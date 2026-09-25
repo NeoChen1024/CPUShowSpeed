@@ -1,0 +1,113 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,29ce0ebc2d36018,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1992-08-01 03:30:46 PST
+Newsgroups: comp.benchmarks
+Path: sparky!uunet!usc!zaphod.mps.ohio-state.edu!moe.ksu.ksu.edu!ux1.cso.uiuc.edu!news.cso.uiuc.edu!ux2.cso.uiuc.edu!ejk
+From: ejk@ux2.cso.uiuc.edu (Ed Kubaitis - CCSO)
+Subject: Convex C3 Benchmarks
+Message-ID: <BsBC4I.Mwo@news.cso.uiuc.edu>
+Sender: usenet@news.cso.uiuc.edu (Net Noise owner)
+Organization: University of Illinois - Urbana
+Date: Sat, 1 Aug 1992 16:21:53 GMT
+Lines: 97
+
+Here are partial results for SPEC CPU benchmarks run on a Convex C3840.
+
+Since we were only interested in approximate SPEC metrics for the C3, we 
+didn't shut the (busy) system down to single user mode to get accurate
+elapsed time measurements. Instead, we used reported CPU time rather
+than elapsed time as required by the SPEC reporting rules. 
+
+  --> THUS THE NUMBERS REPORTED BELOW ARE *NOT* SPECratio, 
+  --> SPECfp92, SPECint92, SPECfp89, SPECint89, SPECmark89.
+
+However, since I/O is such a small component of the SPEC suite, we believe 
+that the "Approximate Vax Equivalents" reported below are a good first 
+order approximation of what the corresponding SPEC metrics would be. 
+
+Care was taken to minimize cache interference by doing timing runs when 
+the load average was 3 or less on the four-processor 3840. In general,
+elapsed time for these runs was close to CPU time.
+
+O2, the highest level of uniprocessor optimization, was used for all 
+compilations. While more exotic optimization flags were not explored, O2 
+does a lot: basic block and program unit scalar optimization plus automatic 
+vectorization.
+
+Since the O3 (automatic parallelizing) option was not used, the results 
+reflect the performance of a single C3 processor. 
+
+This work was partially supported under grant TRA920241N by the National 
+Center for Supercomputing Applications, University of Illinois at
+Urbana-Champaign. I would like to thank Dave McWilliams, system manager
+of the NCSA Convex C3, for his kind assistance.
+
+----------------------------------
+Ed Kubaitis (ejk@ux2.cso.uiuc.edu)
+Computing & Communications Services Office - University of Illinois, Urbana
+
+===============================================================================
+Convex C3840 - Partial SPEC CPU Benchmark Results - August 1992
+
+System
+==============================================================================
+Convex C3840 (4 x 60MHz CPU) 4 GB memory 
+multi-user mode (~10 to 15 users logged in)
+OS:10.0.144   cc:4.3.2   fc:7.0
+==============================================================================
+
+CFP92
+===============================================================================
+Benchmark----  Type  Flags-  CPU---  Apx-Vax-Eqv
+013.spice2g6    dp   fc -O2   946.6     25.4
+015.doduc       dp   fc -O2    42.0     44.3 
+034.mdljdp2     dp   fc -O2    76.9     92.2
+039.wave5       dp   fc -O2    47.5     77.9
+047.tomcatv     dp   fc -O2    12.5    212.0
+048.ora         dp   fc -O2    79.6     93.2
+052.alvinn      sp   cc -O2   156.3     49.2
+056.ear         sp   cc -O2   389.3     65.5
+077.mdljsp2     sp   fc -O2    72.0     46.5
+078.swm256      sp   fc -O2    48.7    260.8
+089.su2cor      dp   fc -O2    43.9    293.8
+090.hydro2d     dp   fc -O2    44.8    305.8
+093.nasa7       dp   fc -O2   137.7    122.0
+094.fpppp       dp   fc -O2   151.1     60.9
+
+Geometric mean                          93.9
+===============================================================================
+
+CINT92
+===============================================================================
+Benchmark----  Type  Flags-  CPU---  Apx-Vax-Eqv
+008.espresso    int  cc -O2   107.9     21.0
+022.li          int  cc -O2   250.4     24.8
+023.eqntott     int  cc -O2    56.5     19.5
+026.compress    int  cc -O2   123.0     22.5
+072.sc          int  cc -O2   339.2     13.4
+085.gcc         int       -       -        -  (not run)
+
+Geometric mean (excluding gcc)          19.8
+===============================================================================
+
+SPEC1.2B (SPEC89)
+==============================================================================
+Benchmark----  Type  Flags-  CPU---  Apx-Vax-Eqv
+013.spice2g6    fp   fc -O2   946.3     25.3
+015.doduc       fp   fc -O2    42.1     44.3
+020.nasa7       fp   fc -O2   136.1    147.6
+030.matrix300   fp   fc -O2    16.7    271.0
+042.fpppp       fp   fc -O2    43.9     69.2
+047.tomcatv     fp   fc -O2    12.2    217.1
+001.gcc1.35     int       -       -        -  (not run)
+008.espresso    int  cc -O2   107.7     21.0
+022.li          int  cc -O2   250.6     24.8
+023.eqntott     int  cc -O2    56.4     19.5
+
+Geometric mean (fp)                     93.6
+Geometric mean (int - excluding gcc)    21.7
+Geometric mean (all - excluding gcc)    57.5
+===============================================================================
+
+

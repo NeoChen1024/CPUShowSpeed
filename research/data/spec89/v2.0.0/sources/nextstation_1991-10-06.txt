@@ -1,0 +1,91 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,7f22e266e28fd934,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1991-10-08 03:57:35 PST
+Path: gmdzi!unido!mcsun!uunet!rosie!next.com
+From: dlakritz@next.com (David Lakritz)
+Newsgroups: comp.benchmarks
+Subject: SPEC results for NeXT
+Message-ID: <1972@rosie.NeXT.COM>
+Date: 6 Oct 91 08:59:26 GMT
+Sender: news@NeXT.COM
+Lines: 76
+
+Here are SPEC results for monochrome and color NeXT systems.
+
+Model: 		NeXTstation Color
+
+Hardware:	25 MHz 68040
+		4K+4K integrated cache
+		16 MB memory
+		400 MB internal scsi disk
+	
+Software:	NeXTstep 2.1 OS
+		default tuning parameters
+		multiuser, normal background load
+		no source code changes to benchmarks
+		compilers: GNU C 1.36
+			   Absoft FORTRAN 77 3.1
+			   Greenhills Fortran-68000 1.8.5 (Grh)
+
+ 
+Benchmark	Time 	    SPECratio	Compiler   Flags  
+
+001.gcc		96.2		15.41	GNU	   -O -fomit-frame-pointer
+008.espresso	214.5		10.56	GNU	   -O -fomit-frame-pointer
+013.spice2g6	2497.7		9.59	Absoft	   -f -O
+015.doduc	235.9		7.90	Absoft	   -f -O -N1 -h4 -H4
+020.nasa7	1709.7		11.75	Absoft	   -f -O
+022.li		408.4		15.20	GNU	   -O -fomit-frame-pointer
+023.eqntott	113.5		9.70	GNU	   -O -fomit-frame-pointer
+030.matrix300	426.1		10.62	Grh	   -f -OLMA   
+042.fpppp	274.1		11.08	Absoft	   -f -O -Z   
+047.tomcatv	281.8		9.40	Grh	   -f -OLMA
+
+SPECint				12.45
+SPECfp				9.97			
+SPECmark			10.90
+
+--------------------------------------------------------------------------
+
+Model: 		NeXTstation
+
+Hardware:	25 MHz 68040
+		4K+4K integrated cache
+		16 MB memory
+		330 MB internal scsi disk
+	
+Software:	NeXTstep 2.1 OS
+		default tuning parameters
+		multiuser, normal background load
+		no source code changes to benchmarks
+		compilers: GNU C 1.36
+			   Absoft FORTRAN 77 3.1
+			   Greenhills Fortran-68000 1.8.5 (Grh)
+	   	
+
+Benchmark	Time 	    SPECratio	Compiler   Flags  
+
+001.gcc		103.6		14.31	GNU	   -O -fomit-frame-pointer
+008.espresso	222.8		10.17	GNU	   -O -fomit-frame-pointer
+013.spice2g6	2706.6		8.85	Absoft	   -f -O
+015.doduc	252.2		7.39	Absoft	   -f -O -N1 -h4 -H4
+020.nasa7	1875.6		10.71	Absoft	   -f -O
+022.li		425.3		14.59	GNU	   -O -fomit-frame-pointer
+023.eqntott	116.5		9.45	GNU	   -O -fomit-frame-pointer
+030.matrix300	464.3		9.75	Grh	   -f -OLMA   
+042.fpppp	309.9		9.80	Absoft	   -f -O -Z   
+047.tomcatv	297.4		8.91	Grh	   -f -OLMA
+
+SPECint				11.90
+SPECfp				9.17			
+SPECmark			10.18
+
+==========================================================================
+David Lakritz 
+NeXT Computer, Inc.
+900 Chesapeake Dr.
+Redwood City, CA  94063
+David_Lakritz@NeXT.com
+
+

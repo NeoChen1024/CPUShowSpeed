@@ -1,0 +1,11 @@
+﻿benchmark,category,weight_in_mark,weight_in_category,source_id,source_url
+001.gcc,INT,1/10,1/4,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+008.espresso,INT,1/10,1/4,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+013.spice2g6,FP,1/10,1/6,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+015.doduc,FP,1/10,1/6,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+020.nasa7,FP,1/10,1/6,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+022.li,INT,1/10,1/4,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+023.eqntott,INT,1/10,1/4,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+030.matrix300,FP,1/10,1/6,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+042.fpppp,FP,1/10,1/6,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+047.tomcatv,FP,1/10,1/6,S03,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf

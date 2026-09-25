@@ -27,7 +27,9 @@ owning document as work lands; remove superseded items.
       page numbers.
 - [ ] Work through the [machine watchlist](machine-watchlist.md), including
       original LINC timing and Honeywell 6180 hardware revisions.
-- [ ] Inventory CPU89/CPU92 literature and assess digitization coverage.
+- [ ] Review the curated SPEC89 integer-score sources against their original
+      publications, assess first-issue digitization, and grade the 17 direct
+      CPU89–CPU92 integer bridge rows by full run configuration.
 - [ ] Assess CoreMark public score coverage and acquisition; inspect certified
       versus uploaded results and find same-system SPEC/CoreMark overlap.
 - [ ] Define the first public timeline and its uncertainty display after the

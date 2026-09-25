@@ -1,0 +1,70 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,c9865e7aaafa065b,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1992-06-13 19:59:00 PST
+Newsgroups: comp.benchmarks
+Path: sparky!uunet!zaphod.mps.ohio-state.edu!moe.ksu.ksu.edu!ux1.cso.uiuc.edu!news.cso.uiuc.edu!ux2.cso.uiuc.edu!ejk
+From: ejk@ux2.cso.uiuc.edu (Ed Kubaitis - CSO )
+Subject: Convex C2 Benchmarks
+Message-ID: <Bptx9o.Lxv@news.cso.uiuc.edu>
+Sender: usenet@news.cso.uiuc.edu (Net Noise owner)
+Organization: University of Illinois - Urbana
+Date: Sun, 14 Jun 1992 09:34:34 GMT
+Lines: 54
+
+Back last summer I posted a request on info.convex:
+
+  |Has anyone run the SPEC benchmarks on a C2? If so, could you post the
+  |results?
+
+There were no responses. Several months later we obtained a license for
+the SPEC 1.2b benchmark suite (SPEC89) and ran the suite on several of
+our systems including our Convex C2. 
+
+Since we were only interested in approximate SPEC metrics for the C2, we 
+never bothered to shut our (busy) system down to single user mode to run 
+the suite so that accurate elapsed time measurements could be made. Instead, 
+we did the calculations using reported CPU time for each benchmark, rather 
+than elapsed time as required by the SPEC run rules. 
+
+  --> THUS THE NUMBERS REPORTED BELOW ARE *NOT* SPECratio89, 
+  --> SPECint89, SPECfp89, and SPECmark89. 
+
+However, since I/O is such a small component of the SPEC89 suite, we believe 
+that the "Approximate Vax Equivalents" reported below are a good first 
+order approximation (within a few %) of what the corresponding SPEC89
+metrics would be. (Note that the results reflect the performance of a
+single C2 processor.)
+
+I am publishing these partial results in the hope of "flushing out" more 
+accurate or up-to-date measurements for the Convex C2 (or C3) and perhaps
+even some results for other mainframe/super vendors. After all, Convex is 
+by no means the only vendor studiously ignoring the SPEC benchmark suites.
+
+----------------------------------
+Ed Kubaitis (ejk@ux2.cso.uiuc.edu)
+Computing & Communications Services Office - University of Illinois, Urbana
+
+==============================================================================
+Convex C240 512 MB memory - multi-user mode (~20 users logged in)
+OS:9.1   cc:4.1   fc:6.1   gcc:1.39
+
+Benchmark----  Type  Flags-  CPU---  Apx-Vax-Eqv
+001.gcc1.35     int  gcc -O   105.1     14.1
+008.espresso    int  cc -O2   252.2      9.0
+022.li          int  cc -O2   497.9     12.5
+023.eqntott     int  cc -O2   170.7      6.5
+013.spice2g6    fp   fc -O2  1825.8     13.1
+015.doduc       fp   fc -O2   108.1     17.2
+020.nasa7       fp   fc -O2   253.7     79.2
+030.matrix300   fp   fc -O2    33.4    135.5
+042.fpppp       fp   fc -O2   183.2     16.6
+047.tomcatv     fp   fc -O2    31.9     83.0
+
+Statistic                            Apx-Vax-Eqv
+-------------------------------      -----------
+Geometric mean of integer codes         10.1
+Geometric mean of fp codes              38.7
+Geometric mean of all 10 codes          22.6
+
+

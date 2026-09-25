@@ -1,0 +1,53 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,76935af11e38d55a,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1990-12-14 09:32:17 PST
+Path: gmdzi!unido!mcsun!uunet!zaphod.mps.ohio-state.edu!ncar!gatech!utkcs2!de5
+From: de5@ornl.gov (Dave Sill)
+Newsgroups: comp.benchmarks
+Subject: SPEC results
+Message-ID: <1990Dec14.173217.11626@cs.utk.edu>
+Date: 14 Dec 90 17:32:17 GMT
+Sender: news@cs.utk.edu (USENET News System)
+Reply-To: Dave Sill <de5@ornl.gov>
+Organization: Oak Ridge National Laboratory
+Lines: 36
+
+Disclaimer: This information is provided as a public service.  It is
+unofficial and incomplete, and may even be wrong.  For complete SPEC
+benchmark results, contact: 
+
+        Systems Performance Evaluation Cooperative (SPEC)
+        c/o Waterside Associates
+        39510 Paseo Padre Parkway
+        Suite 350
+        Fremont, CA  94538
+        415/792-3334
+
+        (After January 1, 1991)
+        SPEC
+        c/o Waterside Associates
+        39138 Fremont Blvd.
+        Fremont, CA  94538
+        415/792-3334
+
+Machine           GCC   Esp  Spice  Dod  Nasa7   Li  Eqn  Mat Fppp  Tom    Mean
+-------           ---   ---  -----  ---  -----   --  ---  --- ----  ---    ----
+DECstation 5000    83   122   1747  103    889  284   60  266  138  153     209
+SPARCserver 490    69   138   1458  133   1012  318   63  201  162  215     220
+Harris Night Hawk  65   108   1782  156   1240  313   65  211  163  182     223
+SPARCstation 330  108   196   2096  196   1439  553   88  308  232  324     327
+DECsystem 5400    135   161   2633  146   1569  510   81  434  227  268     328
+DECsystem 5810    153   143   2876  128   2047  529   73  545  216  291     342
+DECstation 3100   136   189   2523  165   1525  473   98  460  243  268     343
+DECstation 2100   196   254   3418  224   2068  641  125  627  340  363     467
+SPARCstation 1    139   254   2915  369   1968  690  113  410  389  445     459
+Sun 4/260         150   292   5017  551   5878  683  133  485 1030  628     678
+VAX 11/780       1482  2266  23951 1863  20093 6206 1101 4525 3038 2649    3868
+
+-- 
+Dave Sill (de5@ornl.gov)	  It will be a great day when our schools have
+Martin Marietta Energy Systems    all the money they need and the Air Force
+Workstation Support               has to hold a bake sale to buy a new bomber.
+
+

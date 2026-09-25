@@ -24,6 +24,17 @@ use of SPEC results and require historical normalization to be presented as
 approximate. Source documents, PDFs, and downloaded result files are kept in
 read-only raw storage outside Git; each imported record points back to its source.
 
+## Curated SPEC89 recovery data
+
+The [versioned SPEC89 snapshot](../research/data/spec89/v2.0.0/README.md)
+contains source-linked historical observations, saved Usenet messages, compact
+rebuild inputs, and a 25-table CSV export. Its package consistency checks pass,
+but source-specific verification flags remain in every result. The larger
+user-provided input bundle stays unchanged in the ignored local `inventories/`
+area; the generated workbook, redundant JSON export, and broad search index
+are not versioned. See the [checked package audit](../research/spec89-curated-snapshot.md)
+for CPU89–CPU92 overlap counts and limitations.
+
 ## Local bitsavers discovery inventory
 
 `inventories/bitsavers-filelist.txt` is an rsync file listing from

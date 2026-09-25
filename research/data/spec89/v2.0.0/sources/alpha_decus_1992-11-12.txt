@@ -1,0 +1,168 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,cc1deae2492bd380,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1992-11-13 10:32:04 PST
+Path: sparky!uunet!mailgate.mobil.com!dlpcbc!awful!lerami!dalsil!fallout!system
+Newsgroups: comp.benchmarks
+Subject: DECUS DFWLUG ALPHA AXP benchmark data (from DEC)
+Message-ID: <1992Nov12.234201.11724@fallout.lonestar.org>
+From: system@fallout.lonestar.org
+Date: 12 Nov 92 23:42:01 CST
+Organization: DECUS DFWLUG BBS *Dallas*TX*
+Lines: 153
+
+===========================================================================
+= __________                                                              =
+=|  ______  | THE DFWLUG                                                  =
+=| / ---- \ | 10th Anniversary(*1982-1992*)                               =
+=|  |    |  | Celebrating 10 Years of DECUS                               =
+=| \ ____ / | in Dallas/Ft. Worth Texas                                   =
+=|  ------  |                                                             =
+= ----------  dfwlug@fallout.lonestar.org           BBS: (214) 270-3313   =
+= D E C U S                                                               =
+=                                                                         =
+=             The DFWLUG is the Local Users Group for the                 =
+=           Digital Equipment Computer Users Society (DECUS)              =
+=                                                                         =
+=                 *DECUS*    DFWLUG  NET/Newsletter                       =
+=                                                                         =
+=Volume 2 Number 11-1                                 November 12th, 1992 =
+===========================================================================
+
+EXTRA EDITION EXTRA EDITION EXTRA EDITION EXTRA EDITION EXTRA EDITION 
+
+                  *DIGITAL ANNOUCES ALPHA AXP SYSTEMS*
+
+EXTRA EDITION EXTRA EDITION EXTRA EDITION EXTRA EDITION EXTRA EDITION 
+
+--------------------------------------------------------------------------
+VOLUME 2 NUMBER 11-1    INDEX (in this issue)
+   
+PAGE 1   *  ALPHA AXP family of processors (announced November 10th, 1992)
+PAGE 2   *  ALPHA AXP 64-bit Benchmark Data (OpenVMS)
+
+--------------------------------------------------------------------------
+VOLUME 2 NUMBER 11-1  
+PAGE 1
+
+        THE NEW ALPHA AXP FAMILY OF 64-BIT PROCESSORS FROM DIGITAL
+
+The DFWLUG was treated to a special showing of the brand new DEC 3000
+model 500S AXP 64-bit workstation at it's Meeting last Tuesday.
+
+Performance was incredible on this system which ran the OSF/1 operating 
+system and delivered nearly 180 MicroVAX II units of performance. 
+Demonstrations of multi-media, Fractal generation, graphics, Xwindow 
+applications and more running all at the same time from this single 
+powerhouse of a workstation.  As time was short during our meeting 
+Digital promised that at the next meeting the DFWLUG could reboot the 
+same workstation off of it's other disk and run OpenVMS's demos and compilers.
+
+Digital also provided briefing and benchmark packets for all of the new 
+ALPHA servers and workstations included in this family of 64-bit processors.
+
+The DEC 3000 400S AXP and DEC 3000 500S AXP begin the family as desktop and 
+deskside workstations with 159 and 179.7 MicroVAX Units of Performance.  
+Standard SCSI perpherals, turbochannel and standard options will make 
+these systems the price performance leaders of 1992-1993.
+
+The DEC 4000 model 610 AXP starts as single, 193.2 MicroVAX Units of
+Performance departmental system/server and can add another CPU card 
+for even greater CPU throughput.  Standard Future Bus peripherals
+will almost double the I/O possible with workstation systems and 
+provide very high performance as a file server or database engine.
+
+The DEC 7000 model 610 AXP is an SMP multi-processor computer room system 
+that starts at over 217 MicroVAX Units of Performance and in a 4 CPU 
+configuration tops out at over 604 Specthruput numbers.  Up to 4 XMI
+channels or 2 XMI and 2 future Bus I/O channels make this a formitable
+Server for thousands of workstations or PCs.
+
+The DEC 1000 model 610 AXP is an SMP multi-processor Mainframe class 
+engine that starts at 239 MicroVAX Units of Performance and then turns
+on the power.  
+
+
+Benchmark results are for Alpha OpenVMS and should continue to improve
+as Digital refines and continues to optimise their compilers for this 
+new 64-bit risc Computing Family.
+
+--------------------------------------------------------------------------
+VOLUME 2 NUMBER 11-1  
+PAGE 2
+
+               Alpha AXP Peformance Benchmarks for OpenVMS
+
+
+BENCHMARK      DEC 3000    DEC 3000    DEC 4000    DEC 7000    DEC 10000
+               Model       Model       Model       Model       Model
+               400S AXP    500S AXP    610 AXP     610 AXP     610 AXP
+
+SPECmark89      108.1       121.5       136.2       167.4       184.1
+
+SPECthruput89
+        1-CPU   na          na          131.2       161.4       tbd
+        2-CPU   na          na          248.8       308.7       tbd
+        3-CPU   na          na          na          454.4       tbd
+        4-CPU   na          na          na          604.4       654.6
+
+SPECint92       65.3         74.3        83.5        96.6       106.5
+
+SPECfp92       112.2        126.0       143.1       182.1       200.4
+
+SPECrate_int92 
+        1-CPU 1549.3       1762.1      1985.8      2188.6       tbd
+        2-CPU   na          na         3816.1      4291.4       tbd
+        3-CPU   na          na          na         6306.5       tbd
+        4-CPU   na          na          na         8366.8      9107.9
+
+SPECrate_fp92 
+        1-CPU 2631.6       2967.4      3317.1      4126.0       tbd
+        2-CPU   na          na         6214.5      8135.1       tbd
+        3-CPU   na          na          na        11859.8       tbd
+        4-CPU   na          na          na        15739.4     17187.2
+
+Dhrystone
+   V1.1 (Mips)
+        1-CPU  129.9        146.7       158.8       177.3       194.5
+        2-CPU   na          na          317.6       354.6       389.0
+        3-CPU   na          na          na          531.9       583.5
+        4-CPU   na          na          na          709.2       778.0
+
+LINPACK 
+  64-bit
+Double Prec
+100x100         26.4        30.2        36.3         38.6        42.5
+(MFLOPS)
+1000x1000       70.8        79.9        86.4        102.1       111.6
+
+
+CERN
+Benchmark
+Suite           16.9        19.0        21.0         23.6        26.0
+
+
+Perfect
+Benchmark
+Suite
+(MFLOPS)
+(geometric
+   mean)        18.1        20.4        22.9         26.0         28.6
+
+
+DR&N
+Labs CPU2
+(MicroVAX
+ Units of
+ Performance)  159.1       179.7       193.2        217.9         239.3
+
+
+
+---------------------------------------------------------------------------
+Dhrystone scales linearly
+na=Not Applicable
+tbd= To Be Determined
+
+
+
+

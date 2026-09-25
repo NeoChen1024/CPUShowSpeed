@@ -1,0 +1,4 @@
+# Preserve source bytes and generated CSV line endings in the SPEC89 snapshot.
+research/data/spec89/v2.0.0/csv/* -whitespace
+research/data/spec89/v2.0.0/sources/* -whitespace
+research/data/spec89/v2.0.0/inputs/* -whitespace

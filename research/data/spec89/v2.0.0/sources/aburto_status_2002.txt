@@ -1,0 +1,41 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,360f67c03827f5d8,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 2002-07-07 10:34:43 PST
+Path: archiver1.google.com!news1.google.com!newsfeed.stanford.edu!logbridge.uoregon.edu!newshub.sdsu.edu!newspeer.cts.com!galanthis.cts.com!127.0.0.1.MISMATCH!not-for-mail
+From: "Alfred A. Aburto Jr." <aburto@cts.com>
+Newsgroups: comp.benchmarks
+Subject: Al Aburto's benchmarks ...
+Date: Sun, 7 Jul 2002 10:32:37 -0700
+X-Newsreader: Microsoft Outlook Express 5.50.4133.2400
+X-MimeOLE: Produced By Microsoft MimeOLE V5.50.4133.2400
+Lines: 22
+Message-ID: <3d287b32$0$337$e2e8da3@nntp.cts.com>
+NNTP-Posting-Host: 204.212.139.210
+X-Trace: 1026063154 nntp.cts.com 337 204.212.139.210
+Xref: archiver1.google.com comp.benchmarks:1297
+
+Aburto's benchmarks are still held at ftp.nosc.mil ..
+Look in directory "pub" then in "aburto".
+
+Unfortunately since late 1997 I have not had time to get in there and fix
+things up. I took a really huge amount of time to keep things up to date as
+it was. It was just too much after a while ... I am glad so many of you
+found those test programs useful.
+
+So please do not send me anymore results (I've only recieved a few anyway,
+but ...). I am retired and I find now that I have even less free time than
+ever. Good luck to you all in the benchmarking field ...
+
+The aburto@cts.com email address is going "belly up" soon too ...
+
+Al Aburto Jr.
+07 July 2002
+
+
+
+
+
+
+
+

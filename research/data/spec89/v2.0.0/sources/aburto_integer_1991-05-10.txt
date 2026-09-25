@@ -1,0 +1,114 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,cd8b24a68b9a3ee4
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1991-05-10 08:59:40 PST
+Path: gmdzi!unido!mcsun!uunet!zaphod.mps.ohio-state.edu!rphroy!caen!hellgate.utah.edu!dog.ee.lbl.gov!nosc!marlin!aburto
+From: aburto@marlin.NOSC.MIL (Alfred A. Aburto)
+Newsgroups: comp.benchmarks
+Subject: Re: Which benchmarks are useless?
+Keywords: benchmarks  date  statistical correlation
+Message-ID: <1761@marlin.NOSC.MIL>
+Date: 10 May 91 15:59:40 GMT
+References: <2800@spim.mips.COM> <1756@marlin.NOSC.MIL> <3001@spim.mips.COM>
+Distribution: comp.benchmarks
+Organization: Naval Ocean Systems Center, San Diego
+Lines: 96
+
+In article <3001@spim.mips.COM> mash@mips.com (John Mashey) writes:
+>In article <1756@marlin.NOSC.MIL> aburto@marlin.NOSC.MIL (Alfred A. Aburto) writes:
+Thanks for that additional information. I used it and SPEC data held at
+perelandra.cms.udel.edu (spec.sc in directory bench) to revise the table
+I posted (thanks to John McCalpin for the pointer to the SPEC data).
+I also corrected the percent mean error results (they were wrong ---
+incorrectly calculated!).  I also changed to the 1757 Dhrys/sec figure 
+for the VAX 11/780 although I believe a more correct 'peak' value is 
+required here!  We need to use numbers OF THE SAME TYPE when comparing
+performance!  That is, we need high optimized Dhrystones/sec numbers
+in this case for ALL the systems including the VAX 11/780.
+ 
+The sensitivity of Dhrystone to optimization is probably the main reason
+the Dhrystone ratio deviates so widely from the SPECratios and SPECint.
+As a test of this I ran Dhrystone 1.1 on a Sun 4/260 system. The low
+number without optimization ('cc') was 8900 Dhrys/sec while the high
+number with optimization ('cc -O4 -DREG=register') was 20000 Dhrys/sec.
+These yield VAX-MIPS ratings of 5.1 and 11.4 respectively. To quantify
+this type of variability, with respect to optimization, one could for
+example take the average of the low and high numbers to give 14450 Dhrys/sec
+and a VAX-MIPS rating of 8.2. Compare this to the SPECint rating of 8.7
+for the Sun 4/260 in the table below. The comparison is a lot more
+reasonable now!  Other measures of performance such as the median over
+the results using different compiler options may be more appropriate
+of course. Doing all this is a lot of trouble though and almost no one
+does it. Most people naturally want to report the 'best' numbers, the peak
+numbers, and so we wind up with highly biased and sometimes confusing
+Dhrystone results. The easiest solution to all this is to let Dhrystone
+rest in peace and just use the more reliable SPEC numbers. But I'm not
+happy with this as I want benchmarking to cover a much wider territory
+than SPEC now covers.
+
+I don't have alot more to add relative to the results below except the 
+correlation between ALL the programs is still very high across ALL the
+18 systems EVEN with the IBM POWERstation 320 and Intel i860 (systems
+11 and 12) greatly distorting the Dhrystone V1.1 results. Poor Dhrystone
+--- the IBM and Intel compilers seem to have chewed it up and spit out
+Dhrys/sec and MIPS ratings bearing little relation to other integer
+program results and the geometric mean of those results (SPECint). I
+wonder what the results (Dhrys/sec) would be if different compilers
+were used on systems 11 and 12 and if optimization was disabled
+(if at all possible)?  The results, I'm sure, would be quite different.
+ 
+Also I wonder how sensitive the SPECratio results are relative to
+different compilers and different compiler options?
+
+Another interesting result in the table below is the consistent and
+(now) relatively high correlation with clock speed for all the programs
+(Dhrystone1.1, GCC, Espresso, Lisp Interpreter, Eqntott, and SPECint).
+
+Another thing, since I'm being so mouthy anyway :-), what if GCC was
+ported to run on non-UNIX systems (to the vast world of microcomputers)?
+Maybe then we could arrive at a worthy test program of integer performance
+on these 'small systems'?  A test program not so sensitive to optimization
+as the Dhrystone.
+
+                                Dhrystone1.1       SPECratio        SPECint
+                                ------------ ---------------------- -----
+   System                MHz     D/S  Ratio  GCC   ESP    LI   EQN
+00 DEC VAX 11/780        5.00   1757   1.0   1.0   1.0   1.0   1.0   1.0
+01 HP 9000/340          16.67   6536   3.7   3.1   2.3   3.3   2.2   2.7
+02 Sun 4/260            16.67  19900  11.3   9.9   7.8   9.1   8.3   8.7
+03 Sun SPARCstation 1   20.00  22049  12.5  10.7   8.9   9.0   9.7   9.5
+04 HP 9000/834          15.00  23441  13.3  10.2   8.9  11.7  10.1  10.2
+05 MIPS RC2030          16.67  31200  17.8   8.6  11.8  14.2  11.5  11.3
+06 DECstation 3100      16.67  26600  15.1  10.9  12.0  13.1  11.2  11.8
+07 HP Apollo 10000      18.20  27000  15.4  12.8  12.9  11.1  11.1  11.9
+08 Sun SPARCstation 330 25.00  27777  15.8  13.8  11.6  11.2  12.6  12.3
+09 HP 9000/425s         25.00  35140? 20.0? 13.8  13.4  15.5   9.7  12.9
+10 MIPS M/120-5         16.67  31000  17.6  12.5  12.2  15.4  12.0  13.0
+11 IBM POWERstation 320 20.00  51832  29.3  13.7  16.3  15.6  17.7  15.8
+12 Intel Star860        33.00  83985  47.8  12.4  20.1  17.7  17.8  16.7
+13 AT&T Starserver E    33.00  47439  27.0  16.2  16.6  22.2  14.5  17.2
+14 DECstation 5000/200  25.00  42519  24.2  17.3  18.5  21.8  18.4  18.9
+15 MIPS M/2000          25.00  47400  27.0  19.0  18.3  23.8  18.4  19.8
+16 Sun SPARCstation 2   40.00  50075  27.5  19.6  17.6  22.7  21.4  20.2
+17 HP 9000/720          50.00 100149  57.0  35.2  42.5  36.1  40.6  38.5
+18 HP 9000/730          66.00 133532  76.0  46.5  55.2  50.3  52.6  51.0
+-------------------------------------------------------------------------
+Arithmetic Mean                       25.5  15.9  17.1  18.0  16.7  16.8
+Standard Deviation                    17.5   9.8  12.2  10.6  11.7  10.9
+
+Correlation Coef WRT Clock Speed      0.92  0.93  0.93  0.92  0.93  0.94
+
+Correlation Coef WRT Dhry ratio       ----  0.90  0.96  0.93  0.95  0.94
+Correlation Coef WRT GCC  ratio             ----  0.98  0.97  0.98  0.99
+Correlation Coef WRT ESP  ratio                   ----  0.97  0.98  0.99
+Correlation Coef WRT LI   ratio                         ----  0.97  0.99
+Correlation Coef WRT EQN  ratio                               ----  0.99
+                                                                    ----
+
+Percent Mean 'Error' by Dhrystone     ----  60.4  49.1  41.7  52.7  51.8
+Relative to SPEC Integer Programs.
+
+Al Aburto
+aburto@marlin.nosc.mil
+
+

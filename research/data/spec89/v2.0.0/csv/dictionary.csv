@@ -1,0 +1,388 @@
+﻿table,field,type,meaning,missing
+aggregate89,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,vendor,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,system_raw,str,來源中的機型標籤，保留合併型號、縮寫及可能的原始錯誤。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,system_normalized,str,供檢索的保守名稱統一；不能據此認定 OS、編譯器、cache 或 run 相同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,SPECmark89,float|int,原文刊載的 10 個測項總體幾何平均分數。空白不是零。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,SPECint89,float|int,原文刊載的 4 個整數測項幾何平均；不可混同 SPECint92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,SPECfp89,float,原文刊載的 6 個浮點測項幾何平均；不可混同 SPECfp92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,cpu_raw,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,clock_MHz_raw,str,來源中的 clock 字串，可能為 bus/core 雙數字；未任意拆分或修正。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,cache_raw,str,保留來源原始記法與單位慣例；S02 常省略 KB，256/256 等可能混用容量單位。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,operating_system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,compiler,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,source_date,str,文件／貼文日期，不是 CPU 上市日期或量測日期；精度不一，故存為字串。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,info_date_raw,str,彙整表列出的 Info Date／引述年代。沒有轉為上市日期。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,measurement_date,empty,實際量測日期；來源未確定時留白。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,suite,str,有明示小版本時保留；SPEC Release 1.0/1.2 都屬 SPEC89 家族。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,measurement_type,str,"Reference, reported_native, beta, development, component_only, quarantine, rerun, simulation etc. Keep distinct.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,evidence_class,str,區分原廠報告、同時期報導、原作者彙整、後世重跑、未核實二手表；不代表 SPEC 認證。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,page_table,str,PDF 頁碼一律從 1 起算；若另列 printed page，是印刷頁碼。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,original_provenance,str,來源文件指向更早的 SPEC Newsletter、廠商或 Usenet 出處；不表示已取得更早原件。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,verification,str,記錄 PDF 圖表目視核對、可讀文字或視覺核對尚未完成等狀態。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,source_message_id,str,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,source_lines,str,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,import_batch,str,initial_web_recovery or usenet_recovery; does not indicate independent measurement.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,original_record_id,str,Record ID in the originating dataset; blank if the original table supplied no ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,source_status_raw,str,Status annotation inherited verbatim from the Usenet addendum.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,component_count,int,"Count of linked published SPECratio rows, not number of tests or independent runs.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,has_reported_score,bool,True when at least one published SPEC89 aggregate metric is present.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,review_flags,str,Semicolon-separated caution tags; absence is not official SPEC certification.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aggregate89,score_overlap_group,str,"Exact same normalized label and three-field published score tuple, including null positions. Not proof of same run.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,component_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,system_raw,str,來源中的機型標籤，保留合併型號、縮寫及可能的原始錯誤。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,system_normalized,str,供檢索的保守名稱統一；不能據此認定 OS、編譯器、cache 或 run 相同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,benchmark,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,category,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,SPECratio,float,Published reference-runtime/test-runtime ratio; noncompliant CPU-time approximations are elsewhere.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,runtime_seconds,float,Published elapsed seconds only; not reconstructed from ratios.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,page_table,str,PDF 頁碼一律從 1 起算；若另列 printed page，是印刷頁碼。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,compiler,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,flags,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,raw_test,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,source_message_id,str,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,source_lines,str,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,import_batch,str,initial_web_recovery or usenet_recovery; does not indicate independent measurement.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,original_component_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,source_date,str,文件／貼文日期，不是 CPU 上市日期或量測日期；精度不一，故存為字串。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+components89,original_record_id,str,Record ID in the originating dataset; blank if the original table supplied no ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,bridge_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,operating_system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,SPECmark89,float|int,原文刊載的 10 個測項總體幾何平均分數。空白不是零。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,SPECint89,float,原文刊載的 4 個整數測項幾何平均；不可混同 SPECint92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,SPECfp89,float,原文刊載的 6 個浮點測項幾何平均；不可混同 SPECfp92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,SPECint92,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,SPECfp92,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,page_table,str,PDF 頁碼一律從 1 起算；若另列 printed page，是印刷頁碼。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,bridge_type,str,full_INT_FP_89_92 versus mark89_to_INT_FP_92. Pairing is within the cited source only.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,source_date,str,文件／貼文日期，不是 CPU 上市日期或量測日期；精度不一，故存為字串。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,source_message_id,str,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,source_lines,str,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,import_batch,str,initial_web_recovery or usenet_recovery; does not indicate independent measurement.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,original_record_id,str,Record ID in the originating dataset; blank if the original table supplied no ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+bridges89_92,measurement_type,str,"Reference, reported_native, beta, development, component_only, quarantine, rerun, simulation etc. Keep distinct.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,processor_count,int,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,SPECthruput89,float|int,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,source_date,str,文件／貼文日期，不是 CPU 上市日期或量測日期；精度不一，故存為字串。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,operating_system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,page_table,str,PDF 頁碼一律從 1 起算；若另列 printed page，是印刷頁碼。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,source_message_id,str,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,source_lines,str,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,import_batch,str,initial_web_recovery or usenet_recovery; does not indicate independent measurement.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+throughput89,original_record_id,str,Record ID in the originating dataset; blank if the original table supplied no ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,vendor,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,system_raw,str,來源中的機型標籤，保留合併型號、縮寫及可能的原始錯誤。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,system_normalized,str,供檢索的保守名稱統一；不能據此認定 OS、編譯器、cache 或 run 相同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,SPECmark89,empty,原文刊載的 10 個測項總體幾何平均分數。空白不是零。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,SPECint89,float|int,原文刊載的 4 個整數測項幾何平均；不可混同 SPECint92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,SPECfp89,empty,原文刊載的 6 個浮點測項幾何平均；不可混同 SPECfp92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,cpu_raw,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,clock_MHz_raw,empty,來源中的 clock 字串，可能為 bus/core 雙數字；未任意拆分或修正。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,cache_raw,empty,保留來源原始記法與單位慣例；S02 常省略 KB，256/256 等可能混用容量單位。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,operating_system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,compiler,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,source_date,str,文件／貼文日期，不是 CPU 上市日期或量測日期；精度不一，故存為字串。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,info_date_raw,empty,彙整表列出的 Info Date／引述年代。沒有轉為上市日期。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,measurement_date,empty,實際量測日期；來源未確定時留白。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,suite,str,有明示小版本時保留；SPEC Release 1.0/1.2 都屬 SPEC89 家族。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,measurement_type,str,"Reference, reported_native, beta, development, component_only, quarantine, rerun, simulation etc. Keep distinct.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,evidence_class,str,區分原廠報告、同時期報導、原作者彙整、後世重跑、未核實二手表；不代表 SPEC 認證。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,page_table,str,PDF 頁碼一律從 1 起算；若另列 printed page，是印刷頁碼。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,original_provenance,empty,來源文件指向更早的 SPEC Newsletter、廠商或 Usenet 出處；不表示已取得更早原件。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+reruns,verification,str,記錄 PDF 圖表目視核對、可讀文字或視覺核對尚未完成等狀態。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,component_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,system_raw,str,來源中的機型標籤，保留合併型號、縮寫及可能的原始錯誤。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,benchmark,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,category,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,runtime_seconds,float|int,Published elapsed seconds only; not reconstructed from ratios.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,SPECratio,float|int,Published reference-runtime/test-runtime ratio; noncompliant CPU-time approximations are elsewhere.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,measurement_type,str,"Reference, reported_native, beta, development, component_only, quarantine, rerun, simulation etc. Keep distinct.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+rerun_components,page_table,str,PDF 頁碼一律從 1 起算；若另列 printed page，是印刷頁碼。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,vendor,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,system_raw,str,來源中的機型標籤，保留合併型號、縮寫及可能的原始錯誤。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,system_normalized,str,供檢索的保守名稱統一；不能據此認定 OS、編譯器、cache 或 run 相同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,SPECmark89,empty,原文刊載的 10 個測項總體幾何平均分數。空白不是零。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,SPECint89,int,原文刊載的 4 個整數測項幾何平均；不可混同 SPECint92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,SPECfp89,int,原文刊載的 6 個浮點測項幾何平均；不可混同 SPECfp92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,cpu_raw,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,clock_MHz_raw,str,來源中的 clock 字串，可能為 bus/core 雙數字；未任意拆分或修正。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,cache_raw,str,保留來源原始記法與單位慣例；S02 常省略 KB，256/256 等可能混用容量單位。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,operating_system,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,compiler,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,source_date,str,文件／貼文日期，不是 CPU 上市日期或量測日期；精度不一，故存為字串。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,info_date_raw,str,彙整表列出的 Info Date／引述年代。沒有轉為上市日期。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,measurement_date,empty,實際量測日期；來源未確定時留白。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,suite,str,有明示小版本時保留；SPEC Release 1.0/1.2 都屬 SPEC89 家族。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,measurement_type,str,"Reference, reported_native, beta, development, component_only, quarantine, rerun, simulation etc. Keep distinct.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,evidence_class,str,區分原廠報告、同時期報導、原作者彙整、後世重跑、未核實二手表；不代表 SPEC 認證。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,page_table,str,PDF 頁碼一律從 1 起算；若另列 printed page，是印刷頁碼。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,original_provenance,empty,來源文件指向更早的 SPEC Newsletter、廠商或 Usenet 出處；不表示已取得更早原件。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+simulations,verification,str,記錄 PDF 圖表目視核對、可讀文字或視覺核對尚未完成等狀態。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,vendor,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,system_raw,str,來源中的機型標籤，保留合併型號、縮寫及可能的原始錯誤。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,system_normalized,str,供檢索的保守名稱統一；不能據此認定 OS、編譯器、cache 或 run 相同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,SPECmark89,float|int,原文刊載的 10 個測項總體幾何平均分數。空白不是零。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,SPECint89,empty,原文刊載的 4 個整數測項幾何平均；不可混同 SPECint92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,SPECfp89,empty,原文刊載的 6 個浮點測項幾何平均；不可混同 SPECfp92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,cpu_raw,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,clock_MHz_raw,empty,來源中的 clock 字串，可能為 bus/core 雙數字；未任意拆分或修正。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,cache_raw,empty,保留來源原始記法與單位慣例；S02 常省略 KB，256/256 等可能混用容量單位。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,operating_system,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,compiler,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,source_date,empty,文件／貼文日期，不是 CPU 上市日期或量測日期；精度不一，故存為字串。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,info_date_raw,empty,彙整表列出的 Info Date／引述年代。沒有轉為上市日期。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,measurement_date,empty,實際量測日期；來源未確定時留白。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,suite,str,有明示小版本時保留；SPEC Release 1.0/1.2 都屬 SPEC89 家族。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,measurement_type,str,"Reference, reported_native, beta, development, component_only, quarantine, rerun, simulation etc. Keep distinct.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,evidence_class,str,區分原廠報告、同時期報導、原作者彙整、後世重跑、未核實二手表；不代表 SPEC 認證。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,page_table,str,PDF 頁碼一律從 1 起算；若另列 printed page，是印刷頁碼。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,original_provenance,empty,來源文件指向更早的 SPEC Newsletter、廠商或 Usenet 出處；不表示已取得更早原件。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+supplemental_claims,verification,str,記錄 PDF 圖表目視核對、可讀文字或視覺核對尚未完成等狀態。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,runtime_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,001.gcc,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,008.espresso,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,013.spice2g6,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,015.doduc,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,020.nasa7,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,022.li,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,023.eqntott,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,030.matrix300,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,042.fpppp,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,047.tomcatv,int,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,printed_Mean,int,Opaque value printed in the elapsed-time table; never imported as SPECmark89.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,unit,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,publication_date,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,source_message_id,str,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,source_lines,str,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,system_normalized,str,供檢索的保守名稱統一；不能據此認定 OS、編譯器、cache 或 run 相同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+runtime89,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,INT_geomean_approx,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,FP_geomean_approx,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,ALL_geomean_approx,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,INT_tests_present,int,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,FP_tests_present,int,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,reason,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,publication_date,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,source_message_id,str,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,source_lines,str,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant89,measurement_type,str,"Reference, reported_native, beta, development, component_only, quarantine, rerun, simulation etc. Keep distinct.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,component_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,test_raw,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,compiler,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,flags,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,cpu_seconds,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,approx_VAX_equivalents,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,source_lines,int,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+noncompliant_components,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,reported_mark,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,reported_int,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,reported_fp,float,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,001.gcc,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,008.espresso,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,013.spice2g6,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,015.doduc,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,020.nasa7,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,022.li,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,023.eqntott,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,030.matrix300,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,042.fpppp,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,047.tomcatv,float,Published benchmark column; see benchmarks.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,calculated_mark,float,QA geometric mean of all 10 published rounded ratios; not an original reported score.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,delta_mark,float,calculated_mark / reported_mark - 1; blank without a comparable reported aggregate.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,calculated_int,float,QA geometric mean of all 4 published integer ratios; blank if incomplete.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,delta_int,float,calculated_int / reported_int - 1; blank without a comparable reported aggregate.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,calculated_fp,float,QA geometric mean of all 6 published floating-point ratios; blank if incomplete.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,delta_fp,float,calculated_fp / reported_fp - 1; blank without a comparable reported aggregate.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,flag,str,REVIEW if any comparable aggregate differs by >2%; otherwise Within 2% or NO_COMPARABLE_AGGREGATE.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+qa_components,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,vendor,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,system_raw,str,來源中的機型標籤，保留合併型號、縮寫及可能的原始錯誤。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,system_normalized,str,供檢索的保守名稱統一；不能據此認定 OS、編譯器、cache 或 run 相同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,SPECmark89,empty,原文刊載的 10 個測項總體幾何平均分數。空白不是零。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,SPECint89,empty,原文刊載的 4 個整數測項幾何平均；不可混同 SPECint92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,SPECfp89,float,原文刊載的 6 個浮點測項幾何平均；不可混同 SPECfp92。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,cpu_raw,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,clock_MHz_raw,str,來源中的 clock 字串，可能為 bus/core 雙數字；未任意拆分或修正。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,cache_raw,empty,保留來源原始記法與單位慣例；S02 常省略 KB，256/256 等可能混用容量單位。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,operating_system,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,compiler,empty,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,source_date,empty,文件／貼文日期，不是 CPU 上市日期或量測日期；精度不一，故存為字串。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,info_date_raw,empty,彙整表列出的 Info Date／引述年代。沒有轉為上市日期。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,measurement_date,empty,實際量測日期；來源未確定時留白。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,suite,str,有明示小版本時保留；SPEC Release 1.0/1.2 都屬 SPEC89 家族。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,measurement_type,str,"Reference, reported_native, beta, development, component_only, quarantine, rerun, simulation etc. Keep distinct.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,evidence_class,str,區分原廠報告、同時期報導、原作者彙整、後世重跑、未核實二手表；不代表 SPEC 認證。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,page_table,str,PDF 頁碼一律從 1 起算；若另列 printed page，是印刷頁碼。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,original_provenance,empty,來源文件指向更早的 SPEC Newsletter、廠商或 Usenet 出處；不表示已取得更早原件。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,verification,str,記錄 PDF 圖表目視核對、可讀文字或視覺核對尚未完成等狀態。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,source_message_id,empty,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,source_file,empty,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,source_lines,empty,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,import_batch,str,initial_web_recovery or usenet_recovery; does not indicate independent measurement.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,original_record_id,str,Record ID in the originating dataset; blank if the original table supplied no ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,source_status_raw,empty,Status annotation inherited verbatim from the Usenet addendum.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,component_count,int,"Count of linked published SPECratio rows, not number of tests or independent runs.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,has_reported_score,bool,True when at least one published SPEC89 aggregate metric is present.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,review_flags,str,Semicolon-separated caution tags; absence is not official SPEC certification.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+quarantine,score_overlap_group,empty,"Exact same normalized label and three-field published score tuple, including null positions. Not proof of same run.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,overlap_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,left_record_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,right_record_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,matching_published_metrics,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,complete_available_vectors_equal,bool,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,metadata_string_differences,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,decision,str,Conservative overlap handling; matching scores do not justify deleting source observations.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,left_source_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,right_source_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,left_source_url,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,right_source_url,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+overlap_candidates,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+record_map,import_batch,str,initial_web_recovery or usenet_recovery; does not indicate independent measurement.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+record_map,original_record_id,str,Record ID in the originating dataset; blank if the original table supplied no ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+record_map,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+record_map,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+record_map,action,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,title,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,publisher,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,source_date,str,文件／貼文日期，不是 CPU 上市日期或量測日期；精度不一，故存為字串。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,url,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,evidence_class,str,區分原廠報告、同時期報導、原作者彙整、後世重跑、未核實二手表；不代表 SPEC 認證。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,extracted_scope,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,accessed,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,source_message_id,str,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,archive,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,eml_sha256,str,"SHA-256 of source message bytes, without numeric MBOX envelope.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+sources,import_batch,str,initial_web_recovery or usenet_recovery; does not indicate independent measurement.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,date,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,subject,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,author,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,message_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,archive,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,mbox_start,int,"Zero-based start byte offset in uncompressed MBOX, including envelope record.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,mbox_end,int,Exclusive end byte offset in uncompressed MBOX.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,role,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,extracted_file,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,eml_sha256,str,"SHA-256 of source message bytes, without numeric MBOX envelope.",CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+source_manifest,envelope_record_sha256,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+gaps,gap_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+gaps,item,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+gaps,status,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+gaps,lead_url,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+gaps,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+gaps,updated,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+benchmarks,benchmark,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+benchmarks,category,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+benchmarks,weight_in_mark,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+benchmarks,weight_in_category,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+benchmarks,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+benchmarks,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aliases,raw_name,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aliases,normalized_name,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+aliases,rule,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_versions,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_versions,posting_date,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_versions,revision,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_versions,parsed_rows,int,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_versions,score_pair_sha256,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_versions,normalized_score_pair_sha256,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_versions,note,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_versions,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,system,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,cpu,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,clock_raw,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,cache_raw,str,保留來源原始記法與單位慣例；S02 常省略 KB，256/256 等可能混用容量單位。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,SPECmark89,float,原文刊載的 10 個測項總體幾何平均分數。空白不是零。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,info_date_raw,str,彙整表列出的 Info Date／引述年代。沒有轉為上市日期。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,original_source_label,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,version,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,publication_date,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,source_message_id,str,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,source_lines,str,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,version_row_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,linked_record_id,str,Existing Aggregate89 record receiving a version-history link; no new measurement implied.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,link_basis,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+dimarco_version_rows,relationship,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+recovery_leads,target,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+recovery_leads,historical_location,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+recovery_leads,notes,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+recovery_leads,source_id,str,對應 Sources 的來源文件。相同文件的鏡像不另算獨立測試。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+recovery_leads,publication_date,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+recovery_leads,source_message_id,str,Original Usenet Message-ID; not a SPEC submission ID.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+recovery_leads,source_lines,str,1-based lines in source_file; may be non-contiguous. Not MBOX line numbers.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+recovery_leads,source_file,str,Package-relative path to the unmodified saved Usenet message; blank for sources not bundled.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+recovery_leads,source_url,str,該列可追查的公開來源，可能與 Sources 所列主鏡像不同。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+audit_log,audit_id,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+audit_log,record_id,str,本資料集列的唯一識別碼；不是 SPEC 官方 submission ID。,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+audit_log,field,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+audit_log,old_value,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+audit_log,new_value,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+audit_log,reason,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+audit_log,supporting_source_ids,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).
+audit_log,effective_date,str,Source/record attribute retained from originating dataset; see table notes and raw source.,CSV empty cell; JSON null for missing numerics (legacy empty text retained).

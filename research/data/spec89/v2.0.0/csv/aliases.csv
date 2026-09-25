@@ -1,0 +1,152 @@
+﻿raw_name,normalized_name,rule
+Apollo DN10010,HP Apollo DN10010,label_expansion_only_not_configuration_identity
+CDC 4680 (beta),CDC 4680 (Beta),label_expansion_only_not_configuration_identity
+DEC 10000 610 AXP,DEC 10000/610 AXP,label_expansion_only_not_configuration_identity
+DEC 10610,DEC 10000/610 AXP,label_expansion_only_not_configuration_identity
+DEC 2100,DECstation 2100,label_expansion_only_not_configuration_identity
+DEC 3000 400S AXP,DEC 3000/400S AXP,label_expansion_only_not_configuration_identity
+DEC 3000 500S AXP,DEC 3000/500S AXP,label_expansion_only_not_configuration_identity
+DEC 3100,DECstation 3100,label_expansion_only_not_configuration_identity
+DEC 3300,DEC 3000/300 AXP,label_expansion_only_not_configuration_identity
+DEC 3300L,DEC 3000/300L AXP,label_expansion_only_not_configuration_identity
+DEC 3400,DEC 3000/400 AXP,label_expansion_only_not_configuration_identity
+DEC 3500,DEC 3000/500 AXP,label_expansion_only_not_configuration_identity
+DEC 3500X,DEC 3000/500X AXP,label_expansion_only_not_configuration_identity
+DEC 4000 610 AXP,DEC 4000/610 AXP,label_expansion_only_not_configuration_identity
+DEC 4610,DEC 4000/610 AXP,label_expansion_only_not_configuration_identity
+DEC 5000/200,DECstation 5000/200,label_expansion_only_not_configuration_identity
+DEC 5020,DECstation 5000/20,label_expansion_only_not_configuration_identity
+DEC 5025,DECstation 5000/25,label_expansion_only_not_configuration_identity
+DEC 5050,DECstation 5000/50,label_expansion_only_not_configuration_identity
+DEC 5120,DECstation 5000/120,label_expansion_only_not_configuration_identity
+DEC 5125,DECstation 5000/125,label_expansion_only_not_configuration_identity
+DEC 5133,DECstation 5000/133,label_expansion_only_not_configuration_identity
+DEC 5150,DECstation 5000/150,label_expansion_only_not_configuration_identity
+DEC 5200,DECstation 5000/200,label_expansion_only_not_configuration_identity
+DEC 5240,DECstation 5000/240,label_expansion_only_not_configuration_identity
+DEC 5260,DECstation 5000/260,label_expansion_only_not_configuration_identity
+DEC 5400,DECsystem 5400,label_expansion_only_not_configuration_identity
+DEC 5900,DECsystem 5900,label_expansion_only_not_configuration_identity
+DEC 6000/410,DEC VAX 6000/410,label_expansion_only_not_configuration_identity
+DEC 7000 610 AXP,DEC 7000/610 AXP,label_expansion_only_not_configuration_identity
+DEC 7610,DEC 7000/610 AXP,label_expansion_only_not_configuration_identity
+DEC DS5000/200,DECstation 5000/200,label_expansion_only_not_configuration_identity
+DEC DS5400,DECsystem 5400,label_expansion_only_not_configuration_identity
+DEC DS5810,DECsystem 5810,label_expansion_only_not_configuration_identity
+DG 310,Data General AV 310,label_expansion_only_not_configuration_identity
+DG 5010,Data General 5010,label_expansion_only_not_configuration_identity
+DG 530,Data General 530,label_expansion_only_not_configuration_identity
+DG 6200,Data General 6200,label_expansion_only_not_configuration_identity
+DG AV310,Data General AV 310,label_expansion_only_not_configuration_identity
+DG Aviion 310,Data General AV 310,label_expansion_only_not_configuration_identity
+DG Aviion 410,Data General AV 410,label_expansion_only_not_configuration_identity
+DG Aviion 5010,Data General 5010,label_expansion_only_not_configuration_identity
+DG Aviion 6200,Data General 6200,label_expansion_only_not_configuration_identity
+HP 340,HP 9000/340,label_expansion_only_not_configuration_identity
+HP 370,HP 9000/370,label_expansion_only_not_configuration_identity
+HP 425e,HP 9000/425e,label_expansion_only_not_configuration_identity
+HP 425s,HP 9000/425s,label_expansion_only_not_configuration_identity
+HP 425t,HP 9000/425t,label_expansion_only_not_configuration_identity
+HP 705,HP 9000/705,label_expansion_only_not_configuration_identity
+HP 710,HP 9000/710,label_expansion_only_not_configuration_identity
+HP 715/33,HP 9000/715/33,label_expansion_only_not_configuration_identity
+HP 715/50,HP 9000/715/50,label_expansion_only_not_configuration_identity
+HP 720,HP 9000/720,label_expansion_only_not_configuration_identity
+HP 725,HP 9000/725,label_expansion_only_not_configuration_identity
+HP 735/755,HP 9000/735/755,label_expansion_only_not_configuration_identity
+HP 750,HP 9000/750,label_expansion_only_not_configuration_identity
+HP 834,HP 9000/834,label_expansion_only_not_configuration_identity
+HP 897S,HP 9000/897S,label_expansion_only_not_configuration_identity
+HP Apollo 10000,HP Apollo DN10000,label_expansion_only_not_configuration_identity
+HP DN10000,HP Apollo DN10000,label_expansion_only_not_configuration_identity
+HP DN10010,HP Apollo DN10010,label_expansion_only_not_configuration_identity
+HP710,HP 9000/710,label_expansion_only_not_configuration_identity
+HP720,HP 9000/720,label_expansion_only_not_configuration_identity
+HP730,HP 9000/730,label_expansion_only_not_configuration_identity
+HP750,HP 9000/750,label_expansion_only_not_configuration_identity
+HP9000/720,HP 9000/720,label_expansion_only_not_configuration_identity
+HP9000/730,HP 9000/730,label_expansion_only_not_configuration_identity
+IBM 220,IBM RS/6000 220,label_expansion_only_not_configuration_identity
+IBM 320H,IBM RS/6000 320H,label_expansion_only_not_configuration_identity
+IBM 340,IBM RS/6000 340,label_expansion_only_not_configuration_identity
+IBM 350,IBM RS/6000 350,label_expansion_only_not_configuration_identity
+IBM 520H,IBM RS/6000 520H,label_expansion_only_not_configuration_identity
+IBM 530H,IBM RS/6000 530H,label_expansion_only_not_configuration_identity
+IBM 550,IBM RS/6000 550,label_expansion_only_not_configuration_identity
+IBM 550L,IBM RS/6000 550L,label_expansion_only_not_configuration_identity
+IBM 560,IBM RS/6000 560,label_expansion_only_not_configuration_identity
+IBM 570,IBM RS/6000 570,label_expansion_only_not_configuration_identity
+IBM 580,IBM RS/6000 580,label_expansion_only_not_configuration_identity
+IBM 970B,IBM RS/6000 970B,label_expansion_only_not_configuration_identity
+IBM 980B,IBM RS/6000 980B,label_expansion_only_not_configuration_identity
+IBM RS6000/320,IBM RS/6000 320,label_expansion_only_not_configuration_identity
+IBM RS6000/520,IBM RS/6000 520,label_expansion_only_not_configuration_identity
+IBM RS6000/530,IBM RS/6000 530,label_expansion_only_not_configuration_identity
+IBM RS6000/540,IBM RS/6000 540,label_expansion_only_not_configuration_identity
+IBM RS6000/550,IBM RS/6000 550,label_expansion_only_not_configuration_identity
+IBM RS6000/730,IBM RS/6000 730,label_expansion_only_not_configuration_identity
+IBM RS6000/930,IBM RS/6000 930,label_expansion_only_not_configuration_identity
+IBM320H,IBM RS/6000 320H,label_expansion_only_not_configuration_identity
+IBM530H,IBM RS/6000 530H,label_expansion_only_not_configuration_identity
+IBM550,IBM RS/6000 550,label_expansion_only_not_configuration_identity
+Intel 386/387,i386/387,label_expansion_only_not_configuration_identity
+Intel 486 50DX,Intel i486DX-50,label_expansion_only_not_configuration_identity
+Intel 486 50DX2,Intel i486DX2-50,label_expansion_only_not_configuration_identity
+Intel 486 66 DX2,Intel i486DX2-66,label_expansion_only_not_configuration_identity
+Intel 486 66DX2,Intel i486DX2-66,label_expansion_only_not_configuration_identity
+Intel 486DX,i486DX,label_expansion_only_not_configuration_identity
+Intel 486DX2,Intel i486DX2,label_expansion_only_not_configuration_identity
+Intel Star860,Intel STAR860,label_expansion_only_not_configuration_identity
+MicroVAX 3100/90,DEC MicroVAX 3100/90,label_expansion_only_not_configuration_identity
+Mips M/120-5,MIPS M/120-5,label_expansion_only_not_configuration_identity
+Mips M/2000,MIPS M/2000,label_expansion_only_not_configuration_identity
+Mips RC2030,MIPS RC2030,label_expansion_only_not_configuration_identity
+Mips RC3240,MIPS RC3240,label_expansion_only_not_configuration_identity
+Mips RC3260,MIPS RC3260,label_expansion_only_not_configuration_identity
+Moto 8608,Motorola 8608,label_expansion_only_not_configuration_identity
+Moto 8612,Motorola 8612,label_expansion_only_not_configuration_identity
+Moto 8864,Motorola 8864,label_expansion_only_not_configuration_identity
+SGI Chal,SGI Challenge (R4400),label_expansion_only_not_configuration_identity
+SGI IndigoR4,SGI Indigo (R4000),label_expansion_only_not_configuration_identity
+SPARCstation 330,Sun SPARCstation 330,label_expansion_only_not_configuration_identity
+Solb 5/801,Solbourne 5/801,label_expansion_only_not_configuration_identity
+Sun ELC,Sun SPARCstation ELC,label_expansion_only_not_configuration_identity
+Sun IPX,Sun SPARCstation IPX,label_expansion_only_not_configuration_identity
+Sun SS ELC,Sun SPARCstation ELC,label_expansion_only_not_configuration_identity
+Sun SS IPC,Sun SPARCstation IPC,label_expansion_only_not_configuration_identity
+Sun SS IPX,Sun SPARCstation IPX,label_expansion_only_not_configuration_identity
+Sun SS LT,Sun SPARCstation LT,label_expansion_only_not_configuration_identity
+Sun SS SLC,Sun SPARCstation SLC,label_expansion_only_not_configuration_identity
+Sun SS/IPC,Sun SPARCstation IPC,label_expansion_only_not_configuration_identity
+Sun SS1,Sun SPARCstation 1,label_expansion_only_not_configuration_identity
+Sun SS1+,Sun SPARCstation 1+,label_expansion_only_not_configuration_identity
+Sun SS10/30,Sun SPARCstation 10/30,label_expansion_only_not_configuration_identity
+Sun SS10/41,Sun SPARCstation 10/41,label_expansion_only_not_configuration_identity
+Sun SS2,Sun SPARCstation 2,label_expansion_only_not_configuration_identity
+Sun SS330,Sun SPARCstation 330,label_expansion_only_not_configuration_identity
+Sun SS490,Sun SPARCstation 490,label_expansion_only_not_configuration_identity
+VAX 11/780,DEC VAX 11/780,label_expansion_only_not_configuration_identity
+VAX 3100/38,DEC VAXstation 3100/38,label_expansion_only_not_configuration_identity
+VAX 3100/76,DEC VAXstation 3100/76,label_expansion_only_not_configuration_identity
+VAX 4000/100,DEC VAX 4000/100,label_expansion_only_not_configuration_identity
+VAX 4000/300,DEC VAX 4000/300,label_expansion_only_not_configuration_identity
+VAX 4000/400,DEC VAX 4000/400,label_expansion_only_not_configuration_identity
+VAX 4000/500,DEC VAX 4000/500,label_expansion_only_not_configuration_identity
+VAX 4000/60,DEC VAXstation 4000/60,label_expansion_only_not_configuration_identity
+VAX 4000/600,DEC VAX 4000/600,label_expansion_only_not_configuration_identity
+VAX 4000VLC,DEC VAXstation 4000 VLC,label_expansion_only_not_configuration_identity
+VAX 4200,DEC VAX 4000/200,label_expansion_only_not_configuration_identity
+VAX 4300,DEC VAX 4000/300,label_expansion_only_not_configuration_identity
+VAX 4500,DEC VAX 4000/500,label_expansion_only_not_configuration_identity
+VAX 6000 Model 600,DEC VAX 6000 Model 600,label_expansion_only_not_configuration_identity
+VAX 6410,DEC VAX 6000/410,label_expansion_only_not_configuration_identity
+VAX 6450,DEC VAX 6000/450,label_expansion_only_not_configuration_identity
+VAX 6510,DEC VAX 6000/510,label_expansion_only_not_configuration_identity
+VAX 6610,DEC VAX 6000/610,label_expansion_only_not_configuration_identity
+VAX 8700,DEC VAX 8700,label_expansion_only_not_configuration_identity
+VAXstation 3100/38,DEC VAXstation 3100/38,label_expansion_only_not_configuration_identity
+VAXstation 3100/76,DEC VAXstation 3100/76,label_expansion_only_not_configuration_identity
+VAXstation 4000 VLC,DEC VAXstation 4000 VLC,label_expansion_only_not_configuration_identity
+VAXstation 4000/60,DEC VAXstation 4000/60,label_expansion_only_not_configuration_identity
+VAXstation 4000/90,DEC VAXstation 4000/90,label_expansion_only_not_configuration_identity
+i486DX2,Intel i486DX2,label_expansion_only_not_configuration_identity

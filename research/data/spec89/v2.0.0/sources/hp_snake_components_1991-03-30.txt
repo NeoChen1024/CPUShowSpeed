@@ -1,0 +1,118 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,d791b7cd6cd72cb5,start
+X-Google-Attributes: gidf57db,public
+X-Google-Thread: 114b0c,d791b7cd6cd72cb5,start
+X-Google-Attributes: gid114b0c,public
+X-Google-Thread: 102b75,d791b7cd6cd72cb5,start
+X-Google-Attributes: gid102b75,public
+X-Google-ArrivalTime: 1991-03-30 06:58:01 PST
+Xref: utzoo comp.sys.hp:8192 comp.arch:21730 comp.benchmarks:495
+Path: utzoo!utgpu!news-server.csri.toronto.edu!rpi!zaphod.mps.ohio-state.edu!wuarchive!hsdndev!cmcl2!uupsi!sunic!kuling!irf
+From: irf@kuling.UUCP (Bo Thide')
+Newsgroups: comp.sys.hp,comp.arch,comp.benchmarks
+Subject: More Snake bytes.
+Message-ID: <2004@kuling.UUCP>
+Date: 30 Mar 91 14:58:01 GMT
+Reply-To: bt@irfu.se (Bo Thide')
+Organization: Dept. of Computer Systems, Uppsala University, Sweden
+Lines: 97
+
+
+On popular demand here is a follow-up on my eralier posting with
+individual SPECmark ratings for the HP Apollo 9000/700 Snake family. 
+
+
+-----------------------------------------------------------------------------
+            gcc  espr. li   eqntott spice doduc nasa7 matrix fpppp tomcatv
+-----------------------------------------------------------------------------
+HP9000/730  46.5 55.2  50.3 52.6    60.9  64.0  73.7  273.3  107.0 67.4
+HP9000/720  35.2 42.5  36.1 40.6    46.9  48.6  58.0  210.0   81.4 52.9
+-----------------------------------------------------------------------------
+
+
+In John D. McCalpin's (mccalpin@perelandra.cms.udel.edu) terms the 264
+MB/sec bus speed gives the 720 a "Streaming MFLOPS" rating of 11.
+Here's John's table from his comp.benchmarks posting (I let John put in
+the correct Snake figures; an update would be welcome, John!)
+
+               Performance Summary Table - LINPACK
+                -----------------------------------
+
+                MFLOPS  MFLOPS  MFLOPS  MFLOPS  Price   MFLOPS/Million$
+System          Peak    Max     Lnpk    Stream  $10**6   Max    Stream
+-----------------------------------------------------------------------
+IBM 550          82      62       27     12      0.13    477      92
+MIPS RC6280      24      16       10      8      0.20     80      40
+IBM 320          40      29        9      6     <0.02   1450     300
+-----------------------------------------------------------------------
+Convex C-210     50      44       17      9     ~0.5      88      18
+Convex C-240    200     166       26     36     ~1.6     104      23
+-----------------------------------------------------------------------
+Cray Y/MP-1     333     324       25    150     ~3.0     108      50
+Cray Y/MP-8    2664    2144      275   1200    ~16.0     134      75
+-----------------------------------------------------------------------
+1xIBM 3090E VF  116      71       13     11     ~3.0      24       4
+2xIBM 3090E VF  232     141       26*    22     ~5.0      28       4
+3xIBM 3090E VF  348     210       39*    33     ~7.0      30       5
+-----------------------------------------------------------------------
+SGI 4D/310       10       8        6      3
+SGI 4D/380       80      52       48*     3     ~0.20    260      15
+-----------------------------------------------------------------------
+Stardent 3010    32      25       10      6
+Stardent 3040   128      77       12     11     ~0.25    308      44
+-----------------------------------------------------------------------
+IBM 320          40      29        9      6     <0.02   1450     300
+8x  IBM 320     320     232*      72*    48      0.11   1450*    300
+16x IBM 320     640     464*     144*    96      0.21   1450*    300
+-----------------------------------------------------------------------
+(*) indicates extrapolated figures.
+
+
+
+Here's another comparison table:
+====================================================================
+           The HP 720:  How It Stacks Up
+
+COMPANY/PRODUCT     PRICE       MIPS    SPEC    Price Per   Price Per
+                                        marks   MIPS        SPECmark
+
+Hewlett-Packard/    $12,000     57      55.5    $211        $216
+HP 9000 Model 720
+
+IBM/                $9,725      29.5    24.6    $330        $395
+RISC System/6000
+Model 320
+
+Digital Equipment/  $12,500     27.3    19.9    $458        $628
+DECstation 5000
+Model 200 MX
+
+Sun Microsystems/   $15,000     28.5    21      $526        $714
+SPARCstation 2
+
+Units include monochrome monitors and no disks,
+except for IBM 320, which has a 120-Mbyte disk     
+
+Sources: "HP Apollo 9000 Series 700 Performance Brief",
+	 Companies and UNIX Today!
+
+=====================================================================
+
+
+
+Many have questioned the statement in my earlier posting that Motif 1.2
+will be available for the Snakes.  Well, even though I found this stated
+explicitly in three different official HP publications (HP numbers
+5091-0977E, 5091-0979E, and 5091-0980E) I am now inclined to believe
+that this is a typo.  Any official comments from HP on this?
+
+Bo
+
+---
+   ^   Bo Thide'--------------------------------------------------------------
+  |I|        Swedish Institute of Space Physics, S-755 91 Uppsala, Sweden
+  |R|  Phone: (+46) 18-303671.  Telex: 76036 (IRFUPP S).  Fax: (+46) 18-403100 
+ /|F|\          INTERNET: bt@irfu.se      UUCP: ...!mcvax!sunic!irfu!bt  
+ ~~U~~ -----------------------------------------------------------------sm5dfw
+
+

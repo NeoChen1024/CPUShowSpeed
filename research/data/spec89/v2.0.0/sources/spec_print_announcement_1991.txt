@@ -1,0 +1,41 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: 10902b,ee89246fa04175e6,start
+X-Google-Attributes: gid10902b,public
+X-Google-ArrivalTime: 1991-08-31 00:17:56 PST
+Path: gmdzi!unido!mcsun!uunet!stanford.edu!agate!usenet
+From: mccalpin@perelandra.cms.udel.edu (John D. McCalpin)
+Newsgroups: comp.archives
+Subject: [comp.benchmarks] SPEC results
+Message-ID: <1991Aug31.071000.28973@agate.berkeley.edu>
+Date: 31 Aug 91 07:10:00 GMT
+References: <MCCALPIN.91Aug27104406@pereland.cms.udel.edu>
+Sender: usenet@agate.berkeley.edu (USENET Administrator)
+Followup-To: comp.benchmarks
+Organization: College of Marine Studies, U. Del.
+Lines: 20
+Approved: adam@soda.berkeley.edu
+X-Original-Date: 27 Aug 91 14: 44:06 GMT
+X-Original-Newsgroups: comp.benchmarks
+
+Archive-name: auto/comp.benchmarks/SPEC-results
+Original-posting-by: mccalpin@perelandra.cms.udel.edu (John D. McCalpin)
+Original-subject: SPEC results
+Reposted-by: adam@soda.berkeley.edu
+
+My table of SPEC results is starting to get a bit out of date.  Does
+anyone have the full set of the most recent SPEC results for the
+HP/9000-7x0 series and the IBM RS/6000 series?  
+I need either all 10 times (in seconds) or all 10 SPEC ratios.
+
+Information on any new machines is also welcome.
+
+The table will remain available by anonymous ftp from
+perelandra.cms.udel.edu in bench/spec/.
+The file spec.sc is the 'sc' format raw data and worksheet.
+The file spec.print contains a formatted subset of the SPEC ratios.
+--
+John D. McCalpin			mccalpin@perelandra.cms.udel.edu
+Assistant Professor			mccalpin@brahms.udel.edu
+College of Marine Studies, U. Del.	J.MCCALPIN/OMNET
+
+

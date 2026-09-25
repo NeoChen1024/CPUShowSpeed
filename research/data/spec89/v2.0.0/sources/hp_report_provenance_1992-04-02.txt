@@ -1,0 +1,82 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,733d6e2c107ee614,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1992-04-02 15:32:19 PST
+Path: sparky!uunet!zaphod.mps.ohio-state.edu!qt.cs.utexas.edu!yale.edu!spool.mu.edu!caen!uvaarpa!murdoch!hemlock.cs.Virginia.EDU!clc5q
+From: clc5q@hemlock.cs.Virginia.EDU (Clark L. Coleman)
+Newsgroups: comp.benchmarks
+Subject: AIM Benchmark Results for Workstations
+Message-ID: <1992Apr2.233219.18818@murdoch.acc.Virginia.EDU>
+Date: 2 Apr 92 23:32:19 GMT
+Article-I.D.: murdoch.1992Apr2.233219.18818
+Sender: usenet@murdoch.acc.Virginia.EDU
+Organization: University of Virginia Computer Science Department
+Lines: 65
+
+The following numbers were taken from the HP 9000 Series 700 Performance
+Report that was released in January of 1992. AIM results have been requested
+here several times recently, so here are a few that were available about 3
+months ago.  The new machines from Silicon Graphics and IBM were not 
+available at that time.
+***************************************************************************
+
+
+AIM Benchmarks --- Performance Rating (approximates system MIPS or SPECint,
+-------------------------------------	but is usually lower than these #s)
+Machine		Rating
+-------		------
+HP750		47.1
+HP720CRX	35.5
+IBM550		34.5
+HP710C		29.6
+IBM530H		27.9
+IBM320H		20.7
+Sun SS2		15.4
+Sun IPX		14.4
+DEC5000/200	14.0
+DEC5000/120	13.6
+Sun ELC		11.3
+
+
+
+AIM Benchmarks --- Maximum User Load ("amount of user load" at which point the
+-------------------------------------	system response becomes unacceptable)
+Machine		Rating (don't know the units --- number of users??)
+-------		------
+HP750		337
+IBM550		307
+IBM530H		244
+HP720CRX	229
+IBM320H		193
+HP710C		180
+Sun SS2		142
+DEC5000/200	131
+DEC5000/120	122
+Sun IPX		117
+Sun ELC		 69
+
+
+
+AIM Benchmarks --- Maximum Throughput (peak throughput in jobs/minute)
+-------------------------------------
+Machine		Rating
+-------		------
+HP750		461.9
+HP720CRX	347.7
+IBM550		338.3
+HP710C		290.0
+IBM530H		273.3
+IBM320H		202.5
+Sun SS2		151.1
+Sun IPX		141.2
+DEC5000/200	137.6
+DEC5000/120	132.8
+Sun ELC		111.2
+
+
+-- 
+-----------------------------------------------------------------------------
+"It is seldom that any liberty is lost all at once." David Hume
+|||  clc5q@virginia.edu (Clark L. Coleman)
+
+

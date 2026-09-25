@@ -3,6 +3,7 @@
 import click
 from cpushowspeed.plot import plot
 from cpushowspeed.spec import spec
+from cpushowspeed.spec89 import spec89
 
 
 @click.group()
@@ -12,4 +13,5 @@ def cli() -> None:
 
 
 cli.add_command(spec)
+cli.add_command(spec89)
 cli.add_command(plot)

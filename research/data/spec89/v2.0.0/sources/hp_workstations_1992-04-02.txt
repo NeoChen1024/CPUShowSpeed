@@ -1,0 +1,96 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,5ca212e03d0d0e9,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1992-04-02 15:49:29 PST
+Path: sparky!uunet!zaphod.mps.ohio-state.edu!mips!spool.mu.edu!caen!uvaarpa!murdoch!hemlock.cs.Virginia.EDU!clc5q
+From: clc5q@hemlock.cs.Virginia.EDU (Clark L. Coleman)
+Newsgroups: comp.benchmarks
+Subject: SPEC Results for Workstations
+Message-ID: <1992Apr2.234929.19182@murdoch.acc.Virginia.EDU>
+Date: 2 Apr 92 23:49:29 GMT
+Article-I.D.: murdoch.1992Apr2.234929.19182
+Sender: usenet@murdoch.acc.Virginia.EDU
+Organization: University of Virginia Computer Science Department
+Lines: 79
+
+Same source as previous two postings. They don't give all 10 numbers for
+all the boxes from competitors, just the SPECint, SPECfp, and SPECmarks.
+*************************************************************************
+
+
+Benchmark	HP710	HP720	HP730	HP750
+---------	-----	-----	-----	-----
+gcc		29.0	36.0	44.8	46.4
+espresso	39.8	43.4	56.9	57.5
+li		36.7	37.7	49.8	50.9
+eqntott		37.2	41.2	54.0	51.9
+spice2g6	33.2	44.5	57.2	58.3
+doduc		42.5	47.6	62.3	66.5
+nasa7		51.7	64.5	80.9	78.7
+matrix300	277.6	323.2	415.1	407.7
+fpppp		45.3	78.5	103.7	105.9
+tomcatv		64.1	66.4	83.6	83.6
+---------------------------------------------
+SPECint		35.4	39.5	51.2	51.5
+SPECfp		62.4	78.3	100.6	101.6
+SPECmark	49.7	59.5	76.8	77.5
+
+
+SPECint Ratings for Various Workstations
+----------------------------------------
+HP750		51.5
+HP730		51.2
+HP720		39.5
+HP710		35.4
+IBM550		33.9
+SGI 4D/35	28.0
+IBM530H		26.6
+SGI Indigo	23.6
+Sun SS2		21.7
+Sun IPX		21.7
+IBM320H		20.0
+DEC 5000/200	19.5
+Sun ELC		18.0
+
+
+
+SPECfp Ratings for Various Workstations
+----------------------------------------
+IBM550		119.7
+HP750		101.6
+HP730		100.6
+IBM530H		 95.9
+HP720		 78.3
+IBM320H		 66.8
+HP710		 62.4
+SGI 4D/35	 33.4
+SGI Indigo	 28.4
+Sun SS2		 27.4
+DEC 5000/200	 26.7
+Sun IPX		 26.5
+Sun ELC		 22.0
+
+
+SPECmark Ratings for Various Workstations
+----------------------------------------
+HP750		77.5
+HP730		76.8
+IBM550		72.2
+HP720		59.5
+IBM530H		57.4
+HP710		49.7
+IBM320H		41.2
+SGI 4D/35	31.1
+SGI Indigo	26.3
+Sun SS2		25.0
+Sun IPX		24.4
+DEC 5000/200	23.5
+Sun ELC		20.3
+
+
+-- 
+-----------------------------------------------------------------------------
+"It is seldom that any liberty is lost all at once." David Hume
+|||  clc5q@virginia.edu (Clark L. Coleman)
+
+

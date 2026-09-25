@@ -59,6 +59,11 @@ must not be used as benchmark test dates. Curate numeric rows into the
 script-readable dataset once its schema is selected, with a separate source
 reference for each underlying result.
 
+A later [curated SPEC89 recovery snapshot](spec89-curated-snapshot.md) now
+preserves additional source-linked Usenet observations and 34 CPU89–CPU92
+same-source bridge rows. It does not fill the missing first-issue scan or
+turn later collector tables into original SPEC submissions.
+
 ## Internet Archive check
 
 On 2026-09-25, the Internet Archive Advanced Search metadata catalog returned

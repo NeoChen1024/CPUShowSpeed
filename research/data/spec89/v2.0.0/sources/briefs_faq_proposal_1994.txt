@@ -1,0 +1,44 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,c4ad83ce15ab913c,start
+X-Google-Attributes: gidf57db,public
+X-Google-Thread: 102b75,c4ad83ce15ab913c,start
+X-Google-Attributes: gid102b75,public
+X-Google-ArrivalTime: 1994-01-04 20:27:39 PST
+Xref: gmd.de comp.arch:18618 comp.benchmarks:3367
+Newsgroups: comp.arch,comp.benchmarks
+Path: gmd.de!xlink.net!howland.reston.ans.net!agate!dog.ee.lbl.gov!newshub.nosc.mil!news!aburto
+From: aburto@nosc.mil (Alfred A. Aburto)
+Subject: Performance Brief FAQs
+Message-ID: <1994Jan5.034359.24926@nosc.mil>
+Sender: news@nosc.mil
+Organization: NCCOSC RDT&E Division, San Diego, CA
+Distribution: comp.arch,comp.benchmarks
+Date: Wed, 5 Jan 1994 03:43:59 GMT
+Expires: Sun, 30 Jan 1994 08:00:00 GMT
+Lines: 23
+
+-------
+I know that many vendors publish system performance briefs.
+
+We need a FAQ describing where and how one can obtain performance
+briefs. I know that information can be obtained from DEC via ftp,
+but the details get lost after a bit. I know that one can get 
+performance briefs from Intel by calling Intel Literature at
+(800) 548 - 4725.  But what about HP, IBM, SGI, Motorola, ..., etc.??
+
+A FAQ containing information about obtaining performance briefs from
+the various major computer system vendors would be very useful!
+
+If the various vendors will volunteer this information I will pull all
+the information together into a FAQ (an ASCII file called briefs.faq?)
+and post it here (comp.benchmarks) occasionally (once per month?). Also
+a copy will be kept at ftp.nosc.mil (and multiple copies should be 
+spread elsewhere so that this information will indeed always available.
+
+Al Aburto
+aburto@marlin.nosc.mil
+-------
+
+
+
+

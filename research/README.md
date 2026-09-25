@@ -1,8 +1,8 @@
 # Verified research findings
 
 This directory is the repository home for findings checked against primary
-source pages or other clearly identified evidence. It is currently an index and
-contribution guide; no machine findings have been entered yet. Candidate leads
+source pages or other clearly identified evidence. It is an index and
+contribution guide. Candidate leads
 belong in the [machine watchlist](../docs/machine-watchlist.md), while the
 [document extraction policy](../docs/document-extraction.md) governs OCR text.
 
@@ -29,6 +29,8 @@ Research notes remain useful for the evidence trail and interpretation.
 
 - [Early SPEC archive locations](spec-early-archives.md): verified CPU89/CPU92
   source paths and remaining first-issue gaps.
+- [Curated SPEC89 recovery snapshot](spec89-curated-snapshot.md): source-linked
+  machine-readable observations, package validation, and CPU89–CPU92 bridge limits.
 - [First SPEC92 VAXen figure](spec92-vaxen.md): source-checked annual CINT92
   results and coverage limits.
 

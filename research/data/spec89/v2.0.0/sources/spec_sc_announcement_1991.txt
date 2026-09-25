@@ -1,0 +1,72 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: 10902b,d5924ee50c3fa360,start
+X-Google-Attributes: gid10902b,public
+X-Google-ArrivalTime: 1991-01-28 23:10:45 PST
+Path: gmdzi!unido!fauern!sun1.ruf.uni-freiburg.de!ira.uka.de!sol.ctr.columbia.edu!caen!ox.com!emv
+From: mccalpin@perelandra.cms.udel.edu (John D. McCalpin)
+Newsgroups: comp.archives
+Subject: [benchmarks] Re: SPEC results
+Message-ID: <1991Jan29.033808.16641@ox.com>
+Date: 29 Jan 91 03:38:08 GMT
+References: <1991Jan18.191135.1135@cs.utk.edu> <MCCALPIN.91Jan23153911@pereland.cms.udel.edu>
+Sender: emv@ox.com (Edward Vielmetti)
+Reply-To: mccalpin@perelandra.cms.udel.edu (John D. McCalpin)
+Followup-To: comp.benchmarks
+Organization: College of Marine Studies, U. Del.
+Lines: 51
+Approved: emv@ox.com (Edward Vielmetti)
+X-Original-Newsgroups: comp.benchmarks
+
+Archive-name: benchmark/spec/spec-sc/1991-01-23
+Archive: perelandra.cms.udel.edu:/pub/bench/spec.sc [128.175.74.1]
+Original-posting-by: mccalpin@perelandra.cms.udel.edu (John D. McCalpin)
+Original-subject: Re: SPEC results
+Reposted-by: emv@ox.com (Edward Vielmetti)
+
+> On 20 Jan 91 00:29:51 GMT, mccalpin@perelandra.cms.udel.edu I said:
+
+>>> On 18 Jan 91 19:11:35 GMT, de5@ornl.gov (Dave Sill) said:
+
+Dave> Here's the latest compilation of SPEC results.  Send additions,
+Dave> corrections, and comments to me at de5@ornl.gov.
+
+me> For those interested, I have placed the information that Dave posted
+me> in an 'sc' spreadsheet file.  This is an ascii file in 'sc' internal
+me> format for reading into a spreadsheet, *not* a version for printing.
+
+I have updated the file to include some interesting calculations.
+The original raw data has been hidden (using the sc 'z' command) so
+that only the interesting stuff is shown by default.   You can recover
+the original data using the 's' command of sc.
+
+The current table has the following columns:
+	(1) machine name
+	(2) total SPECmark
+	(3) integer "SPECmark" (*)
+	(4) floating-point "SPECmark" (*)
+	(5) ratio: FP SPEC/Integer SPEC
+	(6) ratio: Best SPEC/Worst SPEC
+
+(*) Please note that these are entirely *unofficial* results and
+categories and are intended only as an easy reference.
+
+The "Integer SPECmark" is the geometric mean of the SPEC ratios for
+the four integer tests: gcc, espresso, li, eqntott.
+The "Floating-point SPECmark" is the geometric mean of the other 6
+tests. 
+
+The file is available by anonymous ftp from perelandra.cms.udel.edu
+in pub/bench/spec.sc.
+
+Please send updates and corrections to me and I will keep the file
+up-to-date, though if I get over 100 machines to list I will have to
+either restructure the calculations or build a bigger version of sc!
+
+Any ideas for other interesting calculated quantities to stick into
+the table are welcome.....
+--
+John D. McCalpin			mccalpin@perelandra.cms.udel.edu
+Assistant Professor			mccalpin@brahms.udel.edu
+College of Marine Studies, U. Del.	J.MCCALPIN/OMNET
+
+

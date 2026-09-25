@@ -1,0 +1,261 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,77297044380989b9,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1993-09-13 19:21:24 PST
+Newsgroups: comp.benchmarks
+Path: gmd.de!newsserver.jvnc.net!howland.reston.ans.net!europa.eng.gtefsd.com!uunet!utcsri!cdf.toronto.edu!marvin.cdf.toronto.edu!jdd
+From: jdd@cdf.toronto.edu (John DiMarco)
+Subject: SPECmark table
+Message-ID: <93Sep13.214238edt.31007@marvin.cdf.toronto.edu>
+Originator: root@marvin.cdf
+Sender: news@cdf.toronto.edu
+Nntp-Posting-Host: marvin.cdf.toronto.edu
+Organization: University of Toronto Computing Disciplines Facility
+Date: Tue, 14 Sep 1993 01:42:24 GMT
+Lines: 243
+
+Various people have requested this, so I'll post it regularly. 
+
+$Id: spectable,v 1.6 1993/07/27 16:31:51 jdd Exp $
+
+What this is: A file of reported SPECmarks for various machines. These figures
+              are mostly taken from numbers published on the net, or in 
+              manufacturer press releases or reports. 
+
+This file is available via anonymous ftp from ftp.cdf.toronto.edu in
+the file /pub/spectable.
+
+Notes:
+        - SPECint 92 is derived from the results of a set of integer 
+          benchmarks, and can be used to estimate a machine's single-tasking 
+          performance on integer code. 
+        - SPECfp 92 is derived from the results of a set of floating point
+          benchmarks, and can be used to estimate a machine's single-tasking 
+          performance on floating-point code. 
+        - SPECmark 89 is an older figure derived from the results of
+          a combined set of floating point and integer benchmarks, and
+          is reported only because SPEC92 figures are not available for
+          many older machines. 
+        - Integer SPECrate is derived from the results of a set of integer
+          benchmarks run multiple times simultaneously, and can be used
+          to estimate a machine's overall multi-tasking throughput for 
+          integer code.
+        - Floating-Point SPECrate is derived from the results of a set
+          of floating-point benchmarks run multiple times simultaneously, 
+          and can be used to estimate a machine's overall multi-tasking
+          throughput for floating-point code.
+        - Benchmark results depend not only on processor type, speed, and 
+          cache size, but on OS and other machine characteristics that are
+          not reported here.
+        - Date and source is for SPECint 92, if present, otherwise for
+          SPECfp 92, if present, and so on for Integer SPECrate, 
+          FP SPECrate, and SPECmark 89
+        - Some SPECrates listed below for uniprocessor machines have apparently 
+          been computed from SPECint92 and SPECfp92. 
+        - SPEC newsletter sources are second-hand.
+        - The SS10/51 SPECrate numbers are computed from the SS10/41 numbers. 
+          Sun's announcement claims both SPECrate figures for the SS10/51 are 
+          identical to those of the SS600/140, which is almost certainly wrong. 
+
+Disclaimer: These numbers have not been verified. Nobody guarantees 
+            their correctness, and there is no guarantee that they 
+            accurately reflect the true performance of these systems.
+            Furthermore, this is not a publication of the SPEC consortium
+            and is not endorsed by them in any way.
+
+Guide to abbreviations:
+
+Hyp      = Cypress/Ross Pinnacle aka HyperSPARC CPU
+DG       = Data General
+PA       = HP Precision Architecture
+PW       = IBM Power chipset
+Moto     = Motorola
+M/120    = MIPS M/120
+SP       = SPARC
+SS       = Sun SPARCStation or SPARCserver
+SC       = Sun SPARCcenter
+FuWe     = SPARC: Fujitsu IU, Weitek FPU (FJMB68903)
+LSI      = LSI SPARC LSIS1C0010
+Ross     = Cypress/Ross CY7C601
+Tsu      = TI Tsunami aka. MicroSPARC
+Vik      = TI Viking aka. SuperSPARC
+SPow     = Weitek SPARC Power uP 80MHz CPU replacement
+Sol      = Solbourne
+i486     = Intel 486 PC 
+iPentium = Intel Pentium PC
+
+Please send corrections, updates, and new entries to jdd@cdf.toronto.edu
+
+I hope people find this useful.
+
+John
+--
+John DiMarco                                              jdd@cdf.toronto.edu
+Computing Disciplines Facility Systems Manager            jdd@cdf.utoronto.ca
+University of Toronto                                     EA201B,(416)978-1928
+
+--------------------------------------------------------------------------------
+System    CPU     Clock  Cache  SPEC  SPEC  SPEC  SRate SRate Info  Source
+Name      Type    (MHz) Ext+I/D 92Int 92 FP Mrk89  Int    FP  Date  Obtained
+------    ------  ----- ------- ----- ----- ----- ----- ----- ----- ------------
+ALR VEISA 80487SX  20    64+8    10.7   4.9                   Mar93 SPEC newsltr
+CDC 4680  R6000    66  512+64/16 40.6  45.1              2232 Sep92 SPEC newsltr
+CDC 4360  R3000    33    64/64   24.9  26.7               633 Sep92 SPEC newsltr
+CDC 4330  R3000    33    32/32   24.9  23.9               567 Sep92 SPEC newsltr
+CYM6224K  SP/Hyp   55     256    55.0  77.0                   May93 c.arch
+CYM6224K  SP/Hyp   66     256    67.0  93.0                   May93 c.arch
+Compaq Dp 80487SX  16     0+8     9.3   4.3                   Mar93 SPEC newsltr
+Compaq Dp 80487SX  25    64+8    14.2   6.7                   Mar93 SPEC newsltr
+Compaq Dp 80486DX  33   128+8    18.2   8.3                   Sep92 SPEC newsltr
+Compaq Dp 80486DX2 50   256+8    25.7  12.2                   Mar93 SPEC newsltr
+Compaq Dp 80486DX2 66   256+8    32.2  16.0                   Mar93 SPEC newsltr
+VAX11/780 VAX                                 1.0             Feb90 uproc report
+VAX4k200  KA640    29     6                   5.6             Sep92 SPEC newsltr
+VAX4k300  KA670    36    128                  9.2             Sep92 SPEC newsltr
+VAX4k500  KA680    71    128                 30.7             Sep92 SPEC newsltr
+VAX4k60   KA46     56    256           10.4                   Sep92 SPEC newsltr
+VAX4k90   NVAX     71    2/8           30.2                   Sep92 SPEC newsltr
+VAX6k410  KA660    36    128            7.1   6.8         168 Feb90 uproc report
+VAX6k450  KA660                               9.2             Feb90 uproc report
+VAX6k510  KA650    62    512           13.3  15.6         315 Sep92 SPEC newsltr
+VAX6k610  KA680    83    2MB           39.2  42.1         930 Sep92 SPEC newsltr
+DEC2100   R2000   12.5   128                  7.5             Oct89 c.arch
+DEC3100   R2000  16.67   128                 10.1             Oct89 c.arch
+DEC5400   R3000                              11.3             Feb90 uproc report
+DEC5900   R3000    40    64/64   27.3  29.9  25.5   648   709 Sep92 SPEC newsltr
+DEC5k20   R3000    20    64/64   13.7  14.8  16.3         351 Mar93 c.s.sun.hw
+DEC5k25   R3000    25    64/64               19.1         415 Sep92 SPEC newsltr
+DEC5k33   R3000    33    64/128  20.9  23.4                   Sep92 SPEC newsltr
+DEC5k125  R3000    25    64/64   16.0  17.5                   Sep92 SPEC newsltr
+DEC5k133  R3000    33    64/128  20.1  23.5  26.5   477   557 Mar93 c.s.sun.hw
+DEC5k240  R3000                  27.3  29.9  32.4   648   709 Mar93 c.s.sun.hw
+DEC3k300  AXP/A  30/150 256+8/8  66.2  91.5  85.5  1535  2137 Apr93 c.s.sun.misc
+DEC3k300L AXP/A  20/100 256+8/8  45.9  63.6  59.8  1081  1480 Apr93 c.s.sun.misc
+DEC3k400  AXP/A  27/133 512+8/8  74.7 112.2 108.1  1763  2662 Apr93 c.arch(DEC)
+DEC3k500  AXP/A  30/150 512+8/8  84.4 127.7 126.1  1997  3023 Apr93 c.arch(DEC)
+DEC3k500X AXP/B  40/200 512+8/8 110.9 164.1 160.8  2611  3910 Apr93 c.s.sun.misc
+DEC4k610  AXP/A  40/160 1M+8/8   83.5 143.1 136.2  2198  3247 Nov92 c.arch(DEC)
+DEC4k620  2xAXP/A 40/160 1MB+8/8                   3861  6215 May93 sunflash
+DEC7k610  AXP/B  45/182 4M+8/8   96.6 182.1 167.4  2572  4179 Nov92 c.arch(DEC)
+DEC10k660 6xAXP/B 50/200 4M+8/8 106.5 200.4 184.1 12865 24748 Nov92 c.arch
+DG 310    88000                               9.7             Feb90 uproc report
+DG 530    88100    33    16/16               18.2             Sep92 SPEC newsltr
+DG 4300   88100    20    16/16   13.1                         Sep92 SPEC newsltr
+DG 4300   88100    25    16/16   17.4                         Sep92 SPEC newsltr
+DG 4600   88100    33    15/15   22.6                         Sep92 SPEC newsltr
+DG 4605   88100    33    64/32   26.1                         Sep92 SPEC newsltr
+DG 4625   88100    33    64/32                     1098       Sep92 SPEC newsltr
+DG 5010   88000                              10.1             Feb90 uproc report
+DG 5225   2x88100  25    64/32                      868   532 May93 c.s.sun.hw
+DG 5240   4x88100  25    64/64                     1591   971 May93 c.s.sun.hw
+DG 6200   88000                              12.7             Feb90 uproc report
+DG 6240   4x88100  25    64/64   20.1              1591       Sep92 SPEC newsltr
+DG 6280   8x88100  25  512+64/64                   3245       Sep92 SPEC newsltr
+HP 340    68030   16.67 256/256               1.6             Oct89 c.arch
+HP 370    68030    33   256/256               3.0             Oct89 c.arch
+HP 705    PA1.1    35   32/64    21.9  33.0  34.6             Nov92 Sunflash
+HP 710    PA1.1    50   32/64    31.6  47.6  49.5             Oct92 c.arch
+HP 715/33 PA1.1    33   64/64    24.2  45.0  45.9             Mar93 c.s.sun.hw
+HP 715/50 PA7100   50   64/64    37.1  71.8  69.0   866  1710 Apr93 Sunflash
+HP 725    PA1.1    50   64/64    37.1  72.8  69.0   866  1710 Apr93 Sunflash
+HP 730    PA1.1    66  128/256   47.8  75.4                   May92 c.s.sun.hw
+HP735/755 PA7100   99  256/256   80.6 149.8 146.8  1832  2950 Nov92 c.arch
+HP 750    PA1.1    66  256/256   48.1  75.0  77.5  1141       Oct92 c.arch
+HP F10    PA1.1    32   32/64    22.0  36.6                   Mar93 SPEC newsltr
+HP [F-I]30 PA1.1   48  256/256   37.8  62.4                   Mar93 SPEC newsltr
+HP [FH]20 PA1.1    48   64/64    33.6  56.1                   Mar93 SPEC newsltr
+HP [GHI]40 PA1.1   64  256/256   50.5  81.6                   Mar93 SPEC newsltr
+HP [HI]50 PA7100   96  256/256   78.2 141.6                   Mar93 SPEC newsltr
+HP 807    PA1.1    32   64/32    20.2                         Sep92 SPEC newsltr
+HP 827/17 PA1.1    48   64/64    31.4                         Sep92 SPEC newsltr
+HP 834    PA1.0    15    128                  9.5             Oct89 c.arch
+HP 867    PA1.1    64  256/256   45.6              1201       Sep92 SPEC newsltr
+HP 870/2  2xPA1.1  50  512/512                     1515       Sep92 SPEC newsltr
+HP 870/3  3xPA1.1  50  512/512                     2051       Sep92 SPEC newsltr
+HP 870/4  4xPA1.1  50  512/512                     2479       Sep92 SPEC newsltr
+HP 877    PA1.1    64  256/256   45.8                         Sep92 SPEC newsltr
+HP 897S   PA7100   96            78.3 141.6        1857  1937 Sep92 SPEC newsltr
+HP 890/1  1xPA1.1  60  2MB/2MB                     1215  1180 Sep92 SPEC newsltr
+HP 890/2  2xPA1.1  60  2MB/2MB                     2253  2360 Sep92 SPEC newsltr
+HP 890/3  3xPA1.1  60  2MB/2MB                     3306  3529 Sep92 SPEC newsltr
+HP 890/4  4xPA1.1  60  2MB/2MB                     4301  4685 Sep92 SPEC newsltr
+HP DN10k  PRISM   18.2  128/64               14.5             Oct89 c.arch
+IBM 220   RSC3308  33     8      16.6  26.1  27.7   377   543 Mar93 c.s.sun.hw
+IBM 320H  PW2532   25    8/64    20.9  39.4  43.4   496   935 Nov92 Sunflash
+IBM 340   PW3332   33    8/32    27.7  51.9  56.6   657  1231 Oct92 c.arch
+IBM 350   PW4132   42    8/32    35.4  74.2  73.7   821  1542 Nov92 DEC AXP anno
+IBM 355   PW41??   42            40.5  81.6         961  1936 Apr93 Sunflash
+IBM 365   PW50??   50    32/32   48.4  97.0        1148  2301 Apr93 Sunflash
+IBM 375   PW62??  62.5   32/32   59.8 118.2        1332  2612 Apr93 Sunflash
+IBM 520H  PW2532   25     8/32   20.9  39.6  43.5         939 May92 c.s.sun.hw
+IBM 530H  PW3364   42     8/64   28.5  64.6  62.2   669  1364 Mar93 c.s.sun.hw
+IBM 550   PW4164   42     8/64   35.4  71.7  75.9   840  1701 May92 c.s.sun.hw
+IBM 560   PW5064   50     8/64   42.0  85.6  89.3   999  2028 Oct92 c.arch
+IBM 580   PW6264  62.5   32/64   59.1 124.8 126.4             Mar93 c.s.sun.hw
+IBM 970   PW5064   50    32/64   47.8 101.0 103.4  1117  2220 Mar93 c.s.sun.hw
+IBM 980   PW6264  62.5   32/64   59.2 124.8 126.3  1404  2960 May92 c.s.sun.hw
+M/120-5   R2000  16.67   64/64               11.2             Oct89 c.arch
+M/2000    R3000    25    64/64               17.6             Jun90 c.arch(MIPS)
+M/RC2030  R2000  16.67   32/32                9.3             Oct89 c.arch
+M/RC3240  R3000                              16.0             Feb90 uproc report
+M/RC3260  R3000    25                        17.3             Feb90 uproc report
+M/Magnum  R4000  50/100   16     36.8  40.0                   Oct92 c.arch
+Moto8608  88100    20    16/16                7.8             Oct89 c.arch
+Moto8612  88000    33                        17.8             Feb90 uproc report
+Moto8864  88100    20    32/32                8.2             Oct89 c.arch
+PowerPC   MC98601  66     32     60    80                     Apr93 c.arch
+SGI Chal  R4400  50/100 1M+16/16 62.4  66.5  72               Apr93 c.arch
+SGI Crim  R4000  50/100  1M+8/8  61.7  63.4  70.4  1383  1459 Oct92 c.arch
+SGI Ind   R3000    33    32/32   22.4  24.2  26.3   531   574 Nov92 Sunflash
+SGI Ind2  R4400  75/150 1M+16/16 90    87                     Apr93 c.bmarks
+SGI IndR4 R4000  50/100  1M+8/8  57.6  60.3  70.2  1366  1430 Mar93 c.s.sun.hw
+SGI IndyP R4000  50/100   8/8    34    35                     Jul93 SGI anno
+SGI IndyS R4000  50/100  1M+8/8  59    61                     Jul93 SGI anno
+SGIChalL 12xR4400 50/100 1M+16/16                 13406 17370 May93 c.s.sun.hw
+SGICL/XL  1xR4400 75/150 1M+16/16                  2090  2291 Jul93 c.arch(Mash)
+SGICL/XL  4xR4400 75/150 1M+16/16                  7701  8928 Jul93 c.arch(Mash)
+SGICL/XL  8xR4400 75/150 1M+16/16                 16189 17062 Jul93 c.arch(Mash)
+SGICL/XL 12xR4400 75/150 1M+16/16                 21162 24937 Jul93 c.arch(Mash)
+SGICL/XL 16xR4400 75/150 1M+16/16                 25632 30142 Jul93 c.arch(Mash)
+SGICL/XL 20xR4400 75/150 1M+16/16                 28238 37807 Jul93 c.arch(Mash)
+SS ELC    SP/FuWe  33      64    18.2  17.9  20.3   432   425 Nov92 Sunflash
+SS IPC    SP/LSI   25      64    13.8  11.1  13.5   327   263 Nov92 Sunflash
+SS LT     SP/Ross  25      64    15.3  13.7  16.7   363   325 Sep92 SPEC newsltr
+SS IPX    SP/FuWe  40      64    21.8  21.5  24.4   517   510 Nov92 Sunflash
+SS SLC    SP/LSI   20      64                 8.6             Nov92 Sunflash
+SS1       SP/LSI   20      64                10               Nov92 Sunflash
+SS1+      SP/LSI   25      64                12               Nov92 Sunflash
+SS2       SP/Ross  40      64    21.8  22.8  25.0   517   541 Oct92 c.arch
+SS2/SPow  SP/Weit 40/80   16/8   32.2  31.1                   Jun93 c.s.sun.anno
+SS10/20   SP/Vik   33    20/16   39.8  46.6                   Nov92 Sunflash
+SS10/30   SP/Vik   36    20/16   45.2  54.0  57.3  1072  1282 Apr93 Cockcroft
+SS10/40   SP/Vik   40    20/16   50.2  60.2        1191  1427 Apr93 Sunflash
+SS10/402  2xSP/Vik 40    20/16                     2112  2378 Apr93 Sunflash
+SS10/41   SP/Vik   40  1M+20/16  53.2  67.8  71.2  1264  1607 Apr93 Cockcroft
+SS10/412  2xSP/Vik 40  1M+20/16                    2411  2854 Apr93 Cockcroft
+SS10/51   SP/Vik   50  1M+20/16  65.2  83.0        1580? 2008?Apr93 Sunflash
+SS10/512  2xSp/Vik 50  1M+20/16                    2950  3744 Apr93 Sunflash
+SS10/52   2xSP/Vik 45  1M+20/16  58.1  71.4                   Nov92 c.arch(Bo)
+SS10/54   4xSP/Vik 45  1M+20/16                    5063  6142 Apr93 Sunflash
+SS10/514  4xSP/Vik 50  1M+20/16                    5643  6731 Jul93 Sunflash
+SClas/LX  SP/Tsu   50     4/2    26.4  21.0         626   498 Nov92 Sunflash
+SS330     SP/Ross  25    128                 11.3             Oct89 c.arch
+SS490     SP/Ross  33    128                 17.6             Feb90 uproc report
+SS600-120 2xSP/Ross 40    64                       1043  1066 Sep92 SPEC newsltr
+SS600-140 4xSP/Ross 40    64                       1847  1930 Sep92 SPEC newsltr
+SC1102    2xSP/Vik 50  1M+20/16                    2730  3681 May93 c.s.sun.hw
+SC1104    4xSP/Vik 50  1M+20/16                    5318  7076 May93 c.s.sun.hw
+SC1108    8xSP/Vik 50  1M+20/16                   10113 12710 May93 c.s.sun.hw
+SC2108    8xSP/Vik 40  1M+20/16                    8047 10600 May93 c.s.sun.hw
+Sol5/801  SP/Ross  33                        16.3             Feb90 uproc report
+Sol6/901  SP/Vik 33 16M+1M+20/16 44.0  52.5                   Dec92 SPEC newsltr
+i386/387  80386/7  33    64+0                 4.3              1992 Intel
+i486DX    80486    25   128+8                 8.7              1990 Intel
+i486DX    80486    33     0+8                11.1              1991 Intel 
+i486DX    80486    50   256+8    30.1  14.0  21.9             Oct92 c.arch
+i486DX2   80486    66   256+8                25.6              1992 Intel
+i486DX2   80486DX2 66    0+8     32.4  16.1                   Sep92 uproc report
+iPentium  Pentium  60  256+8/8   58.3  52.2                   Mar93 comp.arch
+iPentium  Pentium  66  256+8/8   64.5  56.9                   Mar93 comp.arch
+
+

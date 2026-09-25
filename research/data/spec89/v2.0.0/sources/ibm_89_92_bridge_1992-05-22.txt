@@ -1,0 +1,100 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,701f4115a0518a5f
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1992-05-22 12:55:54 PST
+Path: sparky!uunet!edi386!eddjp
+From: eddjp@edi386.huber.com ( Dewey Paciaffi )
+Newsgroups: comp.benchmarks
+Subject: Re: SS 10 performance?
+Message-ID: <203@edi386.huber.com>
+Date: 22 May 92 16:43:06 GMT
+References: <l1jlh7INNhca@almaak.usc.edu> <l1lr63INNbb1@appserv.Eng.Sun.COM>
+Organization: J.M. Huber Corp., Edison, NJ
+Lines: 84
+
+In article <l1lr63INNbb1@appserv.Eng.Sun.COM> jdn@europa.Eng.Sun.COM (Jeff Nisewanger) writes:
+>
+>	In the press release announcing the SPARCstation 10, SMCC gave the
+>Model 41 (40Mhz SuperSPARC) a SPECint92 rating of 52.6. Does anyone know
+>of any other announced or shipping system with a higher SPECint92 rating?
+>I know this beats the fastest HP boxes and it beats the 50MHz IBM machine (560)
+>but I think IBM may have recently announced a faster RS/6000 box.
+
+Faster yes, more SPECin92? Not really. Here's some numbers I picked 
+
+
+=========================================================================
+
+ The following is a summary of current performance ratings.
+
+Benchmark(metric)   220   320H   340   350  520H  530H   550   560   970
+-----------------  ----  -----  ----  ----  ----  ----  ----  ----  ----
+
+SPEC 1(geo mean)
+  SPECmark89       25.9   43.4  56.6  71.4  43.5  59.9  75.9  89.3 100.3
+  SPECint89        17.5   21.8  28.8  36.2  21.8  29.2  36.8  43.8  49.3
+  SPECfp89         33.7   68.8  88.8 112.3  68.9  96.7 123.0 143.5 160.9
+
+SPEC CINT92(geo mean)
+  SPECint92        15.9   20.9  27.7  34.6  20.9  28.2  35.4  42.1  47.1
+
+SPEC CFP92(geo mean)
+  SPECfp92         22.9   39.4  51.9  65.0  39.6  57.5  71.7  85.5  93.6
+
+Linpack(MFLOPS)
+  100x100 Double-P  6.5   11.7  14.8  18.6  11.5  20.2  25.6  30.5  30.7
+  100x100 Single-P  7.6   13.3  17.6  22.0  13.3  19.5  24.4  29.4  29.4
+  1000x1000 TPP    14.0   37.2  49.0  61.4  37.1  55.4  69.7  83.6  83.8
+
+LIVERMORE LOOPS
+  Maximum Rate     15.6  38.7  51.8  64.7   38.7  52.9  66.2  80.9  81.7
+  Average Rate      6.3  12.8  17.1  21.4   12.9  17.5  21.9  27.0  27.1
+  Geometric Mean    5.1   9.3  12.4  15.5    9.3  12.7  15.9  20.1  20.2
+  Harmonic Mean     3.8   6.3   8.4  10.5    6.3   8.6  10.8  14.4  14.5
+  Minimum Rate      0.8   1.3   1.8   2.3    1.3   1.8   2.3   3.5   3.5
+
+SPEC SDM(peak throughput, scripts/hr)
+  sdet              n/a  140.1 184.6 227.4 140.3 188.9 236.2 271.3 326.0
+  kenbus1           n/a     .     .   1479    .     .     .   1899  2238
+
+TPC-A (Informix standalone)
+  TPS               n/a    n/a   n/a   n/a  31.0  42.0  51.0  61.0
+  K$/TPS            n/a    n/a   n/a   n/a  13.9  14.8  13.9  14.2
+
+TPC-A (Client-Server Informix)
+  TPS                                                         72.0 100.9
+  K$/TPS                                                      12.7  12.4
+
+TPC-B
+  TPS                n/a  41.4  56.4  66.9  44.7  52.6  69.2  80.1 110.3
+  K$/TPS             n/a   2.5   2.4   2.2   2.4   2.7   2.9   2.7   2.8
+
+AIM APR II
+   AIMs             16.3  22.6  28.4  36.2  22.4  29.7  36.6  45.3  49.9
+   ULR               147   202   247   281   198   251   319   418   454
+
+NOTES: Values shown above are the results of development-level systems.
+       While these values should be indicative of generally-available
+       systems, no warranties or guarantees are stated or implied by IBM.
+       IBM recommends application-oriented testing for performance
+       prediction and offers the above commonly reported benchmarks only
+       as an initial indicator.  Additional information on these tests
+       are available from your IBM local Branch Office or IBM Authorized
+       Reseller.
+
+       All measurements using AIX 3.2 except the 320H, 530H and 550
+           TPC-B which were measured using AIX 3.1.5.
+       SPEC 1, CINT92, CFP92 and LINPACK are CPU intensive benchmarks.
+       SPEC CINT92 and CFP92 are the newly announced CPU intensive
+            integer and floating point benchmark suites.
+       SPEC SDM is a multi-tasking software development benchmark suite.
+       KENBUS numbers are rounded to the nearest whole number.
+       TPC Benchmark A is a multi-user OLTP benchmark.
+       TPC Benchmark B is a multi-tasking database server benchmark.
+       AIM Benchmarks are multi-tasking UNIX benchmarks.
+
+
+-- 
+Dewey Paciaffi      eddjp@edi386.huber.com
+
+

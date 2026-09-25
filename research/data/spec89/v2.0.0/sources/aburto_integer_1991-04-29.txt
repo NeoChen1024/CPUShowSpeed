@@ -1,0 +1,99 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,cd8b24a68b9a3ee4
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1991-04-29 12:38:58 PST
+Path: gmdzi!unido!mcsun!uunet!wuarchive!zaphod.mps.ohio-state.edu!caen!hellgate.utah.edu!dog.ee.lbl.gov!nosc!marlin!aburto
+From: aburto@marlin.NOSC.MIL (Alfred A. Aburto)
+Newsgroups: comp.benchmarks
+Subject: Re: Which benchmarks are useless?
+Keywords: benchmarks  date  statistical correlation
+Message-ID: <1751@marlin.NOSC.MIL>
+Date: 29 Apr 91 19:38:58 GMT
+References: <15159@helios.TAMU.EDU> <1749@marlin.NOSC.MIL> <2717@spim.mips.COM>
+Distribution: comp.benchmarks
+Organization: Naval Ocean Systems Center, San Diego
+Lines: 81
+
+In article <2717@spim.mips.COM> mash@mips.com (John Mashey) writes:
+
+>I don't have the numbers handy, and am about to go out of town again.
+>However, there are a number of combinations where Dhrystone would predict
+>that machine A is 25% faster than machine B, but on SPEC integer
+achine B is 25% faster than machine A, or equivalent combinations where
+>the prediction is 50% off.  Combinations like this include RS/6000 vs
+>MIPS, or Intel i860 vs MIPS, at appropriate clock rates.  A particular
+>case is RS/6000 Model 320, which SPECints around 16, but Dhrystone (1.1)
+>is around 27.5, versus MIPS Magnum (25Mhz, not the newer 33s), which
+>has SPECint at 19.5, but has a lower Dhrystone than the RS/6000.
+>If I find time, I'll dig out the numbers, but I've seen enough data over
+>the years to have stopped collecting it.  What it said was:
+>	a) Dhrystone ALWAYS gives a higher VAX-mips rating than SPECint.
+>	(except maybe the VAX-11/780 :-)  1.1 is worse (higher) than 2.1,
+>	but 2.1 is high also.  the raio ranges from about 1.1 up to at
+>	least 1.6, maybe even as high as 2X.
+>	b) The Dhrystone:SPECint ratios grossly track with a single
+>	product line, except that small-cache machines of a family look
+>	more better on Dhrystone than on SPECint.
+
+Here are some Dhrystone 1.1 and integer SPEC program comparison results
+I gathered. 
+
+The Dhrystone 1.1 results came from an article by Walter Price of Motorola
+('A Benchmark Tutorial', IEEE MICRO, Oct 1989, page 28).  In the table below
+'D/S' are the Dhrystone(1.1)/Sec results. I used the PEAK Dhrystone 1.1
+results from Price's article for each system in the table. I used the peak
+numbers because I didn't want problems that might happen by posting the
+low numbers. Also the peak numbers were more consistent. That is, people
+tended to report the peak number for both the low AND high Dhrystone results
+in Price's article.  So the low numbers tend to be doo-doo and the high
+numbers more reasonably consistent.
+
+As indicated in the table Dhrystone 1.1 ratio results are greater than the
+Integer SPEC ratio results by 14% to 24% with an average of 21% greater.
+This is pretty much as you indicated, but I didn't find any really abnormal
+results (probably due to a lack of enough data). Dhrystone 2.1 results
+would be useful too, but I don't have a data-base .....
+
+An interesting result are the correlation coefficients across the various
+systems. The Dhrystone 1.1 ratios correlate rather well (0.90 to 0.99)
+with all 4 SPECratios and the SPECint (Geometric mean of SPECratio results).
+What this indicates, relative to the results in the table below, is that
+Dhrystone 1.1 predicts RELATIVE PERFORMANCE across the 10 systems examined
+just as well as GCC, espresso, li, eqntott, and SPECint.  The correlation
+in performance prediction between these various programs is quite strong
+despite the fact that they are all really quite different programs with
+different instruction mixes. I suppose this makes some sense though
+because a CPUs performance (relative to other CPUs) is generally improved 
+not for a few instructions but for all instructions. This would tend to
+make the correlation of performance ratios somewhat (there are no absolutes)
+independent of the instruction mix and thus the type of program.
+
+                            Dhrystone 1.1       SPECratio         SPECint
+                            -------------  ---------------------- -------
+System                MHz     D/S  Ratio    GCC   ESP    LI   EQN
+DEC VAX 11/780        5.00   1870   1.0     1.0   1.0   1.0   1.0     1.0
+HP 9000/340          16.67   6536   3.5     3.1   2.3   3.3   2.2     2.7
+Sun 4/260            16.67  19900  10.6     9.9   7.8   9.1   8.3     8.7
+Sun SPARCstation 1   20.00  22049  11.8    10.7   8.9   9.0   9.7     9.5
+HP 9000/834          15.00  23441  12.5    10.2   8.9  11.7  10.1    10.2
+MIPS RC2030          16.67  31200  16.7     8.6  11.8  14.2  11.5    11.3
+DECstation 3100      16.67  26600  14.2    10.9  12.0  13.1  11.2    11.8
+HP Apollo 10000      18.20  27000  14.4    12.8  12.9  11.1  11.1    11.9
+SPARCstation 330     25.00  27777  14.9    13.8  11.6  11.2  12.6    12.3
+MIPS M/120-5         16.67  31000  16.6    12.5  12.2  15.4  12.0    13.0
+MIPS M/2000          25.00  47400  25.3    19.0  18.3  23.8  18.4    19.8
+-------------------------------------------------------------------------
+Arithmetic Mean                    14.1    11.1  10.7  12.2  10.7    11.1
+Standard Deviation                  5.2     3.8   3.9   5.0   3.8     4.0
+Correlation Coef WRT Dhry ratio    ----    0.90  0.98  0.98  0.98    0.99
+Correlation Coef WRT GCC  ratio            ----  0.92  0.85  0.95    ----
+Correlation Coef WRT ESP  ratio                  ----  0.93  0.98    ----
+Correlation Coef WRT LI   ratio                        ----  0.94    ----
+
+Percent 'Error' by Dhrystone       ----    21.3  24.1  13.5  24.1    ----
+Relative to SPEC Integer Programs.
+
+Al Aburto
+aburto@marlin.nosc.mil
+
+

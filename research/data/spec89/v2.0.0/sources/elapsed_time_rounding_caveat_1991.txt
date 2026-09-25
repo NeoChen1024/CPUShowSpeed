@@ -1,0 +1,61 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,cd4297a918c5feb2,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1991-01-20 05:17:16 PST
+Path: gmdzi!unido!fauern!ira.uka.de!sol.ctr.columbia.edu!spool2.mu.edu!samsung!zaphod.mps.ohio-state.edu!mips!kochab!rnovak
+From: rnovak@mips.COM (Robert E. Novak)
+Newsgroups: comp.benchmarks
+Subject: Re: SPEC results
+Message-ID: <45070@mips.mips.COM>
+Date: 20 Jan 91 21:43:17 GMT
+References: <1991Jan18.191135.1135@cs.utk.edu>
+Sender: news@mips.COM
+Reply-To: rnovak@mips.COM (Robert E. Novak)
+Organization: MIPS Computer Systems, Sunnyvale, CA
+Lines: 43
+
+In article <1991Jan18.191135.1135@cs.utk.edu> de5@ornl.gov writes:
+>Here's the latest compilation of SPEC results.  Send additions,
+>corrections, and comments to me at de5@ornl.gov.
+>
+>How does one compute a geometric mean?  How *exactly* is the SPECmark
+>computed?  This table shows elapsed time in seconds for each of the
+>ten programs.  Would SPECratios be preferable?  E.g., which is better:
+>the 83 second GCC figure, or the 17.3 GCC SPECratio?  I'm not sure how
+>easy it would be to fit the ratios in 80 columns.
+>
+>Disclaimer: This information is provided as a public service.  It is
+>unofficial, incomplete, and may even have a typo or two.  For complete
+>SPEC benchmark results, contact:
+>
+>        Systems Performance Evaluation Cooperative (SPEC)
+>        c/o Waterside Associates
+>        39138 Fremont Blvd.
+>        Fremont, CA  94538
+>        415/792-3334
+
+1) Geometric Mean is the Nth root of the product of N terms.  E.G.
+	GM(3,4,5,6) =  4.355877174693  = 4th root of 360
+
+2) It is always best to publish elapsed times.  The rules for computing 
+	a SPECmark require that you carry at least 4 decimal places in the
+	SPECratio (even though only 1 decimal place is published), in order to
+	guarantee accurate results.
+
+3) To publish accurate SPECmarks, you need to compute the SPECratios
+	against the VAX reference times.  Once again, the VAX times are carried
+	to 1 decimal place in the spreadsheets which publish the data, even
+	though no decimal places are shown in the SPEC newsletter publication.
+	I will post a copy of the VAX reference times the next time that I am
+	at my desk.
+
+4) Due to the way in which some of the data in the prior posting was
+	developed (e.g. derived from published SPECratios), be sure to treat
+	them only as approximate.  The actual numbers will vary by +/- 0.2.
+	The ultimate authority is always the SPEC newsletter.
+-- 
+Robert E. Novak                     Mail Stop 5-10, MIPS Computer Systems, Inc.
+{ames,decwrl,pyramid}!mips!rnovak      950 DeGuigne Drive, Sunnyvale, CA  94086
+rnovak@mips.COM        (rnovak%mips.COM@ames.arc.nasa.gov)      +1 408 524-7183
+
+

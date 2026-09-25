@@ -1,0 +1,204 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,29851ee56d12643f,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1991-10-04 13:52:47 PST
+Path: gmdzi!unido!mcsun!uunet!zaphod.mps.ohio-state.edu!mips!rnovak
+From: rnovak@mips.com (Robert E. Novak)
+Newsgroups: comp.benchmarks
+Subject: Simulated SPEC results for R4000
+Summary: R4000 Simulations from 10/1/91 announcement
+Keywords: SPEC Release 1.2b simulation R4000 Cache Primary Secondary Refill
+Message-ID: <9330@spim.mips.COM>
+Date: 4 Oct 91 01:59:18 GMT
+Sender: news@mips.COM
+Organization: MIPS Computer Systems, Sunnyvale, California
+Lines: 184
+Nntp-Posting-Host: kochab.mips.com
+Originator: rnovak@kochab.mips.com
+
+I realize that the following is somewhat borderline.  It is my hope that by
+providing a full disclosure rather than a single number, that you are able
+to understand some of the variables that have left MIPS uneasy about SPEC's
+approval of publication of simulated results.  We have attempted to
+document all of our assumptions that were made in the simulations.
+
+The following R4000 results are based on simulations using the R4000 cache
+simulator.  These numbers remain as preliminary estimated values until the
+benchmarks are run on an R4000-based system.  The SPEC benchmarks suite,
+release 1.2b is used for this analysis.  The numbers will be updated as new
+revisions of the simulation model are available.
+
+Simulations were done with a compiler under development (pre-alpha 3.10).
+The compiler options used were -mips2, -Gnum and -O3.  Other options used
+in some of the programs are:
+
+	020.nasa7:	-ddopt -inline_to 1 -nonIEEEfp
+	013.spice2g6:	-noinline
+	047.tomcatv:	-ddopt -nonIEEEfp
+	030.matrix300:	-ddopt -inline_to 3
+	023.eqntott:	-Wb, -xbb
+	042.fpppp:	-O2
+
+Using the same simulation methodology, the R3000 simulation data is
+approximately 3%-5% conservative compared to results from the actual
+machine.  However, until the Cache4000 model is compared to actual silicon,
+it is unknown whether these results are accurate.
+
+The SPEC benchmark suite has I/O routine calls that cannot be simulated
+accurately on the cache simulator, especially for GCC.  I/O time estimates
+extracted from RC6260 systems are added to the simulated user time to
+arrive at a more accurate total time.
+
+The following sections tabulate 4 sets of results for 4 different processor
+configurations:
+
+	1) R4000SC model1 (50 MHz R4000 with 4MB secondary Cache)
+	2) R4000PC model1 (50 MHz R4000 with primary cache only)
+	3) R4000SC model2 (50 MHz R4000 with 1 MB secondary Cache)
+	4) R4000PC model2 (50 MHz R4000 with primary cache, different
+	   refill model)
+
+The original of this report was done by I. Lui in the Technology
+Performance Group Marketing organization, based on extensive simulations
+done by MIPS Engineering.
+
+Note that all of this data is based on MIPS products only.  MIPS did not
+use any outside pre-processors for compilation.
+
+MIPS has chosen to use a Geometric Mean of 60 as a conservatively rounded
+figure for R4000 processors with Secondary Cache.
+
+MIPS has chosen to use a Geometric Mean of 40 as a conservatively rounded
+figure for R4000 processors with only Primary Cache.
+Simulated SPEC Results (** Not official SPEC Results)
+
+R4000SC model1(50MHz R4000 with secondary cache):
+
+8KB of primary instruction cache, 8KB of primary data cache,
+	4 word refill for primary instruction cache,
+	4 word refill for secondary instruction cache,
+4MB secondary cache configured as joint instruction and data caches,
+	16 word refill for secondary cache,
+	15ns secondary cache SRAMs (minimum seondary cache access time)
+Assume main memory is large enough that there are no paging effects (e.g.,
+main memory > 16 MB)
+	180ns main memory latency to the first word,
+	2 doublewords (128 bits) per 60ns as the memory data pattern
+	40ns DRAM precharge time
+
+Benchmark	Sim. Time	Sim. SPEC Ratio
+
+001.gcc1.35	32.2		46.0
+008.espresso	42.0		53.9
+013.spice2g6	565.3		42.4
+015.doduc	37.8		49.4
+020.nasa7	362.1		55.5
+022.li		94.1		66.0
+023.eqntott	20.4		54.1
+030.matrix300	16.3		277.8
+042.fppp	55.6		54.7
+047.tomcatv	45.4		58.4
+
+Geometric Mean of SPEC Ratios	62.5
+Geometric Mean of SPEC Integer	54.5
+Geometric Mean of SPEC FP	68.5
+
+Simulated SPEC Results (** Not official SPEC Results)
+
+R4000PC model1(50MHz R4000 with primary cache only):
+
+8KB of primary instruction cache, 8KB of primary data cache,
+	4 word refill for primary instruction cache,
+	4 word refill for secondary instruction cache,
+Assume main memory is large enough that there are no paging effects (e.g.,
+main memory > 16 MB)
+	180ns main memory latency to the first word,
+	2 doublewords (128 bits) per 60ns as the memory data pattern
+	40ns DRAM precharge time
+
+Benchmark	Sim. Time	Sim. SPEC Ratio
+
+001.gcc1.35	55.9		26.5
+008.espresso	59.2		38.3
+013.spice2g6	886.2		27.0
+015.doduc	56.1		33.2
+020.nasa7	471.4		42.6
+022.li		133.3		46.6
+023.eqntott	21.9		50.2
+030.matrix300	25.5		177.2
+042.fppp	112.0		27.1
+047.tomcatv	71.1		37.3
+
+Geometric Mean of SPEC Ratios	42.0
+Geometric Mean of SPEC Integer	39.3
+Geometric Mean of SPEC FP	44.0
+
+Simulated SPEC Results (** Not official SPEC Results)
+
+R4000SC model2(50MHz R4000 with secondary cache):
+
+8KB of primary instruction cache, 8KB of primary data cache,
+	4 word refill for primary instruction cache,
+	4 word refill for secondary instruction cache,
+1MB secondary cache configured as joint instruction and data caches,
+	16 word refill for secondary cache,
+	15ns secondary cache SRAMs (minimum seondary cache access time)
+Assume main memory is large enough that there are no paging effects (e.g.,
+main memory > 16 MB)
+	180ns main memory latency to the first word,
+	2 doublewords (128 bits) per 60ns as the memory data pattern
+	40ns DRAM precharge time
+
+Benchmark	Sim. Time	Sim. SPEC Ratio
+
+001.gcc1.35	34.2		43.4
+008.espresso	42.4		53.5
+013.spice2g6	610.5		39.2
+015.doduc	38.8		48.0
+020.nasa7	429.0		46.8
+022.li		93.1		66.7
+023.eqntott	20.6		53.5
+030.matrix300	16.4		276.7
+042.fppp	54.9		55.3
+047.tomcatv	45.7		58.0
+
+Geometric Mean of SPEC Ratios	60.4
+Geometric Mean of SPEC Integer	53.6
+Geometric Mean of SPEC FP	65.4
+
+Simulated SPEC Results (** Not official SPEC Results)
+
+R4000PC model2(50MHz R4000 with primary cache only):
+
+8KB of primary instruction cache, 8KB of primary data cache,
+	8 word refill for primary instruction cache,
+	4 word refill for secondary instruction cache,
+Assume main memory is large enough that there are no paging effects (e.g.,
+main memory > 16 MB)
+	180ns main memory latency to the first word,
+	2 doublewords (128 bits) per 60ns as the memory data pattern
+	40ns DRAM precharge time
+
+Benchmark	Sim. Time	Sim. SPEC Ratio
+
+001.gcc1.35	52.6		28.2
+008.espresso	58.2		39.0
+013.spice2g6	854.1		28.0
+015.doduc	51.5		36.2
+020.nasa7	465.0		43.2
+022.li		136.9		45.3
+023.eqntott	22.0		50.1
+030.matrix300	25.5		177.3
+042.fppp	84.0		36.2
+047.tomcatv	71.0		37.3
+
+Geometric Mean of SPEC Ratios	43.8
+Geometric Mean of SPEC Integer	39.8
+Geometric Mean of SPEC FP	46.8
+
+-- 
+Robert E. Novak                     Mail Stop 5-10, MIPS Computer Systems, Inc.
+{ames,decwrl,pyramid}!mips!rnovak      950 DeGuigne Drive, Sunnyvale, CA  94086
+rnovak@mips.COM        (rnovak%mips.COM@ames.arc.nasa.gov)      +1 408 524-7183
+
+

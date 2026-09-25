@@ -1,0 +1,267 @@
+{
+  "as_of": "2026-09-26",
+  "all_passed": true,
+  "checks": [
+    {
+      "check": "observation_count",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "published_scores_unchanged",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "component_count",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "component_foreign_keys",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "positive_components",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "component_values_unchanged",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "bridge_foreign_keys_and_scores",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "known_source_ids",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "quarantine_applied",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "no_missing_reported_score_filled",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "all_dimarco_rows_linked",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique_source_ids",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-030038",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-031695",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-031582",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-030752",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-030750",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-031255",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-030479",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-029850",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-031738",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-032054",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-030358",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-030393",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-030224",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-028381",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-028289",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-028116",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-027960",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-027900",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-027743",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-027591",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-027200",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-026961",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-026631",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-026248",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-025564",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-025521",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-025250",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-025167",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-025077",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-025001",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-024032",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-001669",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.archives-014687",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.archives-011526",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-027879",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-031886",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_sha256:comp.benchmarks-031246",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_paths_exist",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "source_line_bounds",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "all_37_messages_reextracted_from_uploaded_mbox_zips",
+      "passed": true,
+      "detail": "Both envelope_record_sha256 and eml_sha256 verified via recover_sources.py."
+    }
+  ],
+  "scope": "Input integration, numeric preservation, IDs, lineage, component completeness, source file checksums. Not a new verification of original web/PDF sources."
+}

@@ -1,0 +1,101 @@
+X-Google-Language: ENGLISH,ASCII-7-bit
+X-Google-Thread: f57db,fe4827692ad46af5,start
+X-Google-Attributes: gidf57db,public
+X-Google-ArrivalTime: 1992-06-28 04:02:52 PST
+Newsgroups: comp.benchmarks
+Path: sparky!uunet!cs.utexas.edu!sdd.hp.com!ux1.cso.uiuc.edu!news.cso.uiuc.edu!ux2.cso.uiuc.edu!ejk
+From: ejk@ux2.cso.uiuc.edu (Ed Kubaitis - CCSO)
+Subject: More Convex C2 Benchmarks
+Message-ID: <BqK69o.5zI@news.cso.uiuc.edu>
+Sender: usenet@news.cso.uiuc.edu (Net Noise owner)
+Organization: University of Illinois - Urbana
+Date: Sun, 28 Jun 1992 13:46:35 GMT
+Lines: 85
+
+Here is a an updated list of partial results for SPEC CPU benchmarks 
+run on a Convex C240. The list now includes results from the SPEC CFP92 
+and CINT92 benchmark suites.
+
+Since we were only interested in approximate SPEC metrics for the C2, we 
+didn't shut our (busy) system down to single user mode to get accurate
+elapsed time measurements. Instead, we used reported CPU time rather
+than elapsed time as required by the SPEC reporting rules. 
+
+  --> THUS THE NUMBERS REPORTED BELOW ARE *NOT* SPECratio, 
+  --> SPECfp92, SPECint92, SPECfp89, SPECint89, SPECmark89.
+
+However, since I/O is such a small component of the SPEC suite, we believe 
+that the "Approximate Vax Equivalents" reported below are a good first 
+order approximation of what the corresponding SPEC metrics would be. 
+
+Note that the results reflect the performance of a single C2 processor.
+
+----------------------------------
+Ed Kubaitis (ejk@ux2.cso.uiuc.edu)
+Computing & Communications Services Office - University of Illinois, Urbana
+
+===============================================================================
+Convex C240 - Partial SPEC CPU Benchmark Results - June 1992
+
+System
+==============================================================================
+Convex C240 512 MB memory - multi-user mode (~20 to 30 users logged in)
+OS:9.1   cc:4.1   fc:6.1   gcc:1.39
+==============================================================================
+
+CFP92
+===============================================================================
+Benchmark----  Type  Flags-  CPU---  Apx-Vax-Eqv
+013.spice2g6    dp   fc -O2  1845.6     13.0
+015.doduc       dp   fc -O2   107.9     17.2
+034.mdljdp2     dp   fc -O2   263.0     27.0
+039.wave5       dp   fc -O2   163.9     22.6
+047.tomcatv     dp   fc -O2    30.7     86.3
+048.ora         dp   fc -O2   216.2     34.3
+052.alvinn      sp   cc -O2   517.9     14.8
+056.ear         sp   cc -O2  1132.3     22.5
+077.mdljsp2     sp   fc -O2   268.5     12.5
+078.swm256      sp   fc -O2   178.1     71.3
+089.su2cor      dp   fc -O2   105.7    122.0
+090.hydro2d     dp   fc -O2   127.1    107.8
+093.nasa7       dp   fc -O2   244.4     68.7
+094.fpppp       dp   fc -O2   582.3     15.8
+
+Geometric mean                          32.9
+===============================================================================
+
+CINT92
+===============================================================================
+Benchmark----  Type  Flags-  CPU---  Apx-Vax-Eqv
+008.espresso    int  cc -O2   260.5      8.7
+022.li          int  cc -O2   522.1     11.9
+023.eqntott     int  cc -O2   169.2      6.5
+026.compress    int  cc -O2   259.6     10.7
+072.sc          int  cc -O2   522.7      8.7
+085.gcc         int       -       -        -  (not run)
+
+Geometric mean (excluding gcc)           9.1
+===============================================================================
+
+SPEC1.2B (SPEC89)
+==============================================================================
+Benchmark----  Type  Flags-  CPU---  Apx-Vax-Eqv
+013.spice2g6    fp   fc -O2  1825.8     13.1
+015.doduc       fp   fc -O2   108.1     17.2
+020.nasa7       fp   fc -O2   253.7     79.2
+030.matrix300   fp   fc -O2    33.4    135.5
+042.fpppp       fp   fc -O2   183.2     16.6
+047.tomcatv     fp   fc -O2    31.9     83.0
+001.gcc1.35     int  gcc -O   105.1     14.1
+008.espresso    int  cc -O2   252.2      9.0
+022.li          int  cc -O2   497.9     12.5
+023.eqntott     int  cc -O2   170.7      6.5
+
+Geometric mean of fp codes              38.7
+Geometric mean of integer codes         10.1
+Geometric mean of all 10 codes          22.6
+===============================================================================
+
+
+
+
