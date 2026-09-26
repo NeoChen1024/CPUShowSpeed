@@ -12,6 +12,8 @@ defines provenance and date handling.
 - [SPEC CPU92–CPU2026 integer-rate fitting](spec95-spec2026-rate-fitting.md):
   five adjacent throughput fits, source-linked scatterplots, CPU92 VAX
   reference, and exploratory chain.
+- [Annual integer-rate VAXen view](annual-rate-vaxen.md): yearly source-linked
+  highest submissions and full submission distributions.
 - [SPEC92 rate archive expansion](spec92-archive-expansion.md): 274 Netlib
   integer-rate reports and 1992 manufacturer-reported observations.
 - [Early SPEC archive locations](spec-early-archives.md): provenance and

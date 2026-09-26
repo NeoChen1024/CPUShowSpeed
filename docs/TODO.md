@@ -11,9 +11,10 @@ owning document as work lands; remove superseded items.
       seek independent nonadjacent or three-suite overlaps for a cycle check.
 - [ ] Quantify the uncertainty of the full CPU92→CPU2026 rate chain before
       treating its VAXen figures as an annual performance index.
-- [ ] Build an annual **rate-only** machine timeline using source-checked
-      hardware availability dates and the current fit, keeping base/peak and
-      reported/estimated scores separate.
+- [ ] Review annual rate leaders against their detailed disclosures, including
+      copy counts, clusters, unusual configuration dates, and source-year
+      coverage. Compare systematic date-quality rules in a separate sensitivity
+      view before adopting one for publication.
 - [ ] Search original early SPEC newsletters for additional CPU92 rate
       disclosures, especially before the 1993 Netlib coverage; keep the 1992
       Digital manufacturer brief separate from official submissions.

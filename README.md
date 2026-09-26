@@ -17,6 +17,7 @@ not an implemented benchmark result.
 
 - [Documentation index](docs/README.md): scope, data interpretation and acquisition.
 - [Rate fitting audit](research/spec95-spec2026-rate-fitting.md): current CPU92–CPU2026 factors, sources and limits.
+- [Annual rate figure](research/annual-rate-vaxen.md): source-linked yearly highest submissions and distributions.
 - [SPEC collection](docs/spec-collection.md): implemented rate collection and fitting commands.
 - [Research index](research/README.md): checked findings and preserved source archives.
 - [Roadmap](docs/TODO.md): work that remains unverified or unimplemented.

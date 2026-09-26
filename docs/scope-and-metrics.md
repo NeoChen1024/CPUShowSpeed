@@ -24,8 +24,10 @@ cores, threads or measured runtime workers. Keep base and peak results
 separate. A system's introduction, test and publication dates are different
 events; the [data contract](data-contract.md) defines how to preserve them.
 
-An annual rate-based timeline has **not** been implemented. Generated figures
-from the earlier speed exploration do not represent this rate series.
+A first [annual integer-rate view](../research/annual-rate-vaxen.md) now groups
+all positive dated submissions by their **reported configuration hardware
+availability** and shows the highest score per year plus the submission
+distribution. Its frontier is exploratory and not a model-launch history.
 
 ## Historical extension
 

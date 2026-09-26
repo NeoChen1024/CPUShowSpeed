@@ -73,3 +73,18 @@ VAX or a validated general conversion.
 
 The preserved SPEC89 source snapshot and historical documents are archival
 material. They do not enter these rate commands.
+
+## Annual integer-rate view
+
+```sh
+./.venv/bin/cpushowspeed plot annual-rate
+```
+
+This uses the current hash-checked CPU92 records, official bulk exports, and
+tracked rate factors. It writes complete per-submission and undated CSVs plus
+PNG/SVG/HTML figures to `data/derived/figures/annual-rate/`; the compact
+[annual leaders](../research/data/spec/annual-rate-leaders.csv) and
+[statistics](../research/data/spec/annual-rate-statistics.csv) are tracked as
+research results. All positive scores with a parseable reported hardware month
+enter their year; no individual launch-date exclusion is applied. See the
+[interpretation and limits](../research/annual-rate-vaxen.md).

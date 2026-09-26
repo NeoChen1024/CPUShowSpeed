@@ -1,6 +1,7 @@
 """Command-line entry point for CPUShowSpeed."""
 
 import click
+from cpushowspeed.annual_rate import plot
 from cpushowspeed.bridge import bridge
 from cpushowspeed.caption import caption_command
 from cpushowspeed.documents import documents
@@ -20,6 +21,7 @@ spec.add_command(legacy92_rate_parse_command)
 cli.add_command(spec)
 cli.add_command(spec89)
 cli.add_command(bridge)
+cli.add_command(plot)
 documents.add_command(ocr_command)
 documents.add_command(caption_command)
 cli.add_command(documents)
