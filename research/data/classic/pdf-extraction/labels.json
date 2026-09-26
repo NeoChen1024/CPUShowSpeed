@@ -1,0 +1,19 @@
+{
+  "UNPACK 100x100 dp": "LINPACK 100x100 dp",
+  "UNPACK 1000x1000 dp": "LINPACK 1000x1000 dp",
+  "Al M Pert Rating": "AIM Perf Rating",
+  "Al M Max User Load": "AIM Max User Load",
+  "Whetstone KWI PS sp": "Whetstone KWIPS sp",
+  "AIM Pert Rating": "AIM Perf Rating",
+  "Al M Max Throughput": "AIM Max Throughput",
+  "X11 pert Kvectors/sec": "X11 perf Kvectors/sec",
+  "X11 pert Mpixels/sec": "X11 perf Mpixels/sec",
+  "SPEC SOM SOET S": "SPEC SDM SDET S",
+  "SPEC SOM SOET W": "SPEC SDM SDET W",
+  "SPEC SOM KENBUS1 S": "SPEC SDM KENBUS1 S",
+  "SPEC SOM KENBUS1 W": "SPEC SDM KENBUS1 W",
+  "Ohrystone 1.1 instr/sec": "Dhrystone 1.1 instr/sec",
+  "Ohrystone 2.1 instr/sec": "Dhrystone 2.1 instr/sec",
+  "ON&R Labs MVUPs": "DN&R Labs MVUPs",
+  "Whetstone KWI PS dp": "Whetstone KWIPS dp"
+}

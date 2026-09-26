@@ -1,0 +1,869 @@
+[
+  {
+    "source_id": "dec-n3909-1994",
+    "table_id": "section7-p25",
+    "pdf_page": 25,
+    "printed_page": "26",
+    "orientation": "metrics_as_rows",
+    "label_cut": 46,
+    "column_ends": [
+      59,
+      75,
+      91,
+      102,
+      118,
+      134,
+      150,
+      160
+    ],
+    "columns": [
+      {
+        "machine": "AlphaServer 1000 4/200",
+        "os": "OSF"
+      },
+      {
+        "machine": "AlphaServer 2000 4/200",
+        "os": "OSF"
+      },
+      {
+        "machine": "AlphaServer 2100 4/275",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 7000/700",
+        "os": "OSF"
+      },
+      {
+        "machine": "AlphaServer 1000 4/200",
+        "os": "VMS"
+      },
+      {
+        "machine": "AlphaServer 2000 4/200",
+        "os": "VMS"
+      },
+      {
+        "machine": "AlphaServer 2100 4/275",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 7000/700",
+        "os": "VMS"
+      }
+    ],
+    "start_line": 9,
+    "end_line": 65,
+    "expected_rows": 27
+  },
+  {
+    "source_id": "dec-n3909-1994",
+    "table_id": "section7-p26",
+    "pdf_page": 26,
+    "printed_page": "27",
+    "orientation": "metrics_as_rows",
+    "label_cut": 40,
+    "column_ends": [
+      54,
+      71,
+      89,
+      98,
+      110,
+      126,
+      143,
+      159,
+      168,
+      177
+    ],
+    "columns": [
+      {
+        "machine": "AlphaStation 200 4/166",
+        "os": "OSF"
+      },
+      {
+        "machine": "AlphaStation 200 4/233",
+        "os": "OSF"
+      },
+      {
+        "machine": "AlphaStation 400 4/233",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/700",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/900",
+        "os": "OSF"
+      },
+      {
+        "machine": "AlphaStation 200 4/166",
+        "os": "VMS"
+      },
+      {
+        "machine": "AlphaStation 200 4/233",
+        "os": "VMS"
+      },
+      {
+        "machine": "AlphaStation 400 4/233",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/700",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/900",
+        "os": "VMS"
+      }
+    ],
+    "start_line": 9,
+    "end_line": 65,
+    "expected_rows": 27
+  },
+  {
+    "source_id": "dec-n3909-1994",
+    "table_id": "section7-p27",
+    "pdf_page": 27,
+    "printed_page": "28",
+    "orientation": "metrics_as_rows",
+    "label_cut": 32,
+    "column_ends": [
+      40,
+      50,
+      59,
+      69,
+      80,
+      97,
+      107,
+      117,
+      127,
+      136,
+      145,
+      154,
+      170,
+      179
+    ],
+    "columns": [
+      {
+        "machine": "DEC 2000/300",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/300LX",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/300X",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/600",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/800",
+        "os": "OSF"
+      },
+      {
+        "machine": "AlphaServer 2100 4/200",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 4000/710",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 2000/300",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/300LX",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/300X",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/600",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/800",
+        "os": "VMS"
+      },
+      {
+        "machine": "AlphaServer 2100 4/200",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 4000/710",
+        "os": "VMS"
+      }
+    ],
+    "start_line": 9,
+    "end_line": 63,
+    "expected_rows": 27
+  },
+  {
+    "source_id": "dec-n3909-1994",
+    "table_id": "section7-p28",
+    "pdf_page": 28,
+    "printed_page": "29",
+    "orientation": "metrics_as_rows",
+    "label_cut": 30,
+    "column_ends": [
+      38,
+      47,
+      56,
+      65,
+      74,
+      83,
+      92,
+      105,
+      115,
+      124,
+      133,
+      142,
+      151,
+      160,
+      170,
+      181
+    ],
+    "columns": [
+      {
+        "machine": "DEC 3000/300L",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/300",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/400",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/500",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/500X",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 4000/610",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 7000/610",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 10000/610",
+        "os": "OSF"
+      },
+      {
+        "machine": "DEC 3000/300L",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/300",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/400",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/500",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 3000/500X",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 4000/610",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 7000/610",
+        "os": "VMS"
+      },
+      {
+        "machine": "DEC 10000/610",
+        "os": "VMS"
+      }
+    ],
+    "start_line": 11,
+    "end_line": 66,
+    "expected_rows": 27
+  },
+  {
+    "source_id": "dec-n3909-1994",
+    "table_id": "section7-p29",
+    "pdf_page": 29,
+    "printed_page": "30",
+    "orientation": "metrics_as_rows",
+    "label_cut": 26,
+    "column_ends": [
+      34,
+      43,
+      52,
+      61,
+      69,
+      78,
+      87,
+      96,
+      109,
+      118,
+      127,
+      136,
+      144,
+      153,
+      164,
+      173,
+      183,
+      193
+    ],
+    "columns": [
+      {
+        "machine": "VAX 3100/80",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 3100/90",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/100A",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/200",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/300",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/400",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/500A",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/600A",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/700A",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 6000/610",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 7000/610",
+        "os": "VMS"
+      },
+      {
+        "machine": "DECsystem 5000/25",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECsystem 5000/33",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECsystem 5100",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECsystem 5000/133",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECsystem 5000/240",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECsystem 5500",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECsystem 5900",
+        "os": "ULTRIX"
+      }
+    ],
+    "start_line": 9,
+    "end_line": 51,
+    "expected_rows": 21
+  },
+  {
+    "source_id": "dec-n3909-1994",
+    "table_id": "section7-p30",
+    "pdf_page": 30,
+    "printed_page": "31",
+    "orientation": "metrics_as_rows",
+    "label_cut": 57,
+    "column_ends": [
+      64,
+      72,
+      82,
+      91,
+      102,
+      112,
+      120,
+      130
+    ],
+    "columns": [
+      {
+        "machine": "VAX 3100/85",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 3100/95",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/105A",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/505A",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 4000/705A",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 6000/410",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 6000/510",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAX 7000/710",
+        "os": "VMS"
+      }
+    ],
+    "start_line": 10,
+    "end_line": 55,
+    "expected_rows": 22
+  },
+  {
+    "source_id": "dec-n3909-1994",
+    "table_id": "section7-p31",
+    "pdf_page": 31,
+    "printed_page": "32",
+    "orientation": "metrics_as_rows",
+    "label_cut": 45,
+    "column_ends": [
+      54,
+      64,
+      73,
+      83,
+      93,
+      107,
+      117,
+      127,
+      137,
+      147,
+      156,
+      166,
+      175,
+      185
+    ],
+    "columns": [
+      {
+        "machine": "VAXstation 3100/38",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAXstation 3100/76",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAXstation 4000 VLC",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAXstation 4000/60",
+        "os": "VMS"
+      },
+      {
+        "machine": "VAXstation 4000/90",
+        "os": "VMS"
+      },
+      {
+        "machine": "DECstation 5000/20",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECstation 5000/25",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECstation 5000/33",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECstation 5000/50",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECstation 5000/125",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECstation 5000/133",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECstation 5000/150",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECstation 5000/240",
+        "os": "ULTRIX"
+      },
+      {
+        "machine": "DECstation 5000/260",
+        "os": "ULTRIX"
+      }
+    ],
+    "start_line": 15,
+    "end_line": 41,
+    "expected_rows": 12
+  },
+  {
+    "source_id": "tomari-hiraki-2011",
+    "table_id": "hardware-p8",
+    "pdf_page": 8,
+    "printed_page": "224",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "cpu",
+      "clock_mhz",
+      "core_count",
+      "memory_mb",
+      "year",
+      "idle_w",
+      "running_w"
+    ],
+    "start_line": 5,
+    "end_line": 52,
+    "expected_rows": 45
+  },
+  {
+    "source_id": "tomari-hiraki-2011",
+    "table_id": "hardware-p9",
+    "pdf_page": 9,
+    "printed_page": "225",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "cpu",
+      "clock_mhz",
+      "core_count",
+      "memory_mb",
+      "year",
+      "idle_w",
+      "running_w"
+    ],
+    "start_line": 3,
+    "end_line": 30,
+    "expected_rows": 25
+  },
+  {
+    "source_id": "tomari-hiraki-2011",
+    "table_id": "results-p9",
+    "pdf_page": 9,
+    "printed_page": "225",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "os",
+      "compiler",
+      "Dhrystone2.1_DMIPS",
+      "NPB_ratio",
+      "CINT2006_reported",
+      "CFP2006_reported"
+    ],
+    "start_line": 33,
+    "end_line": 52,
+    "expected_rows": 17
+  },
+  {
+    "source_id": "tomari-hiraki-2011",
+    "table_id": "results-p10",
+    "pdf_page": 10,
+    "printed_page": "226",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "os",
+      "compiler",
+      "Dhrystone2.1_DMIPS",
+      "NPB_ratio",
+      "CINT2006_reported",
+      "CFP2006_reported"
+    ],
+    "start_line": 3,
+    "end_line": 53,
+    "expected_rows": 47
+  },
+  {
+    "source_id": "tomari-hiraki-2011",
+    "table_id": "results-p11",
+    "pdf_page": 11,
+    "printed_page": "227",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "os",
+      "compiler",
+      "Dhrystone2.1_DMIPS",
+      "NPB_ratio",
+      "CINT2006_reported",
+      "CFP2006_reported"
+    ],
+    "start_line": 3,
+    "end_line": 8,
+    "expected_rows": 6
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table 1",
+    "pdf_page": 10,
+    "printed_page": "4",
+    "orientation": "records_as_rows",
+    "fields": [
+      "program_options",
+      "cpu_time_s",
+      "SSCUPs"
+    ],
+    "start_line": 29,
+    "end_line": 34,
+    "fill_down_first": false,
+    "expected_rows": 6,
+    "table_context": {
+      "machine": "DEC VAX 6420",
+      "cpu_scope": "single processor"
+    }
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table 2",
+    "pdf_page": 11,
+    "printed_page": "5",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "Dhrystone_MIPS_version_unspecified",
+      "LINPACK_DP_MFLOPS_size_not_explicit_in_table",
+      "SPECmark89",
+      "SSCUPs_unoptimized",
+      "SSCUPs_optimized"
+    ],
+    "start_line": 17,
+    "end_line": 29,
+    "fill_down_first": false,
+    "expected_rows": 12,
+    "table_context": {}
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table 3",
+    "pdf_page": 12,
+    "printed_page": "6",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "SSCUPs_standard",
+      "SSCUPs_optimized",
+      "CERN_units",
+      "ratio"
+    ],
+    "start_line": 15,
+    "end_line": 22,
+    "fill_down_first": false,
+    "expected_rows": 8,
+    "table_context": {}
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table 4",
+    "pdf_page": 13,
+    "printed_page": "7",
+    "orientation": "records_as_rows",
+    "fields": [
+      "program",
+      "options",
+      "compile_time_s",
+      "file_size_kBytes",
+      "execution_time_s",
+      "SSCUPs"
+    ],
+    "start_line": 10,
+    "end_line": 26,
+    "fill_down_first": true,
+    "expected_rows": 17,
+    "table_context": {
+      "machine": "SGI 4D/380"
+    }
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table 5",
+    "pdf_page": 14,
+    "printed_page": "8",
+    "orientation": "records_as_rows",
+    "fields": [
+      "program",
+      "options",
+      "compile_time_s",
+      "file_size_kBytes",
+      "execution_time_s",
+      "SSCUPs"
+    ],
+    "start_line": 6,
+    "end_line": 14,
+    "fill_down_first": true,
+    "expected_rows": 9,
+    "table_context": {
+      "machine": "IBM RS6000/530"
+    }
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table 6",
+    "pdf_page": 15,
+    "printed_page": "9",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "options",
+      "LINPACK300_SP_MFLOPS",
+      "LINPACK300_DP_MFLOPS",
+      "DP_SP_time_ratio",
+      "SP_SSCUPs"
+    ],
+    "start_line": 18,
+    "end_line": 23,
+    "fill_down_first": false,
+    "expected_rows": 6,
+    "table_context": {}
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table 7",
+    "pdf_page": 15,
+    "printed_page": "9",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "options",
+      "FOURA_SP_time_s",
+      "FOURA_DP_time_s",
+      "DP_SP_time_ratio",
+      "SP_SSCUPs"
+    ],
+    "start_line": 34,
+    "end_line": 39,
+    "fill_down_first": false,
+    "expected_rows": 6,
+    "table_context": {}
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table B-1",
+    "pdf_page": 30,
+    "printed_page": "24",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "options",
+      "LINPACK300_DP_SP_ratio",
+      "FOURA_DP_SP_ratio",
+      "LINPACK300_DPopt_SPnon_ratio",
+      "FOURA_DPopt_SPnon_ratio"
+    ],
+    "start_line": 28,
+    "end_line": 35,
+    "fill_down_first": false,
+    "expected_rows": 8,
+    "table_context": {}
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table C-1",
+    "pdf_page": 31,
+    "printed_page": "25",
+    "orientation": "records_as_rows",
+    "fields": [
+      "program",
+      "options",
+      "reference_time_expression_s",
+      "execution_time_s",
+      "SSCUPs"
+    ],
+    "start_line": 15,
+    "end_line": 19,
+    "fill_down_first": false,
+    "expected_rows": 5,
+    "table_context": {
+      "machine": "DEC VAX-11/780",
+      "floating_point_option": "F",
+      "memory_mb": 32,
+      "os": "VAX VMS 5.2",
+      "compiler": "FORTRAN 5.1",
+      "additional_options": "/NOCHECK /NODEBUG"
+    }
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table D-1",
+    "pdf_page": 33,
+    "printed_page": "27",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "clock_mhz",
+      "common_cache_kB",
+      "instruction_cache_kB",
+      "data_cache_kB",
+      "path_width_bits"
+    ],
+    "start_line": 13,
+    "end_line": 23,
+    "fill_down_first": false,
+    "expected_rows": 11,
+    "table_context": {}
+  },
+  {
+    "source_id": "sscl-375",
+    "table_id": "Table E-1",
+    "pdf_page": 35,
+    "printed_page": "29",
+    "orientation": "records_as_rows",
+    "fields": [
+      "machine",
+      "CERN_units"
+    ],
+    "start_line": 6,
+    "end_line": 16,
+    "fill_down_first": false,
+    "expected_rows": 11,
+    "table_context": {}
+  }
+]

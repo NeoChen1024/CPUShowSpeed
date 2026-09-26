@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "source_id": "dec-n3909-1994",
+  "pdf_blake3": "d398b4abb22b9761d4ff794ad0be10be7fb49c964f29b8587f2bfeeca8a6ae8d",
+  "decision_date": "2026-09-26",
+  "authority": "explicit_user_research_decision",
+  "whetstone": {
+    "rule_id": "dec-whetstone-printed-kwips-interpreted-mwips",
+    "unit": "MWIPS",
+    "mwips_per_interpreted_unit": 1,
+    "basis": "User correction: interpret numeric values as MWIPS despite the printed KWIPS label. Supersedes literal-KWIPS interpretation; original cells remain unchanged."
+  },
+  "dhrystone": {
+    "rule_id": "dec-dhrystone-omitted-k",
+    "missing_suffix_multiplier": 1000,
+    "dmips_divisor": 1757,
+    "basis": "User visually reviewed omitted K suffixes and judges the bare numbers to share the thousands scale of neighboring cells. This is an interpretation, not an OCR correction."
+  },
+  "revision_history": [
+    {
+      "decision_date": "2026-09-26",
+      "rule": {
+        "rule_id": "dec-whetstone-literal-kwips",
+        "unit": "KWIPS",
+        "mwips_per_kwips": 0.001,
+        "basis": "Use the printed KWIPS label literally; do not reinterpret as MWIPS based on other compilations."
+      },
+      "status": "superseded_by_user_correction"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "target": "CINT2006_reported_raw_not_rate_or_VAXen",
+  "pairs": 28,
+  "models": 28,
+  "status": "exploratory_candidate_cohort",
+  "factor": 0.0018358131511883719,
+  "factor_ci95_low": 0.0016578800314868366,
+  "factor_ci95_high": 0.0020360605351338068,
+  "loo_model_p95_percent": 52.44868628664073,
+  "loo_within_model_p95_max_percent": 53.999588536461744,
+  "loglog_slope_diagnostic": 0.8337186075672675
+}

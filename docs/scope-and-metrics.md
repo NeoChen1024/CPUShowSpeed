@@ -15,8 +15,8 @@ CPU2006, CPU2017 and CPU2026. It fits adjacent suites on matched system
 submissions. The CPU92 rate formula defines the VAX-11/780 one-copy throughput
 reference; later scores receive *estimated* VAX-reference units through the
 matched-suite factors. The chained factors are exploratory because hardware
-and software conditions, architecture mix and full-chain uncertainty still
-require review.
+and software conditions, architecture mix and systematic uncertainty still
+require review. Conditional full-chain bootstrap intervals are implemented.
 
 Do not multiply any single-workload score by processor or core count to make a
 rate result. Copy count is a benchmark run setting, not a synonym for chips,
@@ -38,8 +38,12 @@ instruction mix, memory assumptions and source pages; it is never a
 retroactively executed SPEC submission. Floating-point/scientific capacity
 benchmarks and embedded benchmarks such as CoreMark may become separate
 tracks after their workload, parallelism and reference conventions are
-specified. The preserved SPEC89 archive is a source corpus, not an input to
-the current rate fit.
+specified. The SPEC89 corpus now supports an implemented two-edge peak
+estimate, SPECint89 → SPECint92 → SPEC92 rate-VAXen. Direct classical rate fits
+and joint fits with these estimated targets are implemented; reported and
+inferred targets remain separate. See the [historical track guides](../research/overview.md).
+These extensions do not turn native SPECint89/92 scores into measured rate
+submissions or change the official rate-to-rate chain inputs.
 
 ## Evidence classes
 

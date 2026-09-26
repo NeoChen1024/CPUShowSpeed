@@ -1,44 +1,50 @@
-# Verified research findings
+# Research index
 
-This directory holds source-checked findings and method audits. Preserve the
-original metric, machine configuration, source URL or page, review date, and
-uncertainty. Historical values extracted from PDFs should also enter a
-script-readable [historical observation dataset](data/historical/README.md); Markdown alone is not
-the canonical numeric store. The [data contract](../docs/data-contract.md)
-defines provenance and date handling.
+Start with the [overview](overview.md), then follow the four research tracks.
+The [machine-readable registry](model-registry.json) and [generated catalog](catalog.md)
+record metric identities, datasets, model dependencies and every document's role.
+Reports distinguish measured evidence, derived estimates and proposed work.
 
-## Active rate research
+## Four primary tracks
 
-- [SPEC CPU92–CPU2026 integer-rate fitting](spec95-spec2026-rate-fitting.md):
-  five adjacent throughput fits, source-linked scatterplots, CPU92 VAX
-  reference, and exploratory chain.
-- [Annual integer-rate VAXen view](annual-rate-vaxen.md): yearly source-linked
-  highest submissions and full submission distributions.
-- [SPEC92 rate archive expansion](spec92-archive-expansion.md): 274 Netlib
-  integer-rate reports and 1992 manufacturer-reported observations.
-- [Early SPEC archive locations](spec-early-archives.md): provenance and
-  remaining first-issue gaps.
+| Track | Reading guide | Principal result owner |
+| --- | --- | --- |
+| VAXen reference | [Unit and value types](tracks/vaxen.md) | [Methods](../docs/methods.md#vax-throughput-convention) |
+| SPEC92–2026 integer rate | [Modern chain](tracks/spec-rate.md) | [Rate calibration](spec95-spec2026-rate-fitting.md), [annual results](annual-rate-vaxen.md) |
+| SPEC89 scavenging | [Recovery and bridge](tracks/spec89.md) | [Two-edge bridge and joint fits](spec89-rate-bridge.md) |
+| Classical benchmarks | [Pre-SPEC extension](tracks/classical.md) | [Direct rate composites](classic-rate-composite-fitting.md), [indirect/joint experiment](spec89-rate-bridge.md) |
 
-## Preserved historical evidence
+## Source evidence
 
-- [Classic benchmark acquisition](classic-benchmark-collection.md): Longbottom
-  snapshots, independently sourced workload families and acquisition lineage.
-- [Classical / SPEC89-92 hardware overlap](classic-spec-overlap.md): first
-  model-candidate counts and source-linked review outputs, without score fitting.
+- SPEC: [early archives](spec-early-archives.md), [CPU92 rate expansion](spec92-archive-expansion.md),
+  [SPEC89 snapshot](spec89-curated-snapshot.md), [Helman supplement](spec89-helman-worksheet.md),
+  [hardware dates](spec89-hardware-years.md), [89/92 paired-score review](spec89-cpu92-scatter.md).
+- Classical: [source acquisition](classic-benchmark-collection.md),
+  [prior work](classic-spec-literature.md), [DEC/SSCL/Tomari tables](classic-pdf-extraction.md),
+  [initial hardware overlaps](classic-spec-overlap.md).
+- Earlier reconstruction: [mix/timing observations](early-benchmark-evidence.md),
+  [OCR sample checks](chandra-timesharing-sample.md), [historical data contract](data/historical/README.md).
 
-- [First local early-benchmark evidence pass](early-benchmark-evidence.md):
-  source-checked Honeywell Gibson ratings, original PDP-8 timing inputs and
-  the analytical evidence boundary of the DEC programming-benchmark memo.
+## Controls and diagnostics
 
-The [curated SPEC89 source package](data/spec89/v2.0.0/README.md),
-[Helman worksheet supplement](spec89-helman-worksheet.md), and
-[source-checked hardware-date catalog](spec89-hardware-years.md) remain as
-archival research. They are excluded from the active rate fitting pipeline.
-The [machine watchlist](../docs/machine-watchlist.md) and
-[document extraction policy](../docs/document-extraction.md) guide older
-hardware work. The [Chandra OCR sample audit](chandra-timesharing-sample.md)
-records checks of page figures and tables.
+- [Source-column experiments](classic-source-pair-fitting.md) and
+  [source/OS diagnostics](classic-source-diagnostics.md) document matching,
+  unit interpretation and environment differences.
+- [Environment-model closeout](classic-environment-models.md): grouped/shrinkage
+  methods remain diagnostics; primary composites do not apply these corrections.
+- [Native SPEC89/92 pooling](classic-pooled-fitting.md): auxiliary comparison
+  on a speed-score scale, not a substitute for rate calibration.
+- Earlier [single-score](classic-spec92-fitting.md), [pair](classic-pair-fitting.md),
+  [triple-fit](classic-composite-fitting.md), and [triple-coverage](classic-composite-overlap.md)
+  studies remain available for their narrower cohorts and methodological checks.
 
-Keep bulk OCR and temporary debugging transcripts out of research notes. A
-reported benchmark, manual reconstruction and normalized estimate must remain
-separately identified.
+## Historical analyses and storage
+
+[Archive index](archive/README.md) identifies retired speed-era analyses and
+commands. Their files stay at stable paths. SPEC89 source evidence is actively
+reused by the historical bridge; the original modern speed pipeline remains retired.
+
+[Classic snapshots](data/classic/README.md) and [historical observations](data/historical/README.md)
+are machine-readable evidence/results. Large raw documents, DocIR, derived tuples
+and figures remain outside Git. Original values, citations and qualifications
+must survive every conversion; Markdown is not the sole numerical data store.

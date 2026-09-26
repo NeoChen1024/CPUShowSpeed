@@ -1,45 +1,88 @@
 # CPUShowSpeed
+## 60 Years of CPU Benchmarks
 
-CPUShowSpeed studies **whole-machine throughput** across generations of
-benchmark results. Its current quantitative series uses SPEC integer **rate**
-submissions from CPU92 through CPU2026 and reports an exploratory scale
-relative to the VAX-11/780's CPU92 rate reference. A rate score describes the
-published machine configuration and concurrent benchmark copies. Cross-suite
-values are estimates, with original scores and sources retained.
+CPUShowSpeed studies historical computer performance on a common **VAXen**
+scale. The main target is whole-machine integer throughput. Published benchmark
+results, inferred scores and manual reconstructions remain distinguishable.
+The subtitle describes the research horizon; a complete sixty-year series has
+not yet been established.
 
-The project also preserves source-checked historical documents and a curated
-SPEC89 research archive. Those materials are archival evidence; the previous
-integer-speed fits and annual speed figures are outside the active analysis.
-Earlier-machine throughput reconstruction from manuals remains research work,
-not an implemented benchmark result.
+## The unit: 1 VAX
 
-## Start here
+**1 VAX is the VAX-11/780 reference throughput under the SPEC CPU92 integer-rate
+convention.** Its reference rate score is `604800 / 25500 ≈ 23.717647`, so:
 
-- [Documentation index](docs/README.md): scope, data interpretation and acquisition.
-- [Rate fitting audit](research/spec95-spec2026-rate-fitting.md): current CPU92–CPU2026 factors, sources and limits.
-- [Annual rate figure](research/annual-rate-vaxen.md): source-linked yearly highest submissions and distributions.
-- [SPEC collection](docs/spec-collection.md): implemented rate collection and fitting commands.
-- [Research index](research/README.md): checked findings and preserved source archives.
-- [Roadmap](docs/TODO.md): work that remains unverified or unimplemented.
+```text
+VAXen = SPECrate_int92 × 25500 / 604800
+```
 
-## Local setup
+The same normalization applies to the base metric `SPECrate_base_int92`.
+`SPECint92` is a different, speed metric: do not apply this rate-score conversion
+to it. A value inferred from another suite is an **estimated** VAX-equivalent
+throughput, not a measured SPEC92 submission. `1 VAX`, `2 VAXen`, `1k VAXen`,
+`2M VAXen` and `26m VAX` are display labels; stored values are unprefixed numbers.
+See [unit definitions](research/tracks/vaxen.md) and the
+[SPEC CPU92 rate definition](https://www.spec.org/cpu92/specrate.txt).
 
-On Arch Linux, use a repository-local environment managed by `uv`:
+## The fitting assumption: y = kx
+
+The primary calibration assumes a **multiplicative relationship passing through
+the origin**, `y = k × x`, between benchmark scales. It does not fit an additive
+intercept. The coefficient is estimated from log score ratios: take medians
+within the declared model/configuration groups, average the group log ratios,
+then exponentiate. For modern adjacent suites, x is the newer suite's score and
+y the older suite's score; the direction is recorded for every model.
+
+This is a geometric ratio estimator, not ordinary least squares. On log axes
+its slope is fixed at one; a separately reported free slope is diagnostic.
+Base and peak are fitted separately. Repeated submissions are retained, while
+grouping controls their fit weight. The assumed relationship is approximate
+and need not hold equally across architectures, workloads or software.
+
+For classical composites, x is a fixed equal-weight geometric mean of the
+specified benchmark scores in declared units; a separate k is fitted for each
+combination. Factor CI95, held-out P95 error and prediction uncertainty are
+reported separately. Broader historical coverage is a research objective;
+increased error after adding valid evidence is not by itself a failed experiment.
+
+## Four research tracks
+
+| Track | Purpose | Current position |
+| --- | --- | --- |
+| [1. VAXen reference](research/tracks/vaxen.md) | Define the common unit and evidence classes | Defined CPU92 rate normalization |
+| [2. SPEC92–2026 rate chain](research/tracks/spec-rate.md) | Fit successive integer-rate suites and produce annual views | Implemented, conditional calibration; CPU2026 coverage remains limited |
+| [3. SPEC89 recovery and bridge](research/tracks/spec89.md) | Recover scattered scores and link SPECint89 → SPECint92 → SPEC92 rate | Implemented two-edge peak estimate; no direct 89/rate hardware pairs in current inputs |
+| [4. Classical benchmark extension](research/tracks/classical.md) | Use early workloads to establish historical calibration points | Direct and joint pair/triple experiments; older-machine extrapolation remains conditional |
+
+Start with the [research overview](research/overview.md). The
+[model registry](research/model-registry.json) records metric types, datasets,
+calculation dependencies and shared evidence; its [generated catalog](research/catalog.md)
+provides a readable map of every research document. There is no implication that
+all routes are independent evidence or equally validated.
+
+## Reproduce and explore
+
+On Arch Linux, use the repository-local environment managed by `uv`:
 
 ```sh
 uv venv .venv
 uv pip install --python .venv/bin/python -e .
-./.venv/bin/cpushowspeed --help
+uv run --no-sync cpushowspeed --help
+uv run --no-sync cpushowspeed research validate
 ```
 
-`requirements.txt` is the single dependency list; `pyproject.toml` reads it
-for editable installation and defines the `cpushowspeed` command.
-
-Convert a single integer-rate result with the saved calibration:
+`requirements.txt` is the single dependency list. Convert a modern integer-rate
+score with the saved calibration:
 
 ```sh
-./.venv/bin/cpushowspeed convert-rate 2017 base 11800 --format text
+uv run --no-sync cpushowspeed convert-rate 2017 base 11800 --format text
 ```
 
-This prints estimated VAXen and the conditional calibration CI95. Omit
-`--format text` for machine-readable JSON; see the collection guide for scope.
+The converter prints estimated VAXen and conditional calibration CI95. It does
+not yet accept classical or SPEC89 scores; their research commands are listed
+in the corresponding track guides.
+
+- [Documentation index](docs/README.md): contracts, methods and acquisition tools.
+- [Research index](research/README.md): current analyses, source evidence and diagnostics.
+- [Annual rate results](research/annual-rate-vaxen.md): configuration-year views.
+- [Roadmap](docs/TODO.md): remaining evidence and validation work.

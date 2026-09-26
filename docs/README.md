@@ -1,23 +1,32 @@
-# Documentation
+# Documentation index
 
-These documents distinguish implemented source collection from planned
-analysis and define how future data should be read.
+For the research story, begin with the [four-track overview](../research/overview.md).
+For exact metric/model dependencies and document roles, use the
+[registry catalog](../research/catalog.md). The root [README](../README.md)
+introduces the unit, zero-intercept fitting assumption and local setup.
+
+## Scientific contracts
 
 | Document | Primary responsibility |
 | --- | --- |
-| [Scope and metrics](scope-and-metrics.md) | Rate target, historical extension, and evidence classes |
-| [Data contract](data-contract.md) | Result identity, units, dates, validity, and provenance |
-| [Methods](methods.md) | Rate fitting, VAX throughput reference, and manual reconstruction |
-| [Sources](sources.md) | Source inventory, acquisition order, and source-specific caveats |
-| [SPEC collection](spec-collection.md) | Current integer-rate collectors and fits |
-| [Classic benchmark collection](classic-collection.md) | Implemented source-listed snapshots, HTML/PRE extraction and provenance |
-| [Document extraction](document-extraction.md) | Implemented PDF inventory, OCR, captioning, backfill, and evidence policy |
-| [OCR dispatch](ocr-dispatch.md) | Implemented bounded PDF rendering, page inference, and resumable DocIR publication |
-| [Historical DocIR](docir.md) | Implemented OCR page/block writer and HTML table projection |
-| [Image Pool and captioning](image-pool.md) | Implemented visual asset pool, batch captions, and DocIR backfill |
-| [Machine watchlist](machine-watchlist.md) | Priority historical systems and variant-specific evidence needs |
-| [TODO](TODO.md) | Unimplemented or unverified research work |
+| [Scope and metrics](scope-and-metrics.md) | Whole-machine rate target, historical routes and evidence classes |
+| [Data contract](data-contract.md) | Identity, units, dates, validity and provenance |
+| [Methods](methods.md) | Estimation, normalization, uncertainty and research selection rules |
+| [Sources](sources.md) | Source selection, acquisition priorities and caveats |
+| [Machine watchlist](machine-watchlist.md) | Priority systems and variant-specific evidence needs |
+| [Roadmap](TODO.md) | Unimplemented or unverified research work |
 
-The root [README](../README.md) is the public entry point. The
-[research index](../research/README.md) owns source-checked findings. CLI `--help`
-describes commands that have actually been implemented.
+## Reproduction and data processing
+
+| Document | Primary responsibility |
+| --- | --- |
+| [SPEC collection](spec-collection.md) | Integer-rate scraping, fitting and conversion commands |
+| [Classic collection](classic-collection.md) | Classical source extraction and experimental fitting commands |
+| [Document extraction](document-extraction.md) | PDF inventory, processing workflow and evidence policy |
+| [OCR dispatch](ocr-dispatch.md) | Bounded rendering/inference and resumable publication |
+| [DocIR](docir.md) | Page/block schema, rich tables and Markdown projection |
+| [Image Pool](image-pool.md) | Visual asset identity, captions and backfill |
+
+CLI `--help` owns command options. The [research index](../research/README.md)
+owns result navigation; topic reports own their numerical conclusions. Registry
+maintenance is documented in the [overview](../research/overview.md#registry-maintenance).

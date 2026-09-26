@@ -1,0 +1,26 @@
+{
+  "method": "classical-source-diagnostics-v1",
+  "target": "SPECrate_int92",
+  "stage": "plus_cross_source_clock_sensitivity",
+  "input_sha256": {
+    "data/derived/classic/source-pair-fit/pairs.csv": "59858c5d7a3087e6368fbc582ff45e605a3f075d52c07b93a547772d0a4e5e93",
+    "data/derived/classic/source-pair-fit/predictions.csv": "60cbdf821b7232778a322d299ac57bc0485e92d8fe104a425830a7e6f5cc6ab4",
+    "research/data/classic/pdf-extraction/tables.jsonl": "52db977934c6fb263da4328e88d3c6664f880e92febad38ca3d23e3fca9b763d",
+    "data/derived/classic/overlap-spec/spec-records.jsonl": "5d9b6cb5556555ca163e208847f2ce8c3bfa9f246a6354de3ff2fec41f92d459"
+  },
+  "code_sha256": "598b004dc23628b345510d27d32b913ee0ce26d9625b119158e18a27f8137538",
+  "observations": 617,
+  "discarded_for_residual": 0,
+  "output_sha256": {
+    "cohort-comparison.csv": "51c0d0157f9fcdba85ed300050d09613e93285282ff7e16adb23cdb3dcb41e3a",
+    "signed-residuals.csv": "04de8caa44ded1dcee22919cdf3affbfcd9f3fb91445fba47a510f5a79aacc6d",
+    "transfers.csv": "52a7db46a87160ec7cd6fe6c02c6f6aec9c6462318ffafd82861f0da8664bbe4",
+    "os-pairs.csv": "4ed82a0015f1bb05e489f0be75e9e9d3806e785fb7f36fe63982ef6ef6d0dcdc",
+    "outlier-candidates.csv": "7560b02d0108ed56a3a9b0cbe47201c19abd338475ad29866fca6ef38d8f02e8",
+    "osf-cohort-comparison.csv": "799c2869df11d1ea34af23105dbb9bd27ce1a9312124ccc41ee3039f8a74351e",
+    "osf-signed-residuals.csv": "22f20c63c9f8ab962d83aa02158dda153b4ef3aded088124ed6a4ecd430f4d63",
+    "osf-transfers.csv": "11902a191e92d563f085e39ec9aac471b52343f95c363aa6a420e3704e0c8747",
+    "same-osf-models-all-os-cohorts.csv": "5604c4a195aab3114c5d01bbc5febcb0fde4fe8b55136f0a1c11e1a9b42ee519",
+    "same-osf-models-all-os-transfers.csv": "0d248d68e42ddc5c5acce9bcdc19852dfa25ce261417b8c336e24913df6769c1"
+  }
+}

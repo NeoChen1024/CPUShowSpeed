@@ -38,3 +38,14 @@ owning document as work lands; remove superseded items.
       original LINC timing and Honeywell 6180 hardware revisions.
 - [ ] Assess CoreMark public score coverage, certification and concurrency,
       then seek same-system overlaps only if its rate convention is comparable.
+
+## Historical calibration follow-up
+
+- [ ] Seek direct SPECint89/SPEC92 rate overlaps; the implemented two-edge bridge
+      currently relies on separate native-score and DEC speed/rate cohorts.
+- [ ] Validate older-machine estimates against independent throughput evidence;
+      agreement with inferred SPEC89 targets is not observed-rate validation.
+- [ ] Assess architecture/source holdouts and chronological extrapolation while
+      retaining valid diverse observations regardless of residual magnitude.
+- [ ] Define a trace/timing measurement contract before implementing the PDP-8/E
+      assembly/SIMH pilot. No simulator wall-clock conversion is established.

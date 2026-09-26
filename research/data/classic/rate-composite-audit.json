@@ -1,0 +1,24 @@
+{
+  "method": "classic-direct-rate-composites-v1",
+  "date": "2026-09-27",
+  "bootstrap": 10000,
+  "seed": 20260926,
+  "primary_stage": "plus_cross_source_unscaled",
+  "comparison_stage": "within_source",
+  "target_unit": "SPEC92 integer-rate VAXen",
+  "rate_to_vaxen": 0.042162698412698416,
+  "normalization": "Input y already normalized by source-pair-fit; no second scaling",
+  "spec89_included": false,
+  "observations_across_stages": 1418,
+  "comparisons": 154,
+  "uncertainty": "model-cluster bootstrap; conditional on sources, matches, configurations and unit interpretation",
+  "input_sha256": {
+    "data/derived/classic/source-pair-fit/pairs.csv": "59858c5d7a3087e6368fbc582ff45e605a3f075d52c07b93a547772d0a4e5e93"
+  },
+  "code_sha256": {
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_rate_composite.py": "52f597865e05460b6146a287b2a06554aaab847f6e9b684e1e67389bf5d29291",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pooled.py": "c73b06215673bbcf8062b6187fcf472190464325f0447a3a50372693a7c655b4",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_fit.py": "7a5adb48f5d8b032af8cbc0275db2d4c148a014bb355c7aa5050672c5f2df787",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_fit.py": "c1976e4277bceee1415dfe668760ca4ce3fdd29eddacc76ef462410043d709a7"
+  }
+}

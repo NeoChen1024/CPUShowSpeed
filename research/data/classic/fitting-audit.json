@@ -1,0 +1,26 @@
+{
+  "method": "classic-spec92-candidate-fit-v1",
+  "anchor": 0.042162698412698416,
+  "bootstrap": 10000,
+  "seed": 20260926,
+  "uncertainty": "model cluster percentile bootstrap; conditional on unverified cohort; not prediction intervals",
+  "input_sha256": {
+    "data/derived/classic/overlap-spec/classical-records.jsonl": "afe7897a53b5267f4b965c435e1779cd4a46404d60a867d40ff74e4b71341e27",
+    "data/derived/classic/overlap-spec/spec-records.jsonl": "5d9b6cb5556555ca163e208847f2ce8c3bfa9f246a6354de3ff2fec41f92d459",
+    "data/derived/classic/overlap-spec/candidate-pairs.csv": "ed3f9c694f95d785f3d9e3064664f763a660b7203607391ee5890801b5a6531d",
+    "data/derived/classic/netlib-linpack-report.txt": "da10c65aaa7ab32ab41690cdedf2963d37522ed22ee862167400f72a3c759381"
+  },
+  "implementation_sha256": "c1976e4277bceee1415dfe668760ca4ce3fdd29eddacc76ef462410043d709a7",
+  "exclusions": {
+    "spec_metric_missing": 132,
+    "clock_unknown": 90,
+    "spec_cpu_count_not_one": 172,
+    "known_clock_conflict": 204,
+    "classical_metric_missing_or_unparsed": 112,
+    "classical_processor_count_not_one": 24
+  },
+  "output_sha256": {
+    "pairs.csv": "116e97916fdfff171f8a1ac3ade3d790f6c135b98e8052acc96bf6e70795457a",
+    "summary.csv": "51e285214f03ec1a03a5632c036a6597d1576728a83c8dc4bab10dd4879d36a7"
+  }
+}

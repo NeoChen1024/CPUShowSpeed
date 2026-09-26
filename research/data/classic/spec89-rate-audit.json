@@ -1,0 +1,40 @@
+{
+  "method": "spec89-two-edge-rate-joint-v1",
+  "date": "2026-09-27",
+  "bootstrap": 10000,
+  "seed": 20260926,
+  "direct_overlap": {
+    "normalized_model": {
+      "common_models": [],
+      "model_count": 0
+    },
+    "clock_supported_relaxation": {
+      "common_models": [],
+      "model_count": 0
+    }
+  },
+  "route": [
+    "SPECint89",
+    "SPECint92",
+    "SPECrate_int92 * 25500 / 604800"
+  ],
+  "rate_variant": "peak",
+  "base_status": "no_same_column_base_rate_bridge",
+  "estimate_records": 179,
+  "estimate_models": 93,
+  "comparisons": 171,
+  "input_sha256": {
+    "data/derived/classic/source-pair-fit/pairs.csv": "59858c5d7a3087e6368fbc582ff45e605a3f075d52c07b93a547772d0a4e5e93",
+    "data/derived/classic/source-pair-fit/vectors.jsonl": "5891f6ca77cf72d92aaac2608cdbe5897e21465e9019ea249230df48bb18188b",
+    "data/derived/classic/overlap-spec/spec-records.jsonl": "5d9b6cb5556555ca163e208847f2ce8c3bfa9f246a6354de3ff2fec41f92d459",
+    "research/data/spec89/v2.0.0/csv/bridges89_92.csv": "8c7545e9b7183ec7db052c15247fc4fd78ffb381a174898c4482d5f0f15868a4"
+  },
+  "code_sha256": {
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_89_rate.py": "5cec8661092d28a3bdc2421474da1008d5fcf69d2d1151d3d6a3378fc691bdde",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pooled.py": "c73b06215673bbcf8062b6187fcf472190464325f0447a3a50372693a7c655b4",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_fit.py": "7a5adb48f5d8b032af8cbc0275db2d4c148a014bb355c7aa5050672c5f2df787",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_fit.py": "c1976e4277bceee1415dfe668760ca4ce3fdd29eddacc76ef462410043d709a7",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "d16a31770645046779b786f8b623e2bfb61ac1cb6146081fbf6914e284fdc6b8"
+  },
+  "uncertainty": "joint model-cluster bootstrap across both bridge edges and classical fit; estimates not observed rate scores"
+}

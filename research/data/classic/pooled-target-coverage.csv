@@ -1,0 +1,10 @@
+target,observations,models,included,reason
+SPECbase_int92,136,9,False,different_metric_not_pooled
+SPECfp89,257,9,False,different_metric_not_pooled
+SPECfp92,452,46,False,different_metric_not_pooled
+SPECint89,199,9,True,native_integer_pool
+SPECint92,412,38,True,native_integer_pool
+SPECmark89,518,45,False,different_metric_not_pooled
+SPECrate_base_int92,135,12,False,different_metric_not_pooled
+SPECrate_fp92,300,24,False,different_metric_not_pooled
+SPECrate_int92,555,27,False,different_metric_not_pooled

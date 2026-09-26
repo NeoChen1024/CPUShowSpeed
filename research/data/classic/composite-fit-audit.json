@@ -1,0 +1,27 @@
+{
+  "method": "classic-equal-weight-heldout-v1",
+  "bootstrap": 10000,
+  "seed": 20260926,
+  "unit_normalizers": {
+    "Dhrystone": "1 DMIPS",
+    "Whetstone": "1 MWIPS",
+    "LINPACK": "1 MFLOPS"
+  },
+  "weights": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+  ],
+  "input_sha256": {
+    "data/derived/classic/composite-overlap/vectors.csv": "9e60b02afba16a9de5bcd1730518098e936a2ec551669bea8488d897eb9232bc"
+  },
+  "code_sha256": {
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_composite_fit.py": "19fec71c58fda1bf06b6f403b4f8b57780411002e78804a4a8a5fb3f19bbbca8",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_fit.py": "c1976e4277bceee1415dfe668760ca4ce3fdd29eddacc76ef462410043d709a7"
+  },
+  "output_sha256": {
+    "summary.csv": "84f86be0455f20453fccab748692a6a96a608056323a6740a6d62a2c53e749de",
+    "folds.csv": "8a8b34df17e0995249a7a388a8d2a40da2cac6f9894c0146e3ee9e824a6af3e6",
+    "predictions.csv": "d51ef16bf68444599be0c54abee1b6f8cc9ab33fbfb33bfacb493ec0b5cb7423"
+  }
+}

@@ -1,0 +1,4 @@
+source_id,url,family,provider,lineage,role
+dec-n3909-1994,https://vtda.org/docs/computing/DEC/VAX/EC-N3909-10_AlphaVAXComparison_Dec94.pdf,SPEC92;Whetstone;LINPACK,DEC,dec-manufacturer-compilation,results_report
+sscl-375,http://lss.fnal.gov/archive/other/ssc/sscl-375.pdf,Dhrystone;LINPACK;SPECmark;HEP,SSCL,sscl-physics-comparison,results_report
+tomari-hiraki-2011,https://www.jstage.jst.go.jp/article/ipsjtrans/4/0/4_0_217/_pdf/-char/en,Dhrystone;NPB;SPEC2006,Tomari and Hiraki,tomari-hiraki-measurements,results_report

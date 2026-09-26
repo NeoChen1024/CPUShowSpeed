@@ -1,0 +1,1761 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-27",
+  "path_base": "repository root",
+  "conventions": {
+    "fit": "y = k*x; zero intercept; grouped median log ratios then mean across groups",
+    "interval": "Factor CI95 is not held-out P95 or individual prediction uncertainty",
+    "evidence": "Metric identity, value evidence class and model role are separate",
+    "dependency": "depends_on records calculation dependencies; dataset_ids and shared_evidence describe evidence reuse",
+    "coefficients": "Numerical coefficients remain in referenced outputs, not duplicated in this registry"
+  },
+  "tracks": [
+    {
+      "id": "vaxen",
+      "order": 1,
+      "title": "VAXen reference",
+      "path": "research/tracks/vaxen.md"
+    },
+    {
+      "id": "spec-rate",
+      "order": 2,
+      "title": "SPEC92–2026 rate chain",
+      "path": "research/tracks/spec-rate.md"
+    },
+    {
+      "id": "spec89",
+      "order": 3,
+      "title": "SPEC89 recovery and bridge",
+      "path": "research/tracks/spec89.md"
+    },
+    {
+      "id": "classical",
+      "order": 4,
+      "title": "Classical benchmark extension",
+      "path": "research/tracks/classical.md"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "vaxen",
+      "title": "VAX-11/780 equivalent SPEC92 integer-rate throughput",
+      "mode": "rate",
+      "unit": "VAXen",
+      "status": "defined",
+      "variants": [],
+      "reference": "One-copy CPU92 VAX reference; reported rate * 25500/604800",
+      "evidence_class": "per value: normalized observation or estimate"
+    },
+    {
+      "id": "rate-92",
+      "title": "SPEC CPU92 integer rate",
+      "mode": "rate",
+      "unit": "CPU92 raw integer-rate points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Published machine configuration; copies are not core count"
+    },
+    {
+      "id": "rate-95",
+      "title": "SPEC CPU95 integer rate",
+      "mode": "rate",
+      "unit": "CPU95 raw integer-rate points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Published machine configuration; copies are not core count"
+    },
+    {
+      "id": "rate-2000",
+      "title": "SPEC CPU2000 integer rate",
+      "mode": "rate",
+      "unit": "CPU2000 raw integer-rate points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Published machine configuration; copies are not core count"
+    },
+    {
+      "id": "rate-2006",
+      "title": "SPEC CPU2006 integer rate",
+      "mode": "rate",
+      "unit": "CPU2006 raw integer-rate points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Published machine configuration; copies are not core count"
+    },
+    {
+      "id": "rate-2017",
+      "title": "SPEC CPU2017 integer rate",
+      "mode": "rate",
+      "unit": "CPU2017 raw integer-rate points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Published machine configuration; copies are not core count"
+    },
+    {
+      "id": "rate-2026",
+      "title": "SPEC CPU2026 integer rate",
+      "mode": "rate",
+      "unit": "CPU2026 raw integer-rate points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Published machine configuration; copies are not core count"
+    },
+    {
+      "id": "int89",
+      "title": "SPECint89",
+      "mode": "speed",
+      "unit": "raw SPECint89 points",
+      "status": "recorded",
+      "variants": []
+    },
+    {
+      "id": "int92",
+      "title": "SPECint92",
+      "mode": "speed",
+      "unit": "raw SPECint92 points",
+      "status": "recorded",
+      "variants": []
+    },
+    {
+      "id": "base-int92",
+      "title": "SPECbase_int92",
+      "mode": "speed",
+      "unit": "raw SPECbase_int92 points",
+      "status": "recorded",
+      "variants": []
+    },
+    {
+      "id": "mark89",
+      "title": "SPECmark89 mixed suite",
+      "mode": "mixed-speed",
+      "unit": "raw SPECmark89 mixed suite points",
+      "status": "recorded",
+      "variants": []
+    },
+    {
+      "id": "fp89",
+      "title": "SPECfp89",
+      "mode": "speed-fp",
+      "unit": "raw SPECfp89 points",
+      "status": "recorded",
+      "variants": []
+    },
+    {
+      "id": "fp92",
+      "title": "SPECfp92",
+      "mode": "speed-fp",
+      "unit": "raw SPECfp92 points",
+      "status": "recorded",
+      "variants": []
+    },
+    {
+      "id": "rate-fp92",
+      "title": "SPECrate_fp92",
+      "mode": "rate-fp",
+      "unit": "raw SPECrate_fp92 points",
+      "status": "recorded",
+      "variants": []
+    },
+    {
+      "id": "throughput89",
+      "title": "SPECthruput89",
+      "mode": "legacy-throughput",
+      "unit": "raw SPECthruput89 points",
+      "status": "recorded",
+      "variants": []
+    },
+    {
+      "id": "retired-spec-speed",
+      "title": "Later SPEC integer-speed scores",
+      "mode": "speed",
+      "unit": "suite-specific raw points",
+      "status": "retired",
+      "variants": [
+        "95",
+        "2000",
+        "2006",
+        "2017",
+        "2026"
+      ],
+      "scope": "Historical reports only; never interchangeable across suites"
+    },
+    {
+      "id": "dhry-11",
+      "title": "Dhrystone 1.1",
+      "mode": "classical",
+      "unit": "DMIPS",
+      "status": "recorded",
+      "variants": [],
+      "version": "1.1",
+      "normalization": "1757 Dhrystones/s per DMIPS; version retained"
+    },
+    {
+      "id": "dhry-21",
+      "title": "Dhrystone 2.1",
+      "mode": "classical",
+      "unit": "DMIPS",
+      "status": "recorded",
+      "variants": [],
+      "version": "2.1",
+      "normalization": "1757 Dhrystones/s per DMIPS; version retained"
+    },
+    {
+      "id": "dhry-unknown",
+      "title": "Dhrystone unknown",
+      "mode": "classical",
+      "unit": "source-labelled iterations/time",
+      "status": "recorded",
+      "variants": [],
+      "version": "unknown",
+      "normalization": "1757 Dhrystones/s per DMIPS; version retained"
+    },
+    {
+      "id": "whet-native",
+      "title": "Whetstone native",
+      "mode": "classical",
+      "unit": "MWIPS",
+      "status": "recorded",
+      "variants": [],
+      "precision": "native",
+      "normalization": "DEC printed KWIPS interpreted as MWIPS under reviewed policy; original labels preserved"
+    },
+    {
+      "id": "whet-sp",
+      "title": "Whetstone SP",
+      "mode": "classical",
+      "unit": "MWIPS",
+      "status": "recorded",
+      "variants": [],
+      "precision": "SP",
+      "normalization": "DEC printed KWIPS interpreted as MWIPS under reviewed policy; original labels preserved"
+    },
+    {
+      "id": "whet-dp",
+      "title": "Whetstone DP",
+      "mode": "classical",
+      "unit": "MWIPS",
+      "status": "recorded",
+      "variants": [],
+      "precision": "DP",
+      "normalization": "DEC printed KWIPS interpreted as MWIPS under reviewed policy; original labels preserved"
+    },
+    {
+      "id": "linpack-100",
+      "title": "LINPACK n=100",
+      "mode": "classical",
+      "unit": "MFLOPS",
+      "status": "recorded",
+      "variants": [],
+      "matrix_size": "100",
+      "scope": "Precision and implementation remain source metadata; do not pool sizes"
+    },
+    {
+      "id": "linpack-300",
+      "title": "LINPACK n=300",
+      "mode": "classical",
+      "unit": "MFLOPS",
+      "status": "recorded",
+      "variants": [],
+      "matrix_size": "300",
+      "scope": "Precision and implementation remain source metadata; do not pool sizes"
+    },
+    {
+      "id": "linpack-unknown",
+      "title": "LINPACK n=unknown",
+      "mode": "classical",
+      "unit": "MFLOPS",
+      "status": "recorded",
+      "variants": [],
+      "matrix_size": "unknown",
+      "scope": "Precision and implementation remain source metadata; do not pool sizes"
+    },
+    {
+      "id": "composite",
+      "title": "Fixed equal-weight classical pair/triple index",
+      "mode": "derived-index",
+      "unit": "dimensionless geometric index",
+      "status": "defined",
+      "variants": [
+        "exact component pattern recorded per output row"
+      ],
+      "formula": "exp(mean(log(score / declared unit)))"
+    },
+    {
+      "id": "cint2006",
+      "title": "Tomari/Hiraki reported CINT2006",
+      "mode": "speed",
+      "unit": "reported CINT2006 score",
+      "status": "recorded",
+      "variants": [],
+      "scope": "Single-Dhrystone diagnostic; not rate"
+    },
+    {
+      "id": "gibson",
+      "title": "Gibson instruction mix",
+      "mode": "historical-lead",
+      "unit": "source/workload dependent",
+      "status": "recorded",
+      "variants": [],
+      "scope": "Source-checked historical ratings exist; no established VAXen conversion"
+    },
+    {
+      "id": "adp",
+      "title": "ADP instruction mix",
+      "mode": "historical-lead",
+      "unit": "source/workload dependent",
+      "status": "planned",
+      "variants": [],
+      "scope": "No established conversion edge to VAXen"
+    },
+    {
+      "id": "process-control",
+      "title": "Process Control mix",
+      "mode": "historical-lead",
+      "unit": "source/workload dependent",
+      "status": "planned",
+      "variants": [],
+      "scope": "No established conversion edge to VAXen"
+    },
+    {
+      "id": "coprxx",
+      "title": "COPRXX leads",
+      "mode": "historical-lead",
+      "unit": "source/workload dependent",
+      "status": "planned",
+      "variants": [],
+      "scope": "No established conversion edge to VAXen"
+    },
+    {
+      "id": "coremark",
+      "title": "CoreMark",
+      "mode": "historical-lead",
+      "unit": "source/workload dependent",
+      "status": "planned",
+      "variants": [],
+      "scope": "No established conversion edge to VAXen"
+    },
+    {
+      "id": "trace-timing",
+      "title": "Assembly trace plus documented timing",
+      "mode": "historical-lead",
+      "unit": "source/workload dependent",
+      "status": "planned",
+      "variants": [],
+      "scope": "No established conversion edge to VAXen"
+    }
+  ],
+  "datasets": [
+    {
+      "id": "modern-rate-inputs",
+      "path": "data/derived/spec",
+      "kind": "derived",
+      "owner": "docs/spec-collection.md",
+      "optional": true,
+      "lineage": "Official SPEC bulk archives and parsed CPU92 Netlib disclosures; retained submission identity"
+    },
+    {
+      "id": "modern-factor-snapshots",
+      "path": "research/data/spec/fitting",
+      "kind": "snapshot",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "optional": false,
+      "lineage": "Reuses matched official rate submissions across fits and chain"
+    },
+    {
+      "id": "spec89-snapshot",
+      "path": "research/data/spec89/v2.0.0",
+      "kind": "source-snapshot",
+      "owner": "research/spec89-curated-snapshot.md",
+      "optional": false,
+      "lineage": "Collectors and republications can share upstream measurements"
+    },
+    {
+      "id": "spec89-native-bridge",
+      "path": "research/data/spec89/v2.0.0/csv/bridges89_92.csv",
+      "kind": "source-snapshot",
+      "owner": "research/spec89-cpu92-scatter.md",
+      "optional": false,
+      "lineage": "Subset of SPEC89 archive; 17 integer rows, 15 model keys; includes development-level observations"
+    },
+    {
+      "id": "spec89-supplement",
+      "path": "research/data/spec89/aggregate89-plus-helman.csv",
+      "kind": "snapshot",
+      "owner": "research/spec89-helman-worksheet.md",
+      "optional": false,
+      "lineage": ""
+    },
+    {
+      "id": "spec89-years",
+      "path": "research/data/spec89/hardware-introductions.csv",
+      "kind": "reviewed-data",
+      "owner": "research/spec89-hardware-years.md",
+      "optional": false,
+      "lineage": ""
+    },
+    {
+      "id": "classic-acquisition",
+      "path": "research/data/classic/acquisition.csv",
+      "kind": "manifest",
+      "owner": "research/classic-benchmark-collection.md",
+      "optional": false,
+      "lineage": "Mirrors/republications are not independent experiments"
+    },
+    {
+      "id": "classic-pdf-tables",
+      "path": "research/data/classic/pdf-extraction/tables.jsonl",
+      "kind": "reviewed-data",
+      "owner": "research/classic-pdf-extraction.md",
+      "optional": false,
+      "lineage": "DEC, SSCL, Tomari/Hiraki; DEC rows recur in source fits and bridge"
+    },
+    {
+      "id": "classic-unit-policy",
+      "path": "research/data/classic/pdf-extraction/interpretation-policy.json",
+      "kind": "policy",
+      "owner": "research/classic-source-pair-fitting.md",
+      "optional": false,
+      "lineage": ""
+    },
+    {
+      "id": "classic-overlap",
+      "path": "data/derived/classic/overlap-spec",
+      "kind": "derived",
+      "owner": "research/classic-spec-overlap.md",
+      "optional": true,
+      "lineage": "Source-level candidates, not verified identical configurations"
+    },
+    {
+      "id": "classic-source-pairs",
+      "path": "data/derived/classic/source-pair-fit/pairs.csv",
+      "kind": "derived",
+      "owner": "research/classic-source-pair-fitting.md",
+      "optional": true,
+      "lineage": "Reuses DEC and legacy tuples; repeated stages and patterns are not independent samples"
+    },
+    {
+      "id": "classic-source-vectors",
+      "path": "data/derived/classic/source-pair-fit/vectors.jsonl",
+      "kind": "derived",
+      "owner": "research/classic-source-pair-fitting.md",
+      "optional": true,
+      "lineage": "Same DEC columns as classical targets and SPEC92 speed/rate bridge"
+    },
+    {
+      "id": "historical-observations",
+      "path": "research/data/historical",
+      "kind": "reviewed-data",
+      "owner": "research/early-benchmark-evidence.md",
+      "optional": false,
+      "lineage": "PDF page citations; mixes and timing observations are not SPEC scores"
+    }
+  ],
+  "models": [
+    {
+      "id": "rate92-unit",
+      "title": "CPU92 rate normalization",
+      "track": "vaxen",
+      "input_metrics": [
+        "rate-92"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "definition",
+      "formula": "y = x * 25500 / 604800",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "defined",
+      "owner": "docs/methods.md",
+      "dataset_ids": [],
+      "depends_on": [],
+      "shared_evidence": "",
+      "command": null,
+      "outputs": []
+    },
+    {
+      "id": "rate-95-to-92",
+      "title": "CPU95 → CPU92 rate calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-95"
+      ],
+      "target_metric": "rate-92",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-rate-inputs"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
+      "command": "cpushowspeed bridge fit-rate92-anchor",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/cpu92-cpu95-rate-direct-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu95",
+        "old_generation": "cpu92",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "rate-95-vaxen",
+      "title": "CPU95 → VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-95"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older factors and CPU92 unit factor",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-factor-snapshots"
+      ],
+      "depends_on": [
+        "rate-95-to-92",
+        "rate92-unit"
+      ],
+      "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
+      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "rate-2000-to-95",
+      "title": "CPU2000 → CPU95 rate calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-2000"
+      ],
+      "target_metric": "rate-95",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-rate-inputs"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
+      "command": "cpushowspeed bridge fit-rate-generations",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-rate-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu2000",
+        "old_generation": "cpu95",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "rate-2000-vaxen",
+      "title": "CPU2000 → VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-2000"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older factors and CPU92 unit factor",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-factor-snapshots"
+      ],
+      "depends_on": [
+        "rate-2000-to-95",
+        "rate-95-vaxen"
+      ],
+      "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
+      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "rate-2006-to-2000",
+      "title": "CPU2006 → CPU2000 rate calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-2006"
+      ],
+      "target_metric": "rate-2000",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-rate-inputs"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
+      "command": "cpushowspeed bridge fit-rate-generations",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-rate-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu2006",
+        "old_generation": "cpu2000",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "rate-2006-vaxen",
+      "title": "CPU2006 → VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-2006"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older factors and CPU92 unit factor",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-factor-snapshots"
+      ],
+      "depends_on": [
+        "rate-2006-to-2000",
+        "rate-2000-vaxen"
+      ],
+      "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
+      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "rate-2017-to-2006",
+      "title": "CPU2017 → CPU2006 rate calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-2017"
+      ],
+      "target_metric": "rate-2006",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-rate-inputs"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
+      "command": "cpushowspeed bridge fit-rate-generations",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-rate-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu2017",
+        "old_generation": "cpu2006",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "rate-2017-vaxen",
+      "title": "CPU2017 → VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-2017"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older factors and CPU92 unit factor",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-factor-snapshots"
+      ],
+      "depends_on": [
+        "rate-2017-to-2006",
+        "rate-2006-vaxen"
+      ],
+      "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
+      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "rate-2026-to-2017",
+      "title": "CPU2026 → CPU2017 rate calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-2026"
+      ],
+      "target_metric": "rate-2017",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-rate-inputs"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
+      "command": "cpushowspeed bridge fit-rate-generations",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-rate-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu2026",
+        "old_generation": "cpu2017",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "rate-2026-vaxen",
+      "title": "CPU2026 → VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-2026"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older factors and CPU92 unit factor",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "dataset_ids": [
+        "modern-factor-snapshots"
+      ],
+      "depends_on": [
+        "rate-2026-to-2017",
+        "rate-2017-vaxen"
+      ],
+      "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
+      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "annual-rate",
+      "title": "Annual distributions and leaders",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-92",
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017",
+        "rate-2026"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "aggregation",
+      "formula": "group by reported configuration availability year; share calibration draws across scores",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/annual-rate-vaxen.md",
+      "dataset_ids": [
+        "modern-rate-inputs"
+      ],
+      "depends_on": [
+        "rate92-unit",
+        "rate-95-vaxen",
+        "rate-2000-vaxen",
+        "rate-2006-vaxen",
+        "rate-2017-vaxen",
+        "rate-2026-vaxen"
+      ],
+      "shared_evidence": "",
+      "command": "cpushowspeed plot annual-rate-ci",
+      "outputs": [
+        {
+          "path": "research/data/spec/annual-rate-confidence.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "int89-int92",
+      "title": "SPECint89 → SPECint92",
+      "track": "spec89",
+      "input_metrics": [
+        "int89"
+      ],
+      "target_metric": "int92",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "reported"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec89-rate-bridge.md",
+      "dataset_ids": [
+        "spec89-native-bridge"
+      ],
+      "depends_on": [],
+      "shared_evidence": "",
+      "command": "cpushowspeed classic spec89-rate-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/spec89-rate-bridge-summary.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "int92-rate-vaxen",
+      "title": "Same-column SPECint92 → rate-VAXen",
+      "track": "spec89",
+      "input_metrics": [
+        "int92"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec89-rate-bridge.md",
+      "dataset_ids": [
+        "classic-source-vectors"
+      ],
+      "depends_on": [
+        "rate92-unit"
+      ],
+      "shared_evidence": "DEC columns also appear in classical training; holdout removes model from all edges",
+      "command": "cpushowspeed classic spec89-rate-fit",
+      "outputs": []
+    },
+    {
+      "id": "int89-rate-vaxen",
+      "title": "Two-edge SPECint89 → rate-VAXen",
+      "track": "spec89",
+      "input_metrics": [
+        "int89"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "composition",
+      "formula": "product of two empirical factors; no direct 89/rate pairs in current inputs",
+      "variants": [
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec89-rate-bridge.md",
+      "dataset_ids": [
+        "spec89-snapshot"
+      ],
+      "depends_on": [
+        "int89-int92",
+        "int92-rate-vaxen"
+      ],
+      "shared_evidence": "One shared bridge multiplier for all inferred 89 targets; these are not observed rate labels",
+      "command": "cpushowspeed classic spec89-rate-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/spec89-rate-estimates.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "classical-composite",
+      "title": "Declared pair/triple geometric index",
+      "track": "classical",
+      "input_metrics": [
+        "dhry-11",
+        "dhry-21",
+        "whet-native",
+        "whet-sp",
+        "whet-dp",
+        "linpack-100"
+      ],
+      "target_metric": "composite",
+      "relationship": "definition",
+      "formula": "equal-weight geometric mean of the declared subset; versions and precision separate",
+      "variants": [
+        "per component pattern"
+      ],
+      "role": "primary",
+      "status": "defined",
+      "owner": "docs/methods.md",
+      "dataset_ids": [],
+      "depends_on": [],
+      "shared_evidence": "",
+      "command": null,
+      "outputs": []
+    },
+    {
+      "id": "classical-direct-rate",
+      "title": "Direct classical → rate-VAXen",
+      "track": "classical",
+      "input_metrics": [
+        "composite"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/classic-rate-composite-fitting.md",
+      "dataset_ids": [
+        "classic-source-pairs",
+        "classic-unit-policy"
+      ],
+      "depends_on": [
+        "classical-composite",
+        "rate92-unit"
+      ],
+      "shared_evidence": "Single-score baselines share identical tuples and folds; source stages reuse observations",
+      "command": "cpushowspeed classic rate-composite-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/rate-composite-summary.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "classical-via89",
+      "title": "Classical → SPECint89 → rate-VAXen",
+      "track": "classical",
+      "input_metrics": [
+        "composite"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "composition",
+      "formula": "fit native89 log ratios then apply shared bridge; implemented as 89_only cohort",
+      "variants": [
+        "peak; 89_only cohort"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec89-rate-bridge.md",
+      "dataset_ids": [
+        "classic-source-pairs"
+      ],
+      "depends_on": [
+        "classical-composite",
+        "int89-rate-vaxen"
+      ],
+      "shared_evidence": "",
+      "command": "cpushowspeed classic spec89-rate-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/spec89-rate-summary.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "classical-joint",
+      "title": "Classical observed/inferred-target joint fit",
+      "track": "classical",
+      "input_metrics": [
+        "composite"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "joint-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "peak; joint cohort"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec89-rate-bridge.md",
+      "dataset_ids": [
+        "classic-source-pairs"
+      ],
+      "depends_on": [
+        "classical-composite",
+        "rate92-unit",
+        "int89-rate-vaxen"
+      ],
+      "shared_evidence": "Shared model keys resampled jointly across bridges and training; estimated-target errors separate from observed-rate holdouts",
+      "command": "cpushowspeed classic spec89-rate-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/spec89-rate-summary.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "classical-single",
+      "title": "Single classical associations",
+      "track": "classical",
+      "input_metrics": [
+        "dhry-11",
+        "dhry-21",
+        "whet-native",
+        "whet-sp",
+        "whet-dp",
+        "linpack-100"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "diagnostic",
+      "formula": "y = k*x",
+      "variants": [
+        "see per-row target/predictor in output; ancillary targets remain separate"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/classic-spec92-fitting.md",
+      "dataset_ids": [
+        "classic-overlap"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Diagnostic rows are not additional independent calibrations; CSV identifies any alternate native/FP targets",
+      "command": "cpushowspeed classic fit-spec92",
+      "outputs": [
+        {
+          "path": "research/data/classic/fitting-summary.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "classical-pair",
+      "title": "Earlier two-family diagnostics",
+      "track": "classical",
+      "input_metrics": [
+        "composite"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "diagnostic",
+      "formula": "y = k*x",
+      "variants": [
+        "see per-row target/predictor in output; ancillary targets remain separate"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/classic-pair-fitting.md",
+      "dataset_ids": [
+        "classic-overlap"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Diagnostic rows are not additional independent calibrations; CSV identifies any alternate native/FP targets",
+      "command": "cpushowspeed classic pair-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/pair-fit-summary.csv",
+          "optional": false
+        }
+      ],
+      "additional_target_metrics": [
+        "mark89",
+        "int89",
+        "fp89"
+      ]
+    },
+    {
+      "id": "classical-triple",
+      "title": "Earlier three-family diagnostics",
+      "track": "classical",
+      "input_metrics": [
+        "composite"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "diagnostic",
+      "formula": "y = k*x",
+      "variants": [
+        "see per-row target/predictor in output; ancillary targets remain separate"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/classic-composite-fitting.md",
+      "dataset_ids": [
+        "classic-overlap"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Diagnostic rows are not additional independent calibrations; CSV identifies any alternate native/FP targets",
+      "command": "cpushowspeed classic composite-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/composite-fit-summary.csv",
+          "optional": false
+        }
+      ],
+      "additional_target_metrics": [
+        "mark89",
+        "int89",
+        "fp89"
+      ]
+    },
+    {
+      "id": "classical-source",
+      "title": "Source-column cohort comparisons",
+      "track": "classical",
+      "input_metrics": [
+        "composite"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "diagnostic",
+      "formula": "y = k*x",
+      "variants": [
+        "see per-row target/predictor in output; ancillary targets remain separate"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/classic-source-pair-fitting.md",
+      "dataset_ids": [
+        "classic-overlap",
+        "classic-pdf-tables",
+        "classic-unit-policy"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Diagnostic rows are not additional independent calibrations; CSV identifies any alternate native/FP targets",
+      "command": "cpushowspeed classic source-pair-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/source-fit-summary.csv",
+          "optional": false
+        }
+      ],
+      "additional_target_metrics": [
+        "mark89",
+        "int89",
+        "int92",
+        "base-int92",
+        "fp89",
+        "fp92",
+        "rate-fp92"
+      ]
+    },
+    {
+      "id": "classical-environment",
+      "title": "Environment correction diagnostics",
+      "track": "classical",
+      "input_metrics": [
+        "composite"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "diagnostic",
+      "formula": "y = k*x",
+      "variants": [
+        "see per-row target/predictor in output; ancillary targets remain separate"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/classic-environment-models.md",
+      "dataset_ids": [
+        "classic-source-pairs"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Diagnostic rows are not additional independent calibrations; CSV identifies any alternate native/FP targets",
+      "command": "cpushowspeed classic environment-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/environment-summary.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "classical-native-pool",
+      "title": "Pooled native SPECint89/92 diagnostic",
+      "track": "classical",
+      "input_metrics": [
+        "composite"
+      ],
+      "target_metric": "int92",
+      "relationship": "diagnostic",
+      "formula": "y = k*x",
+      "variants": [
+        "see per-row target/predictor in output; ancillary targets remain separate"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/classic-pooled-fitting.md",
+      "dataset_ids": [
+        "classic-source-pairs"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Diagnostic rows are not additional independent calibrations; CSV identifies any alternate native/FP targets",
+      "command": "cpushowspeed classic pooled-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/pooled-summary.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "tomari-dhry-cint",
+      "title": "Tomari Dhrystone2.1/CINT2006 diagnostic",
+      "track": "classical",
+      "input_metrics": [
+        "dhry-21"
+      ],
+      "target_metric": "cint2006",
+      "relationship": "diagnostic",
+      "formula": "y = k*x",
+      "variants": [
+        "reported"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/classic-source-pair-fitting.md",
+      "dataset_ids": [
+        "classic-pdf-tables"
+      ],
+      "depends_on": [],
+      "shared_evidence": "",
+      "command": "cpushowspeed classic source-pair-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/source-fit-tomari.json",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "timing-reconstruction",
+      "title": "Historical workload reconstruction",
+      "track": "classical",
+      "input_metrics": [
+        "gibson",
+        "adp",
+        "process-control",
+        "trace-timing"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "planned",
+      "formula": "documented timing reconstruction plus future validated calibration; no implemented VAXen edge",
+      "variants": [],
+      "role": "planned",
+      "status": "planned",
+      "owner": "docs/methods.md",
+      "dataset_ids": [
+        "historical-observations"
+      ],
+      "depends_on": [],
+      "shared_evidence": "",
+      "command": null,
+      "outputs": []
+    }
+  ],
+  "documents": [
+    {
+      "path": "AGENTS.md",
+      "title": "CPUShowSpeed — Agent guide",
+      "role": "guide",
+      "status": "current",
+      "purpose": "CPUShowSpeed — Agent guide"
+    },
+    {
+      "path": "README.md",
+      "title": "CPUShowSpeed",
+      "role": "guide",
+      "status": "current",
+      "purpose": "CPUShowSpeed"
+    },
+    {
+      "path": "docs/README.md",
+      "title": "Documentation index",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Documentation index"
+    },
+    {
+      "path": "docs/TODO.md",
+      "title": "Research roadmap",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Research roadmap"
+    },
+    {
+      "path": "docs/classic-collection.md",
+      "title": "Classic benchmark source collection",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Classic benchmark source collection"
+    },
+    {
+      "path": "docs/data-contract.md",
+      "title": "Data contract",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Data contract"
+    },
+    {
+      "path": "docs/docir.md",
+      "title": "Historical document IR (selected design)",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Historical document IR (selected design)"
+    },
+    {
+      "path": "docs/document-extraction.md",
+      "title": "Document extraction",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Document extraction"
+    },
+    {
+      "path": "docs/image-pool.md",
+      "title": "Image Pool and captioning (selected design)",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Image Pool and captioning (selected design)"
+    },
+    {
+      "path": "docs/machine-watchlist.md",
+      "title": "Priority machine watchlist",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Priority machine watchlist"
+    },
+    {
+      "path": "docs/methods.md",
+      "title": "Research methods",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Research methods"
+    },
+    {
+      "path": "docs/ocr-dispatch.md",
+      "title": "OCR dispatch",
+      "role": "guide",
+      "status": "current",
+      "purpose": "OCR dispatch"
+    },
+    {
+      "path": "docs/scope-and-metrics.md",
+      "title": "Scope and metrics",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Scope and metrics"
+    },
+    {
+      "path": "docs/sources.md",
+      "title": "Candidate sources and acquisition policy",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Candidate sources and acquisition policy"
+    },
+    {
+      "path": "docs/spec-collection.md",
+      "title": "SPEC integer-rate collection and fitting",
+      "role": "guide",
+      "status": "current",
+      "purpose": "SPEC integer-rate collection and fitting"
+    },
+    {
+      "path": "research/README.md",
+      "title": "Research index",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Research index"
+    },
+    {
+      "path": "research/annual-rate-vaxen.md",
+      "title": "Annual SPEC integer-rate VAXen view",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Annual SPEC integer-rate VAXen view"
+    },
+    {
+      "path": "research/annual-vaxen-timeline.md",
+      "title": "Annual VAXen view of dated SPEC integer-speed evidence",
+      "role": "archive",
+      "status": "retired",
+      "purpose": "Annual VAXen view of dated SPEC integer-speed evidence"
+    },
+    {
+      "path": "research/archive/README.md",
+      "title": "Historical analyses",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Historical analyses"
+    },
+    {
+      "path": "research/catalog.md",
+      "title": "Research catalog",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Research catalog"
+    },
+    {
+      "path": "research/chandra-timesharing-sample.md",
+      "title": "Chandra sample: *A General-Purpose Time-Sharing System*",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Chandra sample: *A General-Purpose Time-Sharing System*"
+    },
+    {
+      "path": "research/classic-benchmark-collection.md",
+      "title": "Classic benchmark source acquisition",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Classic benchmark source acquisition"
+    },
+    {
+      "path": "research/classic-composite-fitting.md",
+      "title": "Equal-weight classical composite: held-out comparison",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Equal-weight classical composite: held-out comparison"
+    },
+    {
+      "path": "research/classic-composite-overlap.md",
+      "title": "Three-benchmark intersection and clock normalization",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Three-benchmark intersection and clock normalization"
+    },
+    {
+      "path": "research/classic-environment-models.md",
+      "title": "Early-benchmark closeout: environment model comparison",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Early-benchmark closeout: environment model comparison"
+    },
+    {
+      "path": "research/classic-pair-fitting.md",
+      "title": "Two-of-three classical benchmark validation",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Two-of-three classical benchmark validation"
+    },
+    {
+      "path": "research/classic-pdf-extraction.md",
+      "title": "Three-source PDF extraction completed",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Three-source PDF extraction completed"
+    },
+    {
+      "path": "research/classic-pooled-fitting.md",
+      "title": "Pooled SPECint89/92 classical fitting",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Pooled SPECint89/92 classical fitting"
+    },
+    {
+      "path": "research/classic-rate-composite-fitting.md",
+      "title": "Direct classical composites to SPEC92 integer-rate VAXen",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Direct classical composites to SPEC92 integer-rate VAXen"
+    },
+    {
+      "path": "research/classic-source-diagnostics.md",
+      "title": "Diagnosing classical/SPEC92 source differences",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Diagnosing classical/SPEC92 source differences"
+    },
+    {
+      "path": "research/classic-source-pair-fitting.md",
+      "title": "Source-column classical pair experiments",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Source-column classical pair experiments"
+    },
+    {
+      "path": "research/classic-spec-literature.md",
+      "title": "Additional classical/SPEC sources and prior work",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Additional classical/SPEC sources and prior work"
+    },
+    {
+      "path": "research/classic-spec-overlap.md",
+      "title": "Classical benchmark / SPEC89-92 hardware overlap: first pass",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Classical benchmark / SPEC89-92 hardware overlap: first pass"
+    },
+    {
+      "path": "research/classic-spec92-fitting.md",
+      "title": "Classical benchmarks / SPEC92 rate: first exploratory fits",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Classical benchmarks / SPEC92 rate: first exploratory fits"
+    },
+    {
+      "path": "research/cpu92-cpu95-bridge.md",
+      "title": "CPU92–CPU95 integer-speed overlap audit",
+      "role": "archive",
+      "status": "retired",
+      "purpose": "CPU92–CPU95 integer-speed overlap audit"
+    },
+    {
+      "path": "research/data/classic/README.md",
+      "title": "Classic collection and overlap snapshots",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Classic collection and overlap snapshots"
+    },
+    {
+      "path": "research/data/classic/pdf-extraction/README.md",
+      "title": "DEC, SSCL and Tomari/Hiraki table extraction",
+      "role": "guide",
+      "status": "current",
+      "purpose": "DEC, SSCL and Tomari/Hiraki table extraction"
+    },
+    {
+      "path": "research/data/historical/README.md",
+      "title": "Curated historical observations",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Curated historical observations"
+    },
+    {
+      "path": "research/data/spec89/helman-1991/README.md",
+      "title": "Helman SPEC89 worksheet derivative (1991-03-31)",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Helman SPEC89 worksheet derivative (1991-03-31)"
+    },
+    {
+      "path": "research/data/spec89/v2.0.0/README.md",
+      "title": "SPEC89 recovered observations, curated v2.0.0 snapshot",
+      "role": "guide",
+      "status": "current",
+      "purpose": "SPEC89 recovered observations, curated v2.0.0 snapshot"
+    },
+    {
+      "path": "research/early-benchmark-evidence.md",
+      "title": "First local early-benchmark evidence pass",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "First local early-benchmark evidence pass"
+    },
+    {
+      "path": "research/overview.md",
+      "title": "Research overview",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Research overview"
+    },
+    {
+      "path": "research/spec-early-archives.md",
+      "title": "Locating early SPEC CPU results",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Locating early SPEC CPU results"
+    },
+    {
+      "path": "research/spec-entity-resolution.md",
+      "title": "Cross-generation SPEC entity resolution precedents",
+      "role": "archive",
+      "status": "retired",
+      "purpose": "Cross-generation SPEC entity resolution precedents"
+    },
+    {
+      "path": "research/spec2017-8280-speed-rate.md",
+      "title": "Why Xeon Platinum 8280 is absent from the annual speed leader list",
+      "role": "archive",
+      "status": "retired",
+      "purpose": "Why Xeon Platinum 8280 is absent from the annual speed leader list"
+    },
+    {
+      "path": "research/spec89-cpu92-scatter.md",
+      "title": "SPEC89–CPU92 source-paired scatter",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "SPEC89–CPU92 source-paired scatter"
+    },
+    {
+      "path": "research/spec89-curated-snapshot.md",
+      "title": "Curated SPEC89 recovery snapshot",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Curated SPEC89 recovery snapshot"
+    },
+    {
+      "path": "research/spec89-hardware-years.md",
+      "title": "SPEC89 hardware introduction-year audit",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "SPEC89 hardware introduction-year audit"
+    },
+    {
+      "path": "research/spec89-helman-worksheet.md",
+      "title": "Helman's 1991 SPEC89 worksheet derivative",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Helman's 1991 SPEC89 worksheet derivative"
+    },
+    {
+      "path": "research/spec89-rate-bridge.md",
+      "title": "SPECint89 bridge to SPEC92 rate and joint classical fitting",
+      "role": "primary",
+      "status": "current",
+      "purpose": "SPECint89 bridge to SPEC92 rate and joint classical fitting"
+    },
+    {
+      "path": "research/spec92-archive-expansion.md",
+      "title": "SPEC CPU92 integer-rate archive expansion",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "SPEC CPU92 integer-rate archive expansion"
+    },
+    {
+      "path": "research/spec92-vaxen.md",
+      "title": "First SPEC92 VAXen figure",
+      "role": "archive",
+      "status": "retired",
+      "purpose": "First SPEC92 VAXen figure"
+    },
+    {
+      "path": "research/spec95-spec2026-rate-fitting.md",
+      "title": "Exploratory SPEC CPU92–CPU2026 integer-rate fitting",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Exploratory SPEC CPU92–CPU2026 integer-rate fitting"
+    },
+    {
+      "path": "research/tracks/classical.md",
+      "title": "Track 4 — Classical benchmarks and pre-SPEC extension",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Track 4 — Classical benchmarks and pre-SPEC extension"
+    },
+    {
+      "path": "research/tracks/spec-rate.md",
+      "title": "Track 2 — SPEC92 through SPEC2026 integer rate",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Track 2 — SPEC92 through SPEC2026 integer rate"
+    },
+    {
+      "path": "research/tracks/spec89.md",
+      "title": "Track 3 — SPEC89 scavenging and rate bridge",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Track 3 — SPEC89 scavenging and rate bridge"
+    },
+    {
+      "path": "research/tracks/vaxen.md",
+      "title": "Track 1 — VAXen reference and numeric types",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Track 1 — VAXen reference and numeric types"
+    }
+  ]
+}
