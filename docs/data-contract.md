@@ -62,6 +62,12 @@ explain why availability is a configuration-level date.
 
 ## Values and validity
 
+Historical PDF extraction now has an initial
+[JSONL observation contract](../research/data/historical/README.md).
+Keep reviewed values and methodological statements there; unreviewed DocIR
+search hits remain in derived storage. This does not make historical ratings
+eligible for the active integer-rate calibration.
+
 Retain raw scores in their original unit and benchmark variant. Use explicit
 missing values, exclusions, and uncertainty rather than zero or fabricated
 coverage. Record non-compliance or withdrawals when the source discloses them.

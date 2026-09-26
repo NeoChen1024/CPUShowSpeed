@@ -1,11 +1,14 @@
 # Document extraction
 
 Stage 1 OCR extraction, the PDF inventory, and HTML table parser are
-implemented. Image-only captioning is implemented; DocIR backfill remains
-planned. OCR output is
-derived reading material for historical scans. Stage 1 completed the
+implemented, together with image-only captioning and DocIR caption backfill.
+OCR output is derived reading material for historical scans. Stage 1 completed the
 16-document, 2,213-page [watchlist batch](../inventories/watchlist-ocr.txt)
-on 2026-09-26; the full corpus has not been run or throughput-tuned.
+on 2026-09-26. The additional [early-benchmark batch](../inventories/early-benchmark-ocr.txt)
+completed 2 documents / 125 pages, 118 image captions and DocIR backfill on the
+same date. Its [evidence audit](../research/early-benchmark-evidence.md) records
+structural-table exceptions and reviewed claims. The full corpus has not been
+run or throughput-tuned.
 
 ## Implemented PDF inventory
 
@@ -51,7 +54,7 @@ pretending the file has zero pages. Page counts are unknown for failed files.
 The selected [historical DocIR](docir.md) defines how OCR pages and tables
 are represented. Its HTML table converter and Chandra-to-DocIR writer are
 implemented. [Image Pool](image-pool.md) crop storage is implemented;
-batch captioning is implemented, while DocIR backfill is not.
+batch captioning and DocIR caption backfill are also implemented.
 `documents report` shows scoped OCR progress and, when a caption catalog is explicitly supplied,
 Image Pool caption progress; see the linked stage designs for counting rules.
 
@@ -107,7 +110,8 @@ record the resolved reading in curated data or a
 
 When curating checked performance values and related observations, also preserve
 them in a script-readable form under the [data contract](data-contract.md).
-Choose its schema and format when PDF and KIPS extraction starts; searchable OCR
+The initial [historical JSONL observation contract](../research/data/historical/README.md)
+now stores reviewed PDF values and methodological statements; searchable OCR
 Markdown alone is not the curated numerical dataset.
 
 Table row/column alignment, decimal points, signs, exponents, units, footnotes,

@@ -18,12 +18,21 @@ from pathlib import Path
 import blake3
 import click
 import humanize
+from cpushowspeed.docir_rich_table import walk_content
 from cpushowspeed.document_report import collect_ocr_stats
 from cpushowspeed.documents import DEFAULT_DATABASE, _connect
 from cpushowspeed.ocr import _select_inventory
 from openai import AsyncOpenAI
 from rich.console import Console
-from rich.progress import BarColumn, MofNCompleteColumn, Progress, SpinnerColumn, TextColumn, TimeElapsedColumn, TimeRemainingColumn
+from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    TimeElapsedColumn,
+    TimeRemainingColumn,
+)
 
 CONSOLE = Console(file=sys.stderr)
 PROMPT = (
@@ -54,7 +63,7 @@ def _eligible_images(path: Path, expected_pages: int) -> deque[str]:
             page = json.loads(line)
             if page.get("page") != page_number or page.get("status") not in {"ok", "blank"}:
                 raise ValueError(f"invalid page {page_number} in {path}")
-            for block in page["blocks"]:
+            for block in (node for parent in page["blocks"] for node in walk_content(parent)):
                 digest = block.get("image_blake3")
                 if not digest or digest in seen:
                     continue

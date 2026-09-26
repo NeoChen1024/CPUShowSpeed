@@ -10,10 +10,10 @@ analysis and define how future data should be read.
 | [Methods](methods.md) | Rate fitting, VAX throughput reference, and manual reconstruction |
 | [Sources](sources.md) | Source inventory, acquisition order, and source-specific caveats |
 | [SPEC collection](spec-collection.md) | Current integer-rate collectors and fits |
-| [Document extraction](document-extraction.md) | Implemented PDF inventory, OCR extraction, and image captioning; planned backfill and evidence checks |
+| [Document extraction](document-extraction.md) | Implemented PDF inventory, OCR, captioning, backfill, and evidence policy |
 | [OCR dispatch](ocr-dispatch.md) | Implemented bounded PDF rendering, page inference, and resumable DocIR publication |
 | [Historical DocIR](docir.md) | Implemented OCR page/block writer and HTML table projection |
-| [Image Pool and captioning](image-pool.md) | Implemented visual asset pool and batch captions; planned DocIR backfill |
+| [Image Pool and captioning](image-pool.md) | Implemented visual asset pool, batch captions, and DocIR backfill |
 | [Machine watchlist](machine-watchlist.md) | Priority historical systems and variant-specific evidence needs |
 | [TODO](TODO.md) | Unimplemented or unverified research work |
 

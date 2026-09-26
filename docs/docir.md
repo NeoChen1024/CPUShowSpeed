@@ -25,7 +25,7 @@ document header containing source PDF identity, schema version, model, and
 rendering settings, followed by page records. Do not repeat these document-wide
 values in every DocIR page line. No third manifest file is required.
 
-## Page and block shape
+## Version-1 page and block shape
 
 A page record is ordered and keeps the rendered page size so pixel bounding
 boxes are interpretable:
@@ -83,7 +83,7 @@ OCR failure has `status: "error"`, an empty `blocks` array, and an error
 message; it is not counted as complete or included in a published document.
 Blocks follow the OCR reading order.
 
-## HTML table conversion
+## Version-1 HTML table conversion
 
 Build table blocks from Chandra's original block HTML, before using its
 document-level Markdown. Its current Markdown converter leaves `<table>`
@@ -114,6 +114,145 @@ pilot that included one 20-row HTML table. One legitimate binary table row
 triggered Chandra's trimmed-suffix repeat check; the OCR adapter now exempts
 short, complete binary table cells while still retrying degenerate output.
 This does not validate the extracted text against original PDF pages.
+
+## Version 2: compound tables and rich cells
+
+Implemented and checked on 2026-09-26. New OCR uses the version-2 table schema;
+the reading API also supports existing version-1 blocks above. Both
+renderers place merged-cell text only at its top-left anchor,
+leaving the other covered grid positions empty. Do not remove spans from the
+canonical representation to simplify Markdown.
+
+The Honeywell batch exposes three additional structural cases:
+
+- Physical page 51, block 5: a genuine table inside a parameter-description
+  cell, following prose; the inner rows must remain attached to that cell.
+- Pages 52, 55, 57, 72 and 83: surrounding text belongs to the same OCR chunk
+  as the table. Preserve its position instead of rejecting or dropping it.
+- Pages 63, 64 and 89: cells contain `img` elements. Some provide only OCR
+  alt text, without a source URI or a cell-specific bounding box. Preserve this
+  unresolved visual occurrence rather than inventing a crop or numeric value.
+
+### Canonical representation
+
+Keep exactly one DocIR block per raw OCR chunk. A version-2 table block has
+`table_schema_version: 2` and an ordered `content` array. Its children can be
+`text`, `table` or `image` nodes. A cell has the existing `row`, `column`,
+`rowspan`, `colspan` and `header`, but replaces `text` with its own ordered
+`content` array. This supports prose around tables, multiple sibling tables,
+and nested tables without flattening their ownership or reading order.
+
+Illustrative structure, not a source transcription:
+
+```json
+{
+  "kind": "table",
+  "source_label": "Table",
+  "table_schema_version": 2,
+  "bbox_px": [100, 200, 900, 700],
+  "content": [
+    {"kind": "text", "text": "Parameters"},
+    {
+      "kind": "table",
+      "row_count": 1,
+      "column_count": 2,
+      "caption": null,
+      "row_groups": [],
+      "cells": [
+        {
+          "row": 0, "column": 0, "rowspan": 1, "colspan": 2,
+          "header": false,
+          "content": [
+            {"kind": "text", "text": "Control character"},
+            {
+              "kind": "image", "source_uri": null,
+              "image_blake3": null, "bbox_px": null,
+              "alt": "OCR description of a control-field diagram",
+              "asset_status": "unresolved"
+            }
+          ]
+        }
+      ]
+    },
+    {"kind": "text", "text": "Footnote following the table."}
+  ]
+}
+```
+
+Text nodes preserve the existing supported superscript/subscript and math
+notation; they are content, not a pre-rendered pipe table. A nested table uses
+the same table-node shape recursively. `row_groups`, when present in the HTML,
+record `thead`, `tbody` or `tfoot` with zero-based `start_row` and `row_count`.
+Do not infer semantic headers or footnote targets from typography alone.
+Do not duplicate cell content in a stored flattened `text` or `markdown` field.
+
+An image's `source_uri` records the literal source reference, without fetching
+it automatically. `image_blake3` is set only when an actual corresponding asset
+exists in the Image Pool. An absent cell-image bbox remains null; the enclosing
+block/page still locates the source for review. OCR alt text remains unverified.
+A whole-table crop may aid review but must not be presented as a cell crop.
+
+### Markdown reading projection
+
+- Expand each table to a rectangular grid; write cell contents only at the
+  top-left coordinate of its span. Covered positions stay empty. Retain
+  separate header rows; do not merge their labels or repeat their values.
+- Use a Markdown header only when supported by the source header cells;
+  otherwise add an empty synthetic header as the current renderer does.
+- Render text within a cell in order, using `<br>` for paragraph boundaries.
+- Render a nested table as an explicit reference in its owning cell, followed
+  by a separate pipe table with a deterministic label derived from the parent
+  table/cell path. Recursively emit every nested table; never replace it with
+  a summary that drops rows. Sibling tables remain in source order.
+- Use an explicit image placeholder with its unverified alt text and available
+  asset reference. Do not interpret a diagram into invented table values.
+- Render surrounding text in order before/between/after tables. Keep footnotes
+  verbatim in position unless their semantic association has been reviewed.
+
+The reading projection is deliberately lossy in layout and must not be used to
+reconstruct canonical table geometry. Scripts consume the structured records.
+
+### Implementation and migration
+
+1. `docir_rich_table.py` implements the version-2 reader/writer and renderer
+   alongside the version-1 reader. Validation bounds nesting (32), nodes
+   (100,000), HTML input (8 million characters) and aggregate grid slots
+   (1 million), in addition to the existing row/column limits. Invalid overlapping spans
+   remain explicit errors, rather than being silently repaired.
+2. `documents migrate-tables` reconverts saved raw chunk HTML without inference,
+   using the existing output lock and atomic replacement per document. It checks
+   source hash identity, page counts/order, status and block/chunk alignment.
+   It preserves unrelated fields/captions and raw JSONL. Existing v2 blocks are
+   validated and retained, including any subsequently resolved image metadata.
+   A failed conversion leaves that document unchanged; previously completed
+   documents can remain migrated. Repeat the command to resume safely.
+3. The nine real failure blocks are regression fixtures, alongside merged
+   headers, nesting, surrounding text, sibling tables and unresolved images.
+   Their original text/numeric token multiplicities survive conversion.
+   Structural checks and reading projections do not certify OCR accuracy.
+4. `walk_content` traverses rich cells and nested nodes for retrieval and image
+   consumers. Caption selection/backfill and image reporting use it. The report
+   lists unresolved inline images separately from resolved Image Pool assets;
+   they are not counted as completed captions. No automatic image resolver is
+   implemented, and image URIs are never fetched during conversion.
+
+```sh
+.venv/bin/cpushowspeed documents migrate-tables \
+  --output-root data/derived/documents/chandra-ocr \
+  --file-list inventories/early-benchmark-ocr.txt --dry-run
+.venv/bin/cpushowspeed documents migrate-tables \
+  --output-root data/derived/documents/chandra-ocr \
+  --file-list inventories/early-benchmark-ocr.txt
+.venv/bin/cpushowspeed documents render-tables \
+  data/derived/documents/chandra-ocr/honeywell/h300/Honeywell_300_Programmers_Reference_Manual_Aug64.docir.jsonl \
+  --page 51
+```
+
+The two-document batch now contains 58 v2 table blocks; all nine previous
+conversion failures are represented. Its 12 unresolved inline images retain OCR
+alt text and enclosing page/block provenance. Raw hashes, page/block positions,
+non-table blocks and table metadata were checked unchanged; a repeated migration
+changed zero blocks. The 16-document watchlist remains readable as v1.
 
 ## Structured diagrams
 
@@ -148,7 +287,7 @@ The PDF page and block position already locate the source occurrence.
 Image bytes and encoder metadata belong to the Image Pool. A successful
 caption is stored first in its SQLite catalog, then copied into the visual
 block's `caption` field by the separate backfill stage. SQLite is the
-caption source of truth; `caption: null` means no successful caption is
-available. OCR must not carry a stale caption across a changed
+caption source of truth; `caption: null` means no caption has been copied
+into this block yet. Run `documents backfill-captions` after captioning. OCR must not carry a stale caption across a changed
 `image_blake3`. If a visual block cannot be cropped safely, keep the
 block in place with an explicit error and omit `image_blake3`.

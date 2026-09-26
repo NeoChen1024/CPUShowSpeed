@@ -1,0 +1,2 @@
+honeywell/h300/Honeywell_300_Programmers_Reference_Manual_Aug64.pdf
+dec/pdp11/memos/700325_Programming_Benchmarks.pdf

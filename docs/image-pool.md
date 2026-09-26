@@ -5,7 +5,7 @@ identifies the bytes of each stored crop; it is not a way to match similar
 pictures across PDFs. Different pixel crops of the same printed figure will
 normally have different hashes. The original PDF remains the source of
 record. OCR-stage crop storage and the image-only captioning command are
-implemented; DocIR backfill remains planned.
+implemented, including repeatable DocIR caption backfill.
 
 ## Storing images
 
@@ -27,7 +27,7 @@ unreferenced files from earlier runs.
 The pool stores image files; a small SQLite catalog records digest, path,
 media type, and dimensions. DocIR owns the source PDF/page/block reference.
 Image bytes are not copied into DocIR. Successful captions are copied from
-SQLite into DocIR by a later, repeatable backfill stage.
+SQLite into DocIR by the repeatable backfill command.
 
 ## Conditional reporting
 
@@ -58,8 +58,9 @@ or unpublished staging work. If the
 selected published documents contain no images, show a count of zero and
 an unavailable percentage rather than 100%.
 
-When DocIR caption backfill is implemented, its materialized-copy progress
-should be identified separately from captions saved in SQLite.
+`documents report` measures captions saved in SQLite. The backfill command
+separately reports scanned pages, updated documents, and copied caption
+occurrences; it does not add persistent progress state.
 
 ## Choosing what to caption
 
@@ -138,12 +139,41 @@ handles Gemma 4 chat-template tokens. It asks for visible detail and explicit
 uncertainty, following Google's [vision prompting guidance](https://ai.google.dev/gemma/docs/capabilities/vision)
 and [Gemma 4 prompt format](https://ai.google.dev/gemma/docs/core/prompt-formatting-gemma4).
 
-After captioning, a separate `documents backfill-captions` stage reads
+## Backfilling DocIR captions
+
+The implemented `documents backfill-captions` command reads
 successful captions by `image_blake3`, rewrites affected DocIR files through
 atomic replacement, and leaves raw OCR JSONL unchanged. The backfill is
 idempotent and does not run concurrently with OCR publication of the same
 document. Structured diagrams remain uncaptioned by default; important
 ones can be reviewed visually or included in a later explicit pass.
+
+```sh
+.venv/bin/cpushowspeed documents backfill-captions \
+  --output-root data/derived/documents/chandra-ocr \
+  --file-list inventories/watchlist-ocr.txt
+```
+
+Use `--all` instead of `--file-list` to select all published documents.
+`--caption-database` optionally selects a catalog; the default is
+`<output-root>/ImagePool/catalog.sqlite`. `--dry-run` validates documents
+and reports planned changes without replacing files.
+
+Each invocation reads a consistent SQLite snapshot. A nonempty saved caption
+replaces an absent or older DocIR caption for the same image hash, including
+any deliberately captioned structured diagram. Missing or empty captions
+leave the block unchanged. Each document is streamed into a temporary file
+beside the original, validated for page order/status/count, flushed, and
+atomically replaced only if captions changed. All other fields and block
+positions are preserved. The command holds the OCR output lock to exclude
+OCR publication and other backfills. Ctrl+C leaves completed documents in
+place and removes the current temporary file; repeating the command resumes
+by comparing actual caption values.
+
+The watchlist backfill updated 1,079 image occurrences in 15 of 16 documents
+across 2,213 scanned pages. A second invocation updated zero documents;
+raw JSONL hashes, non-caption DocIR fields, and second-run file modification
+times were checked. This verifies materialization, not caption accuracy.
 
 ## SQLite state
 

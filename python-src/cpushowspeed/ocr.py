@@ -32,7 +32,8 @@ from chandra.model.util import detect_repeat_token, scale_to_fit
 from chandra.output import parse_chunks, parse_markdown
 from chandra.prompts import PROMPT_MAPPING
 from chandra.settings import settings
-from cpushowspeed.docir_table import TableConversionError, convert_html_table
+from cpushowspeed.docir_rich_table import convert_rich_table
+from cpushowspeed.docir_table import TableConversionError
 from cpushowspeed.documents import DEFAULT_DATABASE, _connect
 from openai import AsyncOpenAI
 from PIL import Image
@@ -173,7 +174,7 @@ def _convert_page(raw: str, full_png: bytes, page: int, pool: Path) -> tuple[dic
         if label == "Table":
             block["kind"] = "table"
             try:
-                block["table"] = convert_html_table(content).as_dict()
+                block.update(convert_rich_table(content))
             except TableConversionError as exc:
                 block.update(table=None, conversion_status="failed", error=str(exc))
         else:

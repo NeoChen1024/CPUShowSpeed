@@ -111,7 +111,7 @@ class OCRTests(unittest.TestCase):
             page, chunks, assets = _convert_page(raw, encoded.getvalue(), 1, pool)
             self.assertEqual(len(chunks), len(page["blocks"]))
             self.assertEqual([block["kind"] for block in page["blocks"]], ["text", "table", "visual", "diagram"])
-            self.assertEqual(page["blocks"][1]["table"]["cells"][1]["text"], "A")
+            self.assertEqual(page["blocks"][1]["content"][0]["cells"][1]["content"][0]["text"], "A")
             self.assertNotIn("markdown", page["blocks"][1])
             self.assertEqual(page["blocks"][3]["diagram"]["format"], "mermaid")
             self.assertEqual(len(assets), 2)

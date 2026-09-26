@@ -3,7 +3,7 @@
 This directory holds source-checked findings and method audits. Preserve the
 original metric, machine configuration, source URL or page, review date, and
 uncertainty. Historical values extracted from PDFs should also enter a
-script-readable dataset when that schema is defined; Markdown alone is not
+script-readable [historical observation dataset](data/historical/README.md); Markdown alone is not
 the canonical numeric store. The [data contract](../docs/data-contract.md)
 defines provenance and date handling.
 
@@ -20,6 +20,10 @@ defines provenance and date handling.
   remaining first-issue gaps.
 
 ## Preserved historical evidence
+
+- [First local early-benchmark evidence pass](early-benchmark-evidence.md):
+  source-checked Honeywell Gibson ratings, original PDP-8 timing inputs and
+  the analytical evidence boundary of the DEC programming-benchmark memo.
 
 The [curated SPEC89 source package](data/spec89/v2.0.0/README.md),
 [Helman worksheet supplement](spec89-helman-worksheet.md), and

@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import click
+from cpushowspeed.docir_rich_table import walk_content
 from cpushowspeed.ocr import _select_inventory
 from rich.console import Console
 from rich.table import Table
@@ -41,6 +42,7 @@ class CaptionStats:
     skipped: int = 0
     failed: int = 0
     pending: int = 0
+    unresolved: int = 0
 
     @property
     def processed(self) -> int:
@@ -94,9 +96,9 @@ def collect_ocr_stats(connection: sqlite3.Connection, run_id: str, output_root: 
     return stats
 
 
-def _image_occurrences(published: list[tuple[Path, int]]) -> tuple[int, dict[str, list[int]]]:
+def _image_occurrences(published: list[tuple[Path, int]]) -> tuple[int, dict[str, list[int]], int]:
     counts: dict[str, list[int]] = defaultdict(lambda: [0, 0])
-    total = 0
+    total = unresolved = 0
     for docir_path, expected_pages in published:
         try:
             with docir_path.open(encoding="utf-8") as stream:
@@ -104,7 +106,9 @@ def _image_occurrences(published: list[tuple[Path, int]]) -> tuple[int, dict[str
                 for line in stream:
                     page = json.loads(line)
                     pages += 1
-                    for block in page["blocks"]:
+                    for block in (node for parent in page["blocks"] for node in walk_content(parent)):
+                        if block.get("kind") == "image" and block.get("asset_status") == "unresolved":
+                            unresolved += 1
                         digest = block.get("image_blake3")
                         if not isinstance(digest, str) or not digest:
                             continue
@@ -117,19 +121,19 @@ def _image_occurrences(published: list[tuple[Path, int]]) -> tuple[int, dict[str
                     raise ValueError(f"expected {expected_pages} pages, found {pages}")
         except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
             raise click.ClickException(f"cannot count images in {docir_path}: {exc}") from exc
-    return total, counts
+    return total, counts, unresolved
 
 
 def collect_caption_stats(database: Path, published: list[tuple[Path, int]]) -> CaptionStats:
     if not database.is_file():
         raise click.ClickException(f"caption database does not exist: {database}")
-    total, counts = _image_occurrences(published)
+    total, counts, unresolved = _image_occurrences(published)
     try:
         with closing(sqlite3.connect(f"{database.resolve().as_uri()}?mode=ro", uri=True)) as connection:
             if not _has_table(connection, "images"):
                 raise click.ClickException(f"caption database has no images table: {database}")
             if not _has_table(connection, "captions"):
-                return CaptionStats(total, initialized=False)
+                return CaptionStats(total, initialized=False, unresolved=unresolved)
             columns = {row[1] for row in connection.execute("PRAGMA table_info(captions)")}
             if not {"image_blake3", "caption", "last_error"} <= columns:
                 raise click.ClickException("captions table needs image_blake3, caption, and last_error columns")
@@ -145,7 +149,7 @@ def collect_caption_stats(database: Path, published: list[tuple[Path, int]]) -> 
     except sqlite3.DatabaseError as exc:
         raise click.ClickException(f"cannot read caption database {database}: {exc}") from exc
 
-    stats = CaptionStats(total, initialized=True)
+    stats = CaptionStats(total, initialized=True, unresolved=unresolved)
     for digest, (eligible, structured) in counts.items():
         caption, error = captions.get(digest, (None, None))
         if isinstance(caption, str) and caption.strip():
@@ -193,7 +197,8 @@ def _caption_table(stats: CaptionStats, database: Path) -> Table:
     table.add_column("Metric", style="cyan")
     table.add_column("Value", justify="right")
     table.add_row("Database", str(database))
-    table.add_row("Images in published DocIR", f"{stats.images:,}")
+    table.add_row("Resolved images in published DocIR", f"{stats.images:,}")
+    table.add_row("Unresolved inline images (not captionable)", f"{stats.unresolved:,}")
     if not stats.initialized:
         table.add_row("Captioning", "not started (no captions table)")
         return table

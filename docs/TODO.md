@@ -19,11 +19,19 @@ owning document as work lands; remove superseded items.
 - [ ] Search original early SPEC newsletters for additional CPU92 rate
       disclosures, especially before the 1993 Netlib coverage; keep the 1992
       Digital manufacturer brief separate from official submissions.
-- [ ] When historical PDF and KIPS extraction begins, choose a script-readable
-      format and schema for checked values and related observations, define
-      stable source/result IDs and migrate checked numeric examples.
-- [ ] Evaluate MinerU or another OCR tool on representative historical scans;
-      verify page mapping and table transcription before using values.
+- [ ] Extend the [historical JSONL observations](../research/data/historical/README.md)
+      with source-checked mix definitions, configuration details and timing
+      conditions; reproduce published KIPS calculations before fitting them.
+- [ ] Work through the [pre-SPEC source catalog](sources.md#pre-spec-collection-phase):
+      recover original Gibson/ADP/Process Control definitions and COPRXX leads;
+      collect historical results and source programs before choosing an assembly
+      reconstruction pilot. Build a configuration-by-benchmark coverage table.
+- [ ] Search the completed watchlist DocIR for benchmark and timing evidence;
+      verify candidate tables and page mappings against local PDFs before
+      curating values. The early-benchmark batch is processed; review its nine
+      recovered Honeywell compound tables against original PDFs, including the
+      12 inline images with unresolved assets. The v2 structural migration is
+      complete; transcription and image resolution remain separate work.
 - [ ] Inspect shortlisted bitsavers PDFs for model-specific timings and cite
       page numbers; reproduce published instruction-mix capacity examples.
 - [ ] Work through the [machine watchlist](machine-watchlist.md), including
