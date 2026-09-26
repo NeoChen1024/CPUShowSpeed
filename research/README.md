@@ -1,51 +1,33 @@
 # Verified research findings
 
-This directory is the repository home for findings checked against primary
-source pages or other clearly identified evidence. It is an index and
-contribution guide. Candidate leads
-belong in the [machine watchlist](../docs/machine-watchlist.md), while the
-[document extraction policy](../docs/document-extraction.md) governs OCR text.
+This directory holds source-checked findings and method audits. Preserve the
+original metric, machine configuration, source URL or page, review date, and
+uncertainty. Historical values extracted from PDFs should also enter a
+script-readable dataset when that schema is defined; Markdown alone is not
+the canonical numeric store. The [data contract](../docs/data-contract.md)
+defines provenance and date handling.
 
-Create a focused Markdown file here when evidence has been checked, for example
-`research/pdp-8.md` or `research/ibm-1401.md`, and link it from this index. Keep
-original names, model/revision distinctions, units, conditions, and uncertainty.
-A useful finding records:
+## Active rate research
 
-- The precise claim or transcribed value, including its unit and applicability.
-- The original document title, issuing organization, form or revision number,
-  and original page/table number; provide a source URL or archive path when
-  available.
-- How the page was checked, especially if OCR or a VLM first suggested the
-  reading, and the review date in `YYYY-MM-DD`.
-- Any unresolved ambiguity or conflicting source, without turning the finding
-  into a silently chosen single value.
+- [SPEC CPU92–CPU2026 integer-rate fitting](spec95-spec2026-rate-fitting.md):
+  five adjacent throughput fits, source-linked scatterplots, CPU92 VAX
+  reference, and exploratory chain.
+- [SPEC92 rate archive expansion](spec92-archive-expansion.md): 274 Netlib
+  integer-rate reports and 1992 manufacturer-reported observations.
+- [Early SPEC archive locations](spec-early-archives.md): provenance and
+  remaining first-issue gaps.
 
-Once historical PDF and KIPS extraction starts, keep checked numerical findings
-and their conditions in a script-readable dataset as well. Select its schema and
-format then, and migrate checked examples already present in Markdown notes.
-Research notes remain useful for the evidence trail and interpretation.
+## Preserved historical evidence
 
-## Current findings
+The [curated SPEC89 source package](data/spec89/v2.0.0/README.md),
+[Helman worksheet supplement](spec89-helman-worksheet.md), and
+[source-checked hardware-date catalog](spec89-hardware-years.md) remain as
+archival research. They are excluded from the active rate fitting pipeline.
+The [machine watchlist](../docs/machine-watchlist.md) and
+[document extraction policy](../docs/document-extraction.md) guide older
+hardware work. The [Chandra OCR sample audit](chandra-timesharing-sample.md)
+records checks of page figures and tables.
 
-- [Chandra time-sharing sample QA](chandra-timesharing-sample.md): original-page
-  checks of diagram code, omitted figure content, and image/caption routing.
-
-- [Early SPEC archive locations](spec-early-archives.md): verified CPU89/CPU92
-  source paths and remaining first-issue gaps.
-- [Curated SPEC89 recovery snapshot](spec89-curated-snapshot.md): source-linked
-  machine-readable observations, package validation, and CPU89–CPU92 bridge limits.
-- [Helman 1991 SPEC89 worksheet derivative](spec89-helman-worksheet.md): 40 source-checked rows merged with explicit derivative and uncertainty flags.
-- [SPEC89 hardware introduction audit](spec89-hardware-years.md): source-linked model-year catalog, unresolved labels, and reproducible row-level join.
-- [SPEC89–CPU92 source-paired scatter](spec89-cpu92-scatter.md): two metric-specific
-  panels retaining all 34 cited bridge observations.
-- [CPU92–CPU95 overlap audit](cpu92-cpu95-bridge.md): 13 reviewed configuration-near
-  integer-speed pairs, provisional stratum ratios, and a machine-readable review table.
-- [SPEC entity resolution precedents](spec-entity-resolution.md): published processor matching methods, local overlap probe, and graded matching proposal.
-- [SPEC92–SPEC2026 fitting audit](spec92-spec2026-fitting.md): five adjacent integer-speed fits, source-linked diagnostics, and no empirical three-suite cycle.
-- [First SPEC92 VAXen figure](spec92-vaxen.md): source-checked annual CINT92
-  results and coverage limits.
-
-A checked transcription is still distinct from an executed benchmark result,
-manual reconstruction, or cross-benchmark estimate; follow the
-[data contract](../docs/data-contract.md) for those records. Do not copy whole
-PDFs, bulk OCR Markdown, or transient investigation logs into this directory.
+Keep bulk OCR and temporary debugging transcripts out of research notes. A
+reported benchmark, manual reconstruction and normalized estimate must remain
+separately identified.

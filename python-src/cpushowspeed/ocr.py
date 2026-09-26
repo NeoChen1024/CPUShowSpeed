@@ -378,6 +378,21 @@ async def _request(
         return "", 0, None, f"{type(exc).__name__}: {exc}"[:500]
 
 
+def _has_bad_repeat(raw: str) -> bool:
+    if detect_repeat_token(raw):
+        return True
+    if len(raw) <= 50 or not detect_repeat_token(raw, cut_from_end=50):
+        return False
+    # Chandra's second check can end inside a legitimate binary table cell
+    # after trimming closing HTML. Do not treat a short complete bit row as
+    # model degeneration; long repeated bit runs remain retryable.
+    trimmed = raw[:-50]
+    cell = re.search(r"<td(?:\s[^>]*)?>([01\s]+)$", trimmed)
+    if cell and raw.rstrip().endswith("</div>") and len(re.findall(r"[01]", cell.group(1))) <= 256:
+        return False
+    return True
+
+
 def _failure_record(page: int, reason: str, payload: PagePayload | None = None) -> tuple[dict, dict]:
     size = [payload.width, payload.height] if payload else None
     raw_record = {
@@ -415,6 +430,68 @@ def _prepare_page(
     return record, docir, assets
 
 
+def _read_file_list(file_list: Path, input_root: Path) -> list[str]:
+    paths = []
+    seen = set()
+    duplicates = 0
+    try:
+        lines = file_list.read_text(encoding="utf-8-sig").splitlines()
+    except (OSError, UnicodeError) as exc:
+        raise click.ClickException(f"cannot read file list {file_list}: {exc}") from exc
+    for line_number, line in enumerate(lines, 1):
+        if not line.strip():
+            continue
+        source = Path(line).expanduser()
+        if source.is_absolute():
+            try:
+                relative = source.resolve().relative_to(input_root)
+            except ValueError as exc:
+                raise click.ClickException(f"{file_list}:{line_number}: path is outside PDF root: {line}") from exc
+        else:
+            if ".." in source.parts:
+                raise click.ClickException(f"{file_list}:{line_number}: parent traversal is not allowed: {line}")
+            relative = source
+        if relative.suffix.lower() != ".pdf":
+            raise click.ClickException(f"{file_list}:{line_number}: expected a PDF path: {line}")
+        key = relative.as_posix()
+        if key in seen:
+            duplicates += 1
+            continue
+        seen.add(key)
+        paths.append(key)
+    if not paths:
+        raise click.ClickException(f"file list has no PDF paths: {file_list}")
+    if duplicates:
+        CONSOLE.print(f"[yellow]Ignored {duplicates:,} duplicate file-list entries.[/yellow]")
+    return paths
+
+
+def _select_inventory(
+    connection: sqlite3.Connection, input_root: Path, file_list: Path | None, prefix: str, limit_documents: int | None
+) -> list[sqlite3.Row]:
+    columns = "relative_path, pages, size_bytes, blake3, mtime_ns, ctime_ns, status"
+    if file_list is not None:
+        selected_paths = _read_file_list(file_list, input_root)
+        available = {row["relative_path"]: row for row in connection.execute(f"SELECT {columns} FROM files")}
+        selected = []
+        for relative in selected_paths:
+            row = available.get(relative)
+            if row is None:
+                raise click.ClickException(f"file list names a PDF absent from inventory: {relative}")
+            if row["status"] != "ok":
+                raise click.ClickException(f"file list names a PDF with inventory status {row['status']}: {relative}")
+            selected.append(row)
+        return selected
+    sql = f"SELECT {columns} FROM files WHERE status = 'ok'"
+    args: tuple = ()
+    if prefix:
+        sql += " AND relative_path LIKE ? ESCAPE '\\'"
+        args = (prefix.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%",)
+    sql += " ORDER BY relative_path"
+    selected = connection.execute(sql, args).fetchall()
+    return selected[:limit_documents] if limit_documents is not None else selected
+
+
 async def _run_ocr(
     database: Path,
     input_root: Path,
@@ -424,6 +501,7 @@ async def _run_ocr(
     jobs: int,
     inflight_pages: int,
     buffer_mib: int,
+    file_list: Path | None,
     prefix: str,
     limit_documents: int | None,
     request_timeout: float,
@@ -434,6 +512,15 @@ async def _run_ocr(
     image_catalog = _init_image_catalog(output_root / "ImagePool")
     try:
         _init_state(connection)
+        inventory = _select_inventory(connection, input_root, file_list, prefix, limit_documents)
+        if not inventory:
+            raise click.ClickException("no inventoried PDFs match the selection")
+        destinations = {}
+        for row in inventory:
+            key = Path(row["relative_path"]).with_suffix("").as_posix().casefold()
+            previous = destinations.setdefault(key, row["relative_path"])
+            if previous != row["relative_path"]:
+                raise click.ClickException(f"output-name collision: {previous} and {row['relative_path']}")
         config = {
             "input_root": str(input_root),
             "output_root": str(output_root),
@@ -456,23 +543,6 @@ async def _run_ocr(
             run_id = uuid.uuid4().hex
             connection.execute("INSERT INTO ocr_runs VALUES (?, ?, ?, ?)", (run_id, str(output_root), _json(config), _now()))
             connection.commit()
-        sql = "SELECT relative_path, pages, size_bytes, blake3, mtime_ns, ctime_ns FROM files WHERE status = 'ok'"
-        args: tuple = ()
-        if prefix:
-            sql += " AND relative_path LIKE ? ESCAPE '\\'"
-            args = (prefix.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%",)
-        sql += " ORDER BY relative_path"
-        inventory = connection.execute(sql, args).fetchall()
-        if limit_documents is not None:
-            inventory = inventory[:limit_documents]
-        if not inventory:
-            raise click.ClickException("no inventoried PDFs match the selection")
-        destinations = {}
-        for row in inventory:
-            key = Path(row["relative_path"]).with_suffix("").as_posix().casefold()
-            previous = destinations.setdefault(key, row["relative_path"])
-            if previous != row["relative_path"]:
-                raise click.ClickException(f"output-name collision: {previous} and {row['relative_path']}")
         inventory_by_path = {row["relative_path"]: row for row in inventory}
         records = {
             row["relative_path"]: row for row in connection.execute("SELECT * FROM ocr_documents WHERE run_id = ?", (run_id,))
@@ -512,7 +582,8 @@ async def _run_ocr(
                 completed_total += len(doc.completed)
             documents.append(doc)
         connection.commit()
-        documents.sort(key=lambda doc: (doc.started_at is None, doc.started_at or "", doc.relative))
+        # Stable sorting preserves file-list order among documents that have not started.
+        documents.sort(key=lambda doc: (doc.started_at is None, doc.started_at or ""))
         total_pages = sum(row["pages"] for row in inventory)
         buffer_bytes = buffer_mib * 1024 * 1024
         active: list[Document] = []
@@ -537,6 +608,7 @@ async def _run_ocr(
                 CONSOLE.print("[yellow]Second interrupt:[/yellow] cancelling outstanding OCR requests now.")
 
         loop.add_signal_handler(signal.SIGINT, request_stop)
+        loop.add_signal_handler(signal.SIGTERM, request_stop)
         async with AsyncOpenAI(api_key=settings.VLLM_API_KEY, base_url=api_base, max_retries=0) as client:
             with (
                 ProcessPoolExecutor(
@@ -680,9 +752,7 @@ async def _run_ocr(
                                 reason = "output truncated at max tokens"
                             if not reason and not raw.strip():
                                 reason = "empty response"
-                            if not reason and (
-                                detect_repeat_token(raw) or (len(raw) > 50 and detect_repeat_token(raw, cut_from_end=50))
-                            ):
+                            if not reason and _has_bad_repeat(raw):
                                 reason = "repeated output"
                             if reason:
                                 payload.reasons.append(reason)
@@ -773,6 +843,7 @@ async def _run_ocr(
                         active.remove(doc)
                     connection.commit()
         loop.remove_signal_handler(signal.SIGINT)
+        loop.remove_signal_handler(signal.SIGTERM)
         if stop_requested:
             for doc in active:
                 connection.execute(
@@ -806,7 +877,13 @@ async def _run_ocr(
 @click.option("-j", "--jobs", type=click.IntRange(1), default=4, show_default=True, help="PDF rendering process pool size.")
 @click.option("--inflight-pages", type=click.IntRange(1), default=8, show_default=True)
 @click.option("--buffer-mib", type=click.IntRange(32), default=512, show_default=True)
+@click.option(
+    "--file-list",
+    type=click.Path(path_type=Path, exists=True, dir_okay=False),
+    help="UTF-8 text file with one inventoried PDF path per line, relative to the PDF root or absolute.",
+)
 @click.option("--prefix", default="", help="Source-relative path prefix to process.")
+@click.option("--all", "all_documents", is_flag=True, help="Explicitly process every inventoried PDF.")
 @click.option("--limit-documents", type=click.IntRange(1), default=None, help="Limit a pilot to this many PDFs.")
 @click.option("--request-timeout", type=click.FloatRange(min=1), default=600.0, show_default=True)
 @click.option("--max-retries", type=click.IntRange(0), default=settings.MAX_VLLM_RETRIES, show_default=True)
@@ -826,7 +903,9 @@ def ocr_command(
     jobs: int,
     inflight_pages: int,
     buffer_mib: int,
+    file_list: Path | None,
     prefix: str,
+    all_documents: bool,
     limit_documents: int | None,
     request_timeout: float,
     max_retries: int,
@@ -841,6 +920,12 @@ def ocr_command(
     root = (input_root or Path(stored[0])).resolve(strict=True)
     if str(root) != stored[0]:
         raise click.ClickException(f"inventory belongs to {stored[0]}")
+    if file_list is not None and (prefix or limit_documents is not None or all_documents):
+        raise click.ClickException("--file-list cannot be combined with --prefix, --limit-documents, or --all")
+    if all_documents and (prefix or limit_documents is not None):
+        raise click.ClickException("--all cannot be combined with --prefix or --limit-documents")
+    if file_list is None and not prefix and limit_documents is None and not all_documents:
+        raise click.ClickException("select PDFs with --file-list, --prefix, or --limit-documents; use --all for the full inventory")
     output = output_root.resolve()
     if output == root or root in output.parents:
         raise click.ClickException("output root must be outside the source PDF tree")
@@ -861,6 +946,7 @@ def ocr_command(
                     jobs,
                     inflight_pages,
                     buffer_mib,
+                    file_list,
                     prefix,
                     limit_documents,
                     request_timeout,

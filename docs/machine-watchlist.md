@@ -64,6 +64,18 @@ and `pdf/honeywell/large_systems/multics/swenson/7307.6180-debuggers-handbook.PD
 Check which hardware revision each document describes; later Multics processor
 manuals must not automatically be treated as 6180 timing sources.
 
+## OCR reading batch
+
+The [machine-readable OCR file list](../inventories/watchlist-ocr.txt) contains
+all 16 explicitly named PDF leads above, ordered so short instruction and
+timing references are processed before longer manuals; the secondary LINC
+brochure is last. All 16 paths had `ok` inventory records on 2026-09-26,
+totaling 2,213 pages. OCR generated DocIR for all 16 documents on
+2026-09-26. This selects documents for reading and does not verify
+that their contents describe the required machine revision or contain usable
+timing evidence. OCR text and model-generated diagrams still require checks
+against the original PDF pages.
+
 ## Evidence needed for each target
 
 Find the exact processor and configuration, original instruction semantics,

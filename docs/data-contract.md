@@ -21,11 +21,9 @@ operating system, compiler, tuning, floating-point precision, and scalar/vector
 mode. Unknown details remain unknown; they are not inferred from model names.
 
 For parallelism, keep distinct fields for enabled hardware cores and SMT
-threads, configured or requested benchmark threads, concurrently run copies,
-and any independently observed worker/process count. An absent observed count
-stays unknown. In particular, a `SPECspeed` result with one copy is not
-necessarily one-thread performance, and a reported `Threads` value describes
-the requested/allowed setting rather than an exact runtime worker census.
+threads, concurrently run benchmark copies, requested software threads, and
+any independently observed worker/process count. An absent observed count
+stays unknown. A rate copy count is not a core count or a measured worker census.
 
 Source references must be precise enough to revisit the value: result URL or
 document citation, page/table or result ID, and retrieval or transcription
@@ -52,12 +50,11 @@ is on its horizontal axis. For the main hardware-era view, prefer the reported
 availability of the *tested hardware configuration* when a SPEC disclosure
 provides it. SPEC defines this as the date when the last required hardware
 component became generally available, which can be later than the launch of
-the named machine or CPU. For SPEC89, where that field is absent, use a
-source-checked model introduction or availability year as a provisional proxy;
-label its event type and keep undated models out of year groups. Do not silently
-pool these two date definitions. Keep publication/test-year views available as
-separate diagnostics. A manual reconstruction of an older machine is not a
-measurement made in its introduction year.
+the named machine or CPU. For earlier machines without a comparable configuration-availability field,
+use a source-checked model introduction or availability date as a separately
+labeled event. Do not silently pool those date definitions. Keep
+publication/test-year views available as diagnostics. A manual reconstruction
+of an older machine is not a measurement made in its introduction year.
 
 [SPEC's hardware-availability field definition](https://www.spec.org/cpu2026/Docs/result-fields.html)
 and [run rule](https://www.spec.org/cpu2026/docs/runrules.html#section4.2.3)
@@ -69,4 +66,9 @@ Retain raw scores in their original unit and benchmark variant. Use explicit
 missing values, exclusions, and uncertainty rather than zero or fabricated
 coverage. Record non-compliance or withdrawals when the source discloses them.
 Matching the same processor name alone does not prove that two scores describe
-the same tested system.
+the same tested system. A bootstrap interval for one benchmark-generation edge
+may be recorded and used as a **conditional sample margin**; it is not the
+error interval of a multi-edge VAXen chain or a guarantee for one machine.
+When an estimated VAXen value is exported, preserve its original reported
+score, benchmark mode, factor source, evidence class, and the scope of any
+interval. Mark unquantified upstream uncertainty explicitly.

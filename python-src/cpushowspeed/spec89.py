@@ -9,7 +9,6 @@ from pathlib import Path
 
 import click
 from cpushowspeed.spec89_build import build_snapshot
-from cpushowspeed.spec89_hardware import hardware_years_command
 from cpushowspeed.spec89_helman import merge_helman_command
 from cpushowspeed.spec89_sources import recover_messages
 
@@ -70,7 +69,7 @@ def verify_snapshot(snapshot: Path) -> dict[str, object]:
 
 @click.group()
 def spec89() -> None:
-    """Manage curated SPEC89 observations and hardware-year evidence."""
+    """Maintain the preserved SPEC89 source archive; excluded from rate fits."""
 
 
 @spec89.command("verify")
@@ -113,5 +112,4 @@ def recover_command(archive_dir: Path, manifest: Path, output_dir: Path) -> None
     click.echo(json.dumps({"recovered_messages": count, "output_dir": str(output_dir)}, sort_keys=True))
 
 
-spec89.add_command(hardware_years_command)
 spec89.add_command(merge_helman_command)

@@ -1,203 +1,60 @@
 # Research methods
 
-No instruction-mix reconstruction or validated general cross-benchmark
-conversion has been implemented. An
-[exploratory SPEC92–SPEC2026 fitting audit](../research/spec92-spec2026-fitting.md)
-now measures all five adjacent integer-speed bridges and searches for direct
-nonadjacent overlaps. Its chain factors remain diagnostics, not adopted VAXen
-conversion constants.
+The active quantitative method is the [SPEC CPU92–CPU2026 integer-rate
+fit](../research/spec95-spec2026-rate-fitting.md). This document states the
+rules for extending and reviewing it. No manual instruction-mix reconstruction
+or general conversion from unrelated historical benchmarks has been
+implemented.
 
-## Instruction-mix reconstruction
+## Adjacent benchmark generations
 
-Select a named mix and preserve its operation weights. Map each operation to
-instructions or software routines on the target machine; cite timing sources
-and account for operand, addressing, branch, memory, and precision conditions.
-For operation weights `w_i` and corresponding times `t_i`, a simple mix has
-`T = sum(w_i * t_i)` and a rate equal to `1 / T` after unit conversion. Record
-any architecture adjustment separately rather than hiding it in the raw timing.
+Match published rate submissions from adjacent SPEC suites using system and
+processor identity, chip count, clock, memory and any available core and
+thread fields. Preserve both original submissions and disclosure URLs. A
+processor alias alone generates a review candidate; it does not establish
+identical hardware, OS, compiler or tuning. Exact run conditions must be
+checked in detailed disclosures before promoting an automatic pair to a
+reviewed configuration match.
 
-Reproduce published mix values on several machines before extrapolating to
-machines absent from those tables. Treat unavailable operations and timing
-conditions as missing evidence, not as zero-cost operations.
+The current fit takes the median of log score ratios within each system and
+processor configuration, then the mean across configurations. Exponentiating
+that mean yields the geometric old/new score factor. This keeps repeated
+submissions visible while preventing them from multiplying independent fit
+weight. Fit base and peak separately. Use leave-one-configuration-out errors
+for prediction checks, and identify bootstrap intervals as conditional on the
+selected cohort. Do not treat one edge's interval as the uncertainty of the
+full chain. Look for independent nonadjacent or three-suite overlaps to test
+the chained estimate.
 
-## Cross-benchmark bridges
+## VAX throughput convention
 
-Build candidate bridges from systems reported under both workloads. Verify
-hardware configuration, memory, operating system, run mode, and thread/copy
-settings; preserve compiler and tuning differences as covariates. Estimate a
-ratio in log space, report the overlap sample and spread, and check prediction
-on held-out systems. Multiple submissions for one system must not masquerade as
-independent evidence.
+The [SPEC CPU92 capacity method](https://www.spec.org/cpu92/specrate.txt)
+sets the VAX-11/780's one-copy reference rate to `604800 / 25500`, about
+23.71765. Thus one CPU92 integer-rate score point represents
+`25500 / 604800` VAX-reference throughput units. Call a normalized value of
+1 `1 VAX` and a value of N `N VAXen`, always labeling the benchmark mode as
+**rate**. This is a workload-relative comparison, not an instruction-per-second
+unit. Decimal SI labels such as `1k VAXen` and `26m VAX` are display formatting
+only; stored values remain unprefixed numbers.
 
-The [entity-resolution review](../research/spec-entity-resolution.md) documents
-processor-level matching precedents and why fuzzy names alone cannot establish
-a same-configuration bridge.
+The [rate audit](../research/spec95-spec2026-rate-fitting.md) gives both the
+CPU95-relative internal chain and the exploratory CPU92-anchored VAXen chain.
+Keep its original scores, per-edge factors and source hashes with every
+normalized estimate. Architecture-dependent overlap and limited CPU2026
+coverage currently prevent treating a single factor as universal.
 
-The implemented fitting audit matches adjacent generations under a conservative
-hardware key, retains all submission pairings, and weights processor
-configurations rather than pair counts. It also searches nonadjacent generation
-pairs; none currently provides a fit-eligible edge, so no empirical
-three-generation cycle check is available. Later speed-suite thread settings
-need per-result review before a factor can be applied broadly.
+## Manual and archival evidence
 
-Keep the original benchmark scores and the normalized estimate side by side.
-Do not use a single reference machine or one ratio as proof of universal
-equivalence. The graph or table must disclose approximation and uncertainty.
+To reconstruct early-machine throughput, select a named instruction mix with
+weights `w_i`; map each operation to documented instructions or routines with
+times `t_i`; account for addressing, memory, branch, precision and emulation
+conditions. A simple mix has `T = sum(w_i * t_i)` and rate `1 / T` after unit
+conversion. Reproduce published examples on several machines before using
+the method for previously unmeasured hardware. Missing operations or timing
+conditions remain missing evidence.
 
-## Reporting reference and statistical backbone
-
-Use `SPECint92` as the primary statistical backbone for the historical
-integer-speed series: it has source-linked detailed submissions and already
-uses a VAX-relative reference time. This choice determines which observed
-benchmark scale later integer scores are calibrated toward. The reference
-machine and the statistical backbone are different concepts; the VAX-11/780
-still defines the displayed value `1` within this track.
-
-Use the DEC VAX-11/780 as the reporting reference for a future stitched
-performance index, setting its value to `1` by definition **within each
-track**. [SPEC's history](https://www.spec.org/spec/30th/osg/) identifies it as
-the reference machine for SPEC CPU89; [Henning's historical check](https://open.spec.org/cpu/publications/HowManyVAXesFitInThePalmsOfYourHands-AuthorVersion.pdf)
-explains the original SPECmark89 value of 1. This convention follows the
-VAX-relative figure in Hennessy and Patterson, cited below. It is a
-unitless ratio. For the project-facing display unit, call a value of 1
-`1 VAX` and a value of N `N VAXen`; define both as performance relative to
-the VAX-11/780 under the stated track and workload. A plot axis may read
-`Relative performance (VAXen; VAX-11/780 = 1)`. This name is not an
-instruction rate, a physical unit, or an official SPEC metric for later
-generations.
-
-For human-readable labels, apply decimal SI magnitude prefixes to the displayed
-number: `1k VAXen` means 1,000 VAXen, `2M VAXen` means 2,000,000 VAXen,
-and `26m VAX` means 0.026 VAX. Use lowercase `k` for kilo and `m` for
-milli; uppercase `M` denotes mega. Formatting and rounding affect labels
-only. Store and export the underlying unprefixed numeric ratio with its
-track, source metric, and normalization method so scripts never have to parse
-a label to recover a value.
-
-Keep integer/general-purpose and floating-point/scientific indices separate.
-A value of 1 on each track refers to the VAX under that track's workload and
-configuration; it does not equate integer and floating-point performance.
-Record the exact VAX reference workload, software, and hardware options used
-for each historical bridge. A VAX anchor fixes the display scale but does not
-supply missing conversion factors or remove the uncertainty accumulated from
-cross-benchmark links. CPU92 speed scores are already VAX-relative under their
-own workloads, as documented in the [early SPEC research](../research/spec-early-archives.md).
-The [SPECint89–SPECint92 source-paired evidence](../research/spec89-cpu92-scatter.md)
-is close to numerical identity in the currently recovered sample: 15 distinct
-literal integer-score vectors give a geometric mean `SPECint92 / SPECint89`
-of about 0.960 and an observed range of 0.893–1.056. This is a sparse,
-source-dependent diagnostic, not an implemented universal conversion. An
-exploratory overlay may place original `SPECint89` scores on the same
-VAX-referenced axis, with their metric and approximation status explicit;
-statistics requiring a common `SPECint92` workload must use a validated
-bridge and retain the reported original. `SPECmark89` is a mixed integer/FP
-metric and does not enter this integer bridge. Any fitted non-unit factor
-creates an estimated SPEC92-equivalent score; it does not redefine the VAX
-reference score of 1 in either original suite.
-
-The [CPU92–CPU95 overlap scatter](../research/cpu92-cpu95-bridge.md)
-shows every candidate pairing, including repeated submissions. Pairings from
-the same system are related observations; their count must not be treated as
-independent sample size in a conversion fit. The current provisional factor
-uses only the curated, one-per-system reviewed set.
-
-The initial per-generation plot may show original scores where a defensible
-path back to the VAX has not yet been calibrated. The first
-[CPU92–CPU95 overlap audit](../research/cpu92-cpu95-bridge.md) found distinct
-software-conditioned ratio groups; it has not supplied a universal factor.
-
-## Provisional CPU89-to-CPU92 sensitivity band
-
-For an exploratory integer timeline, a single shared factor is a useful
-working model, not an established universal conversion. From the currently
-recovered 15 distinct literal `SPECint89`/`SPECint92` system-and-score
-vectors, use `k = 0.960` as the central **SPEC92-equivalent estimate per
-SPECint89 point**, with `k_low = 0.893` and `k_high = 1.056` as observed-ratio
-sensitivity scenarios. The latter two are sample extrema, not a confidence
-interval or a guaranteed bound for other machines. The cohort is small and
-source-dependent, with development systems and later republications. Keep
-full-precision calculated values and original pair IDs in any implementation;
-these rounded values are for explaining the proposal, not code constants.
-
-After a defensible year is assigned to each source observation, let `R92_y`
-be the reported SPECint92 scores for that year and `R89_y` the reported
-SPECint89 scores. For each shared factor `k`, recompute the *whole* annual
-cohort `D_y(k) = R92_y ∪ {k × s : s ∈ R89_y}`. Use `k = 0.960` for the
-central highest-submission line and box statistics; plot the results at
-`k_low` and `k_high` as a translucent sensitivity envelope around the
-maximum, quartiles, median, and whiskers. A single factor moves all CPU89
-scores together. Never insert both endpoints as extra submissions or widen
-the observed-data box to impersonate measurement scatter. A year with no
-CPU89 results has no conversion band. Retain reported raw scores and mark
-every converted score as a normalized estimate. `SPECmark89` does not enter
-this integer cohort.
-
-This annual extension is **not implemented**. The separate
-[SPEC89 hardware-year catalog](../research/spec89-hardware-years.md) currently
-has source-checked years for only part of the recovered observations. Do not
-assign remaining observations to a year using `source_date` or `info_date_raw`.
-SPEC89 model-introduction years and later SPEC configuration-availability
-years have different meanings; expose that distinction in a combined figure.
-
-## Published precedents for historical timelines
-
-The following methods were checked against the cited publications on
-2026-09-25. They are precedents and validation targets, not conversion factors
-already estimated for this project.
-
-- [Danowitz et al., *CPU DB: Recording Microprocessor History* (2012)](https://web.engr.oregonstate.edu/~mjb/cs475/CPU-DB.pdf),
-  methodology section, PDF page 3: take systems with scores under two SPEC
-  versions, calculate paired new/old ratios, and use their geometric mean as a
-  conversion factor toward a SPEC CPU2006-equivalent score. The database also
-  preserves raw scores. The paper covers older MIPS and SPEC89–CPU2000 inputs;
-  it does not supply a validated CPU2017 or CPU2026 bridge.
-- [Leiserson et al., *There's Plenty of Room at the Top* (2020)](https://www.microsoft.com/en-us/research/wp-content/uploads/2020/11/Leiserson-et-al-Theres-plenty-of-room-at-the-top.pdf),
-  Figure 2 Methods: use the best recorded SPECint92/95/2000/2006 score for
-  each processor and scale consecutive generations by geometric means of
-  ratios for processors evaluated on both. Their horizontal dates are
-  processor release dates, not SPEC submission dates. Before 1992 they use
-  recorded MIPS estimates, joined by setting SPECint92 score 1 equal to
-  1 MIPS; this is a weak historical bridge rather than a measured workload
-  equivalence. Their [archived data and code](https://zenodo.org/records/3715525)
-  provide a reproducibility reference.
-- [Hennessy and Patterson, *Computer Architecture: A Quantitative Approach*,
-  Figure 1.1](https://maltsystem.ru/images/book/Hennessy.Patterson.Computer%20Architecture.A%20Quantitative%20Approach.4th.pdf)
-  plots processor performance relative to the VAX-11/780 and explicitly says
-  later SPEC generations are related by scaling factors. The figure does not
-  disclose enough matching and uncertainty details to adopt its factors here.
-- [Henning, *How Many VAXes Fit in the Palms of Your Hands?* (2021)](https://open.spec.org/cpu/publications/HowManyVAXesFitInThePalmsOfYourHands-AuthorVersion.pdf)
-  reruns modified SPECmark89 on one modern Xeon core as a long-span plausibility
-  check. The author labels its score an estimate because the modifications
-  were not approved by SPEC; it is not an official cross-generation conversion.
-
-For the first annual SPEC figure, use reported hardware-configuration availability year and all distinct,
-eligible one-copy integer speed submissions in each year. Keep the selected
-metric consistent and deduplicate result IDs and revisions before counting.
-Include published multi-processor and multithreaded system-speed results under
-the revised scope; retain those settings as data and disclose their effect on
-the distribution. Draw one box plot per year for the submitted-score
-distribution, and overlay a line with points for the highest eligible submission
-in each year. Annotate each year with its submission count and identify the
-processor and system behind each maximum. Until the generation bridges are
-validated, draw separate per-generation panels; never pool different raw SPEC
-scales into one annual box. A year with only one eligible result gets a point
-rather than a meaningful box; an incomplete year is marked as provisional.
-
-This box is the distribution of *submitted system configurations*, so popular
-processors and vendors with many submissions have more weight; it is not a
-distribution of all machines available that year. Later results may exploit
-more hardware parallelism than earlier ones; the maximum is a system-speed
-frontier rather than an isolated-core trend. The maximum traces the observed
-published record and can be moved by one unusually tuned system. Keep the raw scores and disclosures
-available for inspection. The box's whiskers are submission spread, not a
-confidence interval for the annual maximum or for the cross-generation VAXen
-conversion. Show conversion uncertainty separately when available. Leiserson's
-best-score-by-processor-release-year curve remains a distinct historical
-comparison, with a different date and selection rule.
-
-Keep publication, test, and hardware-release dates separate. Use the published
-geometric-mean overlap-ratio method as a baseline bridge, then evaluate paired
-ratio spread, outliers, architecture dependence, and held-out prediction error
-before considering a global graph fit. A graph fit is a proposed extension,
-not a method established by the cited papers. Neither method makes different
-SPEC generations directly comparable as raw scores.
+Original documents and archived observations can generate candidate machine
+histories, but their score fields must not be silently substituted for SPEC
+integer-rate submissions. The [source guide](sources.md) records collection
+caveats and the [data contract](data-contract.md) records value, date and
+provenance requirements.

@@ -137,10 +137,22 @@ publication chronology requires further investigation. This verifies one
 source-to-disclosure link, not the rest of the archive or a CPU92-to-other-suite
 conversion. See the [first VAXen figure](spec92-vaxen.md) for the exclusion.
 
+### New 1992 and integer-rate leads checked on 2026-09-26
+
+The [Computer History Museum packet](https://archive.computerhistory.org/resources/access/text/2024/09/102749924-05-0002-acc.pdf)
+contains the front page and contents of the 1992-03 *SPEC Newsletter*, but not
+the CINT92 result pages listed in those contents. Digital's
+[1992-11-20 Alpha server performance brief](https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/alpha-axp-server.pdf)
+provides five named-system `SPECint92` scores and nine `SPECrate_int92` values;
+these are manufacturer-reported values, not yet verified as SPEC submissions.
+Netlib's previously overlooked `crint92` track contains 274 detailed rate
+reports from 1993 onward. The [separate source audit](spec92-archive-expansion.md)
+records exact counts, citations, script-readable outputs, and caveats.
+
 ## Next source search
 
 Locate a complete scan of the Fall 1989 volume 1, issue 1 newsletter and the
-1992 CPU92 newsletter issues. Check publisher or archive holdings before using
+1992 CPU92 newsletter *result pages*. Check publisher or archive holdings before using
 secondary tables as substitutes for their detailed result disclosures. Record
 original page numbers, metric names, configuration, and any withdrawal or
 compliance notice when transcribing a score.

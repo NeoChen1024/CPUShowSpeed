@@ -16,18 +16,9 @@ dates, the original URL and locator, and the review date. An **introduction**,
 **announcement**, **general availability**, or manufacturer's historical
 **model year** is kept distinct. These are dates of named hardware, not dates
 of SPEC89 tests. The original `aggregate89.csv` and its checksum manifest are
-unchanged. Rebuild the row-level join with:
-
-```sh
-./.venv/bin/cpushowspeed spec89 hardware-years
-```
-
-This writes `data/derived/spec89/aggregate89-with-hardware-years.csv` with all
-421 combined source observations, their original score/provenance fields, and the
-catalog's date and citation fields. The command requires an exact one-to-one
-catalog of normalized labels and rejects assigned years without a source URL
-and locator. It does not suppress repeated submissions or reprints; those
-remain separate observations for later dependence analysis.
+unchanged. The catalog is preserved as source-checked historical date evidence. The
+former SPEC89 annual-speed join command was retired when the project adopted
+a rate-only analysis; the archived scores do not enter the current fit.
 
 ## Checked source groups
 
@@ -57,10 +48,6 @@ remain separate observations for later dependence analysis.
   lists the HP 9000 Model 340 workstation among new products; the CSV keeps
   only year precision.
 
-The next pass should resolve exact model and configuration identity before
-using an adjacent SPEC92 disclosure as a date clue. A SPEC92 `Hardware
-Availability` value applies to the **whole tested configuration**, including
-components added later; it is not proof of the machine model's original
-introduction year. The annual CPU89-to-CPU92 bridge plot should wait for broader
-coverage and should visibly distinguish model-introduction dates from later
-suite configuration-availability dates.
+Before reusing a catalog date for a future machine-capacity study, resolve
+exact model identity and distinguish model introduction from the availability
+of a later benchmark configuration.

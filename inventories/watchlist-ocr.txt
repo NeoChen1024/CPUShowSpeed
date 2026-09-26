@@ -1,0 +1,16 @@
+ibm/1401/A24-6447-0_1401_1460_Instruction_and_Timing_Summary.pdf
+dec/pdp7/PDP7_Instruction_list.pdf
+generalPrecision/LGP-30/manuals/LGP-30_Programming_Manual_195704.pdf
+generalPrecision/LGP-30/LGP-30_Operations_Manual.pdf
+dec/pdp10/KI10/A_Document_On_The_KI10_Apr73.pdf
+dec/pdp10/KA10/DEC-10-HGAA-D_PDP-10_System_Reference_Manual_196805.pdf
+washingtonUniversity/linc/LINC_Reference_Manuals/LINC_Vol_16_Section_2_Programming_the_LINC_Jun65.pdf
+washingtonUniversity/linc/LINC_Reference_Manuals/LINC_Logic_Drawings_and_Timing_Diagrams.pdf
+dec/pdp8/pdp8/F-85_PDP-8_Users_Handbook_May66.pdf
+dec/pdp8/pdp8i/DEC-8I-HR1A-D_8Imaint_Mar70.pdf
+dec/pdp8/pdp8e/DEC-8E-HMM1A-D-D_PDP-8e_Maintenance_Manual_Volume_1_Processor_Sep73.pdf
+dec/pdp10/KS10/EK-0KS10-TM-001_KS10_Tech_Oct78.pdf
+dec/pdp10/KL10/EK-EBOX-UD-003_EBOX_Instruction_Execution_Unit_Unit_Description_Dec76.pdf
+honeywell/large_systems/multics/AL39-0_MULTICS_Processor_Manual_Draft_Oct75.pdf
+honeywell/large_systems/multics/swenson/7307.6180-debuggers-handbook.PDF
+dec/linc/LINC_Brochure_May65.pdf

@@ -2,7 +2,8 @@
 
 This is the selected CPUShowSpeed DocIR extension for OCR of historical PDFs.
 The table converter, Chandra-to-DocIR page writer, and OCR scheduler are
-implemented. Only a small real-SGLang pilot has been checked so far.
+implemented. The 16-document, 2,213-page watchlist batch was generated
+on 2026-09-26; this is OCR output, not source-checked research evidence.
 This format is independent of FrontendAgentLoop's existing DocIR and does not
 change that repository.
 
@@ -108,8 +109,11 @@ table blocks do not store Markdown.
 For a failed table, the page writer should keep a block with `kind: "table"`,
 `table: null`, `conversion_status: "failed"`, and an error message.
 Its position in `blocks` still locates the raw HTML in `chunks`.
-The page writer was checked on a two-page real SGLang response, including
-one 20-row HTML table; larger and malformed-source pilots remain necessary.
+The page writer was exercised over the watchlist batch after a two-page
+pilot that included one 20-row HTML table. One legitimate binary table row
+triggered Chandra's trimmed-suffix repeat check; the OCR adapter now exempts
+short, complete binary table cells while still retrying degenerate output.
+This does not validate the extracted text against original PDF pages.
 
 ## Structured diagrams
 

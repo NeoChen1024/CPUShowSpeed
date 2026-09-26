@@ -1,7 +1,10 @@
 # Cross-generation SPEC entity resolution precedents
+> Archived speed-era research, retained for its source-checked observations.
+> Its fitting and plotting commands are retired; it is excluded from the active rate analysis.
+> Present-tense descriptions below refer to the original 2026-09-26 research snapshot.
 
 Reviewed on 2026-09-26. This note informs the next matching pass for the
-[CPU92–CPU2026 fitting audit](spec92-spec2026-fitting.md). It describes
+CPU92–CPU2026 fitting audit (retired output). It describes
 published methods and a read-only probe of our cached results. It does not
 assert that processor-level candidate pairs are the same benchmark system.
 
@@ -52,8 +55,8 @@ names differ.
 
 ## Probe of our current cache
 
-The offline `cpushowspeed bridge match-coverage` command reproduces the
-[processor overlap counts](data/spec/fitting/processor-match-coverage.csv) from
+The retired offline matching probe produced the
+processor overlap counts (retired output) from
 the cached SPEC sources. It groups the same parsed result records used by the
 fitting audit by normalized processor key. It then checked clock within 1%,
 chip count, and core/SMT counts where available, while *ignoring system name*.
@@ -80,6 +83,43 @@ report 2 GB. The first leg changes system and memory; it cannot be accepted as
 an equal-hardware three-suite cycle without an explicitly weaker analysis
 track. The other two processor keys do not retain the same clock across all
 three suites in the current cache.
+
+## First source-linked alias and review pass
+
+The alias registry (retired output) now maps 12 exact
+`(generation, raw_processor)` strings to six canonical processor model IDs.
+Each row identifies an official bulk-export row by its linked disclosure
+URL; the literal processor string was checked in the hash-verified bulk
+export.
+This is a **processor identity** decision only; a canonical ID does not imply
+identical memory, board, firmware, OS, compiler, or benchmark configuration.
+The registry is deliberately small: an unlisted spelling is unresolved, even
+if the current bulk parser happens to normalize it to the same key. In
+particular, the existing generic key conflates some `UltraSPARC IIi` and
+`UltraSPARC III` strings, so those are not aliased to each other.
+
+The pair-review register (retired output) uses source URLs
+as row identities. Its six initial decisions are one accepted CPU92/CPU95 pair
+already checked in the [older audit](cpu92-cpu95-bridge.md), one
+`processor_level_only` CPU95/CPU2000 Ultra 60 versus Ultra Enterprise 2 pair (512 versus 2048 MiB),
+and four pairs requiring detailed disclosure review. The CPU2006/CPU2017
+Cisco-versus-ASUS and CPU2017/CPU2026 ASUS-versus-Fujitsu examples are
+explicitly processor-overlap leads, not same-system evidence. The remaining
+two same-label candidates still require detailed hardware and software review.
+All decisions are dated `2026-09-26`.
+
+The retired `cpushowspeed bridge review-queue` command validated both tracked CSVs against
+the cached, hash-checked source records and write the generated queue to
+`data/derived/spec/fitting/alias-review-queue.csv` (ignored by Git). It joins
+only listed aliases in adjacent suites, then requires equal chip counts and
+clocks within 1%. The output retains both source URLs, full system names,
+clock, cores, threads per core, memory, OS, base scores, hardware clues, and
+any review decision. This first run produced 848 candidate pairings: 1
+accepted, 1 processor-level only, 4 awaiting detail review, and 842
+unreviewed. These counts reflect repeated submission pairings, not independent processor or
+hardware configurations. The alias sensitivity rerun (retired output)
+uses these candidates in separately labeled exploratory fits. It does not change the original
+factor table or promote unreviewed pairs to accepted same-hardware evidence.
 
 ## Proposed matching levels
 

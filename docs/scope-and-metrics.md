@@ -1,55 +1,53 @@
 # Scope and metrics
 
-The primary research target is the performance of one documented system
-configuration, including its processors, memory, operating system, compiler,
-and benchmark run settings. This is more appropriate across historical machines
-and modern multicore systems than claiming to isolate one core. Scores still
-measure particular workloads, not a machine's universal speed.
+The active research target is **throughput of a documented machine
+configuration**. A result belongs to the tested processors, memory, operating
+system, compiler and benchmark run settings. The principal evidence is a
+published integer-rate measurement, with its concurrent copy counts when the
+disclosure provides them. Reported scores and cross-generation estimates must
+remain distinguishable.
 
-## Workload modes
+## Active SPEC rate series
 
-- **One-copy speed:** completion time for one benchmark workload. The workload
-  may use multiple software threads or hardware cores when its run rules permit
-  them. This is the primary longitudinal SPEC track; record the reported thread
-  settings and enabled hardware configuration.
-- **Throughput/rate:** concurrent benchmark copies and work per unit time.
-  Preserve copy counts and plot this as a separate system-capacity track. Do
-  not mix speed and rate scores into one annual box or conversion without an
-  independently justified model.
+The [CPU92–CPU2026 rate audit](../research/spec95-spec2026-rate-fitting.md)
+uses `SPECrate_int92` and the integer-rate metrics in CPU95, CPU2000,
+CPU2006, CPU2017 and CPU2026. It fits adjacent suites on matched system
+submissions. The CPU92 rate formula defines the VAX-11/780 one-copy throughput
+reference; later scores receive *estimated* VAX-reference units through the
+matched-suite factors. The chained factors are exploratory because hardware
+and software conditions, architecture mix and full-chain uncertainty still
+require review.
 
-A strictly single-threaded view can be a secondary subset where the disclosures
-support it; lack of such evidence does not exclude a result from the system
-speed track. Historical instruction-timing reconstructions must likewise name
-the full machine configuration and the workload mix.
+Do not multiply any single-workload score by processor or core count to make a
+rate result. Copy count is a benchmark run setting, not a synonym for chips,
+cores, threads or measured runtime workers. Keep base and peak results
+separate. A system's introduction, test and publication dates are different
+events; the [data contract](data-contract.md) defines how to preserve them.
 
-## Tracks
+An annual rate-based timeline has **not** been implemented. Generated figures
+from the earlier speed exploration do not represent this rate series.
 
-- **General-purpose / integer:** use `SPECint92` as the historical statistical
-  backbone, with original `SPECint89` retained as a distinct source metric and
-  any conversion marked as an estimate. Earlier instruction mixes and
-  synthetic programs are exploratory bridges, not equivalent workloads. See
-  the [bridge method](methods.md).
-- **Embedded integer:** consider CoreMark as a separate series for MCU and
-  embedded CPU systems. Its small workload and memory footprint differ from
-  SPEC; connect the tracks only after same-system overlap validation.
-- **Floating-point / scientific:** keep Whetstone, LINPACK, Livermore Loops, and
-  SPEC floating-point results identifiable by workload, precision, and mode.
-- **Instruction-mix prehistory:** report manual-derived estimates separately
-  from executed benchmarks. They may extend the machine-introduction timeline
-  without implying measurements were made at introduction.
+## Historical extension
 
-The exact benchmark eligibility rules and any combined index remain open research
-questions. No cross-generation score is an official SPEC metric.
+The project may extend machine-capacity evidence earlier than SPEC CPU92 by
+checking original benchmark publications and instruction-timing documents.
+A manual-derived workload throughput is a separate reconstruction with stated
+instruction mix, memory assumptions and source pages; it is never a
+retroactively executed SPEC submission. Floating-point/scientific capacity
+benchmarks and embedded benchmarks such as CoreMark may become separate
+tracks after their workload, parallelism and reference conventions are
+specified. The preserved SPEC89 archive is a source corpus, not an input to
+the current rate fit.
 
 ## Evidence classes
 
-Every value must be identified as one of:
+Every numeric value must identify its class:
 
 - **Reported measurement:** a published result of executing a named benchmark.
-- **Manual reconstruction:** calculated from documented instruction timings and
-  an explicit workload mix, including any emulation or memory-access assumptions.
-- **Normalized estimate:** inferred through documented overlap between distinct
-  benchmark generations or workloads.
+- **Manual reconstruction:** a calculation from documented instruction timings
+  under an explicit workload and configuration.
+- **Normalized estimate:** a score inferred through a documented overlap
+  between different benchmark generations or workloads.
 
-Display and exports must preserve the class and original metric. An estimate
-must never be presented as a measured score.
+Exports must keep the original metric, source and class. No normalized
+estimate is an official SPEC measurement.

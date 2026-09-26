@@ -208,64 +208,87 @@ def collect_indexes(generations: tuple[str, ...], raw_dir: Path, manifest: Path,
     click.echo(f"Wrote {len(records)} result links to {manifest}", err=True)
 
 
-def collect_legacy92(raw_dir: Path, manifest: Path, delay: float, refresh: bool) -> None:
+def collect_legacy92_rate(raw_dir: Path, manifest: Path, delay: float, refresh: bool) -> dict[str, int]:
+    """Collect the separately published Netlib CINT92 rate indexes."""
     root = "https://www.netlib.org/performance/html/"
-    source = get_cached(root + "spec.html", raw_dir / "cpu92" / "netlib" / "spec.html", refresh=refresh, delay=delay)
-    summaries: list[str] = []
-    for href in links(source):
-        filename = urlparse(href).path.rsplit("/", 1)[-1]
-        if re.fullmatch(r"spec(?:base)?\.(?:cint92|cfp92)\.\d+_\d+\.col0\.html", filename):
-            summaries.append(filename)
-    summaries = sorted(set(summaries))
+    index = get_cached(root + "spec.html", raw_dir / "cpu92" / "netlib" / "spec.html", refresh=refresh, delay=delay)
+    summary_pattern = re.compile(r"spec(?:base)?\.crint92\.\d+_\d+\.col0\.html", re.I)
+    detail_pattern = re.compile(r"spec\.[\w.-]+\.crint(?:92)?\.\d+_\d+\.notes\.html", re.I)
+    summaries = sorted(
+        {
+            urlparse(href).path.rsplit("/", 1)[-1]
+            for href in links(index)
+            if summary_pattern.fullmatch(urlparse(href).path.rsplit("/", 1)[-1])
+        }
+    )
     if not summaries:
-        raise click.ClickException("no CPU92 issue summaries found in Netlib's SPEC index")
-    records: list[dict[str, str]] = []
+        raise ValueError("no CINT92 rate summaries in Netlib index")
+    records = []
     for filename in summaries:
         url = root + filename
-        body = get_cached(url, raw_dir / "cpu92" / "netlib" / filename, refresh=refresh, delay=delay)
-        detail_urls: set[str] = set()
-        for href in links(body):
-            name = urlparse(href).path.rsplit("/", 1)[-1]
-            if re.fullmatch(r"spec(?:base)?\.[\w.-]+\.notes\.html", name):
-                detail_urls.add(root + name)
-        for detail_url in sorted(detail_urls):
+        body = get_cached(url, raw_dir / "cpu92" / "netlib" / "rate" / filename, refresh=refresh, delay=delay)
+        names = sorted(
+            {
+                urlparse(href).path.rsplit("/", 1)[-1]
+                for href in links(body)
+                if detail_pattern.fullmatch(urlparse(href).path.rsplit("/", 1)[-1])
+            }
+        )
+        for name in names:
             records.append(
-                {"summary_url": url, "detail_url": detail_url, "metric": filename.split(".")[0] + "." + filename.split(".")[1]}
+                {
+                    "summary_url": url,
+                    "detail_url": root + name,
+                    "metric": "SPECrate_base_int92" if filename.startswith("specbase.") else "SPECrate_int92",
+                }
             )
-        click.echo(f"{filename}: {len(detail_urls)} detail links", err=True)
+        click.echo(f"{filename}: {len(names)} rate disclosures", err=True)
+    combined_name = "new.spec.crint92.col0.html"
+    combined = get_cached(root + combined_name, raw_dir / "cpu92" / "netlib" / "rate" / combined_name, refresh=refresh, delay=delay)
+    combined_names = {
+        urlparse(href).path.rsplit("/", 1)[-1]
+        for href in links(combined)
+        if detail_pattern.fullmatch(urlparse(href).path.rsplit("/", 1)[-1])
+    }
+    issue_names = {urlparse(row["detail_url"]).path.rsplit("/", 1)[-1] for row in records}
+    if combined_names - issue_names:
+        raise ValueError(f"combined rate summary has {len(combined_names - issue_names)} disclosures absent from issue summaries")
+    issue_only = sorted(issue_names - combined_names)
+    if issue_only:
+        click.echo(f"Netlib combined rate summary omits {len(issue_only)} issue-linked disclosure(s): {issue_only}", err=True)
     manifest.parent.mkdir(parents=True, exist_ok=True)
     tmp = manifest.with_name(manifest.name + ".partial")
-    with tmp.open("w") as output:
-        for record in records:
-            output.write(json.dumps(record, sort_keys=True) + "\n")
+    with tmp.open("w", encoding="utf-8") as stream:
+        for record in sorted(records, key=lambda row: (row["summary_url"], row["detail_url"])):
+            stream.write(json.dumps(record, sort_keys=True) + "\n")
     tmp.replace(manifest)
-    click.echo(f"Wrote {len(records)} CPU92 detail references from {len(summaries)} summaries to {manifest}", err=True)
+    return {
+        "issue_summaries": len(summaries),
+        "detail_references": len(records),
+        "unique_disclosures": len(issue_names),
+        "issue_only_disclosures": issue_only,
+    }
 
 
-def fetch_legacy92_details(manifest: Path, raw_dir: Path, issue: str | None, limit: int | None, delay: float) -> None:
+def fetch_legacy92_rate_details(manifest: Path, raw_dir: Path, limit: int | None, delay: float) -> dict[str, int]:
     if not manifest.exists():
-        raise click.ClickException(f"legacy CPU92 manifest does not exist: {manifest}")
-    urls: set[str] = set()
-    for line in manifest.read_text().splitlines():
-        record = json.loads(line)
-        if issue is None or issue in record["summary_url"]:
-            urls.add(record["detail_url"])
-    downloaded = 0
-    cached = 0
-    for url in sorted(urls):
-        target = raw_dir / "cpu92" / "netlib" / "details" / urlparse(url).path.rsplit("/", 1)[-1]
-        if target.exists():
+        raise ValueError(f"CPU92 rate manifest missing: {manifest}")
+    urls = sorted({json.loads(line)["detail_url"] for line in manifest.read_text().splitlines()})
+    downloaded = cached = 0
+    for url in urls:
+        path = raw_dir / "cpu92" / "netlib" / "rate" / "details" / urlparse(url).path.rsplit("/", 1)[-1]
+        if path.exists():
             cached += 1
             continue
         if limit is not None and downloaded >= limit:
             break
-        body = get_cached(url, target, refresh=False, delay=delay)
-        if b"SPEC Benchmark" not in body:
-            raise click.ClickException(f"unexpected CPU92 disclosure content: {url}")
+        body = get_cached(url, path, refresh=False, delay=delay)
+        if b"SPEC Benchmark CINT92" not in body or b"SPECrate_int92" not in body:
+            raise ValueError(f"unexpected CPU92 rate disclosure: {url}")
         downloaded += 1
         if downloaded % 25 == 0:
-            click.echo(f"Downloaded {downloaded}/{len(urls)} CPU92 disclosures", err=True)
-    click.echo(f"Downloaded {downloaded}; already present {cached}; matching disclosures {len(urls)}", err=True)
+            click.echo(f"Downloaded {downloaded}/{len(urls)} CPU92 rate disclosures", err=True)
+    return {"disclosures": len(urls), "downloaded": downloaded, "cached": cached}
 
 
 def verify_bulk(manifest: Path, raw_dir: Path, generations: tuple[str, ...]) -> None:
@@ -406,29 +429,42 @@ def verify_command(generations: tuple[str, ...], raw_dir: Path, manifest: Path) 
     verify_bulk(manifest, raw_dir, generations or GENERATIONS)
 
 
-@spec.command("legacy92")
+@spec.command("legacy92-rate")
 @click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
 @click.option(
-    "--manifest", type=click.Path(path_type=Path), default=Path("data/derived/spec/cpu92-netlib-links.jsonl"), show_default=True
+    "--manifest",
+    type=click.Path(path_type=Path),
+    default=Path("data/derived/spec/cpu92-netlib-rate-links.jsonl"),
+    show_default=True,
 )
 @click.option("--delay", type=click.FloatRange(min=0), default=0.5, show_default=True)
 @click.option("--refresh", is_flag=True)
-def legacy92_command(raw_dir: Path, manifest: Path, delay: float, refresh: bool) -> None:
-    """Cache Netlib's surviving CPU92 issue summaries and disclosure links."""
-    collect_legacy92(raw_dir, manifest, delay, refresh)
+def legacy92_rate_command(raw_dir: Path, manifest: Path, delay: float, refresh: bool) -> None:
+    """Cache Netlib's surviving CINT92 rate issue and combined indexes."""
+    try:
+        result = collect_legacy92_rate(raw_dir, manifest, delay, refresh)
+    except (OSError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(json.dumps(result, sort_keys=True))
 
 
-@spec.command("legacy92-fetch")
+@spec.command("legacy92-rate-fetch")
 @click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
 @click.option(
-    "--manifest", type=click.Path(path_type=Path), default=Path("data/derived/spec/cpu92-netlib-links.jsonl"), show_default=True
+    "--manifest",
+    type=click.Path(path_type=Path),
+    default=Path("data/derived/spec/cpu92-netlib-rate-links.jsonl"),
+    show_default=True,
 )
-@click.option("--issue", help="Only source summaries containing this issue token, such as 6_93.")
 @click.option("--limit", type=click.IntRange(min=1), help="Maximum new disclosures in this run.")
 @click.option("--delay", type=click.FloatRange(min=0), default=0.5, show_default=True)
-def legacy92_fetch_command(raw_dir: Path, manifest: Path, issue: str | None, limit: int | None, delay: float) -> None:
-    """Download surviving CPU92 detail reports, optionally by issue."""
-    fetch_legacy92_details(manifest, raw_dir, issue, limit, delay)
+def legacy92_rate_fetch_command(raw_dir: Path, manifest: Path, limit: int | None, delay: float) -> None:
+    """Cache CINT92 rate detail reports while preserving their source URLs."""
+    try:
+        result = fetch_legacy92_rate_details(manifest, raw_dir, limit, delay)
+    except (OSError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(json.dumps(result, sort_keys=True))
 
 
 @spec.command("dump")
@@ -449,8 +485,8 @@ def dump_command(generations: tuple[str, ...], raw_dir: Path, refresh: bool) -> 
 @click.option(
     "--track",
     "selected_track",
-    type=click.Choice(("integer-speed", "floating-point-speed", "integer-rate", "floating-point-rate", "all")),
-    default="integer-speed",
+    type=click.Choice(("integer-rate", "floating-point-rate")),
+    default="integer-rate",
     show_default=True,
 )
 @click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)

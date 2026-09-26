@@ -349,10 +349,28 @@ def inventory_command(root: Path, database: Path, workers: int, rescan: bool) ->
 @click.option(
     "--database", type=click.Path(path_type=Path, exists=True, dir_okay=False), default=DEFAULT_DATABASE, show_default=True
 )
-def report_command(database: Path) -> None:
-    """Show the current inventory summary."""
+@click.option(
+    "--output-root", type=click.Path(path_type=Path, file_okay=False), help="OCR run to report; inferred if only one exists."
+)
+@click.option(
+    "--file-list",
+    type=click.Path(path_type=Path, exists=True, dir_okay=False),
+    help="Scope OCR and caption statistics to these PDFs.",
+)
+@click.option("--all", "all_documents", is_flag=True, help="Report over all eligible inventoried PDFs.")
+@click.option(
+    "--caption-database",
+    type=click.Path(path_type=Path, exists=True, dir_okay=False),
+    help="Include Image Pool caption statistics from this SQLite catalog.",
+)
+def report_command(
+    database: Path, output_root: Path | None, file_list: Path | None, all_documents: bool, caption_database: Path | None
+) -> None:
+    """Show PDF inventory, OCR progress, and optional caption progress."""
+    from cpushowspeed.document_report import print_document_report
+
     with closing(_connect(database)) as connection:
-        _summary(connection, database)
+        print_document_report(connection, database, output_root, file_list, all_documents, caption_database)
 
 
 @documents.command("export")

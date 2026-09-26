@@ -1,9 +1,11 @@
 # First SPEC92 VAXen figure
+> Archived speed-era research, retained for its source-checked observations.
+> Its fitting and plotting commands are retired; it is excluded from the active rate analysis.
+> Present-tense descriptions below refer to the original 2026-09-26 research snapshot.
 
 Recomputed on 2026-09-26 from Netlib CPU92 files collected on 2026-09-25.
 All 302 included detailed scores matched their independent issue summary rows.
-The [collection and plot method](../docs/spec-collection.md) reproduces these
-values. The score is SPECint92, a CINT92 speed metric relative to the
+The former speed plot command produced these values; that command is now retired. The score is SPECint92, a CINT92 speed metric relative to the
 VAX-11/780 reference machine. Each result is assigned to the
 **disclosure-reported hardware-configuration availability year**; the test and
 SPEC Newsletter issue months remain separate fields in the generated CSV.

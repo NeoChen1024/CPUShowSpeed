@@ -42,8 +42,8 @@ reports a 200 MHz 21064. The shared model family does not make these the
 same tested setup. The IBM 220 development-level bridge (`B021`) and later
 Netlib M20/220 similarly require OS, compiler, memory, and tuning review.
 
-A [two-panel source-paired scatter](spec89-cpu92-scatter.md) now plots
-all 34 rows while keeping direct integer pairs separate from mark-only pairs.
+An archived two-panel source-paired scatter was produced during the earlier
+speed exploration. It is not part of the active rate analysis.
 
 The next bridge analysis should retain all source observations, identify
 republications and correlated tests, and grade configuration overlap before

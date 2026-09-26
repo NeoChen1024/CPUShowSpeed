@@ -1,14 +1,17 @@
 # OCR dispatch
 
-The `cpushowspeed documents ocr` command implements stage 1 and has passed a
-two-page pilot against a real SGLang endpoint. It has not been run over the
-full corpus or tuned for its throughput. This document covers stage 1 of
+The `cpushowspeed documents ocr` command implements stage 1 and completed
+the 16-document, 2,213-page watchlist batch against a real SGLang endpoint
+on 2026-09-26. It has not been run over the full corpus or tuned for its
+throughput. This document covers stage 1 of
 [document extraction](document-extraction.md): PDF pages to raw Chandra JSON,
 DocIR, and Image Pool assets. It does not run
 image captioning or write Markdown/HTML files. The completed PDF inventory
 currently contains 68,947 PDFs and 6,346,386 known pages, with a median of
-32 pages per PDF and a maximum of 3,979; the dispatcher must not hold one
-whole document's rendered pages in RAM.
+32 pages per PDF and a maximum of 3,979. Because OCR of the entire
+inventory is not expected to finish quickly, the normal entrypoint is a
+selected file list; the dispatcher must not hold one whole document's
+rendered pages in RAM.
 
 ## Library and command boundary
 
@@ -27,19 +30,39 @@ The user-facing command is `cpushowspeed documents ocr` with:
 - `-j/--jobs` for the **PDF rendering worker-process pool size**;
 - `--inflight-pages` for the global limit on outstanding vLLM page requests;
 - `--buffer-mib` for rendered-page admission control;
+- `--file-list` for a UTF-8 file containing one PDF path per line;
 - `--shutdown-grace` for the seconds to wait for in-flight OCR requests
   after Ctrl+C before cancelling them (default 10);
-- optional `--prefix` and `--limit-documents` for a representative pilot or
-  a subset.
+- `--prefix` or `--limit-documents` for a pilot, and explicit `--all` to
+  process the full inventory.
 
-For the user-provided local SGLang endpoint, a small pilot can use:
+Prepare a file such as `selected-pdfs.txt` with one source-relative PDF
+path per line:
+
+```text
+simh/hpiop.pdf
+ibm/IBM_Systems_Journal/353/preface.pdf
+```
+
+Absolute paths inside the inventory PDF root are also accepted. Empty
+lines are ignored; repeated paths are processed once. Every entry must
+match an inventory row with `ok` status, or the command fails before
+sending OCR requests. The list order is the admission order for documents
+that have not started; previously started documents retain their earlier
+start-time priority. A different list can reuse the same output root:
+already published pages are counted and skipped, while only newly listed
+PDFs are added to the batch. `--file-list` cannot be combined with
+`--prefix`, `--limit-documents`, or `--all`. Omitting every selection option
+is an error, so full-corpus processing requires an explicit `--all`.
+
+For the user-provided local SGLang endpoint:
 
 ```sh
 .venv/bin/cpushowspeed documents ocr \
   --database data/derived/documents/inventory.sqlite \
   --output-root data/derived/documents/chandra-ocr \
   --api-base http://localhost:30000/v1 --model chandra \
-  --prefix simh/hpiop.pdf --jobs 2 --inflight-pages 2
+  --file-list selected-pdfs.txt --jobs 2 --inflight-pages 2
 ```
 
 The Rich progress bar uses completed physical pages as its unit. A page
@@ -203,9 +226,8 @@ run can later receive captions by the separate backfill stage.
 
 The existing `files` table remains the source inventory. Separate `ocr_runs`
 and `ocr_documents` tables live in the **same local SQLite database**; OCR
-status does not change a PDF's inventory
-`status`. A run identifies its output root and the model, prompt, rendering,
-and conversion settings. Starting a run with conflicting settings for the
+status does not change a PDF's inventory `status`. A run identifies its
+output root and the model, prompt, rendering, and conversion settings. Starting a run with conflicting settings for the
 same output root is an error, consistent with immutable finalized raw output.
 
 The document-progress row is keyed by run and source-relative path. It
@@ -226,11 +248,42 @@ its output validation and atomic publication steps succeed; if a crash
 occurs between file publication and the SQLite update, the files are
 checked before marking it published. Keep database writes in one coordinator
 with short transactions. The existing database uses WAL and lives on local
-storage. The current buffer
-limit controls admission of rendered pages using a provisional per-worker
-reservation; it is not an exact upper bound on process memory for an
+storage. The current buffer limit controls admission of rendered pages using
+a provisional per-worker reservation; it is not an exact upper bound on
+process memory for an
 exceptionally large PDF page. Measure this on representative large pages
 before a full-corpus run.
+
+## Progress reporting
+
+`documents report` keeps its full PDF inventory tables and adds OCR progress
+for the selected run. It infers the run when the inventory has exactly one;
+otherwise pass `--output-root`. `--file-list` applies the same inventoried
+PDF selection rules as the OCR command, while `--all` (or omitting a report
+scope) uses every currently eligible inventory PDF:
+
+```sh
+.venv/bin/cpushowspeed documents report \
+  --database data/derived/documents/inventory.sqlite \
+  --output-root data/derived/documents/chandra-ocr \
+  --file-list inventories/watchlist-ocr.txt
+```
+
+The report shows published DocIR documents and pages, successful pages still
+in staging, total OCR-completed pages, and active/interrupted/retry/pending
+document counts. Denominators are the selected `files.status='ok'` inventory
+rows. Source hashes that changed since an OCR run, and published state whose
+raw or DocIR file is missing, are reported separately rather than counted
+as completed. Staged-page counts are SQLite checkpoints, not a scan of all
+staging files; a crash between page publication and the checkpoint may leave
+a temporarily low count until OCR resume reconciles it. Tiny full-inventory
+percentages retain enough decimal places to remain visible. Displayed
+percentages are floored at their shown precision, so unfinished work never
+rounds up to 100%.
+
+Pass `--caption-database <output-root>/ImagePool/catalog.sqlite` to add the
+separate caption section described in [Image Pool](image-pool.md). Without
+that option, `documents report` does not read the caption catalog.
 
 ## Throughput validation
 

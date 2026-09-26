@@ -1,9 +1,11 @@
 # Document extraction
 
 Stage 1 OCR extraction, the PDF inventory, and HTML table parser are
-implemented. Captioning and DocIR backfill remain planned. OCR output is
-derived reading material for historical scans. Stage 1 has passed a two-page
-SGLang pilot; the full corpus has not been run or throughput-tuned.
+implemented. Image-only captioning is implemented; DocIR backfill remains
+planned. OCR output is
+derived reading material for historical scans. Stage 1 completed the
+16-document, 2,213-page [watchlist batch](../inventories/watchlist-ocr.txt)
+on 2026-09-26; the full corpus has not been run or throughput-tuned.
 
 ## Implemented PDF inventory
 
@@ -49,7 +51,9 @@ pretending the file has zero pages. Page counts are unknown for failed files.
 The selected [historical DocIR](docir.md) defines how OCR pages and tables
 are represented. Its HTML table converter and Chandra-to-DocIR writer are
 implemented. [Image Pool](image-pool.md) crop storage is implemented;
-batch captioning and DocIR backfill are not.
+batch captioning is implemented, while DocIR backfill is not.
+`documents report` shows scoped OCR progress and, when a caption catalog is explicitly supplied,
+Image Pool caption progress; see the linked stage designs for counting rules.
 
 ## Evidence boundary
 

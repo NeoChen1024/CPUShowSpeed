@@ -1,4 +1,7 @@
 # CPU92–CPU95 integer-speed overlap audit
+> Archived speed-era research, retained for its source-checked observations.
+> Its fitting and plotting commands are retired; it is excluded from the active rate analysis.
+> Present-tense descriptions below refer to the original 2026-09-26 research snapshot.
 
 Reviewed on 2026-09-26. The [reviewed pair table](cpu92-cpu95-reviewed.csv)
 contains the original source URLs, published scores, and review notes in CSV.

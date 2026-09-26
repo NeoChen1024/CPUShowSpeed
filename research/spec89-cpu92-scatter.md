@@ -1,4 +1,7 @@
 # SPEC89–CPU92 source-paired scatter
+> Archived speed-era research, retained for its source-checked observations.
+> Its fitting and plotting commands are retired; it is excluded from the active rate analysis.
+> Present-tense descriptions below refer to the original 2026-09-26 research snapshot.
 
 Plotted and reviewed on 2026-09-26 from the versioned
 [SPEC89 recovery snapshot](data/spec89/v2.0.0/README.md). Rebuild with:
