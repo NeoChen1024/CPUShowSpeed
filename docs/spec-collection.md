@@ -88,3 +88,56 @@ PNG/SVG/HTML figures to `data/derived/figures/annual-rate/`; the compact
 research results. All positive scores with a parseable reported hardware month
 enter their year; no individual launch-date exclusion is applied. See the
 [interpretation and limits](../research/annual-rate-vaxen.md).
+
+## Whole-chain rate confidence intervals
+
+```sh
+./.venv/bin/cpushowspeed bridge bootstrap-rate-chain
+```
+
+Run after both rate-fitting commands. The source-hash and edge-overlap checks
+precede resampling. The command writes the compact
+[chain CI table](../research/data/spec/fitting/integer-rate-chain-intervals.csv)
+and ignored NPZ replicate arrays and JSON diagnostics under
+`data/derived/spec/fitting/`. See the rate audit for the independence assumption
+and uncertainty scope before using the draws in yearly plots.
+
+## Combined annual confidence figures
+
+```sh
+./.venv/bin/cpushowspeed bridge bootstrap-rate-chain
+./.venv/bin/cpushowspeed plot annual-rate-ci
+```
+
+The second command checks bootstrap-array and input hashes, then uses complete
+replicate vectors to recompute yearly quartiles, fixed representative scores
+and the annual frontier. It produces combined hardware/boxplot PNG, SVG and
+HTML under `data/derived/figures/annual-rate/`, and the compact
+[confidence table](../research/data/spec/annual-rate-confidence.csv).
+See the [annual figure note](../research/annual-rate-vaxen.md) for the meaning
+of the pale envelopes and top-retention statistic.
+
+## Convert one reported integer-rate score
+
+From the repository root:
+
+```sh
+./.venv/bin/cpushowspeed convert-rate 2017 base 11800 --format text
+./.venv/bin/cpushowspeed convert-rate 2026 peak 100
+```
+
+`convert-rate GENERATION MODE SCORE` accepts generations `92`, `95`, `2000`,
+`2006`, `2017` and `2026` (also `cpu2017` or `SPEC2017` spellings), and requires
+`base` or `peak`. It defaults to JSON on stdout, including the original score,
+VAXen, CI95 bounds, calibration scenario, method and table hashes. `--format
+text` gives SI-scaled labels. Input scores must be finite and positive. Supply
+only the specified suite's integer-rate metric, not floating-point or speed.
+
+The default `--scenario same_os` matches the annual figures;
+`--scenario hardware_near` selects the alternate CPU92 anchor. The command
+reads the two saved chain/CI CSVs under `--calibration-dir` and rejects mismatched
+chain hashes. It needs no raw archives, NPZ samples or new fitting run. The
+score multiplies both the central scale and its CI endpoints. This gives a
+conditional **calibration** interval and does not estimate individual-machine
+prediction error or systematic bias. CPU92's scale is defined, so its
+calibration CI has zero width.

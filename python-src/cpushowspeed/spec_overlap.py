@@ -17,6 +17,8 @@ from urllib.parse import urljoin
 import numpy as np
 
 BASE_URL = "https://www.spec.org"
+INTERVAL_FIELDS = ("confidence_level", "bootstrap_replicates", "bootstrap_seed", "bootstrap_unit", "quantile_method")
+INTERVAL_METADATA = dict(zip(INTERVAL_FIELDS, (0.95, 10000, 892026, "processor_configuration", "linear")))
 
 PAIR_FIELDS = [
     "old_generation",
@@ -249,8 +251,12 @@ def _statistics(rows: list[dict[str, object]], mode: str, eligible_tiers: set[st
     }
     logs = [value[0] for value in config_values.values()]
     center = statistics.mean(logs)
-    rng = random.Random(892026)
-    bootstrap = sorted(math.exp(statistics.mean(rng.choices(logs, k=len(logs)))) for _ in range(1000))
+    rng = random.Random(INTERVAL_METADATA["bootstrap_seed"])
+    ordered_logs = [config_values[key][0] for key in sorted(config_values)]
+    bootstrap = [
+        math.exp(statistics.mean(rng.choices(ordered_logs, k=len(logs)))) for _ in range(INTERVAL_METADATA["bootstrap_replicates"])
+    ]
+    low, high = np.quantile(bootstrap, [0.025, 0.975], method="linear")
     x = np.asarray([value[2] for value in config_values.values()])
     y = np.asarray([value[1] for value in config_values.values()])
     slope = float(np.polyfit(x, y, 1)[0]) if float(np.var(x)) > 0 else None
@@ -271,8 +277,10 @@ def _statistics(rows: list[dict[str, object]], mode: str, eligible_tiers: set[st
         ),
         "config_ratio_min": math.exp(min(logs)),
         "config_ratio_max": math.exp(max(logs)),
-        "cluster_bootstrap_95_low": bootstrap[24],
-        "cluster_bootstrap_95_high": bootstrap[974],
+        "cluster_bootstrap_95_low": float(low),
+        "cluster_bootstrap_95_high": float(high),
+        **INTERVAL_METADATA,
+        "heldout_p95_absolute_pct_error": float(np.quantile(heldout, 0.95, method="linear")),
         "heldout_median_absolute_pct_error": statistics.median(heldout),
         "loglog_slope_diagnostic": slope,
         "processor_family_factors": {

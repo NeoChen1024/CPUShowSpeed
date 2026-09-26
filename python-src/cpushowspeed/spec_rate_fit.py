@@ -11,6 +11,7 @@ from pathlib import Path
 
 import click
 from cpushowspeed.spec_overlap import (
+    INTERVAL_FIELDS,
     PAIR_FIELDS,
     Result,
     _automatic_pairs,
@@ -26,7 +27,7 @@ from cpushowspeed.spec_overlap import (
 
 GENERATIONS = ("cpu95", "cpu2000", "cpu2006", "cpu2017", "cpu2026")
 MODES = ("base", "peak")
-METHOD_VERSION = "integer-rate-fit-v2"
+METHOD_VERSION = "integer-rate-fit-v3"
 POINT_FIELDS = (
     "mode",
     "old_generation",
@@ -66,6 +67,8 @@ FACTOR_FIELDS = (
     "old_input_sha256",
     "new_input_sha256",
     "pair_export_sha256",
+    "heldout_p95_absolute_pct_error",
+    *INTERVAL_FIELDS,
 )
 
 
@@ -295,6 +298,7 @@ def analyze_rate_generations(raw_dir: Path, output_dir: Path, research_dir: Path
                         "system_groups": fit.get("system_groups", 0),
                         "processor_configs": fit.get("processor_configs", 0),
                         **{name: fit.get(name, "") for name in FACTOR_FIELDS[9:16]},
+                        **{name: fit.get(name, "") for name in ("heldout_p95_absolute_pct_error", *INTERVAL_FIELDS)},
                         "old_input_sha256": input_hashes[old],
                         "new_input_sha256": input_hashes[new],
                         "pair_export_sha256": pair_hash,

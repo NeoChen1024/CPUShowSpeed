@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 
 import click
 from cpushowspeed.spec_overlap import (
+    INTERVAL_FIELDS,
     PAIR_FIELDS,
     Result,
     _automatic_pairs,
@@ -23,7 +24,7 @@ from cpushowspeed.spec_overlap import (
 )
 from cpushowspeed.spec_rate_fit import GENERATIONS, collect_rate
 
-METHOD_VERSION = "cpu92-cpu95-rate-fit-v2"
+METHOD_VERSION = "cpu92-cpu95-rate-fit-v3"
 VAX_RATE92_REFERENCE = 604800 / 25500
 FACTOR_FIELDS = (
     "method_version",
@@ -44,6 +45,7 @@ FACTOR_FIELDS = (
     "cpu92_records_sha256",
     "cpu95_bulk_sha256",
     "pair_export_sha256",
+    *INTERVAL_FIELDS,
 )
 
 
@@ -173,6 +175,47 @@ def _plot(pairs: list[dict[str, object]], fits: dict[tuple[str, str], dict | Non
     return paths
 
 
+def _write_edge_intervals(research_dir: Path) -> Path:
+    """Collect all edge CIs without treating them as a joint chain interval."""
+    rows = []
+    for name in ("cpu92-cpu95-rate-direct-factors.csv", "integer-rate-factors.csv"):
+        source = research_dir / name
+        digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        with source.open(newline="") as stream:
+            for raw in csv.DictReader(stream):
+                rows.append(
+                    {
+                        "old_generation": raw.get("old_generation", "cpu92"),
+                        "new_generation": raw.get("new_generation", "cpu95"),
+                        "scenario": raw["scenario"],
+                        "mode": raw["mode"],
+                        "factor_old_per_new": raw.get("factor_old_per_new", raw.get("factor_cpu92_per_cpu95")),
+                        **{
+                            key: raw[key]
+                            for key in (
+                                "fit_pairings",
+                                "processor_configs",
+                                "cluster_bootstrap_95_low",
+                                "cluster_bootstrap_95_high",
+                                "heldout_p95_absolute_pct_error",
+                                *INTERVAL_FIELDS,
+                            )
+                        },
+                        "scope": "conditional_edge_mean_factor_not_prediction_or_full_chain_interval",
+                        "factor_method_version": raw["method_version"],
+                        "factor_table": name,
+                        "factor_table_sha256": digest,
+                        "pair_export_sha256": raw["pair_export_sha256"],
+                    }
+                )
+    path = research_dir / "integer-rate-edge-intervals.csv"
+    with path.open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]), lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+    return path
+
+
 def analyze_cpu92_rate_fit(records_path: Path, raw_dir: Path, output_dir: Path, research_dir: Path) -> dict[str, object]:
     results = collect_rate(raw_dir)
     results["cpu92"] = collect_cpu92_rate(records_path, raw_dir)
@@ -209,7 +252,8 @@ def analyze_cpu92_rate_fit(records_path: Path, raw_dir: Path, output_dir: Path, 
                         "processor_configs": fit["processor_configs"] if fit else 0,
                         "factor_cpu92_per_cpu95": fit["factor_old_per_new"] if fit else "",
                         "vaxen_per_cpu95_rate_score": fit["factor_old_per_new"] / VAX_RATE92_REFERENCE if fit else "",
-                        "heldout_p95_absolute_pct_error": _heldout_p95(selected, mode) if fit else "",
+                        "heldout_p95_absolute_pct_error": fit["heldout_p95_absolute_pct_error"] if fit else "",
+                        **{name: fit.get(name, "") if fit else "" for name in INTERVAL_FIELDS},
                         "heldout_median_absolute_pct_error": fit["heldout_median_absolute_pct_error"] if fit else "",
                         "cluster_bootstrap_95_low": fit["cluster_bootstrap_95_low"] if fit else "",
                         "cluster_bootstrap_95_high": fit["cluster_bootstrap_95_high"] if fit else "",
@@ -283,6 +327,7 @@ def analyze_cpu92_rate_fit(records_path: Path, raw_dir: Path, output_dir: Path, 
                             )
                         )
                     )
+    interval_path = _write_edge_intervals(research_dir)
     figures = _plot(pairs, fits, output_dir)
     summary = {
         "method_version": METHOD_VERSION,
@@ -290,6 +335,7 @@ def analyze_cpu92_rate_fit(records_path: Path, raw_dir: Path, output_dir: Path, 
         "cpu95_records": len(results["cpu95"]),
         "candidate_pairings": len(pairs),
         "factor_csv": str(factor_path),
+        "edge_intervals_csv": str(interval_path),
         "pair_csv": str(pair_path),
         "chain_csv": str(chain_path),
         "figures": figures,

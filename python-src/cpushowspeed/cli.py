@@ -2,10 +2,12 @@
 
 import click
 from cpushowspeed.annual_rate import plot
+from cpushowspeed.annual_rate_ci import annual_rate_ci_command
 from cpushowspeed.bridge import bridge
 from cpushowspeed.caption import caption_command
 from cpushowspeed.documents import documents
 from cpushowspeed.ocr import ocr_command
+from cpushowspeed.rate_convert import convert_rate_command
 from cpushowspeed.spec import spec
 from cpushowspeed.spec89 import spec89
 from cpushowspeed.spec92_rate import legacy92_rate_parse_command
@@ -19,8 +21,10 @@ def cli() -> None:
 
 spec.add_command(legacy92_rate_parse_command)
 cli.add_command(spec)
+cli.add_command(convert_rate_command)
 cli.add_command(spec89)
 cli.add_command(bridge)
+plot.add_command(annual_rate_ci_command)
 cli.add_command(plot)
 documents.add_command(ocr_command)
 documents.add_command(caption_command)

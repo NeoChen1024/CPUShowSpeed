@@ -98,9 +98,8 @@ interpolated **p95 error** is 19.3% base / 18.2% peak for hardware-near
 pairings and 19.4% base / 13.1% peak for same-OS pairings. This measures
 prediction within the selected cohort. The bootstrap 95% ranges in the CSVs
 resample configurations and likewise describe conditional sampling variation;
-**neither is a full-chain 95% error band**. The later-edge fit CSV currently
-reports held-out *median* errors, so those numbers should not be presented as
-comparable p95 values.
+**neither is a full-chain 95% error band**. All five edges now export both held-out median and p95 errors using the same
+configuration-level definition.
 
 The same-OS CPU92→CPU95 peak center is 102.37 for six PA-RISC
 configurations and 117.78 for five Pentium configurations; base centers are
@@ -109,6 +108,45 @@ compiler and tuning choices. The broader hardware-near tier also contains
 Alpha systems with changed OS releases. These differences limit a single
 unqualified conversion, even though the two pooled peak factors happen to be
 close.
+
+## Per-edge confidence intervals
+
+Recomputed on 2026-09-26. The [combined machine-readable table](data/spec/fitting/integer-rate-edge-intervals.csv)
+includes both CPU92 anchor scenarios and all four later edges, separately for
+base and peak. Each interval uses **10,000 bootstrap resamples of processor
+configurations**, seed `892026`, with sorted configuration keys for stable
+input order and linearly interpolated 2.5th/97.5th percentiles. The estimator
+within a replicate is the geometric mean of sampled configuration ratios;
+source rows, repeated submissions, and cohort membership are unchanged.
+Within-configuration median summaries are held fixed during resampling.
+These are percentile bootstrap intervals, conditional on treating the selected
+configuration summaries as exchangeable sampling units. They do not cover
+matching errors, unseen architectures or arbitrary individual machines.
+
+The table below follows the annual chart's same-OS CPU92 anchor and strict
+later edges. `k` multiplies a newer-suite score into older-suite score units.
+P95 is a held-out multiplicative prediction-error diagnostic, stored as a
+fraction in the CSV and shown here as a percentage.
+
+| Edge | Mode | Configurations | k | 95% CI for k | Held-out p95 error |
+| --- | --- | ---: | ---: | --- | ---: |
+| CPU92 → CPU95 | base | 11 | 95.9 | 89.185–103.23 | 19.4% |
+| CPU92 → CPU95 | peak | 11 | 109.11 | 104.7–114.11 | 13.1% |
+| CPU95 → CPU2000 | base | 13 | 70.751 | 66.344–75.099 | 22.0% |
+| CPU95 → CPU2000 | peak | 13 | 74.599 | 71.106–78.563 | 18.6% |
+| CPU2000 → CPU2006 | base | 25 | 2.0138 | 1.9108–2.1261 | 26.1% |
+| CPU2000 → CPU2006 | peak | 22 | 1.962 | 1.8604–2.0734 | 24.9% |
+| CPU2006 → CPU2017 | base | 150 | 9.5862 | 9.382–9.9087 | 17.9% |
+| CPU2006 → CPU2017 | peak | 124 | 9.4027 | 9.3152–9.4899 | 13.1% |
+| CPU2017 → CPU2026 | base | 79 | 2.3346 | 2.3072–2.3626 | 9.6% |
+| CPU2017 → CPU2026 | peak | 39 | 2.451 | 2.3995–2.5016 | 12.1% |
+
+These are **separate edge intervals**, not simultaneous 95% coverage for all
+edges. The whole-chain bootstrap below propagates draws rather than interval
+endpoints and audits shared configurations and submissions before assuming
+independence between the five edge cohorts.
+The CPU92 VAX reference `604800 / 25500` is a defined scale constant and does
+not itself need an estimated CI. No observations were removed as outliers.
 
 ## VAX-reference throughput scale
 
@@ -138,8 +176,62 @@ hashes before emitting the chain.
 
 These are **scale factors per one reported score point**, not annual machine
 scores. The linked chain CSV also retains the hardware-near CPU92-anchor
-scenario. Neither scenario compounds the edge uncertainties into a defensible
-full-chain interval.
+scenario. The conditional whole-chain intervals below quantify sampling
+variation under an explicitly stated edge-independence assumption.
+
+## Conditional whole-chain confidence intervals
+
+Run `./.venv/bin/cpushowspeed bridge bootstrap-rate-chain` after both rate
+fitting commands. The [chain interval CSV](data/spec/fitting/integer-rate-chain-intervals.csv)
+contains both anchor scenarios and modes. The [bootstrap NPZ](../data/derived/spec/fitting/integer-rate-chain-bootstrap.npz)
+contains complete multiplier vectors for later annual-statistic propagation;
+the [JSON audit](../data/derived/spec/fitting/integer-rate-chain-bootstrap.json)
+records input hashes, stream definition, NumPy version, edge overlap and
+within-chain log-scale covariance. Configuration log-ratio summaries are
+exported beside it for inspection.
+
+The audit compared all ten edge pairs in the broad hardware-near cohorts.
+It found **zero shared submission URLs and zero shared normalized
+processor/chip/clock configuration keys**. The calculation therefore assumes
+independent sampling of the five observed edge cohorts, conditional on those
+identities. This is not evidence that unobserved workload or compiler biases
+are independent. If future data introduce a shared key or source, the command
+stops and requires a model that resamples those dependencies together.
+
+For each mode and anchor scenario, 10,000 replicates resample the original
+configuration log-ratio summaries with replacement, with the same number of
+configurations as that edge's cohort. Each replicate averages the sampled log
+ratios, cumulatively sums them, and exponentiates after applying the fixed
+CPU92 VAX reference. Distinct SHA-256-derived PCG64 streams per edge avoid
+artificial correlation from reusing the same seed. Thus every generation
+within one replicate shares its earlier edges' uncertainty. Later-edge draws
+are reused between the two anchor sensitivity scenarios. Base and peak are
+simulated separately; this does not support joint base/peak or joint
+anchor-scenario inference.
+
+| Generation | Base VAXen / point, 95% CI | Peak VAXen / point, 95% CI |
+| --- | ---: | ---: |
+| CPU92 | 0.0421627 [0.0421627, 0.0421627] | 0.0421627 [0.0421627, 0.0421627] |
+| CPU95 | 4.04341 [3.75303, 4.35005] | 4.60026 [4.40703, 4.81234] |
+| CPU2000 | 286.076 [259.727, 314.173] | 343.174 [321.622, 367.394] |
+| CPU2006 | 576.105 [514.02, 644.062] | 673.303 [618.992, 735.158] |
+| CPU2017 | 5522.64 [4918.43, 6188.31] | 6330.83 [5817.22, 6912.3] |
+| CPU2026 | 12893.1 [11481.5, 14435.5] | 15517 [14207.5, 16965.9] |
+
+These are pointwise percentile 95% intervals for **mean calibration scales**,
+using the same-OS CPU92 anchor and strict later edges in the table. CPU92's
+zero-width interval reflects a defined unit, not a claim of error-free
+measurements. Individual-machine prediction errors, identity mistakes,
+architecture coverage and systematic workload/compiler effects are outside
+these intervals. They are not simultaneous confidence bands over all years.
+Central factors and all pair cohorts are unchanged; no outliers were removed.
+
+For plotting, use `vaxen_per_rate_score[scenario, mode, replicate, generation]`
+from the NPZ. Multiply every submission of a given generation by that same
+draw before recomputing yearly quartiles and maxima. This preserves the shared
+calibration error; independent per-submission jitter would destroy it. The
+[combined annual figures](annual-rate-vaxen.md#combined-distribution-hardware-and-confidence-figures)
+now use these vectors to recompute quartiles, fixed-leader scores and frontiers.
 
 ## Source checks and remaining limits
 
@@ -163,5 +255,6 @@ CPU95–CPU2026** suite pair. Therefore that segment has no independent
 three-suite cycle check. CPU92 nonadjacent overlaps have not been audited by
 this command. CPU2026 also has only 176 parsed integer-rate submissions in
 this snapshot. Full CPU95 and later disclosures, copy counts, OS, compiler and
-tuning for the fit cohorts require further review; no universal error margin
-or historically comparable public index is claimed at this stage.
+tuning for the fit cohorts require further review. The new intervals cover
+conditional sampling variation; a universal error margin or validated public
+historical index is not claimed.

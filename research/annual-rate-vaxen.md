@@ -20,6 +20,44 @@ source-linked [base HTML](../data/derived/figures/annual-rate/annual-rate-leader
 and [peak HTML](../data/derived/figures/annual-rate/annual-rate-leaders-peak.html)
 are beside the PNGs.
 
+## Combined distribution, hardware and confidence figures
+
+Run the chain bootstrap first, then `./.venv/bin/cpushowspeed plot annual-rate-ci`.
+The [combined base figure](../data/derived/figures/annual-rate/annual-rate-combined-base.png)
+and [combined peak figure](../data/derived/figures/annual-rate/annual-rate-combined-peak.png)
+place each year's representative System/CPU, submission count and horizontal
+boxplot on the same row. Their [base HTML](../data/derived/figures/annual-rate/annual-rate-combined-base.html)
+and [peak HTML](../data/derived/figures/annual-rate/annual-rate-combined-peak.html)
+include SVG and complete names, clickable sources and interval tables.
+The [annual confidence CSV](data/spec/annual-rate-confidence.csv) records all
+72 year/mode results at full precision, including quartile, fixed-leader and
+annual-frontier intervals and the original central values.
+
+Each of the 10,000 bootstrap replicates supplies one shared multiplier per
+SPEC generation. Every source submission in a year receives that generation's
+same multiplier; Q1, median, Q3 and maximum are recomputed from the complete
+resulting vector. Computation is batched in 128 replicates to bound memory.
+The source population is fixed, including repeated submissions; only calibration
+uncertainty is resampled. Raw score and date fields are unchanged.
+
+The solid box is the central Q1–Q3 range, with a median line, standard 1.5-IQR
+whiskers and faint outlier points. Pale blue spans **Q1's lower 95% limit to
+Q3's upper 95% limit**. It is an envelope of two pointwise quartile intervals,
+not a 95% interval for all observations. Blue strokes below each box show the
+separate Q1, median and Q3 intervals. The orange point is the central highest
+submission; its pale orange band is the fixed representative's conditional
+95% calibration interval. This keeps the band tied to the System/CPU at left.
+All intervals are percentile intervals from the saved chain draws, with the
+scope and edge-independence assumptions in the [chain audit](spec95-spec2026-rate-fitting.md#conditional-whole-chain-confidence-intervals).
+
+The CSV/HTML also supplies a **frontier interval** that allows the highest
+submission to change across replicates. Top retention counts a tied highest
+score as remaining at the top. The central **2018 base** representative stays
+at the top in **65.81%** of replicates; its plot label therefore notes the
+retention rate. All other year/mode representatives remain co-highest in
+100% of these draws. That describes calibration sensitivity under this model,
+not certainty that those machines were historically the fastest.
+
 ## Population and year definition
 
 The population is **every parsed SPEC integer-rate submission with a positive
@@ -104,8 +142,11 @@ whole population before producing a separate sensitivity figure.
 
 The boxes contain submissions rather than independent machine models;
 multiple results for one platform may affect their distribution. The VAXen
-chain has architecture and software dependence, with no established full-chain
-error band. In particular, the sparse first year and changing suite coverage
+chain has architecture and software dependence. The [conditional whole-chain
+bootstrap](spec95-spec2026-rate-fitting.md#conditional-whole-chain-confidence-intervals)
+estimates sampling variation of the calibration scale. The combined figures
+propagate those draws into pointwise annual intervals; they do not include
+individual-machine prediction error or systematic calibration bias. In particular, the sparse first year and changing suite coverage
 make the leader curve unsuitable as a claim of uninterrupted annual hardware
 progress. Review individual leader disclosures, copy counts and unusual
 configuration dates before using the chart as a public historical index.

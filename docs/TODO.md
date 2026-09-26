@@ -9,8 +9,9 @@ owning document as work lands; remove superseded items.
       especially check copy counts, software, memory and enabled hardware.
 - [ ] Refit the CPU2026 edge as its published integer-rate cohort grows, and
       seek independent nonadjacent or three-suite overlaps for a cycle check.
-- [ ] Quantify the uncertainty of the full CPU92→CPU2026 rate chain before
-      treating its VAXen figures as an annual performance index.
+- [ ] Assess systematic calibration bias separately from the implemented
+      conditional annual bootstrap intervals before treating the result as a
+      public historical performance index.
 - [ ] Review annual rate leaders against their detailed disclosures, including
       copy counts, clusters, unusual configuration dates, and source-year
       coverage. Compare systematic date-quality rules in a separate sensitivity

@@ -22,7 +22,9 @@ that mean yields the geometric old/new score factor. This keeps repeated
 submissions visible while preventing them from multiplying independent fit
 weight. Fit base and peak separately. Use leave-one-configuration-out errors
 for prediction checks, and identify bootstrap intervals as conditional on the
-selected cohort. Do not treat one edge's interval as the uncertainty of the
+selected cohort. All five edges use 10,000 configuration bootstrap resamples
+with fixed seed and percentile intervals; the [combined interval table](../research/data/spec/fitting/integer-rate-edge-intervals.csv)
+also records held-out p95 errors. Do not treat one edge's interval as the uncertainty of the
 full chain. Look for independent nonadjacent or three-suite overlaps to test
 the chained estimate.
 
@@ -58,3 +60,13 @@ histories, but their score fields must not be silently substituted for SPEC
 integer-rate submissions. The [source guide](sources.md) records collection
 caveats and the [data contract](data-contract.md) records value, date and
 provenance requirements.
+
+The implemented `bridge bootstrap-rate-chain` command audits cross-edge
+configuration/source overlap, then propagates 10,000 complete multiplier
+vectors under a disjoint-cohort independence assumption. The
+[rate audit](../research/spec95-spec2026-rate-fitting.md#conditional-whole-chain-confidence-intervals)
+defines its pointwise CI scope and the stored replicate arrays. These quantify
+conditional calibration sampling variation, not individual-machine prediction
+error or shared systematic bias. `plot annual-rate-ci` propagates those shared vectors to yearly quartiles and
+representative scores; its pale box envelopes and fixed-leader intervals
+retain that conditional, pointwise interpretation.

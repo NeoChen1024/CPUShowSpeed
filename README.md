@@ -34,3 +34,12 @@ uv pip install --python .venv/bin/python -e .
 
 `requirements.txt` is the single dependency list; `pyproject.toml` reads it
 for editable installation and defines the `cpushowspeed` command.
+
+Convert a single integer-rate result with the saved calibration:
+
+```sh
+./.venv/bin/cpushowspeed convert-rate 2017 base 11800 --format text
+```
+
+This prints estimated VAXen and the conditional calibration CI95. Omit
+`--format text` for machine-readable JSON; see the collection guide for scope.
