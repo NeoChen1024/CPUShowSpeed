@@ -1,0 +1,36 @@
+source_id,url,family,provider,lineage,role
+longbottom-index,http://www.roylongbottom.org.uk/,index,Roy Longbottom,longbottom-ccta-and-later-compilation,index
+longbottom-cpumix,http://www.roylongbottom.org.uk/cpumix.htm,Gibson;ADP,Roy Longbottom,longbottom-ccta-and-later-compilation,results_and_method
+longbottom-mips,http://www.roylongbottom.org.uk/mips.htm,vendor MIPS claims,Roy Longbottom,longbottom-ccta-and-later-compilation,results_and_method
+longbottom-whetstone-history,http://www.roylongbottom.org.uk/whetstone.htm,Whetstone,Roy Longbottom,longbottom-ccta-and-later-compilation,results_and_method
+longbottom-whetstone-results,http://www.roylongbottom.org.uk/whetstone results.htm,Whetstone,Roy Longbottom,longbottom-ccta-and-later-compilation,results_and_method
+longbottom-dhrystone-results,http://www.roylongbottom.org.uk/dhrystone results.htm,Dhrystone,Roy Longbottom,longbottom-ccta-and-later-compilation,results_and_method
+longbottom-linpack-results,http://www.roylongbottom.org.uk/linpack results.htm,LINPACK,Roy Longbottom,longbottom-ccta-and-later-compilation,results_and_method
+longbottom-livermore-results,http://www.roylongbottom.org.uk/livermore loops results.htm,Livermore,Roy Longbottom,longbottom-ccta-and-later-compilation,results_and_method
+longbottom-cray-comparison,http://www.roylongbottom.org.uk/Cray 1 Supercomputer Performance Comparisons With Home Computers Phones and Tablets.htm,Livermore;Whetstone;LINPACK,Roy Longbottom,longbottom-ccta-and-later-compilation,results_and_method
+netlib-benchmark-index,https://netlib.org/benchmark/,multiple,Netlib,netlib-program-catalog,index
+netlib-dhrystone-results,https://www.netlib.org/performance/html/dhrystone.data.col0.html,Dhrystone,Netlib,aburto-contributor-compilation,results
+netlib-dhrystone-notes,https://www.netlib.org/performance/papers/dhrystone/,Dhrystone,Netlib,aburto-contributor-compilation,method_and_provenance
+netlib-dhrystone-code,https://www.netlib.org/benchmark/dhry-c,Dhrystone,Netlib,weicker-dhrystone,source_code
+netlib-whetstone-code,https://www.netlib.org/benchmark/whetstones,Whetstone,Netlib,curnow-wichmann-whetstone,source_code
+netlib-livermore-code,https://www.netlib.org/benchmark/livermore,Livermore,Netlib,mcmahon-llnl,source_code
+netlib-nas-code,https://www.netlib.org/benchmark/nas,NAS kernels,Netlib,nasa-nas-kernels,source_code
+netlib-perfect-results,https://www.netlib.org/performance/rank/perfect/,PERFECT,Netlib,perfect-club-contributors,result_index
+netlib-gbis,https://www.netlib.org/parkbench/gbis/html/,GENESIS;PARKBENCH,Netlib,southampton-gbis,result_and_method_index
+nasa-kernels-1985,https://ntrs.nasa.gov/api/citations/19850024482/downloads/19850024482.pdf,NAS kernels,NASA NTRS,nasa-nas-kernels,original_report
+gabriel-lisp-book,https://dreamsongs.com/Files/Timrep.pdf,Gabriel Lisp benchmarks,Richard P. Gabriel,gabriel-lisp,author_hosted_book
+longbottom-newsource-zip,http://www.roylongbottom.org.uk/newsource.zip,classic bundle,Roy Longbottom,longbottom-program-distribution,source_or_executable_archive
+longbottom-benchnt-zip,http://www.roylongbottom.org.uk/benchnt.zip,classic bundle,Roy Longbottom,longbottom-program-distribution,source_or_executable_archive
+longbottom-dostests-zip,http://www.roylongbottom.org.uk/dostests.zip,classic bundle,Roy Longbottom,longbottom-program-distribution,source_or_executable_archive
+longbottom-os2tests-zip,http://www.roylongbottom.org.uk/os2tests.zip,classic bundle,Roy Longbottom,longbottom-program-distribution,source_or_executable_archive
+longbottom-cb16bit-zip,http://www.roylongbottom.org.uk/cb16bit.zip,classic bundle,Roy Longbottom,longbottom-program-distribution,source_or_executable_archive
+longbottom-win64-zip,http://www.roylongbottom.org.uk/win64.zip,classic bundle,Roy Longbottom,longbottom-program-distribution,source_or_executable_archive
+longbottom-whetjava-zip,http://www.roylongbottom.org.uk/whetjava.zip,Whetstone,Roy Longbottom,longbottom-program-distribution,source_or_executable_archive
+longbottom-whets-c,http://www.roylongbottom.org.uk/whets.c,Whetstone,Roy Longbottom,longbottom-program-distribution,source_or_executable_archive
+longbottom-whets-for,http://www.roylongbottom.org.uk/whets.for,Whetstone,Roy Longbottom,longbottom-program-distribution,source_or_executable_archive
+longbottom-whetstone-pdf,http://www.roylongbottom.org.uk/whetstone.pdf,Whetstone,Roy Longbottom,curnow-wichmann-whetstone,original_paper_copy
+netlib-linpack-report,http://www.netlib.org/benchmark/performance.pdf,LINPACK,Netlib,dongarra-linpack-compilation,results_report
+netlib-genesis-description,http://www.netlib.org/parkbench/gbis/html/descriptions/ReadMe.ps,GENESIS,Netlib,southampton-gbis,original_suite_description
+netlib-gbis-results,https://www.netlib.org/parkbench/gbis/html/papiani-new-gbis.html,GENESIS;PARKBENCH,Netlib,southampton-gbis,result_index
+tuhs-dhampstone-1988,https://www.tuhs.org/Usenet/comp.lang.c/1988-March/016129.html,Dhampstone,TUHS Usenet archive,dhampstone-usenet-posting,source_code_and_discussion
+aal-sieve-1981,https://txbobsc.com/aal/1981/aal8110.html,Sieve,Bob Sander-Cederlof,byte-sieve-reprint-and-aal-new-runs,program_listing_and_results

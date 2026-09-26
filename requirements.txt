@@ -6,3 +6,4 @@ rich>=13
 chandra-ocr==0.2.0
 humanize>=4
 openai>=2
+beautifulsoup4>=4.12

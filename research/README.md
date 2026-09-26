@@ -21,6 +21,11 @@ defines provenance and date handling.
 
 ## Preserved historical evidence
 
+- [Classic benchmark acquisition](classic-benchmark-collection.md): Longbottom
+  snapshots, independently sourced workload families and acquisition lineage.
+- [Classical / SPEC89-92 hardware overlap](classic-spec-overlap.md): first
+  model-candidate counts and source-linked review outputs, without score fitting.
+
 - [First local early-benchmark evidence pass](early-benchmark-evidence.md):
   source-checked Honeywell Gibson ratings, original PDP-8 timing inputs and
   the analytical evidence boundary of the DEC programming-benchmark memo.

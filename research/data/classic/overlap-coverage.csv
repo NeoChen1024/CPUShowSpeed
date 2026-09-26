@@ -1,0 +1,36 @@
+source_id,role,status,records,section_scope
+longbottom-index,index,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-cpumix,results_and_method,system_rows_parsed,380,eight-column instruction-mix rows
+longbottom-mips,results_and_method,not_parsed_for_hardware,0,not yet parsed
+longbottom-whetstone-history,results_and_method,system_rows_parsed,504,pre 2 historical supplier table; stops at PCs (Precision)
+longbottom-whetstone-results,results_and_method,cpu_only_rows_parsed,574,explicit PRE row grammar
+longbottom-dhrystone-results,results_and_method,cpu_only_rows_parsed,121,explicit PRE row grammar
+longbottom-linpack-results,results_and_method,cpu_only_rows_parsed,158,explicit PRE row grammar
+longbottom-livermore-results,results_and_method,cpu_only_rows_parsed,356,explicit PRE row grammar
+longbottom-cray-comparison,results_and_method,not_parsed_for_hardware,0,not yet parsed
+netlib-benchmark-index,index,program_or_navigation_not_result_population,0,not yet parsed
+netlib-dhrystone-results,results,system_rows_parsed,328,explicit PRE row grammar
+netlib-dhrystone-notes,method_and_provenance,not_parsed_for_hardware,0,not yet parsed
+netlib-dhrystone-code,source_code,program_or_navigation_not_result_population,0,not yet parsed
+netlib-whetstone-code,source_code,program_or_navigation_not_result_population,0,not yet parsed
+netlib-livermore-code,source_code,program_or_navigation_not_result_population,0,not yet parsed
+netlib-nas-code,source_code,program_or_navigation_not_result_population,0,not yet parsed
+netlib-perfect-results,result_index,program_or_navigation_not_result_population,0,not yet parsed
+netlib-gbis,result_and_method_index,program_or_navigation_not_result_population,0,not yet parsed
+nasa-kernels-1985,original_report,not_parsed_for_hardware,0,not yet parsed
+gabriel-lisp-book,author_hosted_book,not_parsed_for_hardware,0,not yet parsed
+longbottom-newsource-zip,source_or_executable_archive,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-benchnt-zip,source_or_executable_archive,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-dostests-zip,source_or_executable_archive,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-os2tests-zip,source_or_executable_archive,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-cb16bit-zip,source_or_executable_archive,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-win64-zip,source_or_executable_archive,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-whetjava-zip,source_or_executable_archive,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-whets-c,source_or_executable_archive,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-whets-for,source_or_executable_archive,program_or_navigation_not_result_population,0,not yet parsed
+longbottom-whetstone-pdf,original_paper_copy,not_parsed_for_hardware,0,not yet parsed
+netlib-linpack-report,results_report,pdf_machine_candidate_rows,1373,Table 1 lines with a separated numeric result; no multiline reconstruction or score interpretation
+netlib-genesis-description,original_suite_description,program_or_navigation_not_result_population,0,not yet parsed
+netlib-gbis-results,result_index,program_or_navigation_not_result_population,0,not yet parsed
+tuhs-dhampstone-1988,source_code_and_discussion,not_parsed_for_hardware,0,not yet parsed
+aal-sieve-1981,program_listing_and_results,not_parsed_for_hardware,0,not yet parsed

@@ -94,9 +94,11 @@ For each acquired file, retain retrieval date, original URL, immutable local
 path and hash; distinguish archive copies of one report from independent
 measurements. Capture publication date at its known precision. Archive.org,
 library repositories and Usenet are recovery channels for missing documents,
-with snapshot/message identity retained. Roy Longbottom's HTTPS homepage failed
-in this review; author-uploaded ResearchGate texts were accessible. This does
-not establish that the original site is permanently unavailable.
+with snapshot/message identity retained. Direct HTTP access to Longbottom's
+site succeeded on 2026-09-26 after an earlier HTTPS failure. The
+[classic collector](classic-collection.md) now preserves its Historic/Classic
+pages and linked programs alongside other origins; see the
+[acquisition audit](../research/classic-benchmark-collection.md).
 
 Before importing numbers, define result records with the original metric and
 unit, mix/version, source locator, machine/configuration, timing assumptions,
