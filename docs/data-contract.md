@@ -48,8 +48,20 @@ retain that original precision and leave the full date unknown; do not invent a
 day or month to satisfy the format.
 
 Never substitute one date for another. A historical plot must state which date
-is on its horizontal axis. A manual reconstruction of an older machine is not
-a measurement made in its introduction year.
+is on its horizontal axis. For the main hardware-era view, prefer the reported
+availability of the *tested hardware configuration* when a SPEC disclosure
+provides it. SPEC defines this as the date when the last required hardware
+component became generally available, which can be later than the launch of
+the named machine or CPU. For SPEC89, where that field is absent, use a
+source-checked model introduction or availability year as a provisional proxy;
+label its event type and keep undated models out of year groups. Do not silently
+pool these two date definitions. Keep publication/test-year views available as
+separate diagnostics. A manual reconstruction of an older machine is not a
+measurement made in its introduction year.
+
+[SPEC's hardware-availability field definition](https://www.spec.org/cpu2026/Docs/result-fields.html)
+and [run rule](https://www.spec.org/cpu2026/docs/runrules.html#section4.2.3)
+explain why availability is a configuration-level date.
 
 ## Values and validity
 

@@ -27,10 +27,21 @@ Research notes remain useful for the evidence trail and interpretation.
 
 ## Current findings
 
+- [Chandra time-sharing sample QA](chandra-timesharing-sample.md): original-page
+  checks of diagram code, omitted figure content, and image/caption routing.
+
 - [Early SPEC archive locations](spec-early-archives.md): verified CPU89/CPU92
   source paths and remaining first-issue gaps.
 - [Curated SPEC89 recovery snapshot](spec89-curated-snapshot.md): source-linked
   machine-readable observations, package validation, and CPU89–CPU92 bridge limits.
+- [Helman 1991 SPEC89 worksheet derivative](spec89-helman-worksheet.md): 40 source-checked rows merged with explicit derivative and uncertainty flags.
+- [SPEC89 hardware introduction audit](spec89-hardware-years.md): source-linked model-year catalog, unresolved labels, and reproducible row-level join.
+- [SPEC89–CPU92 source-paired scatter](spec89-cpu92-scatter.md): two metric-specific
+  panels retaining all 34 cited bridge observations.
+- [CPU92–CPU95 overlap audit](cpu92-cpu95-bridge.md): 13 reviewed configuration-near
+  integer-speed pairs, provisional stratum ratios, and a machine-readable review table.
+- [SPEC entity resolution precedents](spec-entity-resolution.md): published processor matching methods, local overlap probe, and graded matching proposal.
+- [SPEC92–SPEC2026 fitting audit](spec92-spec2026-fitting.md): five adjacent integer-speed fits, source-linked diagnostics, and no empirical three-suite cycle.
 - [First SPEC92 VAXen figure](spec92-vaxen.md): source-checked annual CINT92
   results and coverage limits.
 

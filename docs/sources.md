@@ -35,6 +35,11 @@ area; the generated workbook, redundant JSON export, and broad search index
 are not versioned. See the [checked package audit](../research/spec89-curated-snapshot.md)
 for CPU89–CPU92 overlap counts and limitations.
 
+The [Helman 1991 supplement](../research/data/spec89/helman-1991/README.md)
+preserves a separate source-verified 40-row worksheet derivative. Its
+[combined CSV](../research/data/spec89/aggregate89-plus-helman.csv) adds the
+rows as source observations without changing the versioned snapshot.
+
 ## Local bitsavers discovery inventory
 
 `inventories/bitsavers-filelist.txt` is an rsync file listing from

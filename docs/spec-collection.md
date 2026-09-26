@@ -53,14 +53,101 @@ manifests are in `data/derived/spec/`. Both are generated local data, excluded
 from Git. Curated findings checked against a disclosure belong in `research/`.
 Public use of scores must follow [SPEC Fair Use](https://www.spec.org/products/fairuse/).
 
+## SPEC89–CPU92 source-paired scatter
+
+The versioned SPEC89 recovery snapshot already contains 34 same-source bridge
+rows. This command verifies that snapshot and plots all rows in two separate
+metric panels, with source-linked CSV output under `data/derived/figures/`:
+
+```sh
+./.venv/bin/cpushowspeed plot spec89-92
+```
+
+Seventeen rows report `SPECint89` against `SPECint92`; seventeen report the
+composite `SPECmark89` against `SPECint92`. Exact coordinate ties are marked
+without dropping repeated source observations. The plot is an evidence view,
+not a fitted conversion. See the [checked scatter note](../research/spec89-cpu92-scatter.md).
+
+## CPU92–CPU95 overlap audit
+
+The first cross-generation bridge audit uses the cached Netlib CPU92 details,
+SPEC's official CPU95 bulk CSV and quarterly index, and targeted CPU95 HTML
+disclosures. It does not convert all CPU95 results or extend the VAXen figure.
+
+```sh
+./.venv/bin/cpushowspeed bridge cpu92-cpu95 --fetch-missing
+./.venv/bin/cpushowspeed bridge cpu92-cpu95
+```
+
+`--fetch-missing` downloads only CPU95 disclosures selected by exact normalized
+system name, processor description, and CPU count; the second command is
+offline and verifies cached source hashes and reviewed scores. Both write a
+source-linked candidate-pair CSV and summary JSON under `data/derived/spec/`,
+plus a PNG/SVG scatter plot under `data/derived/figures/`. The scatter uses
+**all** candidate pairings: repeated submissions remain data points, and
+nothing is deduplicated by system. If both generations have multiple
+submissions for a system, their possible pairings are shown separately and
+are not independent evidence for fitting a conversion factor. Color identifies
+processor family; marker shape distinguishes reviewed pairs, relaxed pairs
+with matching reported cache capacities, and pairs whose cache capacities
+differ or are unclear. The [curated reviewed pairs](../research/cpu92-cpu95-reviewed.csv) and
+[checked findings](../research/cpu92-cpu95-bridge.md) are versioned research
+records. Candidate pairs not in the review CSV remain unreviewed, not rejected.
+
+## CPU92–CPU2026 integer-speed fitting audit
+
+Run the offline all-generation experiment with:
+
+```sh
+./.venv/bin/cpushowspeed bridge fit-generations
+```
+
+It verifies local CPU92 disclosures and official bulk-export hashes, keeps all
+same-system candidate submissions, and fits the reviewed CPU92–CPU95 pairs plus
+hardware-near pairs for each later adjacent suite. Peak and base modes remain
+separate. `data/derived/spec/fitting/` receives source-linked records, all
+candidate pairs, JSON diagnostics, and PNG/SVG scatter figures. The compact
+[machine-readable factor table](../research/data/spec/fitting/integer-speed-factors.csv)
+and [exploratory VAXen chain](../research/data/spec/fitting/integer-speed-vaxen-chain.csv)
+are tracked with method version and input hashes. [Findings and limitations](../research/spec92-spec2026-fitting.md)
+explain the absence of three-suite overlap and why these exploratory factors
+are not yet public VAXen conversion constants.
+
+The `bridge match-coverage` command separately counts same-processor
+candidates across adjacent generations without adding them to the fit. Its
+[coverage CSV](../research/data/spec/fitting/processor-match-coverage.csv)
+and [research interpretation](../research/spec-entity-resolution.md) distinguish
+candidate multiplicity from accepted same-configuration evidence.
+
+## Helman SPEC89 worksheet supplement
+
+The [source-checked Helman post](../research/spec89-helman-worksheet.md) adds
+40 published worksheet rows to the 381-row immutable SPEC89 snapshot. The
+tracked `research/data/spec89/aggregate89-plus-helman.csv` contains 421
+source observations with original names, source lines, score columns, note
+references, and flags for calculated values, uncertain clocks, estimate, and
+beta hardware. `cpushowspeed spec89 merge-helman` verifies the preserved post
+and rebuilds the combined CSV; `--mbox-zip` additionally checks the original
+MBOX bytes. The 40 rows are not 40 independent benchmark runs.
+
+## SPEC89 model-year join
+
+The original SPEC89 recovery snapshot is immutable. A separate
+[source-checked catalog](../research/spec89-hardware-years.md) covers every
+normalized model label with an introduction date or an explicit unresolved
+status. `cpushowspeed spec89 hardware-years` joins it to all 421 combined source-observation
+rows under `data/derived/spec89/`, retaining original scores, result IDs,
+source links, event type, and date evidence. Unknown dates remain blank.
+
 ## First VAX-anchored figure
 
 The `plot spec92` command uses the locally cached Netlib CPU92 detailed reports
 to draw annual CINT92 integer-speed box plots and a highest-submission line.
 SPECint92 is already relative to the VAX-11/780 reference time, so these
 scores can be labeled `VAXen (CINT92)` without a cross-generation conversion.
-The horizontal coordinate is the SPEC Newsletter issue year, not a machine
-introduction or test year.
+The horizontal coordinate is the disclosure-reported `Hardware Availability`
+year for the tested configuration, not issue year, test year, or necessarily
+the first launch year of the named CPU or machine.
 
 ```sh
 ./.venv/bin/cpushowspeed plot spec92
@@ -72,17 +159,19 @@ stdout names each output. The CSV is a reproducible chart input, not the final
 schema for historical PDF and KIPS findings. It uses original SPECint92 rather
 than the later `SPECbase_int92`, because baseline reporting began in 1994.
 Reports with one or more CPUs enter the chart if they have a positive
-SPECint92 score and a test month no later than the labeled issue month. The
-reported CPU count stays with each record. The source file hash is verified
+SPECint92 score and a parseable hardware-availability month. Reports whose
+test month follows their labeled issue month remain included but carry a
+`chronology_flag` in the record CSV. The reported CPU count stays with each record. The source file hash is verified
 against its collection metadata before extraction. It does not infer a full
 `YYYY-MM-DD` from the issue's month-only date.
 
 The 2026-09-25 cached set contained 305 integer speed disclosures. The figure
-regenerated on 2026-09-26 includes 300: three lacked a SPECint92 score, and
-two claimed a test month after their issue month. The 1993–1996 yearly counts
-are 69, 111, 110, and 10. All 300 included scores were independently checked
-against their corresponding Netlib issue summary rows. The original 1992 issues
-are still absent from this electronic archive, and 1996 has sparse coverage.
+regenerated on 2026-09-26 includes 302; three lacked a SPECint92 score. Two
+included disclosures have a test month after the labeled issue month and are
+flagged for chronology review. The 1991–1996 hardware-year counts are 3, 15,
+91, 92, 81, and 20. All 302 included scores were checked against their
+corresponding Netlib issue summary rows. The original 1992 issues are absent
+from this electronic archive, so early-year groups are incomplete.
 See the [checked chart results](../research/spec92-vaxen.md).
 
 This figure stops at CPU92. Later suites require validated same-system bridges

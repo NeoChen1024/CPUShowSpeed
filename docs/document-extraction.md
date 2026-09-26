@@ -1,8 +1,55 @@
-# Document extraction (proposed)
+# Document extraction
 
-This workflow is under consideration; no PDF-to-Markdown pipeline has been
-implemented or selected. MinerU or another VLM-based OCR tool may be used to
-make historical scans searchable and quick to browse with an LLM agent.
+Stage 1 OCR extraction, the PDF inventory, and HTML table parser are
+implemented. Captioning and DocIR backfill remain planned. OCR output is
+derived reading material for historical scans. Stage 1 has passed a two-page
+SGLang pilot; the full corpus has not been run or throughput-tuned.
+
+## Implemented PDF inventory
+
+`cpushowspeed documents inventory` inventories an existing local PDF tree.
+It reads each new or changed PDF in full to calculate BLAKE3, then uses
+pypdfium2/PDFium to record its page count and PDF version. It does not OCR,
+extract text, assess an existing text layer, or decide which pages may skip
+Chandra. A PDF's embedded OCR text is not treated as verified evidence.
+
+Run it from the repository's uv-managed `.venv`:
+
+```sh
+uv pip install --python .venv/bin/python -e .
+.venv/bin/cpushowspeed documents inventory \
+  --root /path/to/bitsavers/pdf \
+  --database data/derived/documents/inventory.sqlite \
+  --workers 4
+.venv/bin/cpushowspeed documents report \
+  --database data/derived/documents/inventory.sqlite
+.venv/bin/cpushowspeed documents export \
+  --database data/derived/documents/inventory.sqlite \
+  --output data/derived/documents/inventory.jsonl
+```
+
+The SQLite database is tied to one resolved source root. It stores one row per
+relative PDF path: size and file timestamps for resume checks, BLAKE3 digest,
+page count, PDF version, PDFium version, scan time, and a status/error. Repeating
+the command reuses unchanged successful rows and retries failed rows. Use
+`--rescan` to re-read every file. A file that disappears is marked `missing`
+only after a complete directory traversal and processing run. An empty traversal
+against an existing inventory fails without marking everything missing, in case
+the source mount is unavailable. Symlinked files are skipped. Rich progress
+goes to stderr; reports go to stdout. The JSONL export has one record per source path and includes the resolved
+source root in each record. The database and export are derived data, kept
+outside Git.
+
+A source file can change while it is read; the scanner compares its filesystem
+identity, size, and timestamps before and after hashing and PDF parsing and
+marks such a result `changed` for a later retry. A PDF parse failure retains
+the completed file hash and an explicit `pdf_error` status rather than
+pretending the file has zero pages. Page counts are unknown for failed files.
+
+The selected [historical DocIR](docir.md) defines how OCR pages and tables
+are represented. Its HTML table converter and Chandra-to-DocIR writer are
+implemented. [Image Pool](image-pool.md) crop storage is implemented;
+batch captioning and DocIR backfill are not.
 
 ## Evidence boundary
 
@@ -12,19 +59,47 @@ original document and page or table for research claims, especially numeric
 values used in a reconstruction. Do not cite a Markdown line number as if it
 were an original page reference.
 
-## Proposed workflow
+## Processing workflow
 
-1. Retain the original PDF unchanged and identify its source, edition or
-   revision, file hash, and retrieval date.
-2. Convert pages to Markdown for search and initial reading. Preserve page
-   boundaries and a mapping back to the original PDF pages. Keep the extracted
-   text separate from both the PDF and curated result records.
-3. Use the Markdown to locate likely instruction tables, timing notes,
-   benchmark scores, and machine-configuration details.
-4. Inspect the original page for every numeric value used in an analysis.
-   Escalate ambiguous pages to a stronger VLM or manual review. Record the
-   resolved reading and page-level evidence in a curated result or a
-   [verified research finding](../research/README.md).
+The [OCR dispatch design](ocr-dispatch.md) owns stage 1 scheduling, resource
+bounds, and restart behavior.
+
+1. **OCR extraction.** Read the immutable PDF and its inventory BLAKE3.
+   Use Chandra's Python API to retain each page's original response,
+   ordered chunks, bounding boxes, and generated visual assets. Convert
+   every physical page into the [historical DocIR](docir.md), preserving
+   blank and failed pages explicitly. Mirror the path below a configurable
+   output root: `dec/pdp8/foo.pdf` becomes
+   `dec/pdp8/foo.docir.jsonl`. Replace `.PDF` case-insensitively and reject
+   any resulting path collision. Publish each document's raw JSONL first
+   and DocIR last through temporary files. Keep both outside Git, with
+   finalized raw OCR records immutable. A failed page remains explicit in
+   staging and is retryable on the next run; documents with failed pages
+   are not published.
+2. **Image captioning.** Select every valid `Image` or `Figure` crop in
+   the [Image Pool](image-pool.md), including ones with a Chandra `alt`
+   description. For `Diagram` and `Chart`, skip the second caption
+   when Chandra supplied a usable structured representation such as
+   Mermaid graph code or table cells; caption unparsed visual crops.
+   Store caption results in the local SQLite catalog. Structured OCR
+   remains unverified, so important graphics still need visual QA.
+3. **DocIR backfill.** Read successful captions from SQLite by the
+   block's `image_blake3` and fill its `caption` field. Rewrite each
+   affected DocIR file through a temporary file and atomic replace.
+   OCR and backfill must not write the same document concurrently.
+   SQLite is the source for generated captions; DocIR contains a
+   convenient materialized copy for readers. Re-running this stage
+   must be idempotent. If OCR changes a crop and its hash, an old
+   caption must not be copied into the new block.
+
+These are logical stages. Large runs may process completed documents in
+batches, while preserving this order for each document. OCR, captioning,
+and backfill should be separately resumable. Use the resulting DocIR to
+locate likely instruction tables, timing notes, benchmark scores, and
+machine-configuration details. Check every numeric claim on the original
+PDF page; escalate ambiguous pages to another VLM or manual review and
+record the resolved reading in curated data or a
+[verified research finding](../research/README.md).
 
 When curating checked performance values and related observations, also preserve
 them in a script-readable form under the [data contract](data-contract.md).
@@ -37,7 +112,7 @@ value is not enough when it affects a published score or a bridge calibration.
 
 ## Minimal processing record
 
-For each generated Markdown document, retain the source PDF identifier and hash,
+For each generated DocIR document, retain the source PDF identifier and hash,
 OCR tool/model and version when known, processing date in `YYYY-MM-DD`, and page
 mapping. Mark OCR output as unreviewed, partly reviewed, or reviewed for the
 specific extracted claims; do not imply that validating one table certifies the

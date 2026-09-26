@@ -1,7 +1,11 @@
 # Research methods
 
-No reconstruction or cross-benchmark conversion has been implemented yet. The
-following rules describe what a future method must disclose and validate.
+No instruction-mix reconstruction or validated general cross-benchmark
+conversion has been implemented. An
+[exploratory SPEC92–SPEC2026 fitting audit](../research/spec92-spec2026-fitting.md)
+now measures all five adjacent integer-speed bridges and searches for direct
+nonadjacent overlaps. Its chain factors remain diagnostics, not adopted VAXen
+conversion constants.
 
 ## Instruction-mix reconstruction
 
@@ -25,11 +29,29 @@ ratio in log space, report the overlap sample and spread, and check prediction
 on held-out systems. Multiple submissions for one system must not masquerade as
 independent evidence.
 
+The [entity-resolution review](../research/spec-entity-resolution.md) documents
+processor-level matching precedents and why fuzzy names alone cannot establish
+a same-configuration bridge.
+
+The implemented fitting audit matches adjacent generations under a conservative
+hardware key, retains all submission pairings, and weights processor
+configurations rather than pair counts. It also searches nonadjacent generation
+pairs; none currently provides a fit-eligible edge, so no empirical
+three-generation cycle check is available. Later speed-suite thread settings
+need per-result review before a factor can be applied broadly.
+
 Keep the original benchmark scores and the normalized estimate side by side.
 Do not use a single reference machine or one ratio as proof of universal
 equivalence. The graph or table must disclose approximation and uncertainty.
 
-## Proposed reporting anchor
+## Reporting reference and statistical backbone
+
+Use `SPECint92` as the primary statistical backbone for the historical
+integer-speed series: it has source-linked detailed submissions and already
+uses a VAX-relative reference time. This choice determines which observed
+benchmark scale later integer scores are calibrated toward. The reference
+machine and the statistical backbone are different concepts; the VAX-11/780
+still defines the displayed value `1` within this track.
 
 Use the DEC VAX-11/780 as the reporting reference for a future stitched
 performance index, setting its value to `1` by definition **within each
@@ -60,8 +82,62 @@ for each historical bridge. A VAX anchor fixes the display scale but does not
 supply missing conversion factors or remove the uncertainty accumulated from
 cross-benchmark links. CPU92 speed scores are already VAX-relative under their
 own workloads, as documented in the [early SPEC research](../research/spec-early-archives.md).
+The [SPECint89–SPECint92 source-paired evidence](../research/spec89-cpu92-scatter.md)
+is close to numerical identity in the currently recovered sample: 15 distinct
+literal integer-score vectors give a geometric mean `SPECint92 / SPECint89`
+of about 0.960 and an observed range of 0.893–1.056. This is a sparse,
+source-dependent diagnostic, not an implemented universal conversion. An
+exploratory overlay may place original `SPECint89` scores on the same
+VAX-referenced axis, with their metric and approximation status explicit;
+statistics requiring a common `SPECint92` workload must use a validated
+bridge and retain the reported original. `SPECmark89` is a mixed integer/FP
+metric and does not enter this integer bridge. Any fitted non-unit factor
+creates an estimated SPEC92-equivalent score; it does not redefine the VAX
+reference score of 1 in either original suite.
+
+The [CPU92–CPU95 overlap scatter](../research/cpu92-cpu95-bridge.md)
+shows every candidate pairing, including repeated submissions. Pairings from
+the same system are related observations; their count must not be treated as
+independent sample size in a conversion fit. The current provisional factor
+uses only the curated, one-per-system reviewed set.
+
 The initial per-generation plot may show original scores where a defensible
-path back to the VAX has not yet been calibrated.
+path back to the VAX has not yet been calibrated. The first
+[CPU92–CPU95 overlap audit](../research/cpu92-cpu95-bridge.md) found distinct
+software-conditioned ratio groups; it has not supplied a universal factor.
+
+## Provisional CPU89-to-CPU92 sensitivity band
+
+For an exploratory integer timeline, a single shared factor is a useful
+working model, not an established universal conversion. From the currently
+recovered 15 distinct literal `SPECint89`/`SPECint92` system-and-score
+vectors, use `k = 0.960` as the central **SPEC92-equivalent estimate per
+SPECint89 point**, with `k_low = 0.893` and `k_high = 1.056` as observed-ratio
+sensitivity scenarios. The latter two are sample extrema, not a confidence
+interval or a guaranteed bound for other machines. The cohort is small and
+source-dependent, with development systems and later republications. Keep
+full-precision calculated values and original pair IDs in any implementation;
+these rounded values are for explaining the proposal, not code constants.
+
+After a defensible year is assigned to each source observation, let `R92_y`
+be the reported SPECint92 scores for that year and `R89_y` the reported
+SPECint89 scores. For each shared factor `k`, recompute the *whole* annual
+cohort `D_y(k) = R92_y ∪ {k × s : s ∈ R89_y}`. Use `k = 0.960` for the
+central highest-submission line and box statistics; plot the results at
+`k_low` and `k_high` as a translucent sensitivity envelope around the
+maximum, quartiles, median, and whiskers. A single factor moves all CPU89
+scores together. Never insert both endpoints as extra submissions or widen
+the observed-data box to impersonate measurement scatter. A year with no
+CPU89 results has no conversion band. Retain reported raw scores and mark
+every converted score as a normalized estimate. `SPECmark89` does not enter
+this integer cohort.
+
+This annual extension is **not implemented**. The separate
+[SPEC89 hardware-year catalog](../research/spec89-hardware-years.md) currently
+has source-checked years for only part of the recovered observations. Do not
+assign remaining observations to a year using `source_date` or `info_date_raw`.
+SPEC89 model-introduction years and later SPEC configuration-availability
+years have different meanings; expose that distinction in a combined figure.
 
 ## Published precedents for historical timelines
 
@@ -94,7 +170,7 @@ already estimated for this project.
   check. The author labels its score an estimate because the modifications
   were not approved by SPEC; it is not an official cross-generation conversion.
 
-For the first annual SPEC figure, use publication year and all distinct,
+For the first annual SPEC figure, use reported hardware-configuration availability year and all distinct,
 eligible one-copy integer speed submissions in each year. Keep the selected
 metric consistent and deduplicate result IDs and revisions before counting.
 Include published multi-processor and multithreaded system-speed results under

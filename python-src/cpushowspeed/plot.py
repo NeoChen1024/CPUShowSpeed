@@ -13,9 +13,11 @@ from datetime import datetime
 from pathlib import Path
 
 import click
+from cpushowspeed.spec89_plot import spec89_92_command
 
 REPORT_PATTERN = "*.cint92.*.notes.html"
 ISSUE_PATTERN = re.compile(r"<H2>SPECint92 \(Volume \d+, Issue \d+, ([A-Za-z]+) (\d{4})\)</H2>", re.I)
+HARDWARE_AVAIL_PATTERN = re.compile(r"<DT>Hardware Availability:\s*([A-Za-z]+-\d{2})", re.I)
 TEST_PATTERN = re.compile(r"<DT>Tested\s*:\s*([A-Za-z]+-\d{2})", re.I)
 CPU_COUNT_PATTERN = re.compile(r"Number of CPUs:\s*(\d+)", re.I)
 SCORE_PATTERN = re.compile(r"(?:Geometric Mean \(SPECint92\):|\bSPECint92:)\s*([0-9]+(?:\.[0-9]+)?)", re.I)
@@ -25,9 +27,12 @@ SYSTEM_PATTERN = re.compile(r"<H3>(.*?)</H3>", re.I | re.S)
 
 @dataclass(frozen=True)
 class Cpu92Record:
+    hardware_year: int
+    hardware_availability_month: str
     publication_year: int
     publication_month: str
     tested_month: str
+    chronology_flag: str
     metric: str
     score: float
     unit: str
@@ -62,16 +67,16 @@ def parse_cpu92_report(path: Path) -> tuple[Cpu92Record | None, str | None]:
     document = body.decode("utf-8", errors="replace")
     issue = ISSUE_PATTERN.search(document)
     tested = TEST_PATTERN.search(document)
+    hardware_avail = HARDWARE_AVAIL_PATTERN.search(document)
     cpu_count = CPU_COUNT_PATTERN.search(document)
     systems = SYSTEM_PATTERN.findall(document)
     processor = PROCESSOR_PATTERN.search(document)
-    if not all((issue, tested, cpu_count, processor)) or len(systems) != 2:
+    if not all((issue, tested, hardware_avail, cpu_count, processor)) or len(systems) != 2:
         raise ValueError(f"unrecognized CPU92 disclosure structure: {path}")
 
     issue_month = datetime.strptime(f"{issue.group(1)} {issue.group(2)}", "%B %Y")
     tested_month = datetime.strptime(tested.group(1), "%b-%y")
-    if tested_month > issue_month:
-        return None, "test_after_issue_month"
+    availability_month = datetime.strptime(hardware_avail.group(1), "%b-%y")
     score_match = SCORE_PATTERN.search(document)
     if score_match is None:
         return None, "missing_specint92_score"
@@ -80,9 +85,12 @@ def parse_cpu92_report(path: Path) -> tuple[Cpu92Record | None, str | None]:
         return None, "invalid_score"
     return (
         Cpu92Record(
+            hardware_year=availability_month.year,
+            hardware_availability_month=availability_month.strftime("%Y-%m"),
             publication_year=issue_month.year,
             publication_month=issue_month.strftime("%Y-%m"),
             tested_month=tested_month.strftime("%Y-%m"),
+            chronology_flag="test_after_issue_month" if tested_month > issue_month else "",
             metric="SPECint92",
             score=score,
             unit="VAXen (CINT92)",
@@ -139,7 +147,7 @@ def collect_cpu92(raw_dir: Path) -> tuple[list[Cpu92Record], list[dict[str, str]
         else:
             summary_url, summary_digest = validate_cpu92_summary(path, record.score)
             records.append(dataclass_replace(record, summary_url=summary_url, summary_sha256=summary_digest))
-    records.sort(key=lambda record: (record.publication_year, record.score, record.source_url))
+    records.sort(key=lambda record: (record.hardware_year, record.score, record.source_url))
     return records, exclusions
 
 
@@ -165,15 +173,15 @@ def write_cpu92_outputs(records: list[Cpu92Record], exclusions: list[dict[str, s
     _write_csv(record_path, list(Cpu92Record.__dataclass_fields__), [asdict(record) for record in records])
     _write_csv(exclusion_path, ["source_url", "reason"], exclusions)
 
-    years = sorted({record.publication_year for record in records})
+    years = sorted({record.hardware_year for record in records})
     annual: list[dict[str, object]] = []
     for year in years:
-        cohort = [record for record in records if record.publication_year == year]
+        cohort = [record for record in records if record.hardware_year == year]
         values = np.asarray([record.score for record in cohort], dtype=float)
         top = max(cohort, key=lambda record: (record.score, record.source_url))
         annual.append(
             {
-                "publication_year": year,
+                "hardware_year": year,
                 "submissions": len(cohort),
                 "minimum_vaxen": float(values.min()),
                 "q1_vaxen": round(float(np.percentile(values, 25)), 3),
@@ -189,7 +197,7 @@ def write_cpu92_outputs(records: list[Cpu92Record], exclusions: list[dict[str, s
 
     figure, axis = plt.subplots(figsize=(10, 6.6))
     figure.subplots_adjust(left=0.10, right=0.98, top=0.90, bottom=0.23)
-    distributions = [[record.score for record in records if record.publication_year == year] for year in years]
+    distributions = [[record.score for record in records if record.hardware_year == year] for year in years]
     boxes = axis.boxplot(distributions, positions=years, widths=0.55, patch_artist=True, whis=(0, 100), showfliers=False)
     for patch in boxes["boxes"]:
         patch.set_facecolor("#a9c9dd")
@@ -202,18 +210,18 @@ def write_cpu92_outputs(records: list[Cpu92Record], exclusions: list[dict[str, s
     for row in annual:
         axis.annotate(
             f"{row['top_processor']}\n{row['maximum_vaxen']:.1f}",
-            (row["publication_year"], row["maximum_vaxen"]),
+            (row["hardware_year"], row["maximum_vaxen"]),
             xytext=(0, 9),
             textcoords="offset points",
             ha="center",
             fontsize=8,
             color="#80351d",
         )
-    axis.set_xticks(years, [f"{row['publication_year']}\nn={row['submissions']}" for row in annual])
+    axis.set_xticks(years, [f"{row['hardware_year']}\nn={row['submissions']}" for row in annual])
     axis.set_yscale("log")
     axis.set_ylabel("SPECint92 score (VAXen; VAX-11/780 = 1)")
-    axis.set_xlabel("SPEC Newsletter issue year")
-    axis.set_title("SPEC CPU92 integer speed: published system results")
+    axis.set_xlabel("Reported hardware availability year")
+    axis.set_title("SPEC CPU92 integer speed by hardware availability")
     axis.grid(axis="y", which="both", alpha=0.25)
     axis.legend(loc="upper left")
     axis.margins(x=0.12, y=0.2)
@@ -221,7 +229,7 @@ def write_cpu92_outputs(records: list[Cpu92Record], exclusions: list[dict[str, s
         0.5,
         0.025,
         "Netlib detailed disclosures; CINT92 only. Box = all eligible submissions; line = published maximum.\n"
-        "1992 issues are not in this archive; 1996 has only 10 eligible reports.",
+        "Year is disclosure-reported hardware availability, not test or publication date; archive coverage is incomplete.",
         ha="center",
         va="bottom",
         fontsize=8,
@@ -254,10 +262,13 @@ def plot() -> None:
 @click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/figures"), show_default=True)
 def spec92_command(raw_dir: Path, output_dir: Path) -> None:
-    """Plot yearly CINT92 submissions in VAXen from cached Netlib reports."""
+    """Plot CINT92 submissions by reported hardware availability year."""
     try:
         records, exclusions = collect_cpu92(raw_dir)
         result = write_cpu92_outputs(records, exclusions, output_dir)
     except (OSError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(json.dumps(result, sort_keys=True))
+
+
+plot.add_command(spec89_92_command)

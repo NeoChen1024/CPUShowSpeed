@@ -30,7 +30,7 @@ Across the 15 distinct direct integer vectors, the *reported*
 an input-data description, not a validated universal conversion.
 
 An exact normalized system-name **and** equal `SPECint92` score join between
-the 34 bridge rows and our current 300 Netlib CINT92 detailed reports found
+the 34 bridge rows and our then-current 300 Netlib CINT92 detailed reports found
 zero matches. This does not mean the machine families never overlap: names
 change and Netlib's cached disclosures begin in 1993, while many bridge rows
 cite 1992 material. Candidate model families must be checked at the
@@ -42,7 +42,12 @@ reports a 200 MHz 21064. The shared model family does not make these the
 same tested setup. The IBM 220 development-level bridge (`B021`) and later
 Netlib M20/220 similarly require OS, compiler, memory, and tuning review.
 
+A [two-panel source-paired scatter](spec89-cpu92-scatter.md) now plots
+all 34 rows while keeping direct integer pairs separate from mark-only pairs.
+
 The next bridge analysis should retain all source observations, identify
 republications and correlated tests, and grade configuration overlap before
 estimating a SPECint89-to-SPECint92 factor. `SPECmark89`-only rows belong in a
 separate bridge study; they cannot be silently treated as `SPECint89`.
+
+A separate [1991 Helman worksheet supplement](spec89-helman-worksheet.md) now adds 40 source observations in a combined CSV; it does not alter this v2.0.0 snapshot.

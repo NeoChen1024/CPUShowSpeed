@@ -9,6 +9,8 @@ from pathlib import Path
 
 import click
 from cpushowspeed.spec89_build import build_snapshot
+from cpushowspeed.spec89_hardware import hardware_years_command
+from cpushowspeed.spec89_helman import merge_helman_command
 from cpushowspeed.spec89_sources import recover_messages
 
 DEFAULT_SNAPSHOT = Path("research/data/spec89/v2.0.0")
@@ -68,7 +70,7 @@ def verify_snapshot(snapshot: Path) -> dict[str, object]:
 
 @click.group()
 def spec89() -> None:
-    """Rebuild and verify the curated historical SPEC89 dataset."""
+    """Manage curated SPEC89 observations and hardware-year evidence."""
 
 
 @spec89.command("verify")
@@ -109,3 +111,7 @@ def recover_command(archive_dir: Path, manifest: Path, output_dir: Path) -> None
     except (OSError, ValueError, KeyError, AssertionError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(json.dumps({"recovered_messages": count, "output_dir": str(output_dir)}, sort_keys=True))
+
+
+spec89.add_command(hardware_years_command)
+spec89.add_command(merge_helman_command)

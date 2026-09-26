@@ -1,0 +1,2 @@
+archive,member,start,end,sha256,file,subject,date,from,message_id,targets,relation
+comp.benchmarks.mbox.zip,comp.benchmarks.mbox,105129172,105135348,3feaee51b510677d129763232ed7507ff787c1e888d025081a7c9f5616f8a381,sources/helman_spec_sc_derivative_1991-03-31.txt,SPECmarks/MHz (was Re: More Snake bytes.),31 Mar 91 00:10:55 GMT,jim@baroque.Stanford.EDU (James Helman),<JIM.91Mar30161055@baroque.Stanford.EDU>,spec.sc,published_worksheet_derivative

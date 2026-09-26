@@ -1,6 +1,9 @@
 """Command-line entry point for CPUShowSpeed."""
 
 import click
+from cpushowspeed.bridge import bridge
+from cpushowspeed.documents import documents
+from cpushowspeed.ocr import ocr_command
 from cpushowspeed.plot import plot
 from cpushowspeed.spec import spec
 from cpushowspeed.spec89 import spec89
@@ -14,4 +17,7 @@ def cli() -> None:
 
 cli.add_command(spec)
 cli.add_command(spec89)
+cli.add_command(bridge)
 cli.add_command(plot)
+documents.add_command(ocr_command)
+cli.add_command(documents)

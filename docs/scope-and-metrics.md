@@ -24,9 +24,11 @@ the full machine configuration and the workload mix.
 
 ## Tracks
 
-- **General-purpose / integer:** use comparable integer workload completion
-  results where available. Earlier instruction mixes and synthetic programs are
-  exploratory bridges, not equivalent workloads.
+- **General-purpose / integer:** use `SPECint92` as the historical statistical
+  backbone, with original `SPECint89` retained as a distinct source metric and
+  any conversion marked as an estimate. Earlier instruction mixes and
+  synthetic programs are exploratory bridges, not equivalent workloads. See
+  the [bridge method](methods.md).
 - **Embedded integer:** consider CoreMark as a separate series for MCU and
   embedded CPU systems. Its small workload and memory footprint differ from
   SPEC; connect the tracks only after same-system overlap validation.
