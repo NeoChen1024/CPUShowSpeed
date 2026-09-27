@@ -25,6 +25,12 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 - Earlier reconstruction: [mix/timing observations](early-benchmark-evidence.md),
   [OCR sample checks](chandra-timesharing-sample.md), [historical data contract](data/historical/README.md).
 
+## New sparse calibration experiment
+
+[Per-benchmark network fitting](classic-network-fitting.md) jointly estimates
+individual coefficients from incomplete observations, with explicit clock
+scaling and single/two-family/full-availability holdouts.
+
 ## Controls and diagnostics
 
 - [Source-column experiments](classic-source-pair-fitting.md) and
@@ -48,3 +54,12 @@ reused by the historical bridge; the original modern speed pipeline remains reti
 are machine-readable evidence/results. Large raw documents, DocIR, derived tuples
 and figures remain outside Git. Original values, citations and qualifications
 must survive every conversion; Markdown is not the sole numerical data store.
+
+## Maintenance
+
+[Cleanup inventory](cleanup-inventory.md) records duplicated code, command/data
+dependencies and provisional generated-artifact dispositions. It is an audit,
+not authorization to remove historical evidence.
+
+[Calibration cleanup implementation](calibration-cleanup.md) records the current
+shared statistics policy, preparation-only commands and parity checks.

@@ -78,9 +78,15 @@ score with the saved calibration:
 uv run --no-sync cpushowspeed convert-rate 2017 base 11800 --format text
 ```
 
-The converter prints estimated VAXen and conditional calibration CI95. It does
-not yet accept classical or SPEC89 scores; their research commands are listed
-in the corresponding track guides.
+The converter prints estimated VAXen and conditional calibration CI95.
+For arbitrary classical score subsets, use the [classical predictor](docs/classical-prediction.md):
+
+```sh
+uv run --no-sync cpushowspeed classic predict-rate --dhrystone-1-1 10 --format text
+```
+
+It uses the saved network calibration to estimate SPEC92 peak rate, VAXen and
+joint calibration CI95. Inputs may contain one or several benchmark families.
 
 - [Documentation index](docs/README.md): contracts, methods and acquisition tools.
 - [Research index](research/README.md): current analyses, source evidence and diagnostics.

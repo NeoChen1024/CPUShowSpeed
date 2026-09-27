@@ -1,0 +1,100 @@
+configuration_id,system,cpu,clock_mhz,year,date_method,date_sources
+classic-a5730ec6a50ee5bf,80486DX/33,80486DX,33.3,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-325df779583ba8fc,"ALR 486/33 m-board, 256K cache",,,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-c090edf7b9dbba7f,"ALR 486/33 m-board, 256K cache",,,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-1bb174bc5eed6a39,"AMI 486DX/33, ISA",80486DX,33.3,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-f73c767b89347642,AT Clone,80486DX,33.3,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-4176b456bed83680,"CLUB Falcon 433,  ISA",80486DX,33.3,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-11827426c488d2e5,Compaq Deskpro 486/33l-120 w/487,,,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-b26f26a903361279,Compaq Deskpro 486/33l-120 w/487,,,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-df32378cd2a95458,Compaq Deskpro 486/33l-120 w/487,,,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-dff417a420d50c8e,Compaq Deskpro 486/33l-120 w/487,,,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-beaa9b443717609a,Gateway 2000/Micronics 486DX/33,,,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-42b062df25cbcc17,IBM-486 33MHz,,33.0,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-489a29b84b430cb6,Intel 486DX/33,80486DX,33.3,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-d67fce0d23497668,Intel 486DX/33,80486DX,33.3,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+spec89:A0143,Intel i486DX-33,i486DX-33,33.0,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-fc0aee20186124a5,LAN Technologies,80486DX,33.3,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-0a92e0d57f6282e9,Vega 486DX/33,80486DX,33.3,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-d9f59a752a4e1d2d,Vega 486DX/33,80486DX,33.3,1990,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-35901fffa68fe4be,Clone 386,AM80386DX,40.0,1991,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/Am386
+classic-08482b7fc278da83,"Insight 486DX/50, ISA",80486DX,50.0,1991,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-d7126c18f9ff8ae9,"Insight 486DX/50, ISA",80486DX,50.0,1991,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+spec89:A0155,Intel XPRESS 486DX-50,486DX-50,50.0,1991,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+spec89:A0145,Intel i486DX-50,i486DX-50,50.0,1991,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-4d1c203a8b90effb,Micronics 486-50MHz EISA2,,50.0,1991,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-115ec334a50a2ae4,"Prism"" 486-50 (50 MHz)",,50.0,1991,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-e0e71b85eb1e2b2d,Self-Assembled PC,80486DX,50.0,1991,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_processors
+classic-ae577d7dc78a6183,486DX2/66,80486DX2,66.7,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-fb16e285a9d9c210,486DX2/66,80486DX2,66.7,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-d631a09f4bfbf870,486DX2/72,80486DX2,72.0,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-3018bbbdc0e086e4,"AMI 486DX2/66, EISA",80486DX2,66.7,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-670ff5bd7f55c8f6,Cornell EISA/ISA/VLB,80486DX2,66.7,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-c1240d2f7018dbaa,Escom,80486DX2,66.7,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-9c33f9d93c995da6,Gateway 2000 66 MHz 80486-DX2,,66.0,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-10ab374616ad31f6,Gateway 486DX-2 (66HHz),,,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-0e688fb696cabcfd,Gateway 486DX2/66,80486DX2,66.7,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-22f5cd870211252b,ISA/VLB AT Clone,80486DX2,66.7,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-2eef7f05ac4232fa,Intel 486DX2/66,80486DX2,66.7,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-e867c10397b3a737,Intel 486DX2/66,80496DX2,66.0,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-b2ca3a79ab054ae6,LIJN 486DX2/66,80486DX2,66.7,1992,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-7eb7d5b8763449e4,ALR Evolution V/1,Pentium,60.0,1993,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-6502adbb91e7a1a3,ALR Pentium P5-60,Pentium,60.0,1993,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-b8c7fd7dbd14ecad,CECpx XL 560 Pentium 60 MHz,,60.0,1993,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-d1540916a89d77b2,Gateway P5-60 (60 MHz Pentium),,60.0,1993,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-7c1f441a03224aef,Gateway Pentium (66HHz),,,1993,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-b54874be6bbb7cbc,Intel Pentium P5-60,Pentium,60.0,1993,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-71ee7fa6d2e25438,Intel Pentium P5-66,Pentium,66.0,1993,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-3fa76b14f99577c0,Pentium/60,Pentium,60.0,1993,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-04fd39ffbc28ba8b,486DX4/100,80486DX4,100.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-c6addedaaab65eab,486DX4/100,80486DX4,100.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-87012f5928bec1fc,AT-bus PC,80486DX4,99.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-12f7c3a816c0d0ec,Acer Power/M Ultima,Pentium,100.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-1d8328e91f044b91,Am486DX2/80,80486DX2,80.0,1994,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/Am486
+classic-87b6abf23ffca916,DATEL Pentium P5-90,Pentium,90.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-7c16bcf722760700,Dell Dimension XPS P90,Pentium,90.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-97f5f028c8f9b1a1,Escom,Pentium P5,100.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-df480510371077a3,Gateway 2000 P5-100XL,,,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-46d56b5d9ceea4c4,Gateway 2000 P5-90(90 MHz Pentium),,90.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-0e92d3ee2274b4be,Gateway P5-90,Pentium,90.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-360f57b827130a12,Gateway Pentium P5-90,Pentium,90.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-1692cd4f3d6172a6,Intel Pentium 75 MHz,,75.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-7755cea83608605d,Pentium P5-100,Pentium P5,100.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-ba8dca576966c443,Pentium P5-100,Pentium P5,100.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-20319f7edbddd94f,Pentium P5-75,Pentium P5,75.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-6f749aeffba766ad,Pentium P5-75,Pentium,75.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-d53f98a91b2d83fc,Pentium P5-75,Pentium P5,75.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-7a48eb29e0ee7646,ZEOS  Pentium P5-90,Pentium,90.0,1994,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-d3e10250d6fab3dc,AMD 486DX4/100,AMD 486DX4,100.0,1995,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/Am486
+classic-5693eb004ce52ec8,AMD 486DX5-133,,,1995,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/Am5x86
+classic-da8ee9c1396135a2,DELL XMT5133 Pentium 133MHz,,133.0,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-0a81466c9094d473,Dell Dimension Pro150,Pentium Pro,200.0,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-c169436f8de5d996,Dell Dimension Pro150,Pentium Pro,200.0,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-7bd85cc91b481ceb,Dell XPS Pro 200n,Pentium Pro,200.0,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-d11273661234aa21,Gateway 2000 G6-200 PentiumPro,,,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-e8e91ef7ca09fef3,Gateway 2000 P5-133,,,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-4d7b0d127ecd1350,Intel GX/Pro PC,AMD 5x86,133.0,1995,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/Am5x86
+classic-34ee2a2dbb31f353,Micron Pro Magnum+,Pentium P6,200.0,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-596dc85470016ed4,Pentium P5-120,Pentium P5,120.0,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-6547d5a204d1f171,Pentium P5-133,Pentium P5,133.0,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-6a0996e5c0f62874,Pentium P5-133,Pentium P5,133.0,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-d39034134cde9c33,Pentium P6-200,Pentium P6,200.0,1995,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-fcb0b1379a59ee3d,Sharp PC-3060,Cyrix 5x86,100.0,1995,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/Cyrix_5x86
+classic-0f86834aec9bb8f3,Intel Pentium 166 MHz,,166.0,1996,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/kits/quickrefyr.htm
+classic-206a6a0146be2469,AMD K6-II (350 MHz) BCM-1541 ATX,,350.0,1998,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_K6_processors
+classic-81a62d6317a99dd8,AMD K6-II 500 Mhz,,500.0,1999,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_K6_processors
+classic-a6ca73dc067b5b4d,"ASUS P2B-D/PentiumIII(600 MHz,1 proc)",,600.0,1999,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/archive/releases/1999/dp080299.htm
+classic-3e764ab6d542dd75,"ASUS P2B-F/Celeron(433 MHz,1 Proc)",,433.0,1999,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/archive/releases/1999/dp032299.htm
+classic-a0b5c0ca307b401e,AMD ATHLON Thunderbird 1.2GHz,,1200.0,2000,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_Athlon_processors
+classic-b03eae7546722abe,AMD Athlon MP1800+(1 proc 1530MHz),,1530.0,2001,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_Athlon_XP_processors
+classic-df71a0e2f77aa3d8,AMD Athlon Thunderbird 1.4GHz,,1400.0,2001,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_Athlon_processors
+classic-c68eeed4d7b27869,AMD Duron 900 (900 MHz),,900.0,2001,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_Duron_processors
+classic-1ce6074f3add9efb,"Tyan S2460/AMD Athlon XP(1533 MHz,1 proc)",,1533.0,2001,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_Athlon_XP_processors
+classic-f54c5f35d417fe50,"Tyan S2518/PentiumIII(1266 MHz,1 proc)",,1266.0,2001,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_Intel_Pentium_III_processors
+classic-6716ec4db243f2a1,AMD Opteron 1.4 GHz,,1400.0,2003,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_Opteron_processors
+classic-d42dd8d72b6ae010,AMD Opteron 242/1.6 Ghz (1 proc),,1600.0,2003,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_Opteron_processors
+classic-8669d660a8d7f3a4,Intel Pentium Nocona 3.6 GHz,,3600.0,2004,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/archive/releases/2004/20040628comp.htm
+classic-9c20b135b70f4f9d,Intel Xeon EM64T (Nocona 3.2 Ghz),,3200.0,2004,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/archive/releases/2004/20040628comp.htm
+classic-c5bf2711e8d96160,"AMD Opteron 275/2.2 Ghz (dual core, 1 proc)",,2200.0,2005,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_Opteron_processors
+classic-b6df791f7326a8e9,HP DL385 2.2 GHz (dual core) Opteron 275,,2200.0,2005,reviewed_cpu_release_year_proxy,https://en.wikipedia.org/wiki/List_of_AMD_Opteron_processors
+classic-db5b07f7d35728ca,"Intel Pentium Woodcrest (1 core, 2.67 GHz)",,2670.0,2006,reviewed_cpu_release_year_proxy,https://www.intel.com/pressroom/archive/releases/2006/20060626comp.htm

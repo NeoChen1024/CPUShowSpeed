@@ -7,7 +7,9 @@
     "interval": "Factor CI95 is not held-out P95 or individual prediction uncertainty",
     "evidence": "Metric identity, value evidence class and model role are separate",
     "dependency": "depends_on records calculation dependencies; dataset_ids and shared_evidence describe evidence reuse",
-    "coefficients": "Numerical coefficients remain in referenced outputs, not duplicated in this registry"
+    "coefficients": "Numerical coefficients remain in referenced outputs, not duplicated in this registry",
+    "primary_error": "100*abs(predicted/observed-1); linear P95 over equal model/configuration centers; canonical field model_center_p95_percent",
+    "observation_error": "Secondary only: equal model weights, then equal observations within model; explicitly named weighted CDF P95"
   },
   "tracks": [
     {
@@ -449,7 +451,8 @@
       "kind": "derived",
       "owner": "research/classic-source-pair-fitting.md",
       "optional": true,
-      "lineage": "Reuses DEC and legacy tuples; repeated stages and patterns are not independent samples"
+      "lineage": "Reuses DEC and legacy tuples; repeated stages and patterns are not independent samples",
+      "preparation_command": "cpushowspeed classic prepare-sources (after classic prepare-pairs)"
     },
     {
       "id": "classic-source-vectors",
@@ -457,7 +460,8 @@
       "kind": "derived",
       "owner": "research/classic-source-pair-fitting.md",
       "optional": true,
-      "lineage": "Same DEC columns as classical targets and SPEC92 speed/rate bridge"
+      "lineage": "Same DEC columns as classical targets and SPEC92 speed/rate bridge",
+      "preparation_command": "cpushowspeed classic prepare-sources (after classic prepare-pairs)"
     },
     {
       "id": "historical-observations",
@@ -466,6 +470,30 @@
       "owner": "research/early-benchmark-evidence.md",
       "optional": false,
       "lineage": "PDF page citations; mixes and timing observations are not SPEC scores"
+    },
+    {
+      "id": "maintenance-inventory",
+      "path": "research/data/maintenance",
+      "kind": "maintenance-snapshot",
+      "owner": "research/cleanup-inventory.md",
+      "optional": false,
+      "lineage": "Static inspection at d2e4329; not benchmark evidence"
+    },
+    {
+      "id": "historical-timeline-years",
+      "path": "research/data/historical/timeline-year-overrides.csv",
+      "kind": "reviewed-date-rules",
+      "owner": "research/historical-vaxen-timeline.md",
+      "optional": false,
+      "lineage": "Museum and manufacturer historical sources; model/family proxies explicitly qualified"
+    },
+    {
+      "id": "hardware-date-events",
+      "path": "research/data/historical/hardware-date-evidence.csv",
+      "kind": "reviewed-date-events",
+      "owner": "research/hardware-year-evidence.md",
+      "optional": false,
+      "lineage": "Original bitsavers PDF pages plus identified trusted secondary web pages"
     }
   ],
   "models": [
@@ -1253,13 +1281,13 @@
       ],
       "target_metric": "vaxen",
       "relationship": "diagnostic",
-      "formula": "y = k*x",
+      "formula": "pooled model-median log-ratio factor plus optional diagnostic environment offsets; no extra equal-environment weighting",
       "variants": [
         "see per-row target/predictor in output; ancillary targets remain separate"
       ],
       "role": "diagnostic",
       "status": "implemented-conditional",
-      "owner": "research/classic-environment-models.md",
+      "owner": "research/calibration-cleanup.md",
       "dataset_ids": [
         "classic-source-pairs"
       ],
@@ -1268,7 +1296,7 @@
       "command": "cpushowspeed classic environment-fit",
       "outputs": [
         {
-          "path": "research/data/classic/environment-summary.csv",
+          "path": "research/data/classic/environment-v2-summary.csv",
           "optional": false
         }
       ]
@@ -1355,6 +1383,55 @@
       "shared_evidence": "",
       "command": null,
       "outputs": []
+    },
+    {
+      "id": "classical-sparse-network",
+      "title": "Sparse individual-benchmark network calibration",
+      "track": "classical",
+      "input_metrics": [
+        "dhry-11",
+        "dhry-21",
+        "whet-native",
+        "whet-sp",
+        "whet-dp",
+        "linpack-100"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "joint-fit",
+      "formula": "family/node/model-balanced log WLS with eliminated latent unanchored targets; per-benchmark y=k_b*x_b",
+      "variants": [
+        "peak; reported_clock/linear_clock; rate_only/with_spec89"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/classic-network-fitting.md",
+      "dataset_ids": [
+        "classic-overlap",
+        "classic-source-vectors",
+        "spec89-native-bridge"
+      ],
+      "depends_on": [
+        "rate92-unit",
+        "int89-rate-vaxen"
+      ],
+      "shared_evidence": "Shared source IDs grouped under accepted alias closure; bridges and coefficients share model bootstrap weights; unknown targets not measured rate",
+      "command": "cpushowspeed classic network-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/network-coefficients.csv",
+          "optional": false
+        },
+        {
+          "path": "research/data/classic/network-summary.csv",
+          "optional": false
+        },
+        {
+          "path": "data/derived/classic/network-fit/prediction-calibration.json",
+          "optional": true
+        }
+      ],
+      "prediction_command": "cpushowspeed classic predict-rate",
+      "prediction_guide": "docs/classical-prediction.md"
     }
   ],
   "documents": [
@@ -1756,6 +1833,55 @@
       "role": "guide",
       "status": "current",
       "purpose": "Track 1 — VAXen reference and numeric types"
+    },
+    {
+      "path": "research/cleanup-inventory.md",
+      "title": "Cleanup inventory",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Static cleanup audit; no data removal or model changes"
+    },
+    {
+      "path": "research/data/maintenance/README.md",
+      "title": "Maintenance inventory snapshot",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Static cleanup audit; no data removal or model changes"
+    },
+    {
+      "path": "research/calibration-cleanup.md",
+      "title": "Calibration cleanup and unified validation policy",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Shared statistics, preparation-only CLI and numerical parity"
+    },
+    {
+      "path": "research/classic-network-fitting.md",
+      "title": "Sparse joint calibration of individual classical benchmarks",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Per-benchmark coefficients, missing-data coupling and qualified clock scaling"
+    },
+    {
+      "path": "docs/classical-prediction.md",
+      "title": "Predict SPEC92 integer rate from classical scores",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Prediction CLI inputs, units, shared bootstrap CI and calibration bundle"
+    },
+    {
+      "path": "research/historical-vaxen-timeline.md",
+      "title": "Classical and SPEC89 historical VAXen timeline",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Source-preserving combined plot with estimated hardware years and unresolved-date queue"
+    },
+    {
+      "path": "research/hardware-year-evidence.md",
+      "title": "Hardware-year evidence: bitsavers discovery and first review",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Candidate inventory, active OCR batch, source-checked date events and explicit unresolved dating"
     }
   ]
 }

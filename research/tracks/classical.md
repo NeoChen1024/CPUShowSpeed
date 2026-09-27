@@ -18,6 +18,15 @@ Each pair/triple has fixed equal component weights and its own multiplier.
 Missing components do not silently change the formula. Broader coverage is an
 explicit objective; increased error is diagnostic rather than an exclusion rule.
 
+## Sparse per-benchmark calibration
+
+The [network experiment](../classic-network-fitting.md) now permits missing
+measurements and estimates separate benchmark coefficients jointly. A single
+measurement can produce an estimate once its metric is anchored. It compares
+reported clocks with an explicitly qualified Dhrystone/Whetstone linear-clock
+scenario and retains single/family/subset holdout results. This is a new log-WLS
+model, distinct from the earlier fixed-composite coefficient estimator.
+
 ## Supporting evidence and experiments
 
 - [Acquisition](../classic-benchmark-collection.md), [literature](../classic-spec-literature.md),
@@ -41,3 +50,9 @@ ADP and other leads do not yet have established conversion paths to VAXen.
 
 Use [classic collection commands](../../docs/classic-collection.md) to reproduce
 the implemented evidence extraction and experiments.
+
+## Historical hardware plot
+
+The [combined classical and SPEC89 timeline](../historical-vaxen-timeline.md)
+aggregates original configurations, retains calibration CI95 and records model-year
+estimates separately from unknown dates.

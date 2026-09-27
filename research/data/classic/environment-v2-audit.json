@@ -1,0 +1,32 @@
+{
+  "method": "classical-environment-model-balanced-v2",
+  "input_sha256": {
+    "data/derived/classic/source-pair-fit/pairs.csv": "59858c5d7a3087e6368fbc582ff45e605a3f075d52c07b93a547772d0a4e5e93",
+    "research/data/classic/pdf-extraction/tables.jsonl": "52db977934c6fb263da4328e88d3c6664f880e92febad38ca3d23e3fca9b763d",
+    "data/derived/classic/overlap-spec/spec-records.jsonl": "5d9b6cb5556555ca163e208847f2ce8c3bfa9f246a6354de3ff2fec41f92d459"
+  },
+  "code_sha256": "fa0b094f25eb155e986605259136644a6fadffcf6fbe60e3c857eaed7afd403e",
+  "environment_definition": "construction cohort plus SPEC target OS family; not isolated compiler or classical-run environment",
+  "shrinkage_grid": [
+    1.0,
+    4.0,
+    16.0
+  ],
+  "discarded_for_error": 0,
+  "output_sha256": {
+    "summary.csv": "edbe95f4a19e7bab02c561665ed81d6cd3b35217de4b31b8b55aad99c33db7e7",
+    "folds.csv": "4a16d15f0837db1ef51c22ea2f98f4babe5a1a1c47b35c442bed4b239c5c2ddf",
+    "predictions.csv": "fd4d16c46a611cdb25a84443dc5b8e12ea418db43f38497f3d1b54acfbd4b478",
+    "parameters.csv": "ac4dfa806d1596ea74bed87637e9002f51c08adad7ed36bf53a82f7e1b143c49",
+    "coverage.csv": "7cd52a98396566c2bd4c2e13d591d891bcde9a611b3f38aa45d46017b369f7ce"
+  },
+  "shared_code_sha256": {
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_environment.py": "fa0b094f25eb155e986605259136644a6fadffcf6fbe60e3c857eaed7afd403e",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "31dfa875c6a522a6125e0b6dc019d66f2f9111042e9724464bdaf4cdb3b103c9",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pdf.py": "29e6cef097152568a8506667e8718fa35936ac37a9bbbf32198a8d99da5ef282",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_data.py": "b42a67957fe01473486255a77e23019eb356a9833b395a3864bca14ce4c31dbc",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_io.py": "7c5345d069e0b41d7bf28cee1efc517f2e804ebd910e1210de856822191cc4da"
+  }
+}

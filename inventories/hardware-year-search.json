@@ -1,0 +1,76 @@
+{
+  "reviewed_on": "2026-09-27",
+  "rules": {
+    "DEC VAX": [
+      "vax",
+      "(?:datapro/datapro_reports_70s-90s/DEC/.*(?:VAX|Micro)|dec/brochures/.*VAX)"
+    ],
+    "DEC Alpha": [
+      "alpha|DEC (?:3000|4000|7000|10000)",
+      "dec/(?:brochures|alpha)/.*(?:Alpha|DEC[-_]?(?:3000|4000|7000|10000)|AXP)"
+    ],
+    "DEC PDP": [
+      "PDP|DECsystem|DECSYSTEM",
+      "datapro/datapro_reports_70s-90s/DEC/.*(?:PDP|system)"
+    ],
+    "IBM": [
+      "IBM",
+      "datapro/datapro_reports_70s-90s/IBM/.*(?:370|303|308|309|430|433|434|438|6000)"
+    ],
+    "HP": [
+      "HP|Hewlett",
+      "datapro/datapro_reports_70s-90s/HP/.*(?:9000|3000|1000|2100)"
+    ],
+    "Apollo": [
+      "Apollo",
+      "datapro/datapro_reports_70s-90s/Apollo/"
+    ],
+    "Sun": [
+      "Sun|SPARC",
+      "(?:datapro/datapro_reports_70s-90s/Sun/|sun/(?:brochures|.*[Pp]roduct.*))"
+    ],
+    "Amdahl": [
+      "Amdahl",
+      "datapro/datapro_reports_70s-90s/Amdahl/"
+    ],
+    "CDC": [
+      "CDC|Control Data|Cyber",
+      "datapro/datapro_reports_70s-90s/.*(?:CDC|Control_Data)/"
+    ],
+    "Unisys": [
+      "Univac|Sperry|Unisys|Burroughs",
+      "datapro/datapro_reports_70s-90s/(?:Univac|Burroughs|Sperry|Unisys)/"
+    ],
+    "Gould": [
+      "Gould|SEL",
+      "(?:datapro/datapro_reports_70s-90s/Gould/|gould/brochures/)"
+    ],
+    "Prime": [
+      "Prime",
+      "datapro/datapro_reports_70s-90s/Prime/"
+    ],
+    "Cray": [
+      "Cray",
+      "cray/brochures/"
+    ],
+    "SGI": [
+      "SGI|Silicon",
+      "(?:sgi/.*(?:[Bb]rochure|[Pp]roduct)|datapro/datapro_reports_70s-90s/Silicon.*)"
+    ],
+    "Alliant": [
+      "Alliant",
+      "alliant/.*(?:[Bb]rochure|[Oo]verview|[Pp]roduct)"
+    ],
+    "Pyramid": [
+      "Pyramid",
+      "(?:pyramid/|datapro/datapro_reports_70s-90s/Pyramid/)"
+    ],
+    "ICL": [
+      "ICL",
+      "datapro/datapro_reports_70s-90s/ICL/"
+    ]
+  },
+  "selection": "Round-robin groups; 4..30 pages; prefer target model-number hits then Datapro and approximately 12-page reports; distinct BLAKE3; 80-document first batch",
+  "target_file": "data/derived/documents/year-evidence/targets-at-selection.csv",
+  "target_sha256": "d8bff3a4462f167d66089efdac0717e465c25c51bbeaff292693272497105fdf"
+}

@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import click
+from cpushowspeed.calibration import absolute_error_percent, quantile
 from cpushowspeed.spec_overlap import (
     INTERVAL_FIELDS,
     PAIR_FIELDS,
@@ -24,7 +25,7 @@ from cpushowspeed.spec_overlap import (
 )
 from cpushowspeed.spec_rate_fit import GENERATIONS, collect_rate
 
-METHOD_VERSION = "cpu92-cpu95-rate-fit-v3"
+METHOD_VERSION = "cpu92-cpu95-rate-fit-v4-relative-error"
 VAX_RATE92_REFERENCE = 604800 / 25500
 FACTOR_FIELDS = (
     "method_version",
@@ -47,6 +48,8 @@ FACTOR_FIELDS = (
     "pair_export_sha256",
     *INTERVAL_FIELDS,
 )
+
+FACTOR_FIELDS = (*FACTOR_FIELDS, "model_center_p95_percent")
 
 
 def collect_cpu92_rate(path: Path, raw_dir: Path | None = None) -> list[Result]:
@@ -109,10 +112,8 @@ def _heldout_p95(pairs: list[dict[str, object]], mode: str) -> float | None:
     logs = [statistics.median(values) for values in configs.values()]
     if len(logs) < 3:
         return None
-    errors = sorted(math.expm1(abs(value - (sum(logs) - value) / (len(logs) - 1))) for value in logs)
-    rank = 0.95 * (len(errors) - 1)
-    lower = math.floor(rank)
-    return errors[lower] + (errors[min(lower + 1, len(errors) - 1)] - errors[lower]) * (rank - lower)
+    errors = sorted(absolute_error_percent((sum(logs) - value) / (len(logs) - 1) - value) / 100 for value in logs)
+    return quantile(errors, 0.95)
 
 
 def _plot(pairs: list[dict[str, object]], fits: dict[tuple[str, str], dict | None], output_dir: Path) -> dict[str, str]:
@@ -253,6 +254,7 @@ def analyze_cpu92_rate_fit(records_path: Path, raw_dir: Path, output_dir: Path, 
                         "factor_cpu92_per_cpu95": fit["factor_old_per_new"] if fit else "",
                         "vaxen_per_cpu95_rate_score": fit["factor_old_per_new"] / VAX_RATE92_REFERENCE if fit else "",
                         "heldout_p95_absolute_pct_error": fit["heldout_p95_absolute_pct_error"] if fit else "",
+                        "model_center_p95_percent": fit["model_center_p95_percent"] if fit else "",
                         **{name: fit.get(name, "") if fit else "" for name in INTERVAL_FIELDS},
                         "heldout_median_absolute_pct_error": fit["heldout_median_absolute_pct_error"] if fit else "",
                         "cluster_bootstrap_95_low": fit["cluster_bootstrap_95_low"] if fit else "",

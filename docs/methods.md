@@ -207,3 +207,48 @@ Keep coefficient CI95, held-out P95 error and individual prediction uncertainty
 distinct. Historical breadth is an explicit research objective; predictive
 limitations remain part of the reported result rather than an automatic veto
 on including more diverse observations.
+
+## Unified weighting and error policy
+
+Selected 2026-09-27; implementation/parity evidence is in the
+[calibration cleanup](../research/calibration-cleanup.md). Each independent
+model/configuration has equal total fitting weight, using its median log ratio.
+Modern system/configuration grouping and classical normalized model identity
+remain declared grouping contracts, not extra submission-count weights.
+Environment diagnostics use this same pooled coefficient; within-model
+environment support follows observed row shares, not a second equal-environment
+weight. No environment adjustment enters the primary historical estimates.
+
+Primary P95 is the linearly interpolated 95th percentile of absolute relative
+errors at independent model/configuration centers: `100 * abs(predicted/observed - 1)`.
+The new canonical field is `model_center_p95_percent`. Historical classical
+`loo_model_p95_percent` is the same statistic. Observed/inferred target groups in
+the SPEC89 joint experiment remain separately evaluated using this definition.
+Modern legacy `heldout_p95_absolute_pct_error` stores a fraction; the canonical
+new field stores percent. Previous symmetric multiplicative errors are superseded.
+
+Secondary observation P95 gives each model equal weight, then each observation
+in that model equal weight; its weighted-CDF quantile is labelled explicitly.
+It describes a different population from the primary center statistic and is
+not substituted for it. Factor CI95 uses bootstrap quantiles and remains distinct
+from both. One/multiple-edge bootstrap implementations share an engine while
+retaining shared-model dependence.
+
+## Sparse benchmark network experiment
+
+The [network experiment](../research/classic-network-fitting.md) jointly fits
+per-benchmark log coefficients and latent unanchored configuration values.
+Targets fix observed rate-VAXen or qualified SPEC89-derived values. Unanchored
+co-observations constrain relative coefficients; disconnected metrics remain
+unidentified. This new experimental log-weighted-least-squares estimator is
+distinct from the ordinary model-median ratio fit above. Weight is equal per
+informative model, then per node, family and variant; repeated observations
+contribute to the within-node/metric log median.
+
+Dhrystone/Whetstone clock proportionality is an explicit scenario, restricted
+to existing model matches with recognized compatible CPU identities. Unknown
+clocks remain unscaled; unresolved/conflicting processor identities do not
+authorize frequency-conflict conversion. LINPACK stays unscaled. Estimates use
+the actual reported clock unless explicitly normalizing to a paired target.
+Whole-model holdouts remove all accepted aliases and shared bridge evidence;
+coefficient bootstrap samples retain shared calibration dependence.

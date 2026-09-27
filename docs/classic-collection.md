@@ -4,6 +4,14 @@ Implemented on 2026-09-26. The active VAXen series remains integer rate; this
 collector preserves broader historical evidence without declaring benchmarks
 interchangeable or importing normalized scores.
 
+## Preparation without experiments
+
+The current minimal pipeline is `classic prepare-pairs`, `classic prepare-sources`,
+then `classic rate-composite-fit` and/or `classic spec89-rate-fit`. Preparation
+emits the same source-linked inputs and its own audit without running old fits
+or generating figures. Existing experiment commands remain available. See the
+[cleanup verification](../research/calibration-cleanup.md) for byte/numeric parity.
+
 ## Reading and reproduction order
 
 For the research interpretation, start with the [classical track](../research/tracks/classical.md).
@@ -262,3 +270,16 @@ classical models. `--input-root`, `--spec-records`, `--native-bridge`, `--output
 `--bootstrap` and `--seed` select inputs and settings. See [bridge findings](../research/spec89-rate-bridge.md)
 for the absence of direct pairs, peak-only scope and separation of observed-rate
 validation from agreement with estimated targets.
+
+### Sparse per-benchmark calibration
+
+`uv run cpushowspeed classic network-fit` estimates individual benchmark
+coefficients jointly from anchor observations and unanchored co-measurements.
+It runs reported/linear-clock scenarios and rate-only/SPEC89-enabled cohorts,
+with availability-masked whole-model holdouts. See [network methods and
+results](../research/classic-network-fitting.md) for weighting, eligibility,
+identifiability and conditional CI95. It writes estimates without updating
+the production SPEC rate converter.
+
+`classic predict-rate` consumes the saved network calibration and accepts any
+nonempty score subset. See [input units, examples and CI95 semantics](classical-prediction.md).

@@ -1,0 +1,410 @@
+[
+  {
+    "url": "https://ps-2.kev009.com/rootvg/RSmodels.htm",
+    "path": "data/derived/documents/year-expansion/ibm-models.html",
+    "sha256": "00f1ff79ba31630e6e69ca65edf1edfc962a455a53d37055b62bfe5ca47ac11b",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0338",
+      "hardware-date-0339",
+      "hardware-date-0340",
+      "hardware-date-0341",
+      "hardware-date-0342",
+      "hardware-date-0343",
+      "hardware-date-0344",
+      "hardware-date-0345",
+      "hardware-date-0346",
+      "hardware-date-0347",
+      "hardware-date-0348",
+      "hardware-date-0349",
+      "hardware-date-0350",
+      "hardware-date-0351",
+      "hardware-date-0352",
+      "hardware-date-0353",
+      "hardware-date-0354",
+      "hardware-date-0355",
+      "hardware-date-0356",
+      "hardware-date-0357",
+      "hardware-date-0358",
+      "hardware-date-0359",
+      "hardware-date-0360",
+      "hardware-date-0361",
+      "hardware-date-0362",
+      "hardware-date-0363",
+      "hardware-date-0364",
+      "hardware-date-0365",
+      "hardware-date-0366",
+      "hardware-date-0367",
+      "hardware-date-0368",
+      "hardware-date-0369",
+      "hardware-date-0370"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://www.openpa.net/pa-risc_timeline.html",
+    "path": "data/derived/documents/year-expansion/openpa-timeline.html",
+    "sha256": "3b12c5474de33a91e215e177ea17d22694773b0becec18645f2b615eca3ad93b",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0371",
+      "hardware-date-0372",
+      "hardware-date-0373",
+      "hardware-date-0374",
+      "hardware-date-0375",
+      "hardware-date-0376",
+      "hardware-date-0377",
+      "hardware-date-0378",
+      "hardware-date-0379",
+      "hardware-date-0380",
+      "hardware-date-0381",
+      "hardware-date-0382",
+      "hardware-date-0383",
+      "hardware-date-0384",
+      "hardware-date-0385",
+      "hardware-date-0386",
+      "hardware-date-0387",
+      "hardware-date-0388",
+      "hardware-date-0389",
+      "hardware-date-0390"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://archive.computerhistory.org/resources/text/DEC/dec.digital_(DEC)_timeline_1957-1997.102630354/timelinetext.htm",
+    "path": "data/derived/documents/year-expansion/dec-timeline.html",
+    "sha256": "a1eb8ef6e96bacb6f1e99f4eaefaa906ab8b127be3e941e0b97ab5d800ded7fa",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0391",
+      "hardware-date-0392",
+      "hardware-date-0393",
+      "hardware-date-0394",
+      "hardware-date-0395",
+      "hardware-date-0396",
+      "hardware-date-0397"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://museum.ipsj.or.jp/en/computer/super/0008.html",
+    "path": "data/derived/documents/year-expansion/nec-sx12.html",
+    "sha256": "13242260250f99b2e90ca0074ccb28cf88e6c9c3eb6f44ee2c7501ca8f531f82",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0398",
+      "hardware-date-0399"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://museum.ipsj.or.jp/en/computer/super/0018.html",
+    "path": "data/derived/documents/year-expansion/nec-sx4.html",
+    "sha256": "5fcf89cb89a4e6ad55a5aff01041052fe2fd46f8248298f20ac18d5131237dc7",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0400"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://museum.ipsj.or.jp/en/computer/super/0019.html",
+    "path": "data/derived/documents/year-expansion/nec-sx5.html",
+    "sha256": "f661c6916b02e2a4d2ccaf32f2b61b438d9570495f57a54043b8db750558dfa2",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0401"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://museum.ipsj.or.jp/en/computer/super/0012.html",
+    "path": "data/derived/documents/year-expansion/fujitsu-vpp.html",
+    "sha256": "79c82ff33db1645325cc20fcf2eefb29050c8f332ddc8d89010d26b379604aaf",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0402",
+      "hardware-date-0403",
+      "hardware-date-0404",
+      "hardware-date-0405",
+      "hardware-date-0406"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://museum.ipsj.or.jp/en/computer/super/0005.html",
+    "path": "data/derived/documents/year-expansion/fujitsu-vp.html",
+    "sha256": "9cdb5f8478f7c7a1d90973b543ab2bf897b9f033b5fcd4bdeaa786fe17bb74c2",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0407",
+      "hardware-date-0408",
+      "hardware-date-0409",
+      "hardware-date-0410"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://museum.ipsj.or.jp/en/heritage/HITAC_S-820.html",
+    "path": "data/derived/documents/year-expansion/hitachi-s820.html",
+    "sha256": "cb89d0e8b3f2c39495585351d5c4536bd8c45b6e3226eb8c9ea5095881f83913",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0411"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://www.nec.com/en/global/ir/press/2004/index.html",
+    "accessed_on": "2026-09-27",
+    "snapshot_error": "HTTP Error 403: Forbidden",
+    "verification": "web tool text checked; local snapshot unavailable",
+    "event_ids": [
+      "hardware-date-0412"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/aiie",
+    "path": "data/derived/documents/year-expansion/apple-history/aiie.html",
+    "sha256": "ae1b8eb59eca9c76fefc5507b7685d974a7e89f44a8f857186fc5bb863b0e36d",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0489"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/se30",
+    "path": "data/derived/documents/year-expansion/apple-history/se30.html",
+    "sha256": "577587c266c36c605cccbf21d5fd3d27b98ed19553fc225b56074da1693a95b1",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0490"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/classic_ii",
+    "path": "data/derived/documents/year-expansion/apple-history/classic_ii.html",
+    "sha256": "2bee6618f4666c84ff523d9661f081b2c0cfd90344d31a8b04892dc62d689377",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0491"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/700",
+    "path": "data/derived/documents/year-expansion/apple-history/700.html",
+    "sha256": "1b3757196a8a988a966153968ac16d143c954b3f8270e83cd8a27c561d9a76bb",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0492"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/170",
+    "path": "data/derived/documents/year-expansion/apple-history/170.html",
+    "sha256": "b89629962781d1be92e39f17cb5f2ad55453b56cc18b3179fa1ad198e0289a85",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0493"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/950",
+    "path": "data/derived/documents/year-expansion/apple-history/950.html",
+    "sha256": "8dd59a1f5c5ec8eb26aae37c684e0ff02a7e4d6b64aa12f6bd1074a5842e9096",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0494"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/6200",
+    "path": "data/derived/documents/year-expansion/apple-history/6200.html",
+    "sha256": "d3f40befe741fd6e1550987c6981012bde02b3b21a59499b0052b9a799f72359",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0495"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/6100",
+    "path": "data/derived/documents/year-expansion/apple-history/6100.html",
+    "sha256": "c05bf582d7fb1f217f69b2d71e901f41d3fa21f9ae1ae9f984afb5bedd653420",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0496",
+      "hardware-date-0497"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/7100",
+    "path": "data/derived/documents/year-expansion/apple-history/7100.html",
+    "sha256": "f1aa281c3df1542509b9148fac7fe1a1ec0b1c43b507b4809e3b5be0147381d5",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0498",
+      "hardware-date-0499"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/8100",
+    "path": "data/derived/documents/year-expansion/apple-history/8100.html",
+    "sha256": "81ec27fe365a9ccccc43b5aa99a2c53b1dc7f950ad31d90c9737a219169c53e0",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0500"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/7500",
+    "path": "data/derived/documents/year-expansion/apple-history/7500.html",
+    "sha256": "e39906c7beb92362da5ab2112c23c7dae0c925a8c67e7aeab7185b88cf3611e2",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0501"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/8500",
+    "path": "data/derived/documents/year-expansion/apple-history/8500.html",
+    "sha256": "e81dc66886c4ad46c44895fb78bd3cf1b02327c477d87b7eb3b34e73a9a1c799",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0502"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/9500",
+    "path": "data/derived/documents/year-expansion/apple-history/9500.html",
+    "sha256": "84efb6aaa2fa9d50022944db4efbc88452f23c3344d83115deb1954c5cb1e665",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0503"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/5500",
+    "path": "data/derived/documents/year-expansion/apple-history/5500.html",
+    "sha256": "267306d19eb92a7f6b00d6282792b51c4aedc036e26d3faf9c45feb69c4a99ec",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0504"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/6500",
+    "path": "data/derived/documents/year-expansion/apple-history/6500.html",
+    "sha256": "3d2120499e3fb39f150d8a53c31160e79d6ed0b93a7086492e0fcf00e14f0aff",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0505"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/7300",
+    "path": "data/derived/documents/year-expansion/apple-history/7300.html",
+    "sha256": "661cd1bd10dc3f8f598dbe4b7bf439b021fceb8dd4af8bb1df20b540cbbc152f",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0506"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://apple-history.com/pg4",
+    "path": "data/derived/documents/year-expansion/apple-history/pg4.html",
+    "sha256": "441db7acea7e496c20341b1342efd44d17612c4635abcec7af199a01a3181ca3",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0507"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://archive.decromancer.ca/fsck.technology/documentation/Apple/Apple%20Spec%20PDFs/Applespec/Systems/68k-Desktop/Macintosh%20II.pdf",
+    "path": "data/derived/documents/year-expansion/apple/Macintosh II.pdf",
+    "sha256": "5715975b64a3487d8d3f3ec7a69835e6a6482ef3ad115cea78f4d3f9b378450e",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0508"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://archive.decromancer.ca/fsck.technology/documentation/Apple/Apple%20Spec%20PDFs/Applespec/Systems/68k-Desktop/Maciutcsh%20Quadra%20840AV.pdf",
+    "path": "data/derived/documents/year-expansion/apple/Maciutcsh Quadra 840AV.pdf",
+    "sha256": "61b452a283b6c56b2b101d30df761250106345d7c8f474a10f843b1e768b1ea2",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0509"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://archive.decromancer.ca/fsck.technology/documentation/Apple/Apple%20Spec%20PDFs/Applespec/Systems/Powerbook/Macintosh%20PowerBook%201400cs-133.pdf",
+    "path": "data/derived/documents/year-expansion/apple/Macintosh PowerBook 1400cs-133.pdf",
+    "sha256": "ea2c5144cf6a8ca8100a5ce82972a40726ea497966c6399d303d6762522121a2",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0510"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://archive.irixnet.org/sgistuff/hardware/systems/personal.html",
+    "path": "data/derived/documents/year-expansion/sgi-personal.html",
+    "sha256": "f26848fe0f342ccbebd8d63f6f281342e4bffa1780db305a45ef234ad5916c48",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0511"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://archive.irixnet.org/sgistuff/hardware/systems/indigo.html",
+    "path": "data/derived/documents/year-expansion/sgi-indigo.html",
+    "sha256": "ad290bae1323b29386aa014e0d050c4205ee01c7df1371ecb17d9dc58f25545d",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0512",
+      "hardware-date-0513"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://archive.irixnet.org/sgistuff/hardware/systems/indigo2.html",
+    "path": "data/derived/documents/year-expansion/sgi-indigo2.html",
+    "sha256": "f6d45354623b0a74cb58fc66b804370a47bfefcf26ac41b6773f9b695da3f701",
+    "accessed_on": "2026-09-27",
+    "event_ids": [
+      "hardware-date-0514"
+    ],
+    "status": "reviewed_date_source"
+  },
+  {
+    "url": "https://groups.google.com/g/comp.unix.solaris/c/LhrNN8RRAkU",
+    "accessed_on": "2026-09-27",
+    "snapshot_error": "HTTP Error 429: Too Many Requests",
+    "verification": "web tool text checked; local snapshot unavailable",
+    "event_ids": [
+      "hardware-date-0515"
+    ],
+    "status": "reviewed_date_source"
+  }
+]

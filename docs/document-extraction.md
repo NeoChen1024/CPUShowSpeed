@@ -126,3 +126,21 @@ mapping. Mark OCR output as unreviewed, partly reviewed, or reviewed for the
 specific extracted claims; do not imply that validating one table certifies the
 whole document. Full OCR transcripts and intermediate images are derived data,
 not ordinary project documentation or Git content.
+
+## Hardware-year discovery batch
+
+The [hardware-year evidence review](../research/hardware-year-evidence.md)
+tracks an 80-document / 947-page batch completed on 2026-09-27 with 64 inflight
+pages. All DocIR pages are published, and all 80 documents have completed the
+hardware-year review (full text screening plus 145 relevant original-page checks).
+This does not certify unrelated benchmark claims. Use `documents report` with
+`inventories/hardware-year-ocr.txt` for current completion.
+`documents year-candidates` selects candidates and `documents year-evidence`
+searches text layers and published DocIR for unreviewed date passages.
+
+The subsequent unknown-year expansion searches the other 545 candidate PDFs.
+`inventories/hardware-year-expansion-ocr.txt` selects 32 text-poor PDFs / 310 pages;
+all pages were published with 64 inflight pages. The separate expansion ledger
+records 26 original local pages checked, without marking the entire search corpus
+as reviewed. See the hardware-year evidence document for external source checks,
+accepted date events and remaining uncertainty.

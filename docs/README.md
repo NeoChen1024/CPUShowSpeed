@@ -21,6 +21,7 @@ introduces the unit, zero-intercept fitting assumption and local setup.
 | Document | Primary responsibility |
 | --- | --- |
 | [SPEC collection](spec-collection.md) | Integer-rate scraping, fitting and conversion commands |
+| [Classical prediction](classical-prediction.md) | Arbitrary score subsets to estimated SPEC92 rate/VAXen and calibration CI95 |
 | [Classic collection](classic-collection.md) | Classical source extraction and experimental fitting commands |
 | [Document extraction](document-extraction.md) | PDF inventory, processing workflow and evidence policy |
 | [OCR dispatch](ocr-dispatch.md) | Bounded rendering/inference and resumable publication |

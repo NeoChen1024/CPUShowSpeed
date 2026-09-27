@@ -24,7 +24,8 @@ class EnvironmentTests(unittest.TestCase):
     def test_equal_model_and_environment_weight_and_shrinkage(self):
         rows = self.rows()
         self.assertAlmostEqual(sum(w for m, e, z, w in cells(rows)), 3)
-        self.assertEqual(train(rows + [rows[0]] * 20, "pooled"), train(rows, "pooled"))
+        # Repeats remain observations within the model; all models retain equal weight.
+        self.assertAlmostEqual(train(rows + [rows[0]] * 20, "pooled")["alpha"], 1 / 3)
         pooled = train(rows, "pooled")
         grouped = train(rows, "grouped")
         shrunk = train(rows, "shrinkage", 4)

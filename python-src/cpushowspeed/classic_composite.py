@@ -8,17 +8,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 import click
-from cpushowspeed.classic_fit import linpack_n100, numeric, write_csv
-
-TARGETS = ("SPECmark89", "SPECint89", "SPECfp89", "SPECrate_base_int92", "SPECrate_int92")
-
-
-def clock_status(records):
-    clocks = [numeric(r.get("clock_mhz")) for r in records]
-    known = [x for x in clocks if x is not None]
-    if known and max(known) - min(known) > 0.01 * max(known):
-        return "conflict"
-    return "known" if len(known) == len(clocks) else "unknown"
+from cpushowspeed.classic_values import TARGETS, clock_status, linpack_n100, numeric
+from cpushowspeed.research_io import code_hashes, write_csv
 
 
 def audit(classical, specs, pairs, pages):
@@ -189,5 +180,6 @@ def composite_overlap(input_root, linpack_text, output):
         exclusions=dict(Counter(reason for r in vectors for reason in r["exclusion_reasons"].split(";") if reason)),
         output_sha256={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(output.glob("*.csv"))},
     )
+    audit["shared_code_sha256"] = code_hashes(Path(__file__))
     (output / "audit.json").write_text(json.dumps(metadata, indent=2) + "\n")
     click.echo(json.dumps(dict(output=str(output), vector_tuples=len(vectors), summaries=len(summary))))

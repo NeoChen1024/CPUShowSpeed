@@ -10,8 +10,9 @@ from collections import defaultdict
 from pathlib import Path
 
 import click
+from cpushowspeed.calibration import ANCHOR, fit
 from cpushowspeed.classic_composite import TARGETS
-from cpushowspeed.classic_fit import ANCHOR, fit, quantile, write_csv
+from cpushowspeed.research_io import code_hashes, write_csv
 
 SCENARIOS = ("candidate_known_clocks", "candidate_unknown_clock_allowed", "candidate_linear_clock_scaling")
 PREDICTORS = ("equal_weight", "dhrystone", "whetstone", "linpack")
@@ -159,5 +160,6 @@ def composite_fit(vectors, output, bootstrap, seed):
         },
         output_sha256={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in output.glob("*.csv")},
     )
+    audit["shared_code_sha256"] = code_hashes(Path(__file__))
     (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps(dict(output=str(output), comparisons=len(summaries), model_folds=len(folds))))

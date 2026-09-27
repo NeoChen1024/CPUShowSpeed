@@ -1,0 +1,9 @@
+group,path,function,line,end_line
+1,python-src/cpushowspeed/annual_rate.py,_sha256,86,87
+1,python-src/cpushowspeed/spec_rate_chain.py,_hash,32,33
+1,python-src/cpushowspeed/spec_rate_inputs.py,_sha256,15,16
+2,python-src/cpushowspeed/caption.py,_now,46,47
+2,python-src/cpushowspeed/ocr.py,_now,65,66
+3,python-src/cpushowspeed/classic_diagnostics.py,read_csv,20,22
+3,python-src/cpushowspeed/classic_environment.py,csv_rows,19,21
+3,python-src/cpushowspeed/classic_source_fit.py,read_csv,41,43

@@ -102,6 +102,9 @@ flowchart TD
     classical_native_pool["classical-native-pool"]
     tomari_dhry_cint["tomari-dhry-cint"]
     timing_reconstruction["timing-reconstruction"]
+    classical_sparse_network["classical-sparse-network"]
+    rate92_unit --> classical_sparse_network
+    int89_rate_vaxen --> classical_sparse_network
 ```
 
 | Model / owner | Inputs → target | Relationship; role; status | Dependencies |
@@ -129,10 +132,11 @@ flowchart TD
 | [classical-pair](../research/classic-pair-fitting.md) | composite → vaxen | diagnostic; diagnostic; implemented-conditional | none |
 | [classical-triple](../research/classic-composite-fitting.md) | composite → vaxen | diagnostic; diagnostic; implemented-conditional | none |
 | [classical-source](../research/classic-source-pair-fitting.md) | composite → vaxen | diagnostic; diagnostic; implemented-conditional | none |
-| [classical-environment](../research/classic-environment-models.md) | composite → vaxen | diagnostic; diagnostic; implemented-conditional | none |
+| [classical-environment](../research/calibration-cleanup.md) | composite → vaxen | diagnostic; diagnostic; implemented-conditional | none |
 | [classical-native-pool](../research/classic-pooled-fitting.md) | composite → int92 | diagnostic; diagnostic; implemented-conditional | none |
 | [tomari-dhry-cint](../research/classic-source-pair-fitting.md) | dhry-21 → cint2006 | diagnostic; diagnostic; implemented-conditional | none |
 | [timing-reconstruction](../docs/methods.md) | gibson, adp, process-control, trace-timing → vaxen | planned; planned; planned | none |
+| [classical-sparse-network](../research/classic-network-fitting.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; primary; implemented-conditional | rate92-unit, int89-rate-vaxen |
 
 ## Datasets
 
@@ -151,6 +155,9 @@ flowchart TD
 | classic-source-pairs | [guide](../research/classic-source-pair-fitting.md) | `data/derived/classic/source-pair-fit/pairs.csv` | optional derived input |
 | classic-source-vectors | [guide](../research/classic-source-pair-fitting.md) | `data/derived/classic/source-pair-fit/vectors.jsonl` | optional derived input |
 | historical-observations | [guide](../research/early-benchmark-evidence.md) | `research/data/historical` | required in checkout |
+| maintenance-inventory | [guide](../research/cleanup-inventory.md) | `research/data/maintenance` | required in checkout |
+| historical-timeline-years | [guide](../research/historical-vaxen-timeline.md) | `research/data/historical/timeline-year-overrides.csv` | required in checkout |
+| hardware-date-events | [guide](../research/hardware-year-evidence.md) | `research/data/historical/hardware-date-evidence.csv` | required in checkout |
 
 ## Document inventory
 
@@ -216,3 +223,10 @@ analysis from evidence, diagnostics and retired work.
 | [Track 2 — SPEC92 through SPEC2026 integer rate](../research/tracks/spec-rate.md) | guide | current |
 | [Track 3 — SPEC89 scavenging and rate bridge](../research/tracks/spec89.md) | guide | current |
 | [Track 1 — VAXen reference and numeric types](../research/tracks/vaxen.md) | guide | current |
+| [Cleanup inventory](../research/cleanup-inventory.md) | diagnostic | current |
+| [Maintenance inventory snapshot](../research/data/maintenance/README.md) | diagnostic | current |
+| [Calibration cleanup and unified validation policy](../research/calibration-cleanup.md) | guide | current |
+| [Sparse joint calibration of individual classical benchmarks](../research/classic-network-fitting.md) | primary | current |
+| [Predict SPEC92 integer rate from classical scores](../docs/classical-prediction.md) | guide | current |
+| [Classical and SPEC89 historical VAXen timeline](../research/historical-vaxen-timeline.md) | primary | current |
+| [Hardware-year evidence: bitsavers discovery and first review](../research/hardware-year-evidence.md) | evidence | current |

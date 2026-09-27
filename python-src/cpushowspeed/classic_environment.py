@@ -1,6 +1,5 @@
 """Leakage-controlled comparison of pooled, grouped and shrinkage log-ratio fits."""
 
-import csv
 import hashlib
 import json
 import math
@@ -9,16 +8,14 @@ from collections import defaultdict
 from pathlib import Path
 
 import click
-from cpushowspeed.classic_fit import write_csv
-from cpushowspeed.classic_source_fit import os_key
+from cpushowspeed.calibration import error_summary, weighted_quantile
+from cpushowspeed.classic_source_data import os_key
+from cpushowspeed.research_io import code_hashes
+from cpushowspeed.research_io import read_csv as csv_rows
+from cpushowspeed.research_io import write_csv
 
 MODELS = ("pooled", "grouped", "shrinkage")
 LAMBDAS = (1.0, 4.0, 16.0)
-
-
-def csv_rows(path):
-    with path.open(newline="") as f:
-        return list(csv.DictReader(f))
 
 
 def cells(rows):
@@ -26,16 +23,19 @@ def cells(rows):
     for r in rows:
         grouped[r["model_key"], r["environment"]].append(r["z"])
     counts = defaultdict(int)
-    for m, e in grouped:
-        counts[m] += 1
-    return [(m, e, statistics.median(zs), 1 / counts[m]) for (m, e), zs in sorted(grouped.items())]
+    for (m, e), zs in grouped.items():
+        counts[m] += len(zs)
+    return [(m, e, statistics.median(zs), len(zs) / counts[m]) for (m, e), zs in sorted(grouped.items())]
 
 
 def train(rows, method, lam=4.0):
     data = cells(rows)
     if not data:
         raise ValueError("empty training set")
-    alpha = math.fsum(z * w for m, e, z, w in data) / math.fsum(w for m, e, z, w in data)
+    model_values = defaultdict(list)
+    for r in rows:
+        model_values[r["model_key"]].append(r["z"])
+    alpha = statistics.mean(statistics.median(v) for v in model_values.values())
     envs = defaultdict(list)
     for m, e, z, w in data:
         envs[e].append((z, w))
@@ -66,17 +66,6 @@ def select_lambda(rows):
             errors.append(sum(w * (predict(fitted, e) - z) ** 2 for m, e, z, w in heldout) / sum(w for m, e, z, w in heldout))
         losses.append((statistics.mean(errors), lam))
     return min(losses)[1], "inner_leave_model_out"
-
-
-def weighted_quantile(values, q):
-    ordered = sorted(values)
-    threshold = q * sum(w for x, w in ordered)
-    total = 0
-    for x, w in ordered:
-        total += w
-        if total >= threshold:
-            return x
-    return ordered[-1][0]
 
 
 def evaluate(rows):
@@ -151,7 +140,7 @@ def evaluate(rows):
             signed = []
             for envs in by_model.values():
                 for obs in envs.values():
-                    w = 1 / len(envs) / len(obs)
+                    w = 1 / sum(len(v) for v in envs.values())
                     weighted += [(abs(r["signed_error_percent"]), w) for r in obs]
                     signed += [(r["signed_error_percent"], w) for r in obs]
                     logs += [(r["log_error"] ** 2, w) for r in obs]
@@ -160,6 +149,7 @@ def evaluate(rows):
                     scheme=scheme,
                     method=method,
                     status="evaluated",
+                    **error_summary(selected),
                     models=len(by_model),
                     observations=len(selected),
                     weighted_absolute_p95_percent=weighted_quantile(weighted, 0.95),
@@ -183,7 +173,7 @@ def plot(output, summaries):
     for ax, cohort in zip(axes, ("within_DEC", "extended")):
         for j, method in enumerate(MODELS):
             vals = {
-                r["pattern"]: float(r["weighted_absolute_p95_percent"])
+                r["pattern"]: float(r["model_center_p95_percent"])
                 for r in summaries
                 if r["cohort"] == cohort
                 and r["scheme"] == "leave_model_out"
@@ -199,7 +189,7 @@ def plot(output, summaries):
         )
         ax.invert_yaxis()
         ax.set_title(cohort)
-        ax.set_xlabel("Model/environment-balanced observation P95 error (%)")
+        ax.set_xlabel("Equal-model center P95 relative error (%)")
         ax.grid(alpha=0.2)
         ax.legend()
     fig.suptitle(
@@ -281,7 +271,7 @@ def environment_fit(input_root, output):
         write_csv(output / (name + ".csv"), data)
     plot(output, summaries)
     audit = dict(
-        method="classical-environment-shrinkage-v1",
+        method="classical-environment-model-balanced-v2",
         input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         environment_definition="construction cohort plus SPEC target OS family; not isolated compiler or classical-run environment",
@@ -289,5 +279,6 @@ def environment_fit(input_root, output):
         discarded_for_error=0,
         output_sha256={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in output.glob("*.csv")},
     )
+    audit["shared_code_sha256"] = code_hashes(Path(__file__))
     (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps(dict(output=str(output), comparisons=len(summaries))))

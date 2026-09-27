@@ -8,9 +8,10 @@ from collections import defaultdict
 from pathlib import Path
 
 import click
-from cpushowspeed.classic_fit import ANCHOR, write_csv
-from cpushowspeed.classic_pooled import composites
-from cpushowspeed.classic_source_fit import fit, read_csv
+from cpushowspeed.calibration import ANCHOR, fit
+from cpushowspeed.classic_vectors import composites
+from cpushowspeed.research_io import code_hashes, read_csv, write_csv
+from cpushowspeed.research_plot import save_figure
 
 TARGETS = ("SPECrate_base_int92", "SPECrate_int92")
 STAGES = ("within_source", "plus_cross_source_unscaled")
@@ -134,8 +135,7 @@ def plot(output, rows, summaries):
             f"Classical composites → SPEC92 integer rate — {variant}\nAll eligible unscaled source cohorts; shading: factor CI95, not prediction interval"
         )
         fig.tight_layout(rect=(0, 0, 1, 0.95))
-        for ext in ("png", "svg"):
-            fig.savefig(output / f"rate-composite-{variant}.{ext}", dpi=150)
+        save_figure(fig, output, f"rate-composite-{variant}")
         plt.close(fig)
 
 
@@ -195,5 +195,6 @@ def rate_composite_fit(pairs, output, bootstrap, seed):
             + [Path(__file__).with_name(n) for n in ("classic_pooled.py", "classic_source_fit.py", "classic_fit.py")]
         },
     )
+    audit["shared_code_sha256"] = code_hashes(Path(__file__))
     (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps(dict(output=str(output), comparisons=len(summaries), observations=len(rows))))

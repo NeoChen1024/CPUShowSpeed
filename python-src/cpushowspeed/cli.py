@@ -13,13 +13,18 @@ from cpushowspeed.classic_composite_fit import composite_fit
 from cpushowspeed.classic_diagnostics import source_diagnostics
 from cpushowspeed.classic_environment import environment_fit
 from cpushowspeed.classic_fit import fit_spec92
+from cpushowspeed.classic_network import network_fit
 from cpushowspeed.classic_overlap import overlap_spec
 from cpushowspeed.classic_pair_fit import pair_fit
 from cpushowspeed.classic_pdf import extract_pdf_tables
 from cpushowspeed.classic_pooled import pooled_fit
+from cpushowspeed.classic_predict import predict_rate
+from cpushowspeed.classic_prepare import prepare_pairs, prepare_sources
 from cpushowspeed.classic_rate_composite import rate_composite_fit
 from cpushowspeed.classic_source_fit import source_pair_fit
+from cpushowspeed.classic_timeline import historical_timeline
 from cpushowspeed.documents import documents
+from cpushowspeed.historical_candidates import year_candidates, year_evidence
 from cpushowspeed.ocr import ocr_command
 from cpushowspeed.rate_convert import convert_rate_command
 from cpushowspeed.research_registry import research
@@ -44,6 +49,8 @@ cli.add_command(bridge)
 plot.add_command(annual_rate_ci_command)
 cli.add_command(plot)
 documents.add_command(ocr_command)
+documents.add_command(year_candidates)
+documents.add_command(year_evidence)
 documents.add_command(caption_command)
 documents.add_command(backfill_captions_command)
 documents.add_command(migrate_tables_command)
@@ -54,6 +61,8 @@ classic.add_command(fit_spec92)
 classic.add_command(composite_overlap)
 classic.add_command(composite_fit)
 classic.add_command(pair_fit)
+classic.add_command(prepare_pairs)
+classic.add_command(prepare_sources)
 classic.add_command(extract_pdf_tables)
 classic.add_command(source_pair_fit)
 classic.add_command(source_diagnostics)
@@ -61,4 +70,7 @@ classic.add_command(environment_fit)
 classic.add_command(pooled_fit)
 classic.add_command(rate_composite_fit)
 classic.add_command(spec89_rate_fit)
+classic.add_command(network_fit)
+classic.add_command(predict_rate)
+classic.add_command(historical_timeline)
 cli.add_command(classic)

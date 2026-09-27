@@ -1,0 +1,11 @@
+system,source_url,status,reason,reviewed_on
+Sun SPARCstation Voyager,https://www.computinghistory.org.uk/det/77366/Sun-SPARCstation-Voyager/,candidate_not_integrated,Museum March 1994 chronology; confirm exact source identity before integration,2026-09-27
+Sun SPARCstation Voyager,https://janit.iki.fi/docs/SPARCstationVoyagerJTF.pdf,pending_original_page_review,Vendor Just the Facts candidate; retrieve and check release statement,2026-09-27
+Sun 3 and SPARCstation families,https://www.unix-ag.uni-siegen.de/faqs/SUN-HW-FAQ.html,ambiguous_table,Inherited year-column interpretation conflicts for some rows; do not bulk forward-fill,2026-09-27
+SGI 4D families,https://archive.irixnet.org/developerforum95/Silicon_Graphics_Developer_Forum_95_The_CD_Volume_2/documents/hw_handbook_html/postscript/iris_tree_sm.ps,incomplete_render,Downloaded tree lacks usable model labels; chassis images cannot establish identity,2026-09-27
+SGI Indigo graphics options,https://archive.irixnet.org/sgistuff/hardware/systems/indigo.html,configuration_pending,Elan and XZ announcements describe planned shipment; exact CPU plus graphics configuration remains unresolved,2026-09-27
+Apple PowerMacintosh 8100/100,https://apple-history.com/8100,revision_pending,100 MHz revision chronology requires corroboration; do not inherit 80 MHz launch date,2026-09-27
+Gould PN6005,https://usenet.trashworldnews.com/?thread=53180,existence_bound_only,Contemporary customer usage is not first introduction evidence,2026-09-27
+MIPS M/120,https://www.techmonitor.ai/hardware/mips_launches_a_cheapo_12_mips_oem_box_with_orders_worth_8m,pending_full_source_review,Launch article candidate requires original text and configuration check,2026-09-27
+Burroughs B6800,https://www.smecc.org/The%20Architecture%20%20of%20the%20Burroughs%20B-5000.htm,pending_full_source_review,Historical architecture essay contains announcement lead; follow contemporaneous citation,2026-09-27
+GEC Elliott 905,https://www.tnmoc.org/notes-from-the-museum/2019/9/1/fifty-years-ago-from-the-pages-of-computer-weekly,existence_bound_only,Customer installation report does not by itself establish launch year,2026-09-27

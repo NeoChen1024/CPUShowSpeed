@@ -10,7 +10,7 @@ from pathlib import Path
 
 import blake3
 import click
-from cpushowspeed.classic_fit import write_csv
+from cpushowspeed.research_io import code_hashes, write_csv
 
 ROOT = Path("research/data/classic/pdf-extraction")
 
@@ -336,5 +336,6 @@ def extract_pdf_tables(acquisition, recipes, corrections, output):
             p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in output.iterdir() if p.suffix in (".csv", ".jsonl")
         },
     )
+    audit["shared_code_sha256"] = code_hashes(Path(__file__))
     (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps(dict(output=str(output), sources=len(sources), table_parts=len(tables), observations=len(obs))))

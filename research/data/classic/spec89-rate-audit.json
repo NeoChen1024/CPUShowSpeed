@@ -30,11 +30,21 @@
     "research/data/spec89/v2.0.0/csv/bridges89_92.csv": "8c7545e9b7183ec7db052c15247fc4fd78ffb381a174898c4482d5f0f15868a4"
   },
   "code_sha256": {
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_89_rate.py": "5cec8661092d28a3bdc2421474da1008d5fcf69d2d1151d3d6a3378fc691bdde",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pooled.py": "c73b06215673bbcf8062b6187fcf472190464325f0447a3a50372693a7c655b4",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_fit.py": "7a5adb48f5d8b032af8cbc0275db2d4c148a014bb355c7aa5050672c5f2df787",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_fit.py": "c1976e4277bceee1415dfe668760ca4ce3fdd29eddacc76ef462410043d709a7",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "d16a31770645046779b786f8b623e2bfb61ac1cb6146081fbf6914e284fdc6b8"
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_89_rate.py": "0d3b104c03b72f334a5c8e846b67ce5e9d603324535f9679ab18d510f6ce940b",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pooled.py": "9f4b6c40bc409e9fbcf397e8e3c8a9d7f1f2be1f6e37bbf5b7d0467a9e5d843f",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_fit.py": "757fdaf90316f87ef0bf984a324de43b19a5bef9e4b54fba1e5a462e0551d4ba",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_fit.py": "75c085dfefb71e7b5ff035131756beab2078f26227e80ed3a6db26f0b7aac976",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "31dfa875c6a522a6125e0b6dc019d66f2f9111042e9724464bdaf4cdb3b103c9"
   },
-  "uncertainty": "joint model-cluster bootstrap across both bridge edges and classical fit; estimates not observed rate scores"
+  "uncertainty": "joint model-cluster bootstrap across both bridge edges and classical fit; estimates not observed rate scores",
+  "shared_code_sha256": {
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration_edges.py": "b6e4cbe854b1fa3b36f9490ed8f253af05899c826a658726b5c4b9a441a785d6",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_89_rate.py": "0d3b104c03b72f334a5c8e846b67ce5e9d603324535f9679ab18d510f6ce940b",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_bridge_data.py": "e31eddff4bf6a4a540f19d43cef19fb7071b2d95c24c92da1ac3ba17d65709ed",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "31dfa875c6a522a6125e0b6dc019d66f2f9111042e9724464bdaf4cdb3b103c9",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_vectors.py": "ed804328d7d026cfdc582851e03b4cc41a40eb90538ad8338449a76408e89880",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_io.py": "7c5345d069e0b41d7bf28cee1efc517f2e804ebd910e1210de856822191cc4da",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_plot.py": "ec6302f217e84fc44e7b297f1cd4f6e7bd899b293a695aa02b87936fbf4efc60"
+  }
 }

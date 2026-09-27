@@ -1,6 +1,5 @@
 """Matched-model cohort diagnostics; no score/residual-driven exclusions."""
 
-import csv
 import hashlib
 import itertools
 import json
@@ -10,16 +9,12 @@ from collections import defaultdict
 from pathlib import Path
 
 import click
-from cpushowspeed.classic_fit import quantile, write_csv
+from cpushowspeed.calibration import quantile
+from cpushowspeed.research_io import code_hashes, read_csv, write_csv
 
 ORIGINS = ("within_DEC", "legacy_cross_source", "DEC_to_archive")
 STAGE = "plus_cross_source_clock_sensitivity"
 FOCUS = "Whetstone:MWIPS_DP+LINPACK:n100_MFLOPS"
-
-
-def read_csv(path):
-    with path.open(newline="") as f:
-        return list(csv.DictReader(f))
 
 
 def centers(rows, predictor="equal_weight"):
@@ -253,5 +248,6 @@ def source_diagnostics(input_root, output):
         discarded_for_residual=0,
         output_sha256={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in output.glob("*.csv")},
     )
+    audit["shared_code_sha256"] = code_hashes(Path(__file__))
     (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps(dict(output=str(output), observations=len(rows), source_comparisons=len(transfers))))

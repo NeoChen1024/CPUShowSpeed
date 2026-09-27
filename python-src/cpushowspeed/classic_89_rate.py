@@ -8,11 +8,13 @@ from collections import defaultdict
 from pathlib import Path
 
 import click
-import numpy as np
-from cpushowspeed.classic_fit import ANCHOR, quantile, write_csv
+from cpushowspeed.calibration import ANCHOR, fit, quantile
+from cpushowspeed.calibration_edges import bridge_log, coefficient, joint_bootstrap
+from cpushowspeed.classic_bridge_data import bridge_rows
 from cpushowspeed.classic_overlap import model_key, relaxed_key
-from cpushowspeed.classic_pooled import bridge_rows, composites
-from cpushowspeed.classic_source_fit import fit, read_csv
+from cpushowspeed.classic_vectors import composites
+from cpushowspeed.research_io import code_hashes, read_csv, write_csv
+from cpushowspeed.research_plot import save_figure
 
 
 def evidence(specs, vectors, native_bridge):
@@ -58,48 +60,6 @@ def centers(evidence_rows):
     for r in evidence_rows:
         groups[r["edge"]][r["model_key"]].append(float(r["log_ratio"]))
     return {edge: {k: statistics.median(v) for k, v in models.items()} for edge, models in groups.items()}
-
-
-def bridge_log(edges, exclude=None):
-    return sum(statistics.mean(v for k, v in values.items() if k != exclude) for values in edges.values())
-
-
-def coefficient(rows, edges, exclude=None):
-    b = bridge_log(edges, exclude)
-    groups = defaultdict(list)
-    for r in rows:
-        if r["model_key"] != exclude:
-            groups[r["model_key"]].append(r["z"] + (b if r["generation"] == "89" else 0))
-    return statistics.mean(statistics.median(v) for v in groups.values()), b
-
-
-def joint_bootstrap(rows, edges, draws, seed):
-    keys = sorted({r["model_key"] for r in rows} | {k for e in edges.values() for k in e})
-    index = {k: i for i, k in enumerate(keys)}
-    weights = np.random.default_rng(seed).multinomial(len(keys), np.full(len(keys), 1 / len(keys)), size=draws)
-    b = np.zeros(draws)
-    valid = np.ones(draws, dtype=bool)
-    for values in edges.values():
-        w = weights[:, [index[k] for k in values]]
-        total = w.sum(axis=1)
-        valid &= total > 0
-        b += np.divide(w @ np.array(list(values.values())), total, out=np.zeros(draws), where=total > 0)
-    numerator = np.zeros(draws)
-    denom = np.zeros(draws)
-    for key in sorted({r["model_key"] for r in rows}):
-        group = [r for r in rows if r["model_key"] == key]
-        z = np.array([r["z"] for r in group])[:, None]
-        old = np.array([r["generation"] == "89" for r in group])[:, None]
-        center = np.median(z + old * b, axis=0)
-        w = weights[:, index[key]]
-        numerator += center * w
-        denom += w
-    if rows:
-        valid &= denom > 0
-        factors = np.exp(numerator[valid] / denom[valid]).tolist()
-    else:
-        factors = []
-    return factors, np.exp(b[valid]).tolist()
 
 
 def evaluate(rows, edges, draws, seed):
@@ -209,8 +169,7 @@ def plot(output, rows, summary, b):
         "SPECint89 bridge + direct SPEC92 rate: joint classical fits\nTriangles are estimated targets; shading is factor CI95, not prediction interval"
     )
     fig.tight_layout(rect=(0, 0, 1, 0.94))
-    for ext in ("png", "svg"):
-        fig.savefig(output / ("joint-scatter." + ext), dpi=150)
+    save_figure(fig, output, "joint-scatter")
     plt.close(fig)
 
 
@@ -337,5 +296,6 @@ def spec89_rate_fit(input_root, spec_records, native_bridge, output, bootstrap, 
         },
         uncertainty="joint model-cluster bootstrap across both bridge edges and classical fit; estimates not observed rate scores",
     )
+    audit["shared_code_sha256"] = code_hashes(Path(__file__))
     (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps(dict(output=str(output), bridge=bridge_results, estimates=len(estimates))))

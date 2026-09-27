@@ -2,25 +2,25 @@
 
 from __future__ import annotations
 
-import csv
 import hashlib
 import json
 import re
 import subprocess
-from collections import Counter, defaultdict
+from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
 
 import blake3
 import click
 from bs4 import BeautifulSoup
+from cpushowspeed.research_io import read_csv as shared_read_csv
+from cpushowspeed.research_io import write_csv as shared_write_csv
 
 METHOD = "classic-hardware-overlap-v1"
 
 
 def read_csv(path):
-    with Path(path).open(encoding="utf-8-sig", newline="") as f:
-        return list(csv.DictReader(f))
+    return shared_read_csv(path, encoding="utf-8-sig")
 
 
 def number(text):
@@ -473,13 +473,7 @@ def compare(records, specs):
 
 
 def write_csv(path, rows):
-    if not rows:
-        path.write_text("")
-        return
-    with path.open("w") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
-        w.writeheader()
-        w.writerows(rows)
+    return shared_write_csv(path, rows, fields=list(rows[0]) if rows else [], lineterminator="\n", empty_text="")
 
 
 @click.command("overlap-spec")

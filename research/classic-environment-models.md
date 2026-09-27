@@ -1,5 +1,11 @@
 # Early-benchmark closeout: environment model comparison
 
+> Historical v1 diagnostic snapshot. The 2026-09-27 [unified weighting/error
+> policy](calibration-cleanup.md) supersedes its equal-environment pooled
+> weighting and primary observation-P95 comparison. The command now produces
+> v2; original numerical tables below describe the retained v1 snapshots.
+
+
 Review date: 2026-09-26. Compares a pooled multiplier, separate environment
 multipliers, and partial pooling on the same observations. All environments
 and repeats are retained. The equal-weight two-benchmark composite remains

@@ -16,9 +16,16 @@
     "data/derived/classic/source-pair-fit/pairs.csv": "59858c5d7a3087e6368fbc582ff45e605a3f075d52c07b93a547772d0a4e5e93"
   },
   "code_sha256": {
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_rate_composite.py": "52f597865e05460b6146a287b2a06554aaab847f6e9b684e1e67389bf5d29291",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pooled.py": "c73b06215673bbcf8062b6187fcf472190464325f0447a3a50372693a7c655b4",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_fit.py": "7a5adb48f5d8b032af8cbc0275db2d4c148a014bb355c7aa5050672c5f2df787",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_fit.py": "c1976e4277bceee1415dfe668760ca4ce3fdd29eddacc76ef462410043d709a7"
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_rate_composite.py": "10277e5851011d367a7e223facbba6d1c7d315b86df1bc1e88c7438b2a72d53c",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pooled.py": "9f4b6c40bc409e9fbcf397e8e3c8a9d7f1f2be1f6e37bbf5b7d0467a9e5d843f",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_fit.py": "757fdaf90316f87ef0bf984a324de43b19a5bef9e4b54fba1e5a462e0551d4ba",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_fit.py": "75c085dfefb71e7b5ff035131756beab2078f26227e80ed3a6db26f0b7aac976"
+  },
+  "shared_code_sha256": {
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_rate_composite.py": "10277e5851011d367a7e223facbba6d1c7d315b86df1bc1e88c7438b2a72d53c",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_vectors.py": "ed804328d7d026cfdc582851e03b4cc41a40eb90538ad8338449a76408e89880",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_io.py": "7c5345d069e0b41d7bf28cee1efc517f2e804ebd910e1210de856822191cc4da",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_plot.py": "ec6302f217e84fc44e7b297f1cd4f6e7bd899b293a695aa02b87936fbf4efc60"
   }
 }

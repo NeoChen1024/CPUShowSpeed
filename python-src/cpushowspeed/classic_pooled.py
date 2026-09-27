@@ -1,118 +1,21 @@
 """Pooled SPECint89/92 classical composites; no implicit rate conversion."""
 
 import hashlib
-import itertools
 import json
 import math
 import statistics
-from collections import defaultdict
 from pathlib import Path
 
 import click
 import numpy as np
-from cpushowspeed.classic_fit import quantile, write_csv
-from cpushowspeed.classic_overlap import model_key
-from cpushowspeed.classic_source_fit import read_csv
+from cpushowspeed.calibration import quantile
+from cpushowspeed.calibration_edges import coefficient, joint_bootstrap
+from cpushowspeed.classic_bridge_data import bridge_centers, bridge_rows
+from cpushowspeed.classic_vectors import composites
+from cpushowspeed.research_io import code_hashes, read_csv, write_csv
+from cpushowspeed.research_plot import save_figure
 
 TARGETS = ("SPECint89", "SPECint92")
-
-
-def bridge_rows(path):
-    # utf-8-sig preserves the archive's BOM without changing its bytes.
-    import csv
-
-    with path.open(encoding="utf-8-sig", newline="") as f:
-        rows = list(csv.DictReader(f))
-    return [
-        dict(r, model_key=model_key(r["system"]), log_ratio=math.log(float(r["SPECint92"]) / float(r["SPECint89"])))
-        for r in rows
-        if r["SPECint89"] and r["SPECint92"]
-    ]
-
-
-def bridge_centers(rows):
-    groups = defaultdict(list)
-    for r in rows:
-        groups[r["model_key"]].append(float(r["log_ratio"]))
-    return {k: statistics.median(v) for k, v in groups.items()}
-
-
-def composites(pairs, stage, targets=TARGETS):
-    rows = []
-    groups = defaultdict(list)
-    for r in pairs:
-        if r["stage"] != stage or r["target"] not in targets:
-            continue
-        metrics = r["pattern"].split("+")
-        members = tuple((m, r[key + "_id"], float(r[key])) for m, key in zip(metrics, ("first", "second")))
-        item = dict(r, members=members)
-        rows.append(item)
-        groups[r["model_key"], r["spec_id"], r["target"], r["origin"], r["y"]].append(item)
-    # A triple must have all three compatible pair edges for this exact target
-    # and exact classical record/value identities. Joining is not replication.
-    for group in groups.values():
-        edges = {frozenset(r["members"]) for r in group}
-        nodes = sorted(set(itertools.chain.from_iterable(edges)))
-        for combo in itertools.combinations(nodes, 3):
-            if len({n[0].split(":")[0] for n in combo}) != 3:
-                continue
-            if all(frozenset(edge) in edges for edge in itertools.combinations(combo, 2)):
-                supporting = [r for r in group if set(r["members"]).issubset(combo)]
-                rows.append(
-                    dict(
-                        group[0],
-                        pattern="+".join(n[0] for n in combo),
-                        members=combo,
-                        provenance=json.dumps([r["provenance"] for r in supporting]),
-                    )
-                )
-    for r in rows:
-        r["member_ids"] = json.dumps([n[1] for n in r["members"]])
-        r["member_values"] = json.dumps([n[2] for n in r["members"]])
-        r["x"] = math.exp(statistics.mean(math.log(n[2]) for n in r["members"]))
-        r["generation"] = "89" if r["target"] == "SPECint89" else "92"
-        r["raw_target"] = float(r["y"])
-        r["z"] = math.log(r["raw_target"] / r["x"])
-        del r["members"]
-    return rows
-
-
-def log_factor(rows, bridge, exclude=None):
-    available = [v for k, v in bridge.items() if k != exclude]
-    if not available:
-        raise ValueError("No training bridge models")
-    b = statistics.mean(available)
-    groups = defaultdict(list)
-    for r in rows:
-        if r["model_key"] != exclude:
-            groups[r["model_key"]].append(r["z"] + (b if r["generation"] == "89" else 0))
-    if not groups:
-        raise ValueError("No training fitting models")
-    return statistics.mean(statistics.median(v) for v in groups.values()), b
-
-
-def bootstrap_factors(rows, bridge, draws, seed, identity=False):
-    """Joint model-cluster bootstrap: shared models get the same draw weight."""
-    keys = sorted({r["model_key"] for r in rows} | set(bridge))
-    rng = np.random.default_rng(seed)
-    weights = rng.multinomial(len(keys), np.full(len(keys), 1 / len(keys)), size=draws)
-    lookup = {k: i for i, k in enumerate(keys)}
-    bi = [lookup[k] for k in bridge]
-    denom = weights[:, bi].sum(axis=1)
-    b = np.divide(weights[:, bi] @ np.array(list(bridge.values())), denom, out=np.zeros(draws), where=denom > 0)
-    if identity:
-        b[:] = 0
-    numerator, total = np.zeros(draws), np.zeros(draws)
-    for key in sorted({r["model_key"] for r in rows}):
-        group = [r for r in rows if r["model_key"] == key]
-        z = np.array([r["z"] for r in group])[:, None]
-        mask = np.array([r["generation"] == "89" for r in group])[:, None]
-        center = np.median(z + mask * b, axis=0)
-        w = weights[:, lookup[key]]
-        numerator += w * center
-        total += w
-    valid = (total > 0) & (denom > 0)
-    return np.exp(numerator[valid] / total[valid]).tolist()
 
 
 def evaluate(rows, bridge, draws, seed, identity=False):
@@ -228,8 +131,7 @@ def plot(output, rows, summaries, bridge_factor):
         "Classical composites → pooled SPECint89/92 (unscaled clocks)\nShading: joint model-bootstrap factor CI95; not rate-VAXen or prediction intervals"
     )
     fig.tight_layout(rect=(0, 0, 1, 0.96))
-    for suffix in ("png", "svg"):
-        fig.savefig(output / ("pooled-scatter." + suffix), dpi=150)
+    save_figure(fig, output, "pooled-scatter")
     plt.close(fig)
 
 
@@ -331,5 +233,15 @@ def pooled_fit(pairs, bridges, output, bootstrap, seed):
             for p in (Path(__file__), Path(__file__).with_name("classic_overlap.py"), Path(__file__).with_name("classic_fit.py"))
         },
     )
+    audit["shared_code_sha256"] = code_hashes(Path(__file__))
     (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps(audit))
+
+
+def log_factor(rows, bridge, exclude=None):
+    return coefficient(rows, {"native_bridge": bridge}, exclude=exclude)
+
+
+def bootstrap_factors(rows, bridge, draws, seed, identity=False):
+    edges = {"native_bridge": {k: 0.0 if identity else v for k, v in bridge.items()}}
+    return joint_bootstrap(rows, edges, draws, seed)[0]

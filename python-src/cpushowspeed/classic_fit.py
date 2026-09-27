@@ -5,89 +5,21 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
-import math
-import random
-import re
-import statistics
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 import click
+from cpushowspeed.calibration import ANCHOR, fit
+from cpushowspeed.calibration import quantile as quantile
+from cpushowspeed.classic_values import linpack_n100, numeric
+from cpushowspeed.research_io import code_hashes, write_csv
 
-ANCHOR = 25500 / 604800
 METRICS = {
     "Dhrystone": [("v1.1_DMIPS", "Dhrystone 1.1 (DMIPS)"), ("v2.1_DMIPS", "Dhrystone 2.1 (DMIPS)")],
     "Whetstone": [("MWIPS", "Whetstone Fortran, native precision (MWIPS)"), ("MWIPS_DP", "Whetstone Fortran, DP (MWIPS)")],
     "LINPACK": [("n100_MFLOPS", "LINPACK n=100 (MFLOPS)")],
 }
 SCENARIOS = ("clock_known_single_cpu", "clock_unknown_allowed_single_cpu")
-
-
-def numeric(value):
-    value = str(value).strip().rstrip("*")
-    if not re.fullmatch(r"(?:\d+(?:\.\d*)?|\.\d+)", value):
-        return None
-    x = float(value)
-    return x if x > 0 else None
-
-
-def linpack_n100(record, pages):
-    """Read only the n=100 column using this physical page's aligned header."""
-    match = re.fullmatch(r"pdf:page:(\d+):line:(\d+)", record["locator"])
-    if not match:
-        return None
-    page, line = map(int, match.groups())
-    lines = pages[page - 1].splitlines()
-    raw = lines[line - 1]
-    if raw != record["raw_record"]:
-        raise ValueError(f"LINPACK locator mismatch: {record['id']}")
-    header = next((s for s in lines[:12] if re.search(r"n=100\s", s)), None)
-    if header is None:
-        return None
-    start = header.index("n=100")
-    # pdftotext aligns values slightly left of the header. Restrict to this
-    # column, never fall back to the first numeric compiler/TPP/peak token.
-    value = raw[max(0, start - 4) : start + 7].strip()
-    return numeric(value)
-
-
-def quantile(values, p):
-    values = sorted(values)
-    index = (len(values) - 1) * p
-    lo, hi = math.floor(index), math.ceil(index)
-    return values[lo] + (values[hi] - values[lo]) * (index - lo)
-
-
-def fit(rows, bootstrap, seed):
-    groups = defaultdict(list)
-    for row in rows:
-        groups[row["model_key"]].append(row)
-    centers = [statistics.median(math.log(r["y_vaxen"] / r["x"]) for r in group) for _, group in sorted(groups.items())]
-    result = {"pairs": len(rows), "models": len(groups), "status": "insufficient_models"}
-    if len(centers) < 2:
-        return result
-    mean = statistics.mean(centers)
-    rng = random.Random(seed)
-    draws = [math.exp(statistics.mean(rng.choices(centers, k=len(centers)))) for _ in range(bootstrap)]
-    loo = [100 * abs(math.expm1((sum(centers) - c) / (len(centers) - 1) - c)) for c in centers]
-    pair_errors = []
-    for i, (_, group) in enumerate(sorted(groups.items())):
-        heldout = (sum(centers) - centers[i]) / (len(centers) - 1)
-        # Each model contributes one P95, preserving within-model spread.
-        pair_errors.append(quantile([100 * abs(math.expm1(heldout - math.log(r["y_vaxen"] / r["x"]))) for r in group], 0.95))
-    result.update(
-        status="exploratory_candidate_cohort",
-        factor=math.exp(mean),
-        factor_ci95_low=quantile(draws, 0.025),
-        factor_ci95_high=quantile(draws, 0.975),
-        loo_model_p95_percent=quantile(loo, 0.95),
-        loo_within_model_p95_max_percent=max(pair_errors),
-    )
-    xs = [statistics.median(math.log(r["x"]) for r in group) for _, group in sorted(groups.items())]
-    ys = [statistics.median(math.log(r["y_vaxen"]) for r in group) for _, group in sorted(groups.items())]
-    if len(xs) >= 3 and max(xs) - min(xs) > 1e-8:
-        result["loglog_slope_diagnostic"] = statistics.linear_regression(xs, ys).slope
-    return result
 
 
 def pair_rows(pairs, classical, specs, pages):
@@ -136,14 +68,6 @@ def pair_rows(pairs, classical, specs, pages):
                         )
                     )
     return rows
-
-
-def write_csv(path, rows):
-    fields = list(dict.fromkeys(key for row in rows for key in row))
-    with path.open("w", newline="") as f:
-        writer = csv.DictWriter(f, fields)
-        writer.writeheader()
-        writer.writerows(rows)
 
 
 def plots(output, rows, summaries):
@@ -252,5 +176,6 @@ def fit_spec92(input_root, linpack_text, output, bootstrap, seed):
         exclusions=dict(Counter(reason for r in rows for reason in r["exclusion_reasons"].split(";") if reason)),
         output_sha256={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(output.glob("*.csv"))},
     )
+    audit["shared_code_sha256"] = code_hashes(Path(__file__))
     (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps({"output": str(output), "fits": len(summaries), "pair_metric_scenarios": len(rows)}))

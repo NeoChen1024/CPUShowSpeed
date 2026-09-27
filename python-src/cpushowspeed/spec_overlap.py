@@ -15,6 +15,7 @@ from pathlib import Path
 from urllib.parse import urljoin
 
 import numpy as np
+from cpushowspeed.calibration import absolute_error_percent, quantile
 
 BASE_URL = "https://www.spec.org"
 INTERVAL_FIELDS = ("confidence_level", "bootstrap_replicates", "bootstrap_seed", "bootstrap_unit", "quantile_method")
@@ -263,7 +264,7 @@ def _statistics(rows: list[dict[str, object]], mode: str, eligible_tiers: set[st
     by_family: dict[str, list[float]] = defaultdict(list)
     for key, value in config_values.items():
         by_family[_processor_family(key[0])].append(value[0])
-    heldout = [math.exp(abs(value - (sum(logs) - value) / (len(logs) - 1))) - 1 for value in logs]
+    heldout = [absolute_error_percent((sum(logs) - value) / (len(logs) - 1) - value) / 100 for value in logs]
     return {
         "factor_old_per_new": math.exp(center),
         "log_factor": center,
@@ -280,7 +281,8 @@ def _statistics(rows: list[dict[str, object]], mode: str, eligible_tiers: set[st
         "cluster_bootstrap_95_low": float(low),
         "cluster_bootstrap_95_high": float(high),
         **INTERVAL_METADATA,
-        "heldout_p95_absolute_pct_error": float(np.quantile(heldout, 0.95, method="linear")),
+        "heldout_p95_absolute_pct_error": quantile(heldout, 0.95),
+        "model_center_p95_percent": 100 * quantile(heldout, 0.95),
         "heldout_median_absolute_pct_error": statistics.median(heldout),
         "loglog_slope_diagnostic": slope,
         "processor_family_factors": {

@@ -93,9 +93,9 @@ bootstrap ranges and source hashes are in the linked factor CSV. A large
 not the performance gain of one machine.
 
 On the CPU92→CPU95 edge, leave one processor configuration out, refit on the
-others, then evaluate `exp(abs(log(actual/predicted))) - 1`. The linearly
-interpolated **p95 error** is 19.3% base / 18.2% peak for hardware-near
-pairings and 19.4% base / 13.1% peak for same-OS pairings. This measures
+others, then evaluate `abs(predicted/actual - 1)`. The linearly
+interpolated **p95 error** is 18.3% base / 17.0% peak for hardware-near
+pairings and 16.9% base / 11.9% peak for same-OS pairings. This measures
 prediction within the selected cohort. The bootstrap 95% ranges in the CSVs
 resample configurations and likewise describe conditional sampling variation;
 **neither is a full-chain 95% error band**. All five edges now export both held-out median and p95 errors using the same
@@ -111,6 +111,11 @@ close.
 
 ## Per-edge confidence intervals
 
+Error policy updated 2026-09-27: primary P95 now uses observed-target relative
+error consistently with classical models. Factors and CI95 did not change. See
+[before/after checks](calibration-cleanup.md). New factor CSVs also expose
+`model_center_p95_percent` in percent; the legacy error field remains a fraction.
+
 Recomputed on 2026-09-26. The [combined machine-readable table](data/spec/fitting/integer-rate-edge-intervals.csv)
 includes both CPU92 anchor scenarios and all four later edges, separately for
 base and peak. Each interval uses **10,000 bootstrap resamples of processor
@@ -125,20 +130,20 @@ matching errors, unseen architectures or arbitrary individual machines.
 
 The table below follows the annual chart's same-OS CPU92 anchor and strict
 later edges. `k` multiplies a newer-suite score into older-suite score units.
-P95 is a held-out multiplicative prediction-error diagnostic, stored as a
+P95 is a held-out relative prediction-error diagnostic, stored as a
 fraction in the CSV and shown here as a percentage.
 
 | Edge | Mode | Configurations | k | 95% CI for k | Held-out p95 error |
 | --- | --- | ---: | ---: | --- | ---: |
-| CPU92 → CPU95 | base | 11 | 95.9 | 89.185–103.23 | 19.4% |
-| CPU92 → CPU95 | peak | 11 | 109.11 | 104.7–114.11 | 13.1% |
-| CPU95 → CPU2000 | base | 13 | 70.751 | 66.344–75.099 | 22.0% |
-| CPU95 → CPU2000 | peak | 13 | 74.599 | 71.106–78.563 | 18.6% |
-| CPU2000 → CPU2006 | base | 25 | 2.0138 | 1.9108–2.1261 | 26.1% |
-| CPU2000 → CPU2006 | peak | 22 | 1.962 | 1.8604–2.0734 | 24.9% |
-| CPU2006 → CPU2017 | base | 150 | 9.5862 | 9.382–9.9087 | 17.9% |
+| CPU92 → CPU95 | base | 11 | 95.9 | 89.185–103.23 | 16.9% |
+| CPU92 → CPU95 | peak | 11 | 109.11 | 104.7–114.11 | 11.9% |
+| CPU95 → CPU2000 | base | 13 | 70.751 | 66.344–75.099 | 20.3% |
+| CPU95 → CPU2000 | peak | 13 | 74.599 | 71.106–78.563 | 16.3% |
+| CPU2000 → CPU2006 | base | 25 | 2.0138 | 1.9108–2.1261 | 23.3% |
+| CPU2000 → CPU2006 | peak | 22 | 1.962 | 1.8604–2.0734 | 19.9% |
+| CPU2006 → CPU2017 | base | 150 | 9.5862 | 9.382–9.9087 | 17.8% |
 | CPU2006 → CPU2017 | peak | 124 | 9.4027 | 9.3152–9.4899 | 13.1% |
-| CPU2017 → CPU2026 | base | 79 | 2.3346 | 2.3072–2.3626 | 9.6% |
+| CPU2017 → CPU2026 | base | 79 | 2.3346 | 2.3072–2.3626 | 8.7% |
 | CPU2017 → CPU2026 | peak | 39 | 2.451 | 2.3995–2.5016 | 12.1% |
 
 These are **separate edge intervals**, not simultaneous 95% coverage for all

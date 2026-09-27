@@ -68,3 +68,11 @@ retain the two-edge bridge and joint-model experiment. Estimate intervals cover
 coefficient uncertainty only; these rows are not historical rate measurements.
 The compact estimate table omits bulk raw provenance, retaining stable source
 record IDs and URLs. See [interpretation and reproduction](../../spec89-rate-bridge.md).
+
+## Sparse per-benchmark network
+
+`network-coefficients.csv`, `network-summary.csv`, `network-frequency-checks.csv`
+and `network-audit.json` preserve the missing-data network experiment. Each
+coefficient applies to its named metric/version/unit. Estimated hardware values
+are not measured rate scores; intervals describe conditional calibration only.
+See [method and validation](../../classic-network-fitting.md).

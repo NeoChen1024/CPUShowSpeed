@@ -1,0 +1,21 @@
+{
+  "reviewed_on": "2026-09-27",
+  "baseline_dated": 1192,
+  "baseline_undated": 519,
+  "dated": 1291,
+  "undated": 420,
+  "cpu_proxies_applied": 99,
+  "numeric_rows_unchanged": 1711,
+  "numeric_fields_checked": [
+    "scores",
+    "vaxen",
+    "ci95_low",
+    "ci95_high",
+    "observation_count"
+  ],
+  "previously_dated_years_unchanged": true,
+  "inputs": {
+    "data/derived/documents/year-cpu/baseline.csv": "745686f85f91fab55edec5aea154c43710633b4caa2fd4c3c7d2e574da7e3196",
+    "research/data/historical/cpu-release-proxies.csv": "c2425a7ecd2149b5e91d17de727e47a79c2b8d26c94c02c2ce6a23c8d5e841bc"
+  }
+}

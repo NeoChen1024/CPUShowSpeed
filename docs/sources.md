@@ -6,6 +6,19 @@ have been imported; the other listed sources remain candidates. Prefer
 original technical documents and preserve
 source-specific conditions before extracting comparable values.
 
+## Hardware chronology sources
+
+Wikipedia and comparable historical reference sites are accepted secondary
+sources for model introduction years (user-selected policy, 2026-09-27).
+They may supply a dated model-era estimate even when an original vendor document
+is unavailable. Record the article URL, section, review date, actual date
+precision and secondary-source status; retain a revision or snapshot when
+available. Follow cited originals where useful, but original-document recovery
+is not a prerequisite for accepting a clearly identified model year. Preserve
+conflicting claims and distinguish a family launch from a later configuration.
+
+## Source inventory
+
 | Source | Intended use | Acquisition caveat |
 | --- | --- | --- |
 | [SPEC CPU95](https://www.spec.org/cpu95/results/) | Published rate results | HTML/text disclosures; inspect compliance and configuration |
