@@ -15,6 +15,7 @@ from cpushowspeed.research_io import code_hashes, read_csv, write_csv
 from cpushowspeed.spec_overlap import _checked_bulk, _frequency, _source_url
 from cpushowspeed.timeline_dates import CPUChronology, candidate, select_date
 from cpushowspeed.timeline_html import render_html
+from cpushowspeed.timeline_lineage import build_lineage
 
 SCHEMA = "vaxen-timeline-v1"
 HISTORICAL = Path("data/derived/classic/historical-timeline")
@@ -212,9 +213,11 @@ def timeline_command(output_dir):
             [{k: json.dumps(v, ensure_ascii=False) if isinstance(v, (dict, list)) else v for k, v in r.items()} for r in rows],
         )
 
-        render_html(rows, output_dir / "vaxen-timeline.html")
+        lineage = build_lineage(output_dir / "vaxen-timeline.html")
+        render_html(rows, output_dir / "vaxen-timeline.html", lineage=lineage)
         audit = dict(
             schema_version=SCHEMA,
+            lineage_inputs_sha256=lineage["input_sha256"],
             records=len(rows),
             historical=len(historical),
             spec_rate=len(modern),

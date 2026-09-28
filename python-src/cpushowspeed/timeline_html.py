@@ -3,6 +3,8 @@
 import json
 from html import escape
 
+from cpushowspeed.timeline_lineage import MARKUP, SCRIPT, STYLE
+
 TITLE = "CPUShowSpeed: 70 years of benchmarks measured in VAXen"
 
 
@@ -21,9 +23,9 @@ def list_browsing(suffix=""):
 </form>"""
 
 
-def render_html(rows, output, title=TITLE):
+def render_html(rows, output, title=TITLE, lineage=None):
     # Keep rich provenance in JSONL/CSV; share repeated strings in the offline display payload.
-    fields = "configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit mix_variant evidence_class source_locator".split()
+    fields = "configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit mix_variant evidence_class source_locator generation reported_score benchmark_id calibration_scenario".split()
     strings, indexes, packed = [], {}, []
     for row in rows:
         values = []
@@ -44,6 +46,14 @@ def render_html(rows, output, title=TITLE):
     output.write_text(
         PAGE.replace("__TITLE__", escape(title))
         .replace("__PAYLOAD__", payload)
+        .replace("__LINEAGE_STYLE__", STYLE)
+        .replace("__LINEAGE_MARKUP__", MARKUP)
+        .replace(
+            "__LINEAGE_SCRIPT__",
+            SCRIPT.replace(
+                "__LINEAGE_DATA__", json.dumps(lineage or {"nodes": [], "edges": []}, ensure_ascii=False).replace("<", "\\u003c")
+            ),
+        )
         .replace("__BROWSING_TOP__", list_browsing())
         .replace("__BROWSING_BOTTOM__", list_browsing("-bottom"))
     )
@@ -65,17 +75,12 @@ table{border-collapse:collapse;width:100%}small,.hint{color:#556}.table-tools{ma
 #tip{position:fixed;z-index:10;width:340px;max-width:calc(100vw - 36px);max-height:calc(100vh - 24px);
  overflow:auto;background:#fff;border:2px solid #207ca3;border-radius:8px;padding:12px;box-shadow:0 4px 24px #2233;
  pointer-events:none;overflow-wrap:anywhere;font-size:14px;box-sizing:border-box}
-#tip.pinned{pointer-events:auto}#tip strong{display:block}#tip p{margin:7px 0}#tip-controls{display:flex;gap:6px;margin-top:10px}
+#tip.pinned{pointer-events:auto}#tip strong{display:block}#tip p{margin:7px 0}#tip-controls{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 #tip:not(.pinned) #tip-controls{display:none}[hidden]{display:none!important}#plot{touch-action:pan-y}
+__LINEAGE_STYLE__
 </style>
 <h1>__TITLE__</h1>
-<p class="hint"><small><strong>What is a VAXen?</strong> 1 VAX is the VAX-11/780 reference throughput under the SPEC CPU92 integer-rate convention;
-“VAXen” is the plural. Its reference rate score is 604800 / 25500 ≈ 23.717647, so
-<strong>VAXen = SPECrate_int92 × 25500 / 604800</strong> (also for SPECrate_base_int92).
-This measures system throughput, not performance per core. SPECint92 speed scores use a different scale.
-Results from other benchmark suites are calibrated estimates of equivalent throughput, not measured SPEC92 submissions.
-SI prefixes are decimal: 1 kVAXen = 1,000 VAXen; 1 MVAXen = 1,000,000 VAXen; 1 mVAX = 0.001 VAX.
-The pale CI95 spans describe calibration uncertainty, not individual-machine prediction intervals.</small></p>
+__LINEAGE_MARKUP__
 <label>Search system, CPU, configuration or benchmark: <input id="q" placeholder="VAX, PDP, LINPACK…"></label>
 <fieldset id="scores"><legend>Scores</legend>
 <label><input type="checkbox" style="width:auto" data-mode="base" checked> SPEC Base</label>
@@ -83,21 +88,19 @@ The pale CI95 spans describe calibration uncertainty, not individual-machine pre
 <label><input type="checkbox" style="width:auto" data-mode="peak_proxy" checked> Historical estimates</label>
 </fieldset>
 <fieldset id="routes"><legend>Benchmark routes</legend></fieldset>
-<p class="hint">Combined mixes uses both available CCTA ratings, or one when only one exists. Individual Gibson/ADP routes are comparison views; enabling them alongside the combined route displays alternative estimates of the same source rows.</p>
-<p>Single-node / reported-system throughput · no per-core division. Disclosed clusters and historical one-processor proxies remain identified in the details.</p>
+<p class="hint">Combined mixes merges available Gibson and ADP estimates. Individual mix views are optional comparisons.</p>
+<p>System throughput · not per-core performance</p>
 <p id="count" aria-live="polite"></p>
-<p>Hardware years are model/CPU-era estimates; unknown years remain in the table. Pale spans show calibration CI95,
-not individual prediction intervals. Historical and instruction-mix routes share calibration evidence and are not independent validation.</p>
-<p class="hint">Hover near a point to inspect it. Click to pin; use Previous / Next for overlapping points. Escape or click outside to dismiss.</p>
+<p>Year: CPU release → system availability → eligible submission date. Undated records remain in the list.</p>
+<p class="hint">Hover to inspect · click to pin · scroll to zoom · drag to pan</p>
 <p><button id="zoom-in">Zoom in</button> <button id="zoom-out">Zoom out</button> <button id="reset">All years</button>
 <button id="early">Early hardware</button> <button id="modern">SPEC era</button> <span id="range-label"></span></p>
-<p class="hint">Wheel to zoom around the pointer; drag to pan. Vertical VAXen scale stays fixed. Unknown years stay in the list.</p>
 <div class="timeline-chart"><div class="chart"><svg id="plot" viewBox="0 0 1400 760" aria-label="Historical VAXen scatterplot"></svg></div>
 <svg id="overview" viewBox="0 0 1400 90" preserveAspectRatio="none" aria-label="Record counts and time-range selection"></svg></div>
-<p class="hint" style="text-align:center">Overview: record counts for the selected routes, mode and search. Drag the handles to resize, the window to pan, or outside it to select a new range. Focus a handle and use arrow keys for one-year steps.</p>
+<p class="hint" style="text-align:center">Records per year. Drag the handles to resize the time window; drag its center to move it. Arrow keys adjust focused handles.</p>
 <div id="tip" role="region" aria-label="Selected data point" hidden><div id="tip-content"></div>
 <div id="tip-controls"><button id="prev" type="button">Previous</button><button id="next" type="button">Next</button>
-<button id="close" type="button">Close</button></div></div>
+<button id="close" type="button">Close</button><button id="trace-path" type="button">View calibration path</button></div></div>
 __BROWSING_TOP__
 <table><thead><tr><th>Year / evidence</th><th>System / configuration</th><th>Route / inputs</th><th>VAXen / CI95</th><th>Sources</th></tr></thead><tbody id="body"></tbody></table>
 __BROWSING_BOTTOM__
@@ -259,5 +262,6 @@ function bindListBrowsing(suffix){
 }
 browsingSuffixes.forEach(bindListBrowsing);
 document.querySelector('#q').addEventListener('input',()=>{page=0;draw();});
+__LINEAGE_SCRIPT__
 draw();
 </script></html>"""

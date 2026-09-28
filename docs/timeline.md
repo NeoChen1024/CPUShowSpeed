@@ -249,3 +249,47 @@ and tooltips (`clock: N MHz`). Missing clock values omit that item entirely;
 no orphan MHz label is emitted. CPU identity remains beside the system name.
 Memory-cycle timing stays a separate source field and is not converted into
 an assumed CPU clock.
+
+## Calibration pathway explorer
+
+The collapsed **How scores become VAXen** section contains an offline SVG graph
+and a details card. Nodes and edges use the model registry; saved rate edge
+intervals, SPEC89 bridge summaries and the two classical/mix coefficient bundles
+supply numerical details. Input hashes are recorded in the timeline audit.
+The layout is fixed and scrolls horizontally on narrow screens; the information
+card moves below the graph. Arrow widths do not represent precision or sample
+size. Nodes/arrows support mouse clicks and Enter/Space activation.
+
+The SPEC rate chain displays the actual selected edge scenarios: `same_os` for
+CPU95→92 and `strict` for newer edges. The second SPEC89 edge already outputs
+VAXen (including rate normalization); no extra normalization is added visually.
+Classical and mix calibration occupy distinct joint-model blocks with shared
+classical inputs; they are not depicted as independent multiplier chains.
+
+Pin a timeline point, then choose **View calibration path**. Its route is
+highlighted, unrelated nodes fade, and the card shows the original input scores,
+saved VAXen/CI95 and calibration qualifications. Clicking a highlighted arrow
+shows its model details; rate rows select that point's base/peak mode. Clicking empty space in the pathway graph clears the trace and resets its
+information card; clicking a node or edge still opens its details. This does
+not change the main timeline filters, zoom or pagination. Unestablished connections remain documented in the
+research report and are not shown in the explorer.
+
+Factor CI95 and held-out error are separately labelled. The legacy rate-edge
+relative-error field is multiplied by 100 for percentage display. Joint-model
+component intervals are not multiplied to reconstruct a record's interval;
+the trace shows the record's existing joint/chain interval. Research links are
+relative local paths; the explorer itself needs no network or external library.
+
+Validation covers complete-page route tracing for CPU2026, SPEC89, classical
+and combined mixes, metadata edge identities, path reset,
+existing timeline controls, and standalone SVG rendering. This is not a claim
+of full browser visual interaction verification.
+
+### Copy and color hierarchy
+
+Use solid backgrounds throughout: white page/cards, a light-gray pathway panel,
+and pale purple/teal model/unit nodes. Avoid gradients. The unit definition and
+calibration-CI explanation live inside **How scores become VAXen**, above the
+graph. The VAXen node holds plural, SI-prefix and speed-versus-rate details.
+The main page keeps short scope, chronology and interaction hints; individual
+record qualifications remain in the tooltip and path details.
