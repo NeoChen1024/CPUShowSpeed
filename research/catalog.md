@@ -36,7 +36,7 @@ Start with the [four-track overview](overview.md).
 | composite | Fixed equal-weight classical pair/triple index | derived-index / dimensionless geometric index | defined |
 | cint2006 | Tomari/Hiraki reported CINT2006 | speed / reported CINT2006 score | recorded |
 | gibson | Gibson instruction mix | historical-lead / source/workload dependent | recorded |
-| adp | ADP instruction mix | historical-lead / source/workload dependent | planned |
+| adp | ADP instruction mix | historical-lead / source/workload dependent | recorded |
 | process-control | Process Control mix | historical-lead / source/workload dependent | planned |
 | coprxx | COPRXX leads | historical-lead / source/workload dependent | planned |
 | coremark | CoreMark | historical-lead / source/workload dependent | planned |
@@ -105,6 +105,10 @@ flowchart TD
     classical_sparse_network["classical-sparse-network"]
     rate92_unit --> classical_sparse_network
     int89_rate_vaxen --> classical_sparse_network
+    instruction_mix_joint_network["instruction-mix-joint-network"]
+    classical_sparse_network --> instruction_mix_joint_network
+    rate92_unit --> instruction_mix_joint_network
+    int89_rate_vaxen --> instruction_mix_joint_network
 ```
 
 | Model / owner | Inputs → target | Relationship; role; status | Dependencies |
@@ -137,6 +141,7 @@ flowchart TD
 | [tomari-dhry-cint](../research/classic-source-pair-fitting.md) | dhry-21 → cint2006 | diagnostic; diagnostic; implemented-conditional | none |
 | [timing-reconstruction](../docs/methods.md) | gibson, adp, process-control, trace-timing → vaxen | planned; planned; planned | none |
 | [classical-sparse-network](../research/classic-network-fitting.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; primary; implemented-conditional | rate92-unit, int89-rate-vaxen |
+| [instruction-mix-joint-network](../research/instruction-mix-bridge.md) | gibson, adp, dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; diagnostic; implemented-conditional | classical-sparse-network, rate92-unit, int89-rate-vaxen |
 
 ## Datasets
 
@@ -158,6 +163,7 @@ flowchart TD
 | maintenance-inventory | [guide](../research/cleanup-inventory.md) | `research/data/maintenance` | required in checkout |
 | historical-timeline-years | [guide](../research/historical-vaxen-timeline.md) | `research/data/historical/timeline-year-overrides.csv` | required in checkout |
 | hardware-date-events | [guide](../research/hardware-year-evidence.md) | `research/data/historical/hardware-date-evidence.csv` | required in checkout |
+| instruction-mix-study | [guide](../research/instruction-mix-bridge.md) | `research/data/classic/mix-study` | required in checkout |
 
 ## Document inventory
 
@@ -230,3 +236,6 @@ analysis from evidence, diagnostics and retired work.
 | [Predict SPEC92 integer rate from classical scores](../docs/classical-prediction.md) | guide | current |
 | [Classical and SPEC89 historical VAXen timeline](../research/historical-vaxen-timeline.md) | primary | current |
 | [Hardware-year evidence: bitsavers discovery and first review](../research/hardware-year-evidence.md) | evidence | current |
+| [Shared VAXen timeline](../docs/timeline.md) | guide | current |
+| [Unified historical and SPEC rate timeline](../research/unified-vaxen-timeline.md) | primary | current |
+| [Gibson and ADP evidence and calibration experiments](../research/instruction-mix-bridge.md) | primary | current |

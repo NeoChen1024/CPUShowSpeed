@@ -1,7 +1,7 @@
 # Scope and metrics
 
-The active research target is **throughput of a documented machine
-configuration**. A result belongs to the tested processors, memory, operating
+The active research target is **single-node / documented-system throughput**,
+not single-core performance. A result belongs to the tested processors, memory, operating
 system, compiler and benchmark run settings. The principal evidence is a
 published integer-rate measurement, with its concurrent copy counts when the
 disclosure provides them. Reported scores and cross-generation estimates must
@@ -24,7 +24,12 @@ cores, threads or measured runtime workers. Keep base and peak results
 separate. A system's introduction, test and publication dates are different
 events; the [data contract](data-contract.md) defines how to preserve them.
 
-A first [annual integer-rate view](../research/annual-rate-vaxen.md) now groups
+The [shared timeline](timeline.md) is the current interactive view, combining
+historical proxies and SPEC92–2026 rate records with CPU-first dating. It keeps
+source scope and node-count uncertainty visible; reported cluster results are
+not silently certified as single-node measurements.
+
+The earlier [annual integer-rate view](../research/annual-rate-vaxen.md) now groups
 all positive dated submissions by their **reported configuration hardware
 availability** and shows the highest score per year plus the submission
 distribution. Its frontier is exploratory and not a model-launch history.

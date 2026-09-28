@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-import html
 import json
 import textwrap
 from collections import defaultdict
@@ -153,43 +152,6 @@ def _plot(rows: list[dict], leaders: list[dict], stats: list[dict], mode: str, o
     return paths
 
 
-def _html(leaders: list[dict], stats: list[dict], mode: str, output_dir: Path) -> str:
-    rows = []
-    summaries = {int(row["year"]): row for row in stats if row["mode"] == mode}
-    for leader in [row for row in leaders if row["mode"] == mode]:
-        stat = summaries[int(leader["year"])]
-        cells = [
-            leader["year"],
-            leader["system"],
-            leader["processor"],
-            leader["year_submission_count"],
-            _si(float(leader["vaxen"])),
-            f"{_si(stat['fixed_leader_low'])}–{_si(stat['fixed_leader_high'])}",
-            f"{100 * stat['leader_top_fraction']:.1f}%",
-            f"{_si(stat['frontier_low'])}–{_si(stat['frontier_high'])}",
-        ]
-        markup = "".join(f"<td>{html.escape(str(value))}</td>" for value in cells)
-        rows.append(f'<tr>{markup}<td><a href="{html.escape(str(leader["source_url"]), quote=True)}">Source</a></td></tr>')
-    path = output_dir / f"annual-rate-combined-{mode}.html"
-    path.write_text(
-        f"""<!doctype html><html lang="en"><meta charset="utf-8">
-<title>Annual SPEC rate with confidence intervals — {mode}</title>
-<style>body{{font:14px system-ui;margin:2rem; color:#20303b}}img{{width:100%;height:auto}}table{{border-collapse:collapse;width:100%}}
-th,td{{padding:.5rem;border-bottom:1px solid #dce4e8;text-align:left}}th{{background:#eaf2f5;position:sticky;top:0}}a{{color:#17628a}}</style>
-<h1>Annual SPEC integer rate with calibration uncertainty — {mode}</h1>
-<p>All positive dated submissions, grouped by reported hardware availability. Pale blue is the envelope
-from Q1's lower CI to Q3's upper CI; blue strokes show separate quartile CIs. Orange shows the fixed
-representative's interval. Intervals use 10,000 coherent chain draws and describe conditional calibration
-sampling variation, not machine-to-machine prediction error or simultaneous coverage over years.</p>
-<img src="annual-rate-combined-{mode}.svg" alt="Combined annual rate distribution and leader chart">
-<p>Top retention counts a tie as remaining at the top. The frontier interval allows the winner to change.</p>
-<table><thead><tr><th>Year</th><th>System</th><th>CPU</th><th>n</th><th>VAXen</th><th>Fixed leader 95% CI</th>
-<th>Top retention</th><th>Annual frontier 95% CI</th><th>Source</th></tr></thead><tbody>{''.join(rows)}</tbody></table></html>""",
-        encoding="utf-8",
-    )
-    return str(path)
-
-
 def analyze(raw_dir: Path, records_path: Path, research_dir: Path, fit_dir: Path, output_dir: Path, summary_dir: Path) -> dict:
     records, provenance = collect_annual_records(raw_dir, records_path, research_dir, fit_dir)
     leaders, _ = _annual(records, "same_os")
@@ -249,7 +211,6 @@ def analyze(raw_dir: Path, records_path: Path, research_dir: Path, fit_dir: Path
     figures = {}
     for mode in modes:
         figures[mode] = _plot(records, leaders, summaries, mode, output_dir)
-        figures[mode]["html"] = _html(leaders, summaries, mode, output_dir)
     result = {
         "method_version": METHOD_VERSION,
         "confidence_csv": str(csv_path),

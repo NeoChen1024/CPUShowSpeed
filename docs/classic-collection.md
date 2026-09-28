@@ -283,3 +283,41 @@ the production SPEC rate converter.
 
 `classic predict-rate` consumes the saved network calibration and accepts any
 nonempty score subset. See [input units, examples and CI95 semantics](classical-prediction.md).
+
+## Instruction-mix preparation
+
+`uv run cpushowspeed classic mix-inventory` inventories the cached CCTA/TSU
+Gibson and ADP tables and discovers candidate overlaps with the current
+historical classical configuration export. It independently checks the cached
+HTML rows, records missing scores, validates operation weights, and preserves
+source/configuration/metric identities. Default outputs live in
+`data/derived/classic/mix-study/`; `--output-dir` selects another directory.
+No candidate is approved or fitted automatically. The
+[research report](../research/instruction-mix-bridge.md) owns the checked counts,
+configuration risks and next experiment design.
+
+`uv run cpushowspeed classic mix-evidence` screens the eight instruction-mix
+OCR selections for benchmark terms, including canonical table-cell text. It
+writes unverified page excerpts and a manifest with input hashes, page counts
+and missing-document flags under `data/derived/documents/mix-evidence/`.
+It only reads published DocIR; it does not publish incomplete staged documents
+or turn keyword hits into calibrated scores. Original-page review and curated
+SC-3/DINKIAC CSVs are described in the same research report.
+
+`uv run cpushowspeed classic mix-bridge` fits the existing unapproved mix/classical
+candidate cohorts with the shared geometric-ratio policy and audits direct
+SPEC89/SPEC92 name overlap. SPEC92 screening includes cached Netlib speed
+summaries, curated source vectors and the rate archive. It preserves metric
+identities and reports missing cells separately. Outputs include source-score
+inventories, coverage, conditional fit summaries and PNG/SVG scatterplots under
+`data/derived/classic/mix-bridge/`. No production VAXen coefficient is updated.
+
+`uv run cpushowspeed classic mix-network-fit` extends the existing sparse
+classical calibration with candidate CCTA Gibson/ADP observations, sharing one
+InstructionMix family weight. It joins original observation identities, closes
+holdout groups over reused mix rows and runs reported/linear-clock and
+rate-only/SPEC89-enabled scenarios. Outputs under
+`data/derived/classic/mix-network-fit/` include coefficients, joint bootstrap
+draws, full attachment audit, whole-model proxy holdouts, measured-anchor
+comparisons, and conditional per-mix VAXen estimates. It does not overwrite
+`classic network-fit` or the production prediction bundle.

@@ -1,0 +1,9 @@
+scenario,cohort,metric,models,nodes,statistics_policy,model_center_p95_percent,model_balanced_observation_p95_percent,within_model_p95_max_percent
+reported_clock,rate_only,InstructionMix:Gibson_KIPS,16,18,model-balanced-relative-error-v2,221.94341493834443,349.16255929922715,349.16255929922715
+reported_clock,rate_only,InstructionMix:ADP_KIPS,14,15,model-balanced-relative-error-v2,497.4648806132699,658.561452972991,658.561452972991
+reported_clock,with_spec89,InstructionMix:Gibson_KIPS,16,18,model-balanced-relative-error-v2,217.6435843316147,343.15369727990645,343.15369727990645
+reported_clock,with_spec89,InstructionMix:ADP_KIPS,14,15,model-balanced-relative-error-v2,493.9659235062025,652.1489603159235,652.1489603159235
+linear_clock,rate_only,InstructionMix:Gibson_KIPS,16,18,model-balanced-relative-error-v2,221.10157433345228,347.9874895709067,347.9874895709067
+linear_clock,rate_only,InstructionMix:ADP_KIPS,14,15,model-balanced-relative-error-v2,496.80221340366165,657.3871395783893,657.3871395783893
+linear_clock,with_spec89,InstructionMix:Gibson_KIPS,16,18,model-balanced-relative-error-v2,217.18481208541374,342.5133128155294,342.5133128155294
+linear_clock,with_spec89,InstructionMix:ADP_KIPS,14,15,model-balanced-relative-error-v2,493.5810673337985,651.4285299986318,651.4285299986318

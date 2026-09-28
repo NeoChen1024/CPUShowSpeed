@@ -1,0 +1,20 @@
+mix,operation,weight,source_url,source_locator,variant
+Gibson Mix,Fixed Point Add/Subtract,0.33,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Fixed Point Multiply,0.006,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Fixed Point Divide,0.002,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Branch,0.065,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Compare,0.04,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Transfer 8 characters,0.175,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Shift,0.046,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Logical,0.017,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Modification,0.19,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Floating Point Add,0.073,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Floating Point Multiply,0.04,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+Gibson Mix,Floating Point Divide,0.016,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 1,CCTA/TSU variation reproduced by Longbottom
+ADP Mix,Fixed Point Add/Subtract,0.31,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 2,CCTA/TSU variation reproduced by Longbottom
+ADP Mix,Fixed Point Multiply,0.013,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 2,CCTA/TSU variation reproduced by Longbottom
+ADP Mix,Fixed Point Divide,0.006,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 2,CCTA/TSU variation reproduced by Longbottom
+ADP Mix,Branch,0.35,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 2,CCTA/TSU variation reproduced by Longbottom
+ADP Mix,Compare,0.062,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 2,CCTA/TSU variation reproduced by Longbottom
+ADP Mix,Transfer 8 characters,0.205,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 2,CCTA/TSU variation reproduced by Longbottom
+ADP Mix,Logical,0.054,http://www.roylongbottom.org.uk/cpumix.htm,Operation-weight table 2,CCTA/TSU variation reproduced by Longbottom

@@ -6,6 +6,27 @@ CI95. It reads an existing calibration bundle; prediction performs no fitting
 or network access. The [network experiment](../research/classic-network-fitting.md)
 owns coefficient estimation and empirical limitations.
 
+## Common prediction entry point
+
+`cpushowspeed predict classical` exposes the same classical prediction command.
+`cpushowspeed predict spec-rate GENERATION MODE SCORE` exposes the existing SPEC
+integer-rate converter, supporting 92, 95, 2000, 2006, 2017 and 2026, with
+`base` or `peak` and `--format json|text`. Both paths read saved calibration and
+return VAXen plus conditional CI95. For example:
+
+```sh
+uv run cpushowspeed predict spec-rate 2017 base 11800 --format text
+uv run cpushowspeed predict classical --dhrystone-1-1 10 --format text
+```
+
+The original `convert-rate` and `classic predict-rate` commands remain aliases
+of the same implementations. SPEC speed, FP and SPEC89 scores are not rate
+inputs. SPEC2026 retains the sparse-calibration limitations described in the
+rate-chain research. The classical path targets peak rate; the SPEC path retains
+the supplied base/peak mode. Their JSON output schemas and calibration-scenario
+options remain route-specific. These commands do not combine SPEC and classical
+measurements into an additional joint prediction.
+
 ## Inputs
 
 | Option | Metric | Unit |

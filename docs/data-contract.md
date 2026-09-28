@@ -1,7 +1,7 @@
 # Data contract
 
-This document defines interpretation requirements. The physical storage schema
-and serialization format are not yet selected.
+This document defines interpretation requirements. Specific implemented formats are owned by the historical-observation contract
+and the [shared timeline schema](timeline.md#shared-record-contract).
 
 Source-checked values and other observations recovered from historical documents
 should be stored in a form scripts can read and process. Select the concrete
@@ -45,16 +45,20 @@ including inventory and retrieval dates. If a source gives only a year or month,
 retain that original precision and leave the full date unknown; do not invent a
 day or month to satisfy the format.
 
-Never substitute one date for another. A historical plot must state which date
-is on its horizontal axis. For the main hardware-era view, prefer the reported
-availability of the *tested hardware configuration* when a SPEC disclosure
-provides it. SPEC defines this as the date when the last required hardware
-component became generally available, which can be later than the launch of
-the named machine or CPU. For earlier machines without a comparable configuration-availability field,
-use a source-checked model introduction or availability date as a separately
-labeled event. Do not silently pool those date definitions. Keep
-publication/test-year views available as diagnostics. A manual reconstruction
-of an older machine is not a measurement made in its introduction year.
+Never silently substitute one event definition for another. The current shared
+chronological view selects **CPU release → hardware availability/introduction →
+era-compatible submission-era → unknown**, while preserving each candidate and its provenance.
+SPEC result-publication date is an explicitly labelled submission-era proxy,
+not a known submission receipt date. Reject its use for chronology when
+source evidence places the hardware in a substantially different era; retain
+the benchmark record and the exclusion reason. Test, document and retrieval dates remain
+separate. Earlier annual reports grouped by hardware availability; those are
+snapshots of the earlier policy, not retroactively CPU-year statistics.
+
+Hardware availability in SPEC means when the last required hardware component
+became available; it can be later than the CPU or system model introduction.
+See the [shared timeline contract](timeline.md#cpu-first-date-selection) for
+matching, uncertainty and fallback details.
 
 [SPEC's hardware-availability field definition](https://www.spec.org/cpu2026/Docs/result-fields.html)
 and [run rule](https://www.spec.org/cpu2026/docs/runrules.html#section4.2.3)

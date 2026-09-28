@@ -1,0 +1,4 @@
+sds/sigma/Sigma_6_9_Sales_Guide_Feb72.pdf
+nbs/monograph/113_Research_and_Development_in_the_Computer_and_Information_Sciences_197003/NBS_Monograph_113-Volume_2.pdf
+hp/Interex/1985_Interex_Baltimore_HP1000_9000_Vol1.pdf
+afips/1971-05_#38.pdf

@@ -15,10 +15,9 @@ and [peak distribution](../data/derived/figures/annual-rate/annual-rate-distribu
 show one box per year with the year's highest submission overlaid. The
 [base representatives](../data/derived/figures/annual-rate/annual-rate-leaders-base.png)
 and [peak representatives](../data/derived/figures/annual-rate/annual-rate-leaders-peak.png)
-show the system and CPU separately. Zoomable SVG files and full-name,
-source-linked [base HTML](../data/derived/figures/annual-rate/annual-rate-leaders-base.html)
-and [peak HTML](../data/derived/figures/annual-rate/annual-rate-leaders-peak.html)
-are beside the PNGs.
+show the system and CPU separately. Zoomable SVG files are beside the PNGs.
+Interactive exploration uses the [unified timeline](../docs/timeline.md);
+annual-rate commands no longer generate HTML reports.
 
 ## Combined distribution, hardware and confidence figures
 
@@ -26,9 +25,7 @@ Run the chain bootstrap first, then `./.venv/bin/cpushowspeed plot annual-rate-c
 The [combined base figure](../data/derived/figures/annual-rate/annual-rate-combined-base.png)
 and [combined peak figure](../data/derived/figures/annual-rate/annual-rate-combined-peak.png)
 place each year's representative System/CPU, submission count and horizontal
-boxplot on the same row. Their [base HTML](../data/derived/figures/annual-rate/annual-rate-combined-base.html)
-and [peak HTML](../data/derived/figures/annual-rate/annual-rate-combined-peak.html)
-include SVG and complete names, clickable sources and interval tables.
+boxplot on the same row. Full names and source links remain in the CSV exports.
 The [annual confidence CSV](data/spec/annual-rate-confidence.csv) records all
 72 year/mode results at full precision, including quartile, fixed-leader and
 annual-frontier intervals and the original central values.

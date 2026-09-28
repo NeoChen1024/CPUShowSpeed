@@ -13,6 +13,7 @@ from cpushowspeed.classic_composite_fit import composite_fit
 from cpushowspeed.classic_diagnostics import source_diagnostics
 from cpushowspeed.classic_environment import environment_fit
 from cpushowspeed.classic_fit import fit_spec92
+from cpushowspeed.classic_mix import mix_inventory
 from cpushowspeed.classic_network import network_fit
 from cpushowspeed.classic_overlap import overlap_spec
 from cpushowspeed.classic_pair_fit import pair_fit
@@ -25,6 +26,9 @@ from cpushowspeed.classic_source_fit import source_pair_fit
 from cpushowspeed.classic_timeline import historical_timeline
 from cpushowspeed.documents import documents
 from cpushowspeed.historical_candidates import year_candidates, year_evidence
+from cpushowspeed.mix_bridge import mix_bridge
+from cpushowspeed.mix_evidence import mix_evidence
+from cpushowspeed.mix_network import mix_network_fit
 from cpushowspeed.ocr import ocr_command
 from cpushowspeed.rate_convert import convert_rate_command
 from cpushowspeed.research_registry import research
@@ -32,12 +36,23 @@ from cpushowspeed.spec import spec
 from cpushowspeed.spec89 import spec89
 from cpushowspeed.spec92_rate import legacy92_rate_parse_command
 from cpushowspeed.table_migrate import migrate_tables_command, render_tables_command
+from cpushowspeed.unified_timeline import timeline_command
 
 
 @click.group()
 @click.version_option(package_name="cpushowspeed")
 def cli() -> None:
     """Collect and analyze historical CPU performance evidence."""
+
+
+@click.group("predict")
+def predict():
+    """Estimate VAXen from SPEC integer rate or classical benchmark scores."""
+
+
+predict.add_command(convert_rate_command, name="spec-rate")
+predict.add_command(predict_rate, name="classical")
+cli.add_command(predict)
 
 
 spec.add_command(legacy92_rate_parse_command)
@@ -47,6 +62,7 @@ cli.add_command(convert_rate_command)
 cli.add_command(spec89)
 cli.add_command(bridge)
 plot.add_command(annual_rate_ci_command)
+plot.add_command(timeline_command)
 cli.add_command(plot)
 documents.add_command(ocr_command)
 documents.add_command(year_candidates)
@@ -57,6 +73,7 @@ documents.add_command(migrate_tables_command)
 documents.add_command(render_tables_command)
 cli.add_command(documents)
 classic.add_command(overlap_spec)
+classic.add_command(mix_inventory)
 classic.add_command(fit_spec92)
 classic.add_command(composite_overlap)
 classic.add_command(composite_fit)
@@ -73,4 +90,7 @@ classic.add_command(spec89_rate_fit)
 classic.add_command(network_fit)
 classic.add_command(predict_rate)
 classic.add_command(historical_timeline)
+classic.add_command(mix_evidence)
+classic.add_command(mix_bridge)
+classic.add_command(mix_network_fit)
 cli.add_command(classic)

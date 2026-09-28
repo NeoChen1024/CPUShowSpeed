@@ -1,0 +1,14 @@
+{
+  "reviewed_on": "2026-09-28",
+  "sc3_records": 12,
+  "gibson_upgrade_ratio": 1.3228200371057515,
+  "dhrystone_cache_ratio_2_wait": 1.6965658636596617,
+  "dhrystone_cache_ratio_5_wait": 2.5913936044216346,
+  "dinkiac_weight_sum_percent": 100.0,
+  "dinkiac_weighted_revolutions": 8.6245,
+  "dinkiac_reported_rounded_revolutions": 8.6,
+  "dinkiac_reported_simulations": 31,
+  "dinkiac_nonempty_cells": 31,
+  "notes": "Derived arithmetic checks, not fitted coefficients or additional independent measurements.",
+  "sc3_score_cells_matching_docir_and_visual_transcription": 12
+}

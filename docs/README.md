@@ -21,6 +21,7 @@ introduces the unit, zero-intercept fitting assumption and local setup.
 | Document | Primary responsibility |
 | --- | --- |
 | [SPEC collection](spec-collection.md) | Integer-rate scraping, fitting and conversion commands |
+| [Shared VAXen timeline](timeline.md) | Common record schema, CPU-first chronology, combined interactive view |
 | [Classical prediction](classical-prediction.md) | Arbitrary score subsets to estimated SPEC92 rate/VAXen and calibration CI95 |
 | [Classic collection](classic-collection.md) | Classical source extraction and experimental fitting commands |
 | [Document extraction](document-extraction.md) | PDF inventory, processing workflow and evidence policy |

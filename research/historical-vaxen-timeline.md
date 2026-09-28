@@ -16,8 +16,6 @@ The output directory defaults to `data/derived/classic/historical-timeline/`.
 
 - `historical-vaxen.png` / `.svg`: large logarithmic timeline, with unresolved
   years retained in a separate panel on the same vertical scale.
-- `historical-vaxen.html`: offline searchable plot and table; hover identifies
-  source configuration, input scores, dating method and calibration CI95.
 - `configurations.csv`: one aggregated classical source/configuration or one
   SPEC89 source submission per row; estimated values and dating fields.
 - `observations.csv`: all contributing score observations, source IDs, locators
@@ -26,6 +24,9 @@ The output directory defaults to `data/derived/classic/historical-timeline/`.
   source URL, locator, interpretation and priority.
 - `undated.csv`: explicit year-review queue; these results remain in the output.
 - `audit.json`: counts, exclusions, complete input hashes and local code hashes.
+
+Interactive exploration now uses only the [unified timeline](../docs/timeline.md),
+generated with `cpushowspeed plot timeline`.
 
 Large outputs remain ignored. The small, reviewed dating rules are versioned in
 [data/historical/timeline-year-overrides.csv](data/historical/timeline-year-overrides.csv).
@@ -71,30 +72,13 @@ All current plotted dates are **estimates/proxies for the measured configuration
 Even a documented model introduction does not establish when a later clock,
 FPU option, memory configuration or software combination became available.
 
-1. Explicit reviewed overrides resolve identified conflicts. Optional family
-   fallbacks apply only when a model match supplies no year.
-2. Selected [reviewed hardware date events](hardware-year-evidence.md) take
-   priority over bulk catalogs. Existing curated SPEC89 model dates take priority over bulk approximate years.
-3. Longbottom's Whetstone table explicitly defines `Intr Date` as approximate
-   first delivery. The source mix tables also contribute model-year evidence,
-   but their KIPS scores are not converted by this tool. SPEC92/SPEC95 hardware
-   availability fields provide dates for configurations of the matched model.
-4. Longbottom's MIPS catalog `Year` is a catalog-year proxy, not verified first
-   shipment. It is used only below the preceding evidence priorities.
-5. Model matching normalizes existing aliases, the `DEC Alpha` prefix, parenthetic
-   configuration text and clock-corroborated suffixes. A match identifies a model
-   era, not full configuration equivalence. Prefer same-clock date evidence when
-   available at the selected priority.
-6. For conflicting years at the same priority, plot the integer-truncated median
-   of distinct years and retain the full min/max evidence span. This span is not
-   a confidence interval or a guaranteed bound on the actual configuration date.
-7. For still-unknown configurations, reviewed CPU-release mappings can provide
-   a CPU-era proxy. These are keyed by configuration ID and checked against the
-   original system name, CPU field and clock, so differently equipped machines
-   sharing a name cannot inherit one another's dates. Existing model dates and
-   explicit unresolved conflicts take precedence.
-8. Publication/retrieval dates are never substituted for introduction. With no
-   defensible year evidence or family proxy, the year remains unknown.
+The current precedence is **CPU release → hardware model/configuration →
+submission-era → unknown**, as defined by the [shared timeline contract](../docs/timeline.md).
+The historical generator uses the shared CPU/hardware selector; the combined
+adapter can additionally use explicit result-publication metadata. All candidate
+dates remain recorded. Earlier CPU-fallback audits below are snapshots of the
+preceding rule, not the current priority. Conflict/model overrides remain part
+of the hardware candidate calculation, and do not override a reviewed CPU date.
 
 Source corrections include Argus 700G's impossible 1963 entry: the Argus 700
 family launch is reported in *Computer Weekly*, 1973-06-14, p.12, via
@@ -145,3 +129,28 @@ adds 99 further rows. Its method is `reviewed_cpu_release_year_proxy`, explicitl
 distinct from a system launch. CPU events also appear in `date-evidence.csv` with
 a configuration ID and `fallback_only` priority. Equal low/high years indicate
 one adopted CPU-year estimate, not certainty about the complete configuration.
+
+## Offline HTML interaction
+
+The list can sort by year in either direction (unknown years always last), by
+numeric VAXen in either direction, or by system name. Search retains the selected
+sort; sorting does not change plot coordinates or observations.
+
+Hover selects the nearest point center within 12 CSS screen pixels, independently
+of SVG scaling and the logarithmic value axis. Its marker is enlarged, brought
+above the other points, and ringed; the corresponding uncertainty spans darken.
+Spans themselves do not attract selection. Leaving the radius clears the hover.
+Click pins the selection. Candidates within 6 screen pixels of the nearest center
+and within the 12-pixel cursor radius are available through Previous/Next controls,
+including coincident observations. Escape, Close, or an outside click dismisses;
+search resets selection. Tooltip placement is clamped to the viewport.
+
+The page remains self-contained with no remote JavaScript dependency. HTML
+rendering is owned by the shared `timeline_html.py`. Offline JavaScript tests check
+sorting, search, snapping at two SVG scales, overlap cycling, highlighting and
+pin/dismissal state. Direct browser verification was blocked by the browser
+local-file URL policy on 2026-09-27; actual visual interaction was not verified.
+
+For the shared record schema, mode filters, pagination and time navigation, see
+[Shared VAXen timeline](../docs/timeline.md). `plot timeline` also updates this
+page's historical HTML entry point from the common records.

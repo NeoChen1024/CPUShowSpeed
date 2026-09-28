@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import csv
 import hashlib
-import html
 import json
 import math
 import re
@@ -401,40 +400,6 @@ def _distribution_plot(
     return paths
 
 
-def _html(leaders: list[dict[str, object]], mode: str, output_dir: Path) -> str:
-    cohort = sorted((row for row in leaders if row["mode"] == mode), key=lambda row: int(row["year"]))
-    rows = []
-    for row in cohort:
-        url = html.escape(str(row["source_url"]), quote=True)
-        cells = [
-            row["year"],
-            row["system"],
-            row["processor"],
-            _si(float(row["vaxen"])),
-            f"{row['benchmark_id']} {row['reported_score']}",
-            row["hardware_availability_month"],
-            row["year_submission_count"],
-        ]
-        cells_html = "".join(f"<td>{html.escape(str(value))}</td>" for value in cells)
-        rows.append(f'<tr>{cells_html}<td><a href="{url}">SPEC result</a></td></tr>')
-    body = "\n".join(rows)
-    document = f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>Annual SPEC rate {mode} representatives</title>
-<style>body{{font:14px system-ui,sans-serif;max-width:1500px;margin:2rem auto;padding:0 1rem;color:#17232c}}
-img{{max-width:100%;height:auto}}table{{border-collapse:collapse;width:100%}}th,td{{border-bottom:1px solid #dce4e8;padding:.5rem;text-align:left;vertical-align:top}}
-th{{position:sticky;top:0;background:#eaf2f5}}tr:nth-child(even){{background:#f8fafb}}a{{color:#145a82}}</style></head>
-<body><h1>Annual representative SPEC integer-rate systems — {mode}</h1>
-<p>One highest positive rate submission per reported hardware-availability year. VAXen use the exploratory
-same-OS CPU92 anchor. Repeated submissions remain in the yearly distribution; ties select the lowest source URL.
-These are hardware-date groups of published submissions, not historical measurements made in that year.</p>
-<img src="annual-rate-leaders-{mode}.svg" alt="Annual {mode} rate leader chart">
-<table><thead><tr><th>Year</th><th>Suite</th><th>System</th><th>CPU</th><th>VAXen</th><th>Reported result</th>
-<th>HW available</th><th>Submissions</th><th>Source</th></tr></thead><tbody>{body}</tbody></table></body></html>"""
-    path = output_dir / f"annual-rate-leaders-{mode}.html"
-    path.write_text(document, encoding="utf-8")
-    return str(path)
-
-
 def _write_csv(path: Path, fields: tuple[str, ...], rows: list[dict[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as stream:
@@ -460,7 +425,6 @@ def analyze_annual_rate(
         figures[mode] = {
             "leaders": _leader_plot(leaders, mode, output_dir),
             "distribution": _distribution_plot(records, leaders, mode, output_dir),
-            "html": _html(leaders, mode, output_dir),
         }
     summary = {
         "method_version": METHOD_VERSION,

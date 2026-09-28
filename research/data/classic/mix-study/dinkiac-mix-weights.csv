@@ -1,0 +1,8 @@
+operation,time_revolutions,weight_percent,notes,pdf_page,printed_page,figure,source_id,source_url,source_sha256,reviewed_on,evidence_class,fit_eligible
+Load/store; add/subtract; logical,1.5,38.9,,14,6,2,conn-dinkiac-1971,https://www.bitsavers.org/pdf/afips/1971-05_%2338.pdf,264c9b6e064ab804b2ede5e1846d2340ba3ca1a2de8705e2dfb43186f116bc55,2026-09-28,simulation_model,false
+Multiply/divide,50,0.8,10-word subroutine,14,6,2,conn-dinkiac-1971,https://www.bitsavers.org/pdf/afips/1971-05_%2338.pdf,264c9b6e064ab804b2ede5e1846d2340ba3ca1a2de8705e2dfb43186f116bc55,2026-09-28,simulation_model,false
+Floating multiply/divide,100,5.3,single precision; 20-word subroutine,14,6,2,conn-dinkiac-1971,https://www.bitsavers.org/pdf/afips/1971-05_%2338.pdf,264c9b6e064ab804b2ede5e1846d2340ba3ca1a2de8705e2dfb43186f116bc55,2026-09-28,simulation_model,false
+Floating add/subtract,25,6.9,single precision; 10-word subroutine,14,6,2,conn-dinkiac-1971,https://www.bitsavers.org/pdf/afips/1971-05_%2338.pdf,264c9b6e064ab804b2ede5e1846d2340ba3ca1a2de8705e2dfb43186f116bc55,2026-09-28,simulation_model,false
+Shifts/register,1,9.7,,14,6,2,conn-dinkiac-1971,https://www.bitsavers.org/pdf/afips/1971-05_%2338.pdf,264c9b6e064ab804b2ede5e1846d2340ba3ca1a2de8705e2dfb43186f116bc55,2026-09-28,simulation_model,false
+Test/jump,0.5,16.6,,14,6,2,conn-dinkiac-1971,https://www.bitsavers.org/pdf/afips/1971-05_%2338.pdf,264c9b6e064ab804b2ede5e1846d2340ba3ca1a2de8705e2dfb43186f116bc55,2026-09-28,simulation_model,false
+Index; search/compare,2,21.8,,14,6,2,conn-dinkiac-1971,https://www.bitsavers.org/pdf/afips/1971-05_%2338.pdf,264c9b6e064ab804b2ede5e1846d2340ba3ca1a2de8705e2dfb43186f116bc55,2026-09-28,simulation_model,false

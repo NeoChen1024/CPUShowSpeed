@@ -82,7 +82,7 @@ material. They do not enter these rate commands.
 
 This uses the current hash-checked CPU92 records, official bulk exports, and
 tracked rate factors. It writes complete per-submission and undated CSVs plus
-PNG/SVG/HTML figures to `data/derived/figures/annual-rate/`; the compact
+PNG/SVG figures to `data/derived/figures/annual-rate/`; the compact
 [annual leaders](../research/data/spec/annual-rate-leaders.csv) and
 [statistics](../research/data/spec/annual-rate-statistics.csv) are tracked as
 research results. All positive scores with a parseable reported hardware month
@@ -111,8 +111,8 @@ and uncertainty scope before using the draws in yearly plots.
 
 The second command checks bootstrap-array and input hashes, then uses complete
 replicate vectors to recompute yearly quartiles, fixed representative scores
-and the annual frontier. It produces combined hardware/boxplot PNG, SVG and
-HTML under `data/derived/figures/annual-rate/`, and the compact
+and the annual frontier. It produces combined hardware/boxplot PNG and SVG
+under `data/derived/figures/annual-rate/`, and the compact
 [confidence table](../research/data/spec/annual-rate-confidence.csv).
 See the [annual figure note](../research/annual-rate-vaxen.md) for the meaning
 of the pale envelopes and top-retention statistic.

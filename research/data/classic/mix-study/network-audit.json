@@ -1,0 +1,116 @@
+{
+  "method": "instruction-mix-joint-network-v1",
+  "reviewed_on": "2026-09-28",
+  "draws": 10000,
+  "seed": 20260928,
+  "runs": [
+    {
+      "scenario": "reported_clock",
+      "cohort": "rate_only",
+      "metrics": [
+        "Dhrystone:v1.1_DMIPS",
+        "Dhrystone:v2.1_DMIPS",
+        "InstructionMix:ADP_KIPS",
+        "InstructionMix:Gibson_KIPS",
+        "LINPACK:n100_MFLOPS",
+        "Whetstone:MWIPS",
+        "Whetstone:MWIPS_DP",
+        "Whetstone:MWIPS_SP"
+      ],
+      "valid_draws": 10000,
+      "informative_models": 460,
+      "mix_nodes": 18,
+      "mix_model_groups": 16,
+      "mix_nodes_with_observed_target": 0
+    },
+    {
+      "scenario": "reported_clock",
+      "cohort": "with_spec89",
+      "metrics": [
+        "Dhrystone:v1.1_DMIPS",
+        "Dhrystone:v2.1_DMIPS",
+        "InstructionMix:ADP_KIPS",
+        "InstructionMix:Gibson_KIPS",
+        "LINPACK:n100_MFLOPS",
+        "Whetstone:MWIPS",
+        "Whetstone:MWIPS_DP",
+        "Whetstone:MWIPS_SP"
+      ],
+      "valid_draws": 10000,
+      "informative_models": 470,
+      "mix_nodes": 18,
+      "mix_model_groups": 16,
+      "mix_nodes_with_observed_target": 0
+    },
+    {
+      "scenario": "linear_clock",
+      "cohort": "rate_only",
+      "metrics": [
+        "Dhrystone:v1.1_DMIPS",
+        "Dhrystone:v2.1_DMIPS",
+        "InstructionMix:ADP_KIPS",
+        "InstructionMix:Gibson_KIPS",
+        "LINPACK:n100_MFLOPS",
+        "Whetstone:MWIPS",
+        "Whetstone:MWIPS_DP",
+        "Whetstone:MWIPS_SP"
+      ],
+      "valid_draws": 10000,
+      "informative_models": 460,
+      "mix_nodes": 18,
+      "mix_model_groups": 16,
+      "mix_nodes_with_observed_target": 0
+    },
+    {
+      "scenario": "linear_clock",
+      "cohort": "with_spec89",
+      "metrics": [
+        "Dhrystone:v1.1_DMIPS",
+        "Dhrystone:v2.1_DMIPS",
+        "InstructionMix:ADP_KIPS",
+        "InstructionMix:Gibson_KIPS",
+        "LINPACK:n100_MFLOPS",
+        "Whetstone:MWIPS",
+        "Whetstone:MWIPS_DP",
+        "Whetstone:MWIPS_SP"
+      ],
+      "valid_draws": 10000,
+      "informative_models": 470,
+      "mix_nodes": 18,
+      "mix_model_groups": 16,
+      "mix_nodes_with_observed_target": 0
+    }
+  ],
+  "fit": "Existing family/node/model-balanced sparse log least squares; original classical scores retained; InstructionMix family shares Gibson/ADP weight.",
+  "target": "SPECrate_int92 peak * 25500/604800",
+  "qualification": "All candidate links conditional; proxy residuals are not direct SPEC prediction errors; CI95 omits model discrepancy; no mix clock scaling; extra vendor mix variants not pooled.",
+  "input_sha256": {
+    "data/derived/classic/overlap-spec/classical-records.jsonl": "afe7897a53b5267f4b965c435e1779cd4a46404d60a867d40ff74e4b71341e27",
+    "data/derived/classic/overlap-spec/spec-records.jsonl": "5d9b6cb5556555ca163e208847f2ce8c3bfa9f246a6354de3ff2fec41f92d459",
+    "data/derived/classic/overlap-spec/candidate-pairs.csv": "ed3f9c694f95d785f3d9e3064664f763a660b7203607391ee5890801b5a6531d",
+    "data/derived/classic/source-pair-fit/vectors.jsonl": "5891f6ca77cf72d92aaac2608cdbe5897e21465e9019ea249230df48bb18188b",
+    "data/derived/classic/source-pair-fit/matching-review.csv": "88958d216089e0e0ec03b6f93f273562b6cad801c42ec34435cb9329bfe1b2ec",
+    "research/data/spec89/v2.0.0/csv/bridges89_92.csv": "8c7545e9b7183ec7db052c15247fc4fd78ffb381a174898c4482d5f0f15868a4",
+    "data/derived/classic/netlib-linpack-report.txt": "da10c65aaa7ab32ab41690cdedf2963d37522ed22ee862167400f72a3c759381",
+    "data/derived/classic/mix-study/candidate-pairs.csv": "5a737d7136e7ad95968e3f3841c6307e1b331cc50107bd490b726676ba23ad74",
+    "data/derived/classic/historical-timeline/observations.csv": "537dcd0579305e69044b5441f08322b2cbaa245909faa4b1a0e78a761683e8fd",
+    "data/derived/classic/mix-study/mix-records.csv": "cd19cc3b8d8d741322f0ae60ed03e8efee0251b4144122b7b7a6965042f55c10"
+  },
+  "code_sha256": {
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration_edges.py": "b6e4cbe854b1fa3b36f9490ed8f253af05899c826a658726b5c4b9a441a785d6",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_89_rate.py": "0d3b104c03b72f334a5c8e846b67ce5e9d603324535f9679ab18d510f6ce940b",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_bridge_data.py": "e31eddff4bf6a4a540f19d43cef19fb7071b2d95c24c92da1ac3ba17d65709ed",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network.py": "161cde531cc44bcd44d714c0a82b2f67b060ba020dc41de940a4982fa9a4f667",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network_data.py": "f16e15c25d81ce430de0006f3e7f913f7631b9984ae19e65b00bc86a5b8f05d6",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network_model.py": "d54a2779e25dbc53256993007f2a613898669122105e2502765cca4f5849e141",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "31dfa875c6a522a6125e0b6dc019d66f2f9111042e9724464bdaf4cdb3b103c9",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_predict.py": "573f74c657e838807bd293b2adee2b21d78804407331ff6a8a922aa881655545",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_vectors.py": "ed804328d7d026cfdc582851e03b4cc41a40eb90538ad8338449a76408e89880",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_network.py": "81adc29b3be4553c80cd14298f0ceaa9dac1303134e45686c2d84068fa6d0eb8",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/rate_convert.py": "68a78857870729098bd83715d9d3cab25b99364531a6e59ba7dbebac1c2740de",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_io.py": "7c5345d069e0b41d7bf28cee1efc517f2e804ebd910e1210de856822191cc4da",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_plot.py": "ec6302f217e84fc44e7b297f1cd4f6e7bd899b293a695aa02b87936fbf4efc60"
+  }
+}

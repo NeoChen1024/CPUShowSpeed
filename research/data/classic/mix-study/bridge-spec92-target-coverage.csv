@@ -1,0 +1,10 @@
+source_kind,metric,positive_score_cells,system_labels,candidate_pairs
+curated_source_vector,SPECbase_int92,17,9,0
+curated_source_vector,SPECfp92,78,54,0
+curated_source_vector,SPECint92,62,38,0
+netlib_speed_summary,SPECbase_fp92,162,146,0
+netlib_speed_summary,SPECbase_int92,214,175,0
+netlib_speed_summary,SPECfp92,228,202,0
+netlib_speed_summary,SPECint92,302,244,0
+rate_archive,SPECrate_base_int92,199,117,0
+rate_archive,SPECrate_int92,283,165,0

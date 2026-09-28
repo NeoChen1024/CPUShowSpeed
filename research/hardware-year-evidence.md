@@ -1,6 +1,8 @@
 # Hardware-year evidence: archive and web research
 
-Reviewed: 2026-09-27. Current date catalog: **593 events**.
+Reviewed: 2026-09-27. Current date catalog: **593 events**. Current chronology precedence is defined
+by the [shared timeline](../docs/timeline.md): CPU → hardware → submission-era.
+The pass-specific counts and earlier fallback rules below are historical snapshots.
 
 ## Completed first batch
 

@@ -75,19 +75,20 @@ uv run --no-sync cpushowspeed research validate
 score with the saved calibration:
 
 ```sh
-uv run --no-sync cpushowspeed convert-rate 2017 base 11800 --format text
+uv run --no-sync cpushowspeed predict spec-rate 2017 base 11800 --format text
 ```
 
 The converter prints estimated VAXen and conditional calibration CI95.
 For arbitrary classical score subsets, use the [classical predictor](docs/classical-prediction.md):
 
 ```sh
-uv run --no-sync cpushowspeed classic predict-rate --dhrystone-1-1 10 --format text
+uv run --no-sync cpushowspeed predict classical --dhrystone-1-1 10 --format text
 ```
 
 It uses the saved network calibration to estimate SPEC92 peak rate, VAXen and
 joint calibration CI95. Inputs may contain one or several benchmark families.
 
+- [Combined VAXen timeline](docs/timeline.md): CPU-first history, SPEC rate submissions, time zoom and source filters (`uv run cpushowspeed plot timeline`).
 - [Documentation index](docs/README.md): contracts, methods and acquisition tools.
 - [Research index](research/README.md): current analyses, source evidence and diagnostics.
 - [Annual rate results](research/annual-rate-vaxen.md): configuration-year views.

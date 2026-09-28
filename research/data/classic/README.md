@@ -2,6 +2,26 @@
 
 `acquisition.csv` inventories downloaded sources and hashes, not measurements.
 
+`mix-study/source-hunt.csv` records the expanded Gibson/ADP source search;
+`source-hunt-acquisition.csv` records downloaded PDF hashes and locations.
+`additional-observations.csv` contains ten page-verified vendor table cells
+(six absolute ratings and four relative cells), independently of the generated
+Longbottom inventory. It is not yet consumed by fitting. Preserve reported
+units, variant names, processor counts and reference identities; blank dates
+and processor counts mean unknown. `fit_eligible=false` means equivalence has
+not been approved. See the [mix study](../../instruction-mix-bridge.md).
+
+`mix-study/sc3-observations.csv` records twelve page-verified scores from the
+1991 SC-3 paper. Gibson operations/s, Dhrystones/s and millions of Whetstones/s
+remain distinct reported units; `reported_per_mhz` preserves the source ratio
+column (Whetstone uses MWIPS/MHz * 1000). Empty fields mean unspecified.
+`dinkiac-mix-weights.csv` and `dinkiac-simulation-results.csv` preserve the
+1971 reconstruction model, seven weight/timing groups and all 33 result cells
+(31 durations and two source dashes). These simulations are not measurements.
+`ocr-review-checks.json` records arithmetic and OCR/transcription cross-checks.
+These curated files remain separate from model inputs pending integration and
+variant/configuration review; no fitted coefficients were changed.
+
 `overlap-summary.csv`, `overlap-models.csv`, `overlap-coverage.csv` and
 `overlap-audit.json` are compact outputs of `cpushowspeed classic overlap-spec`.
 Full records and pairs remain in the ignored derived output directory. After
@@ -76,3 +96,28 @@ and `network-audit.json` preserve the missing-data network experiment. Each
 coefficient applies to its named metric/version/unit. Estimated hardware values
 are not measured rate scores; intervals describe conditional calibration only.
 See [method and validation](../../classic-network-fitting.md).
+
+## Instruction-mix bridge preparation
+
+`mix-candidate-aliases.csv` expands discovery only; it does not approve hardware
+identity or configure fitting. `mix-study/weights.csv`, `coverage.csv`,
+`candidate-pairs.csv` and `audit.json` snapshot the preparation command. Every
+pair is pending review and ineligible for fitting. Counts span metric variants
+and repeated source configurations, not independent experiments. Full source
+listings including missing scores remain in the generated `mix-records.csv`.
+See [the preparation report](../../instruction-mix-bridge.md).
+
+`mix-study/bridge-classical-fit-summary.csv` records exploratory `y=kx` factors
+in classical-score units per mix KIPS, never VAXen. The two name-match scenarios
+retain their own group counts, bootstrap CI95 and shared relative-error policy.
+`bridge-spec89-target-coverage.csv`, `bridge-spec92-target-coverage.csv` and
+`bridge-spec89-family-leads.csv` record direct-bridge feasibility, including
+zero-overlap findings and a rejected-for-fitting CPU-family lead.
+`bridge-audit.json` preserves input hashes, seed and interpretation boundaries.
+
+`mix-study/network-*.csv/json` are compact snapshots of `classic mix-network-fit`:
+joint coefficients to SPEC92 rate/VAXen, whole-model errors against classical
+proxies, same-population measured-anchor comparisons, and provenance. Raw mix
+scores use KIPS. Coefficient CI95 is calibration uncertainty, not an observation
+prediction interval. Full linked nodes, candidate attachments, draws and all
+1,440 scenario-specific mix estimates stay in ignored derived storage.

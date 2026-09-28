@@ -1,0 +1,6 @@
+source_id,url,local_path,sha256,bytes,retrieved_on
+tr440,http://computermuseum.informatik.uni-stuttgart.de/ftp/telefunken/tr440/doku/TR440_Ueberblick.pdf,data/raw/classic/mix-hunt-2026-09-27/tr440.pdf,17d4108600e100b27ecb76c49eb3fe0fcbd6b60cd810e2bd4f0f399606b696e7,8990270,2026-09-27
+sigma,https://www.bitsavers.org/pdf/sds/sigma/Sigma_6_9_Sales_Guide_Feb72.pdf,data/raw/classic/mix-hunt-2026-09-27/sigma.pdf,172a82d003f1c4872fc7b607ee7d81f391cfcb5671698a857af4639088933fc6,2393800,2026-09-27
+res33,https://www.computerconservationsociety.org/resurrection/pdfs/res33.pdf,data/raw/classic/mix-hunt-2026-09-27/res33.pdf,99d2a0b6772060352a4943726a00ded3f519d6d4b52c3c3e96ac479854bacf4c,274992,2026-09-27
+hp197110,https://vtda.org/pubs/HP_Journal/HP_Journal_1971-10.pdf,data/raw/classic/mix-hunt-2026-09-27/hp197110.pdf,9650773329cb9bf2c1aa07fcccc5dcb984e4d617c8c84caa1ef7109c4c773541,3605415,2026-09-27
+sc3,https://digitalcommons.usu.edu/cgi/viewcontent.cgi?article=2851&context=smallsat,data/raw/classic/mix-hunt-2026-09-27/sc3.pdf,3b7a76a6ed251302a3f0a7d7343eb8fac651adf4c18e8ed5e47141d730872389,507153,2026-09-27

@@ -1,0 +1,2 @@
+mix_id,mix_clock_mhz,spec_id,spec_system,spec_clock_mhz,spec_scores,fit_eligible,reason,spec_source_url
+sc3-gibson-SC-3,16,spec89:A0094,i386/387,33.0,"{""SPECmark89"": ""4.3"", ""SPECint89"": """", ""SPECfp89"": """"}",False,CPU-family lead only; different machine and clock; SC-3 Gibson uses 16-bit memory; SPEC cache/configuration differ or unspecified; SPECmark89 is not SPECint89.,https://web-docs.gsi.de/~kraemer/COLLECTION/BENCHMARKS/specmark-table.txt

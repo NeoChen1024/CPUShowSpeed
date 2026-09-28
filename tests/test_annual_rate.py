@@ -1,10 +1,8 @@
 """Annual rate bins retain every eligible source result and deterministic leaders."""
 
-import tempfile
 import unittest
-from pathlib import Path
 
-from cpushowspeed.annual_rate import _annual, _html, _month
+from cpushowspeed.annual_rate import _annual, _month
 
 
 class AnnualRateTests(unittest.TestCase):
@@ -49,11 +47,6 @@ class AnnualRateTests(unittest.TestCase):
         self.assertEqual(leaders[0]["source_url"], "https://example.com/a")
         self.assertEqual(stats[0]["median_vaxen"], 20)
         self.assertEqual(stats[0]["maximum_vaxen"], 20)
-        with tempfile.TemporaryDirectory() as directory:
-            path = _html(leaders, "base", Path(directory))
-            document = Path(path).read_text()
-            self.assertIn("CPU", document)
-            self.assertIn('href="https://example.com/a"', document)
 
 
 if __name__ == "__main__":

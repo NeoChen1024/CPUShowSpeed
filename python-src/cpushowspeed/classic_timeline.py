@@ -13,6 +13,7 @@ from cpushowspeed.classic_network_data import values
 from cpushowspeed.classic_overlap import full_name, model_key, relaxed_key
 from cpushowspeed.classic_predict import predict_scores
 from cpushowspeed.research_io import code_hashes, read_csv, write_csv
+from cpushowspeed.timeline_dates import CPUChronology, candidate, select_date
 
 ROOT = Path("data/derived/classic")
 
@@ -496,21 +497,6 @@ def render(rows, output):
     for ext in ("png", "svg"):
         fig.savefig(output / ("historical-vaxen." + ext), dpi=160)
     plt.close(fig)
-    # Embedded data and native SVG: usable offline, with full-name search and hover.
-    payload = json.dumps(rows, ensure_ascii=False).replace("<", "\\u003c")
-    page = """<!doctype html><meta charset="utf-8"><title>Historical VAXen</title>
-<style>body{font:15px system-ui;margin:24px;color:#223}input{width:36em;padding:8px}svg{width:100%;min-width:900px;background:#fafbfd}td,th{padding:7px;text-align:left;border-bottom:1px solid #ddd}table{border-collapse:collapse;width:100%}small{color:#556}</style>
-<h1>Classical benchmarks + SPEC89: historical VAXen</h1><p>Search system, CPU, configuration or benchmark: <input id="q" placeholder="VAX, PDP, LINPACK…"></p>
-<p id="count"></p><p>Hardware years are estimates/proxies; unknown years remain in the table. Pale spans show calibration CI95, not individual prediction intervals. The two routes share calibration evidence and are not independent validation.</p>
-<svg id="plot" viewBox="0 0 1400 760"></svg><table><thead><tr><th>Year / evidence</th><th>System / configuration</th><th>Route / inputs</th><th>VAXen / CI95</th><th>Sources</th></tr></thead><tbody id="body"></tbody></table>
-<script>const data=PAYLOAD;const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmt=x=>Number(x).toPrecision(4);const dated=data.filter(r=>r.year);const ymin=Math.floor(Math.log10(Math.min(...data.map(r=>r.ci95_low))));const ymax=Math.ceil(Math.log10(Math.max(...data.map(r=>r.ci95_high))));const xmin=Math.min(...dated.map(r=>r.year))-1,xmax=Math.max(...dated.map(r=>r.year))+1;
-const X=x=>90+(x-xmin)/(xmax-xmin)*1270,Y=y=>680-(Math.log10(y)-ymin)/(ymax-ymin)*640;
-function draw(){let rows=data.filter(r=>JSON.stringify(r).toLowerCase().includes(document.querySelector('#q').value.toLowerCase()));document.querySelector('#count').textContent=`${rows.length} configurations / source submissions; ${rows.filter(r=>r.year).length} with estimated years`;
-let s='';for(let y=ymin;y<=ymax;y++){let p=Y(10**y);s+=`<path d="M90 ${p}H1360" stroke="#dde3e8"/><text x="8" y="${p+5}">10^${y} VAXen</text>`}for(let x=Math.ceil(xmin/5)*5;x<=xmax;x+=5){s+=`<path d="M${X(x)} 40V680" stroke="#eee"/><text x="${X(x)-17}" y="710">${x}</text>`}
-for(const r of rows.filter(r=>r.year)){let c=r.route==='SPEC89'?'#bd5934':'#207ca3';let title=esc(`${r.system} | ${r.cpu} | ${r.clock_mhz} MHz | ${r.os}\n${r.configuration}\n${r.year_low}–${r.year_high}: ${r.date_method}\n${r.vaxen} VAXen; CI95 ${r.ci95_low}–${r.ci95_high}\n${r.scores}`);s+=`<g><title>${title}</title><path d="M${X(r.year)} ${Y(r.ci95_low)}V${Y(r.ci95_high)} M${X(r.year_low)} ${Y(r.vaxen)}H${X(r.year_high)}" stroke="${c}" opacity=".2" stroke-width="3"/><circle cx="${X(r.year)}" cy="${Y(r.vaxen)}" r="4" fill="${c}" fill-opacity=".45"/></g>`}document.querySelector('#plot').innerHTML=s;
-document.querySelector('#body').innerHTML=rows.map(r=>`<tr><td>${esc(r.year||'Unknown')}<br><small>${esc(r.date_method)} ${esc(r.year_low)}–${esc(r.year_high)}</small></td><td>${esc(r.system)}<br>${esc(r.cpu)} ${esc(r.clock_mhz)} MHz<br><small>${esc(r.os)} ${esc(r.configuration)}</small></td><td>${esc(r.route)}<br><small>${esc(r.scores)}</small></td><td>${fmt(r.vaxen)}<br><small>${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</small></td><td><a href="${esc(r.source_url)}">Benchmark</a><br>${r.date_sources.split(';').filter(Boolean).map(u=>`<a href="${esc(u)}">Year source</a>`).join(' ')}<br><small>${esc(r.date_notes)}</small></td></tr>`).join('')};document.querySelector('#q').addEventListener('input',draw);draw();</script>"""
-    (output / "historical-vaxen.html").write_text(page.replace("PAYLOAD", payload))
 
 
 @click.command("historical-timeline")
@@ -536,13 +522,17 @@ def historical_timeline(output):
         records, paths[1].read_text().split("\f"), jsonl(paths[2]), read_csv(paths[3]), {r["id"]: r for r in jsonl(paths[4])}
     )
     evidence, overrides = date_catalog(records), read_csv(paths[5])
-    cpu_proxies = {r["configuration_id"]: r for r in read_csv(paths[-1])}
+    chronology = CPUChronology(read_csv(paths[-1]))
     for i, r in enumerate(rows):
         if r["route"] == "classical":
             p = predict_scores(r["scores"], ROOT / "network-fit")
             r.update(vaxen=p["vaxen"], ci95_low=p["vaxen_ci95"]["low"], ci95_high=p["vaxen_ci95"]["high"])
         r.update(choose_date(r["system"], r["clock_mhz"], evidence, overrides))
-        apply_cpu_release_proxy(r, cpu_proxies)
+        hardware = candidate(
+            "hardware", r["year"], r["date_sources"], r["date_method"], r["date_notes"], r["year_low"], r["year_high"]
+        )
+        r.update(select_date(chronology.lookup(r) + [hardware]))
+        r["date_candidates"] = json.dumps(r["date_candidates"], ensure_ascii=False)
         r["scores"] = json.dumps(r["scores"], sort_keys=True)
         r["evidence_class"] = "model_prediction_not_reported_SPEC_result"
         r["uncertainty_scope"] = "conditional_calibration_CI95_not_machine_prediction_interval"
@@ -553,23 +543,23 @@ def historical_timeline(output):
     write_csv(output / "configurations.csv", rows)
     write_csv(output / "observations.csv", observations)
     for r in rows:
-        if r["date_method"] == "reviewed_cpu_release_year_proxy":
-            proxy = cpu_proxies[r["configuration_id"]]
-            evidence.append(
-                dict(
-                    system=r["system"],
-                    model_key="",
-                    year=r["year"],
-                    date=proxy["release_date"],
-                    method=r["date_method"],
-                    source_url=proxy["source_url"],
-                    locator=proxy["source_locator"],
-                    priority="fallback_only",
-                    clock_mhz=r["clock_mhz"],
-                    notes=r["date_notes"],
-                    configuration_id=r["configuration_id"],
+        for c in json.loads(r["date_candidates"]):
+            if c["kind"] == "cpu":
+                evidence.append(
+                    dict(
+                        system=r["system"],
+                        model_key="",
+                        year=c["year"],
+                        date=c["date"],
+                        method=c["method"],
+                        source_url=c["source_url"],
+                        locator="Reviewed CPU chronology",
+                        priority="cpu_first",
+                        clock_mhz=r["clock_mhz"],
+                        notes=c["notes"],
+                        configuration_id=r["configuration_id"],
+                    )
                 )
-            )
     write_csv(output / "date-evidence.csv", evidence)
     write_csv(output / "undated.csv", [r for r in rows if not r["year"]])
     render(rows, output)
@@ -588,7 +578,7 @@ def historical_timeline(output):
         exclusions=excluded,
         input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         code_sha256=code_hashes(__file__),
-        date_policy="model-era estimates with reviewed CPU-release fallback; unknown configurations retained",
+        date_policy="CPU-first, then hardware chronology; unknown configurations retained",
         no_additional_clock_scaling=True,
     )
     (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")

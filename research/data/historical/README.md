@@ -103,10 +103,15 @@ latest generated `undated.csv` remain the current data and queue respectively.
 
 `cpu-release-proxies.csv` is a separate CPU-year fallback table: configuration ID,
 original system/CPU/clock identity, interpreted CPU, release date, source URL and
-locator, optional revision/snapshot hash, review date and qualifications. It only
-applies to `date_status=unknown`; existing dates and unresolved conflict decisions
-win. Identity mismatches raise an error rather than silently reusing a stale
+locator, optional revision/snapshot hash, review date and qualifications. The initial `year-cpu-*` audit used it only for unknown dates. The current
+[shared chronology](../../../docs/timeline.md) gives reviewed CPU dates priority
+over hardware dates and preserves both candidates. Identity mismatches raise an error rather than silently reusing a stale
 mapping. Generic family/earliest-model assumptions are stated in notes. This table
 does not assert complete-system release, nor amend raw benchmark identity.
 `year-cpu-changes.csv` and `year-cpu-audit.json` record the resulting date-only
 changes. The generated date-evidence export includes applied CPU mappings.
+
+`submission-date-reviews.csv` contains evidence-backed acceptance/rejection of
+submission dates as chronology proxies, not benchmark exclusions. It starts
+empty. The [shared timeline contract](../../../docs/timeline.md#submission-era-compatibility-reviews)
+defines the fields and precedence; no fixed maximum age gap is assumed.

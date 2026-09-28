@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-27",
+  "updated": "2026-09-28",
   "path_base": "repository root",
   "conventions": {
     "fit": "y = k*x; zero intercept; grouped median log ratios then mean across groups",
@@ -316,16 +316,16 @@
       "unit": "source/workload dependent",
       "status": "recorded",
       "variants": [],
-      "scope": "Source-checked historical ratings exist; no established VAXen conversion"
+      "scope": "CCTA/TSU variant has conditional joint classical-to-rate experiment; other variants uncalibrated; not a production converter"
     },
     {
       "id": "adp",
       "title": "ADP instruction mix",
       "mode": "historical-lead",
       "unit": "source/workload dependent",
-      "status": "planned",
+      "status": "recorded",
       "variants": [],
-      "scope": "No established conversion edge to VAXen"
+      "scope": "CCTA/TSU variant has conditional joint classical-to-rate experiment; other variants uncalibrated; not a production converter"
     },
     {
       "id": "process-control",
@@ -494,6 +494,14 @@
       "owner": "research/hardware-year-evidence.md",
       "optional": false,
       "lineage": "Original bitsavers PDF pages plus identified trusted secondary web pages"
+    },
+    {
+      "id": "instruction-mix-study",
+      "path": "research/data/classic/mix-study",
+      "kind": "reviewed-data",
+      "owner": "research/instruction-mix-bridge.md",
+      "optional": false,
+      "lineage": "CCTA source ratings; unapproved classical configuration joins; joint fit snapshots"
     }
   ],
   "models": [
@@ -1432,6 +1440,53 @@
       ],
       "prediction_command": "cpushowspeed classic predict-rate",
       "prediction_guide": "docs/classical-prediction.md"
+    },
+    {
+      "id": "instruction-mix-joint-network",
+      "title": "Conditional Gibson/ADP joint classical-rate calibration",
+      "track": "classical",
+      "input_metrics": [
+        "gibson",
+        "adp",
+        "dhry-11",
+        "dhry-21",
+        "whet-native",
+        "whet-sp",
+        "whet-dp",
+        "linpack-100"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "joint-fit",
+      "formula": "Existing sparse family/node/model-balanced log WLS; InstructionMix variants share a family; y=k_b*x_b",
+      "variants": [
+        "CCTA/TSU only; peak; reported_clock/linear_clock; rate_only/with_spec89"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/instruction-mix-bridge.md",
+      "dataset_ids": [
+        "instruction-mix-study",
+        "classic-overlap",
+        "classic-source-vectors",
+        "spec89-native-bridge"
+      ],
+      "depends_on": [
+        "classical-sparse-network",
+        "rate92-unit",
+        "int89-rate-vaxen"
+      ],
+      "shared_evidence": "Original observation-ID joins; shared mix IDs close holdout groups; joint bootstrap; proxy errors are not measured SPEC errors",
+      "command": "cpushowspeed classic mix-network-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/mix-study/network-coefficients.csv",
+          "optional": false
+        },
+        {
+          "path": "research/data/classic/mix-study/network-audit.json",
+          "optional": false
+        }
+      ]
     }
   ],
   "documents": [
@@ -1882,6 +1937,27 @@
       "role": "evidence",
       "status": "current",
       "purpose": "Candidate inventory, active OCR batch, source-checked date events and explicit unresolved dating"
+    },
+    {
+      "path": "docs/timeline.md",
+      "title": "Shared VAXen timeline",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Common records, CPU-first chronology, mode filters and time navigation"
+    },
+    {
+      "path": "research/unified-vaxen-timeline.md",
+      "title": "Unified historical and SPEC rate timeline",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Checked merged population, route-specific CI and chronology coverage"
+    },
+    {
+      "path": "research/instruction-mix-bridge.md",
+      "title": "Gibson and ADP evidence and calibration experiments",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Source variants, SPEC overlap feasibility, and conditional joint classical-to-rate calibration"
     }
   ]
 }

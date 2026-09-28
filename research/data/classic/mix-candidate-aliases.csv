@@ -1,0 +1,8 @@
+mix_regex,classical_regex,reason
+CDC 6600,Control Data 6600 \(Cyber74\),6600/Cyber74 identity and options require review
+"IBM 360/65(?: G| H\. I, J)",IBM 360/65,Memory subvariants: candidate only
+ICL 1904A \+,ICL 1904A,Plus marker requires review; suffix preserved
+ICL 1904S \+,ICL 1904S,Plus marker requires review; suffix preserved
+HP 2100(?: FLP)?,HP 2100(?:A EAU FPU|S FFP),Variant and floating-point implementation need review
+DEC PDP11(?: EAE)?,DEC PDP 11/20 EAE,Unsuffixed PDP11 possibly 11/20; not established
+DEC PDP8 EAU,DEC PDP 8E EAE,Source option/model spelling ambiguous
