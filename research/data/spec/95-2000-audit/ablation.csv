@@ -1,0 +1,15 @@
+scenario,mode,target_speed_pairs,target_rate_pairs,triples,systems,processor_models,processor_configurations,processor_keys,policy
+current_strict,base,7,16,2,1,1,1,21264a,baseline
+current_strict,peak,7,16,2,1,1,1,21264a,baseline
+memory_relaxed,base,14,24,5,4,2,3,21264a;ultrasparcii,sensitivity_only_not_fit_eligible
+memory_relaxed,peak,14,24,5,4,2,3,21264a;ultrasparcii,sensitivity_only_not_fit_eligible
+candidate_aliases_only,base,9,20,4,3,1,2,21264a,sensitivity_only_not_fit_eligible
+candidate_aliases_only,peak,9,20,4,3,1,2,21264a,sensitivity_only_not_fit_eligible
+memory_and_candidate_aliases,base,19,36,10,9,3,5,21264;21264a;ultrasparcii,sensitivity_only_not_fit_eligible
+memory_and_candidate_aliases,peak,19,36,10,9,3,5,21264;21264a;ultrasparcii,sensitivity_only_not_fit_eligible
+ignore_system_memory_diagnostic,base,78,98,72,14,3,5,21264;21264a;ultrasparcii,sensitivity_only_not_fit_eligible
+ignore_system_memory_diagnostic,peak,78,98,72,14,3,5,21264;21264a;ultrasparcii,sensitivity_only_not_fit_eligible
+ignore_resources_diagnostic,base,17,34,24,3,3,8,21264a;parisc8600;ultrasparcii,sensitivity_only_not_fit_eligible
+ignore_resources_diagnostic,peak,17,34,24,3,3,8,21264a;parisc8600;ultrasparcii,sensitivity_only_not_fit_eligible
+memory_aliases_ignore_resources_diagnostic,base,37,79,65,11,5,18,21264;21264a;parisc8600;r12000;ultrasparcii,sensitivity_only_not_fit_eligible
+memory_aliases_ignore_resources_diagnostic,peak,37,79,65,11,5,18,21264;21264a;parisc8600;r12000;ultrasparcii,sensitivity_only_not_fit_eligible

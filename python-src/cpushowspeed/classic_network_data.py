@@ -5,6 +5,7 @@ import math
 import re
 from collections import defaultdict
 
+from cpushowspeed.benchmark_records import classical_values as values
 from cpushowspeed.calibration import ANCHOR
 from cpushowspeed.classic_overlap import model_key, relaxed_key
 from cpushowspeed.classic_values import linpack_n100, numeric
@@ -52,19 +53,6 @@ def scaling_cpu_check(classical, spec):
     return "cpu_identity_compatible" if a == b else "cpu_identity_conflict"
 
 
-def values(record, pages):
-    f = record["benchmark"]
-    m = record["metrics_raw"]
-    if f == "Dhrystone":
-        return {"Dhrystone:" + k: numeric(m.get(k)) for k in ("v1.1_DMIPS", "v2.1_DMIPS") if numeric(m.get(k))}
-    if f == "Whetstone":
-        return {"Whetstone:" + k: numeric(m.get(k)) for k in ("MWIPS", "MWIPS_DP") if numeric(m.get(k))}
-    if f == "LINPACK":
-        score = linpack_n100(record, pages)
-        return {"LINPACK:n100_MFLOPS": score} if score else {}
-    return {}
-
-
 def reference_record(spec):
     raw = spec["raw_record"]
     return isinstance(raw, dict) and (
@@ -72,7 +60,12 @@ def reference_record(spec):
     )
 
 
-def build(classical, specs, pairs, vectors, matching, pages, scaling):
+def build(classical, specs, pairs, vectors, matching, pages, scaling, target_metric="SPECrate_int92", target_scale=None):
+    if target_metric not in {"SPECrate_int92", "SPECint92"}:
+        raise ValueError("unsupported calibration target")
+    if target_scale is None:
+        target_scale = ANCHOR if target_metric == "SPECrate_int92" else 1.0
+    observed_kind = "observed_rate" if target_metric == "SPECrate_int92" else "observed_speed"
     nodes = {}
     observations = []
     audit = []
@@ -137,11 +130,11 @@ def build(classical, specs, pairs, vectors, matching, pages, scaling):
         c, s = classical[pair["classic_id"]], specs[pair["spec_id"]]
         if reference_record(s):
             continue
-        rate = numeric(s["metrics_raw"].get("SPECrate_int92"))
+        rate = numeric(s["metrics_raw"].get(target_metric))
         old = numeric(s["metrics_raw"].get("SPECint89"))
         if not rate and not old:
             continue
-        if rate and numeric(s.get("cpu_count")) != 1:
+        if rate and target_metric == "SPECrate_int92" and numeric(s.get("cpu_count")) != 1:
             continue
         for metric, score in scores.get(c["id"], {}).items():
             adjusted, multiplier, policy = clock_adjust(score, metric, c.get("clock_mhz"), s.get("clock_mhz"), scaling)
@@ -167,7 +160,7 @@ def build(classical, specs, pairs, vectors, matching, pages, scaling):
             if adjusted is None:
                 continue
             n = node(
-                s["id"], keys[s["id"]], s["system"], "observed_rate" if rate else "estimated_89", rate * ANCHOR if rate else old
+                s["id"], keys[s["id"]], s["system"], observed_kind if rate else "estimated_89", rate * target_scale if rate else old
             )
             add(
                 n,
@@ -185,9 +178,13 @@ def build(classical, specs, pairs, vectors, matching, pages, scaling):
     # Same-column data supply both directly anchored and missing-target nodes.
     byvector = {v["id"]: v for v in vectors}
     for v in vectors:
-        rate = v["targets"].get("SPECrate_int92")
+        rate = v["targets"].get(target_metric)
         n = node(
-            v["id"], find(v["model_key"]), v["machine"], "observed_rate" if rate else "unanchored", rate * ANCHOR if rate else None
+            v["id"],
+            find(v["model_key"]),
+            v["machine"],
+            observed_kind if rate else "unanchored",
+            rate * target_scale if rate else None,
         )
         for metric, score in v["scores"].items():
             add(n, metric, v["observation_ids"][metric], score, score, 1, v["source_url"], provenance=v)
@@ -196,11 +193,13 @@ def build(classical, specs, pairs, vectors, matching, pages, scaling):
         if str(match["included"]).lower() != "true":
             continue
         v, s = byvector[match["vector_id"]], specs[match["spec_id"]]
-        rate = numeric(s["metrics_raw"].get("SPECrate_int92"))
+        rate = numeric(s["metrics_raw"].get(target_metric))
         old = numeric(s["metrics_raw"].get("SPECint89"))
         if not rate and not old:
             continue
-        n = node(s["id"], keys[s["id"]], s["system"], "observed_rate" if rate else "estimated_89", rate * ANCHOR if rate else old)
+        n = node(
+            s["id"], keys[s["id"]], s["system"], observed_kind if rate else "estimated_89", rate * target_scale if rate else old
+        )
         for metric, score in v["scores"].items():
             add(
                 n,

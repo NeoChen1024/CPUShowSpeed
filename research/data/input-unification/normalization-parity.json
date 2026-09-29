@@ -1,0 +1,13 @@
+{
+  "spec_source_records": 53961,
+  "classical_source_records": 3794,
+  "canonical_observations": 103456,
+  "old_numeric_and_identity_projection": "exact",
+  "live_snapshot_spec_projection_including_runtime": "exact",
+  "source_views": {
+    "classical": 3794,
+    "historical_spec": 724,
+    "reviewed_vectors": 88
+  },
+  "qualification": "No reported scores changed. Execution-count exclusions are a separate, explicit mode-specific policy."
+}

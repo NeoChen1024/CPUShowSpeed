@@ -2,8 +2,8 @@ method_version,scenario,mode,generation,cpu95_rate_equivalent_per_score,status
 integer-rate-fit-v4-relative-error,strict,base,cpu95,1.0,exploratory_chain_only
 integer-rate-fit-v4-relative-error,strict,base,cpu2000,70.75114298255477,exploratory_chain_only
 integer-rate-fit-v4-relative-error,strict,base,cpu2006,142.479862486692,exploratory_chain_only
-integer-rate-fit-v4-relative-error,strict,base,cpu2017,1365.8379886696182,exploratory_chain_only
-integer-rate-fit-v4-relative-error,strict,base,cpu2026,3188.6749617555574,exploratory_chain_only
+integer-rate-fit-v4-relative-error,strict,base,cpu2017,1347.5170384653366,exploratory_chain_only
+integer-rate-fit-v4-relative-error,strict,base,cpu2026,3145.903010999622,exploratory_chain_only
 integer-rate-fit-v4-relative-error,strict,peak,cpu95,1.0,exploratory_chain_only
 integer-rate-fit-v4-relative-error,strict,peak,cpu2000,74.59877572769904,exploratory_chain_only
 integer-rate-fit-v4-relative-error,strict,peak,cpu2006,146.36192172425137,exploratory_chain_only

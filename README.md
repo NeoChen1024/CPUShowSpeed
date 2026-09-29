@@ -2,7 +2,8 @@
 ## 60 Years of CPU Benchmarks
 
 CPUShowSpeed studies historical computer performance on a common **VAXen**
-scale. The main target is whole-machine integer throughput. Published benchmark
+scale. The established VAXen series measures whole-machine integer throughput.
+An independent integer-speed calibration is also implemented as a research experiment. Published benchmark
 results, inferred scores and manual reconstructions remain distinguishable.
 The subtitle describes the research horizon; a complete sixty-year series has
 not yet been established.
@@ -44,6 +45,11 @@ specified benchmark scores in declared units; a separate k is fitted for each
 combination. Factor CI95, held-out P95 error and prediction uncertainty are
 reported separately. Broader historical coverage is a research objective;
 increased error after adding valid evidence is not by itself a failed experiment.
+
+See the [speed/rate comparison](research/spec-dual-track.md) for separate speed
+coefficients, conditional chain CI95, and classical/mix target comparisons.
+Speed is not necessarily single-threaded; speed outputs currently use
+SPECint92-equivalent points and do not change the rate-VAXen definition.
 
 ## Four research tracks
 
@@ -88,7 +94,7 @@ uv run --no-sync cpushowspeed predict classical --dhrystone-1-1 10 --format text
 It uses the saved network calibration to estimate SPEC92 peak rate, VAXen and
 joint calibration CI95. Inputs may contain one or several benchmark families.
 
-- [Combined VAXen timeline](docs/timeline.md): CPU-first history, SPEC rate submissions, time zoom and source filters (`uv run cpushowspeed plot timeline`).
+- [Combined VAXen timeline](docs/timeline.md): CPU-first history, rate baselines, selectable speed/joint estimates, matching scenarios and time zoom (`uv run cpushowspeed plot timeline`).
 - [Documentation index](docs/README.md): contracts, methods and acquisition tools.
 - [Research index](research/README.md): current analyses, source evidence and diagnostics.
 - [Annual rate results](research/annual-rate-vaxen.md): configuration-year views.

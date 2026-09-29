@@ -7,7 +7,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from cpushowspeed.spec_rate_fit import GENERATIONS, _chain, _fit_edges, collect_rate
+from cpushowspeed.spec_rate_fit import (
+    GENERATIONS,
+    _chain,
+    _fit_edges,
+    collect_integer,
+    collect_rate,
+)
 
 
 class RateFitTests(unittest.TestCase):
@@ -48,6 +54,9 @@ class RateFitTests(unittest.TestCase):
                         }
                     )
                 )
+            speed = collect_integer(root, "speed")
+            self.assertTrue(all(r.peak == 999999 for group in speed.values() for r in group))
+            self.assertEqual(sum(map(len, speed.values())), 15)
             results = collect_rate(root)
             self.assertEqual(
                 {generation: len(rows) for generation, rows in results.items()}, {generation: 3 for generation in GENERATIONS}

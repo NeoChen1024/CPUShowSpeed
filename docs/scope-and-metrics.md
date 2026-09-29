@@ -1,11 +1,20 @@
 # Scope and metrics
 
-The active research target is **single-node / documented-system throughput**,
+The established timeline and rate target is **single-node / documented-system throughput**,
 not single-core performance. A result belongs to the tested processors, memory, operating
 system, compiler and benchmark run settings. The principal evidence is a
 published integer-rate measurement, with its concurrent copy counts when the
 disclosure provides them. Reported scores and cross-generation estimates must
 remain distinguishable.
+
+## Independent speed research
+
+The project now retains integer speed and rate as distinct research targets.
+The [dual-track experiment](../research/spec-dual-track.md) implements a speed
+chain and classical/mix re-anchoring. Speed denotes task completion, not a
+single-core guarantee. Its output is SPECint92-equivalent points; the existing
+rate-VAXen unit and public timeline remain throughput-only. Base/peak is an
+independent dimension. Never combine speed and rate observations into one fit.
 
 ## Active SPEC rate series
 

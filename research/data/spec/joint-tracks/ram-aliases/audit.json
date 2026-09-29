@@ -1,0 +1,68 @@
+{
+  "bootstrap_replicates": 10000,
+  "code_hashes": {
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/execution_policy.py": "c482cf4e5cd22c52cb0246af192407851b48c3daec77cf2ec279175f9d65800d",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_context.py": "9130fde4f2ba28dcc483eb84f7a21ca89700ac10b48c3e7614c1e501f75b2fa4",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_io.py": "7c5345d069e0b41d7bf28cee1efc517f2e804ebd910e1210de856822191cc4da",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec.py": "da3e5a3ba397edf740809d79a8c1708a4b16fc23b5032af17293c688b2f04fb1",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec92_rate.py": "4b00ae0ae5a01fd237fa2bf0da052861345b19f674e752bbf48237bb04f66c93",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec92_rate_fit.py": "5f3c20bda23bdfbd824ed61152d8a7b20476fec7b29655a6071407ad95142e07",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec95_overlap_audit.py": "1712f01929274e1567739b027676f30a871c1c96ec1aa614953ce6746ba74681",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_disclosure.py": "502996bce4e504bcdcadba1abc72db9c167df6879d0d1b8fe34cf42f1d06d41e",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_inputs.py": "1f63eefbc202df2c71f95a5a3253352b5a9508e816563d50a0544fb49877a86b",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_joint_tracks.py": "378d63bccecc85b291d373e178d67a41bc766e4c837140169beb0e0a95a445ce",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_overlap.py": "3c8d2c990d44a93960cc978104a9e2394d73b6ea44db517c67ead79d35bf743d",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_chain.py": "b31173e0e666c0a1504eb454df17caa1b6da3a468593fc5c652f9177cd2040e8",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_fit.py": "5b06f15b367c1123e673e28f7c4d5aa5413c06f29a839680b1b66144fbe6edb1",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_inputs.py": "22258f1bda497f4c355e717512dbcbe5206228d6deb86d85273d30c1d1f5ce49"
+  },
+  "cpu92_records_sha256": "4e51119deca48ac877be2589a2123c3b88edf7a9850425f6a6fa6829bfe2591a",
+  "execution_policy": "reject-known-uniform-count-conflicts-v1",
+  "full_chain": "local predictor -> older native rate -> existing rate-backbone estimator -> rate-VAXen",
+  "input_snapshot": {
+    "mode": "input_snapshot",
+    "path": "data/derived/inputs/audit.json",
+    "sha256": "4b6a419696e2bb2e398bde234115729991538fd228c7b6cd3fb9276e6256e43e"
+  },
+  "limitations": [
+    "CPU95-to-CPU92 alone has direct measured VAXen targets",
+    "Later VAXen coefficients remain conditional on the upstream rate chain",
+    "Common-case masking does not validate machines structurally missing a benchmark",
+    "Run copies/threads and software equivalence unverified",
+    "CI95 describes coefficient sampling, not individual prediction intervals",
+    "No runtime conversion factor or public timeline overwritten"
+  ],
+  "mask_policy": "all methods trained/evaluated on identical complete triplets; single-input models never read hidden input",
+  "matching_policy": "ram-aliases",
+  "method_version": "joint-spec-predictors-v4-execution-evidence",
+  "output_csv_sha256": {
+    "configuration-centers.csv": "855ccb365b7c0052971501c8cf2e5f54274d74d85a21b1286cae701984ecc81f",
+    "holdout-configurations.csv": "00f97099c71d572478343d925125475a94e37a51584f2f6a000af720ae130336",
+    "holdout-predictions.csv": "c6df39e41ba392fef34f4c37070bd8a0943638f6278033787991ccd76597aab0",
+    "rate-backbone-pairs.csv": "4d0b320b943d3225224538f7a7986ca2621b48434fcd47c678f819717ec1fa5d",
+    "rejections.csv": "049fef030cd724f75a12aab752e16e9a5affde5dd2868ba5fa10607865954312",
+    "triples.csv": "b9a209dbf896709a50ed08e5ed783b5dc9cff5c8bb7564ae2c5006ad67c75c21"
+  },
+  "predictor_weights": {
+    "equal_geometric": 0.5,
+    "rate_only": 0.0,
+    "speed_only": 1.0
+  },
+  "primary_validation": "newer speed/rate predict distinct older observed rate; no synthetic targets",
+  "raw_bulk_sha256": {
+    "cpu2000": "08d4487927f2c927ee25ad9ff0a7805af195d5a765ce00bd5c0602a79f43ca29",
+    "cpu2006": "b718ac9449e46ca74ae3074b2a289f04eda668583b9e81e4f0b9613a68c23822",
+    "cpu2017": "2fcc2fef3e589a8a7ffb813dabd7e41f60083940d85af8bc513becbbc6009c96",
+    "cpu2026": "65cd979b9bd348a0cbeb7a983b51fdba301411b61f6ccf0568c44d6a38602e58",
+    "cpu95": "7fe860a52e3f8c07939fc8f0bfd9b9a3783722ec00011fd4f692e05fccf013b9"
+  },
+  "relaxed_edge": "all adjacent generations; includes within-generation speed/rate predictor matching",
+  "research_csv_sha256": {
+    "backbone-summary.csv": "ff5bf3ad8f540cb992ea2094c01d3ea533153537967b55792be82aa289718ba8",
+    "coverage.csv": "d9d663ccdcee143c67fa30bba027633c8feb40831b96e1cd99e41835e94a6102",
+    "summary.csv": "908b81fe397a536aeca912c1c3c68ce593d0a1268587a59a24989a6bd6dd61ff"
+  },
+  "runtime_fingerprint": "a50a4ebd991fc69959c681962f018f8b9f51ab9ce581753f5de64c90275af785",
+  "seed": 20260929
+}

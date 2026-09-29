@@ -3,6 +3,7 @@
 import json
 from html import escape
 
+from cpushowspeed import timeline_calculator
 from cpushowspeed.timeline_lineage import MARKUP, SCRIPT, STYLE
 
 TITLE = "CPUShowSpeed: 70 years of benchmarks measured in VAXen"
@@ -23,9 +24,9 @@ def list_browsing(suffix=""):
 </form>"""
 
 
-def render_html(rows, output, title=TITLE, lineage=None):
+def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
     # Keep rich provenance in JSONL/CSV; share repeated strings in the offline display payload.
-    fields = "configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit mix_variant evidence_class source_locator generation reported_score benchmark_id calibration_scenario".split()
+    fields = "record_id resource_warning runtime_resources hardware_context resource_basis reported_cpu_count cores_per_chip input_configurations estimate_kind variants matched_rate_variants comparison_keys source_record_ids benchmark_sources configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit mix_variant evidence_class source_locator generation reported_score benchmark_id calibration_scenario".split()
     strings, indexes, packed = [], {}, []
     for row in rows:
         values = []
@@ -54,6 +55,14 @@ def render_html(rows, output, title=TITLE, lineage=None):
                 "__LINEAGE_DATA__", json.dumps(lineage or {"nodes": [], "edges": []}, ensure_ascii=False).replace("<", "\\u003c")
             ),
         )
+        .replace("__CALCULATOR_STYLE__", timeline_calculator.STYLE)
+        .replace("__CALCULATOR_MARKUP__", timeline_calculator.calculator_markup())
+        .replace(
+            "__CALCULATOR_SCRIPT__",
+            timeline_calculator.SCRIPT.replace(
+                "__CALCULATOR_DATA__", json.dumps(calculator or {"historical_inputs": []}, allow_nan=False).replace("<", "\\u003c")
+            ),
+        )
         .replace("__BROWSING_TOP__", list_browsing())
         .replace("__BROWSING_BOTTOM__", list_browsing("-bottom"))
     )
@@ -78,6 +87,7 @@ table{border-collapse:collapse;width:100%}small,.hint{color:#556}.table-tools{ma
 #tip.pinned{pointer-events:auto}#tip strong{display:block}#tip p{margin:7px 0}#tip-controls{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 #tip:not(.pinned) #tip-controls{display:none}[hidden]{display:none!important}#plot{touch-action:pan-y}
 __LINEAGE_STYLE__
+__CALCULATOR_STYLE__
 </style>
 <h1>__TITLE__</h1>
 __LINEAGE_MARKUP__
@@ -87,6 +97,16 @@ __LINEAGE_MARKUP__
 <label><input type="checkbox" style="width:auto" data-mode="peak" checked> SPEC Peak</label>
 <label><input type="checkbox" style="width:auto" data-mode="peak_proxy" checked> Historical estimates</label>
 </fieldset>
+<fieldset id="estimates"><legend>Estimates</legend>
+<label><input type="checkbox" style="width:auto" data-estimate="baseline" checked> ● Rate baseline / historical</label>
+<label><input type="checkbox" style="width:auto" data-estimate="speed"> ▲ From speed</label>
+<label><input type="checkbox" style="width:auto" data-estimate="joint"> ◆ From speed + rate</label></fieldset>
+<fieldset id="matching"><legend>Matching across SPEC generations</legend>
+<label><input type="radio" style="width:auto" id="match-strict" name="matching" value="strict"> Strict</label>
+<label><input type="radio" style="width:auto" id="match-ram-aliases" name="matching" value="ram-aliases" checked> RAM + aliases</label>
+<label><input type="radio" style="width:auto" id="match-cpu-clock" name="matching" value="cpu-clock"> CPU + clock (cross-platform)</label></fieldset>
+<p class="hint">All estimates target rate-VAXen. Speed estimates: SPEC95–2026 submissions. Joint estimates: matched overlap pairs. CI95 is calibration uncertainty, not a prediction interval.</p>
+<p id="estimate-status" class="hint"></p>
 <fieldset id="routes"><legend>Benchmark routes</legend></fieldset>
 <p class="hint">Combined mixes merges available Gibson and ADP estimates. Individual mix views are optional comparisons.</p>
 <p>System throughput · not per-core performance</p>
@@ -97,16 +117,27 @@ __LINEAGE_MARKUP__
 <button id="early">Early hardware</button> <button id="modern">SPEC era</button> <span id="range-label"></span></p>
 <div class="timeline-chart"><div class="chart"><svg id="plot" viewBox="0 0 1400 760" aria-label="Historical VAXen scatterplot"></svg></div>
 <svg id="overview" viewBox="0 0 1400 90" preserveAspectRatio="none" aria-label="Record counts and time-range selection"></svg></div>
-<p class="hint" style="text-align:center">Records per year. Drag the handles to resize the time window; drag its center to move it. Arrow keys adjust focused handles.</p>
+<p class="hint" style="text-align:center">Displayed points per year. Drag the handles to resize the time window; drag its center to move it. Arrow keys adjust focused handles.</p>
 <div id="tip" role="region" aria-label="Selected data point" hidden><div id="tip-content"></div>
 <div id="tip-controls"><button id="prev" type="button">Previous</button><button id="next" type="button">Next</button>
 <button id="close" type="button">Close</button><button id="trace-path" type="button">View calibration path</button></div></div>
+__CALCULATOR_MARKUP__
 __BROWSING_TOP__
 <table><thead><tr><th>Year / evidence</th><th>System / configuration</th><th>Route / inputs</th><th>VAXen / CI95</th><th>Sources</th></tr></thead><tbody id="body"></tbody></table>
 __BROWSING_BOTTOM__
 <script>
 const packed=__PAYLOAD__;
 const data=packed.rows.map(values=>Object.fromEntries(packed.fields.map((key,i)=>[key,typeof values[i]==='string'?packed.strings[Number(values[i].slice(1))]:values[i]])));
+for(const r of data)for(const key of ['variants','matched_rate_variants','comparison_keys','source_record_ids','benchmark_sources','runtime_resources','hardware_context','input_configurations']){
+ if(typeof r[key]==='string'&&r[key])r[key]=JSON.parse(r[key]);}
+let matching='ram-aliases';const enabledEstimates=new Set(['baseline']);
+const kind=r=>r.estimate_kind||'baseline';
+const estimateLabel=r=>({baseline:'Rate baseline / historical',speed:'From speed',joint:'From speed + rate'}[kind(r)]);
+function variant(r){const v=r.variants?.[matching];if(r.variants&&Object.keys(r.variants).length&&!v)return null;
+ return v?{...r,vaxen:v[0],ci95_low:v[1],ci95_high:v[2],calibration_scenario:matching,uncertainty_scope:kind(r)==='baseline'&&r.generation!=='cpu92'?'conditional whole-CPU-model rate-chain coefficient CI95':r.uncertainty_scope}:r;}
+const relationIndex=new Map();for(const r of data)for(const key of r.comparison_keys||[]){const a=relationIndex.get(key)||[];a.push(r);relationIndex.set(key,a);}
+function relatives(r){const keys=new Set(r.comparison_keys||[]);for(const k of [...keys])for(const q of relationIndex.get(k)||[])if(kind(q)==='joint')for(const k2 of q.comparison_keys||[])keys.add(k2);
+ const found=new Map();for(const k of keys)for(const q of relationIndex.get(k)||[]){const v=variant(q);if(v)found.set(q.record_id,v);}return [...found.values()];}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function fmt(value){const x=Number(value);if(!Number.isFinite(x))return '—';
  const prefixes=['p','n','µ','m','','k','M','G','T','P','E'];
@@ -114,9 +145,10 @@ function fmt(value){const x=Number(value);if(!Number.isFinite(x))return '—';
  let scaled=x/10**e;if(Math.abs(Number(scaled.toFixed(3)))>=1000&&e<18){e+=3;scaled=x/10**e;}
  return `${scaled.toFixed(3)} ${prefixes[(e+12)/3]}VAXen`;}
 const plot=document.querySelector('#plot'), tip=document.querySelector('#tip'), overviewPlot=document.querySelector('#overview');
-const dated=data.filter(r=>r.year), ymin=Math.floor(Math.log10(Math.min(...data.map(r=>r.ci95_low)))),
- ymax=Math.ceil(Math.log10(Math.max(...data.map(r=>r.ci95_high)))),
- xmin=Math.min(...dated.map(r=>r.year))-1,xmax=Math.max(...dated.map(r=>r.year))+1;
+const dated=data.filter(r=>r.year);let ymin=Math.floor(Math.log10(data.reduce((m,r)=>Math.min(m,r.ci95_low,...Object.values(r.variants||{}).map(v=>v[1])),Infinity))),
+ ymax=Math.ceil(Math.log10(data.reduce((m,r)=>Math.max(m,r.ci95_high,...Object.values(r.variants||{}).map(v=>v[2])),0))),
+ xmin=dated.reduce((m,r)=>Math.min(m,r.year),Infinity)-1,xmax=dated.reduce((m,r)=>Math.max(m,r.year),-Infinity)+1;
+const originalBounds={xmin,xmax,ymin,ymax};let userPredictions=[];
 let viewMin=xmin,viewMax=xmax,page=0;const PAGE_SIZE=200;
 const X=x=>90+(x-viewMin)/(viewMax-viewMin)*1270,Y=y=>680-(Math.log10(y)-ymin)/(ymax-ymin)*640;
 const palette=['#207ca3','#bd5934','#397947','#7c57a2','#ad7130','#ca4779','#4064ac','#537b79'];
@@ -129,6 +161,7 @@ const browsingSuffixes=['','-bottom'];
 const enabledModes=new Set(['base','peak','peak_proxy']);
 const searchable=data.map(r=>[r.system,r.cpu,r.configuration,r.os,r.scores,r.route,modeOf(r)].join(' ').toLowerCase());
 const spans=r=>`M${X(r.year)} ${Y(r.ci95_low)}V${Y(r.ci95_high)} M${X(r.year_low)} ${Y(r.vaxen)}H${X(r.year_high)}`;
+let visiblePoints=new Map();
 let filtered=data,points=[],candidates=[],active=0,pinned=false,grid=new Map(),drag=null,dragged=false;
 function clearSelection(){candidates=[];active=0;pinned=false;tip.hidden=true;tip.classList.remove('pinned');
  document.querySelector('#highlight')?.replaceChildren();}
@@ -150,17 +183,42 @@ function positionTip(){if(tip.hidden||!candidates.length)return;
  tip.style.left=Math.max(12,Math.min(left,innerWidth-box.width-12))+'px';
  tip.style.top=Math.max(12,Math.min(p.y+14,innerHeight-box.height-12))+'px';
 }
+
+function resourceDescription(r){
+ const count=v=>v!==''&&v!==null&&v!==undefined?esc(v):'not reported';
+ function one(q){
+  let text=q.reported_cpu_count?'Reported CPU count '+count(q.reported_cpu_count)+' (chip equivalence unverified)':
+   'Enabled chips '+count(q.chips)+' · enabled cores '+count(q.cores)+' · hardware threads/core '+count(q.threads_per_core);
+  if(q.cores_per_chip)text+=' · chip capacity '+count(q.cores_per_chip)+' cores/chip';
+  if(q.resource_warning)text+='<br>'+esc(q.resource_warning);
+  const run=q.runtime_resources;
+  if(run){text+='<br>'+(run.quantity==='copies'?'Rate copies':'Speed benchmark threads')+': ';
+   text+=run.status==='reported'?(String(run.minimum)===String(run.maximum)?count(run.minimum):count(run.minimum)+'–'+count(run.maximum)):
+    run.status==='not_collected'?'detail not collected':'not reported in parsed table';
+   if(run.source_url)text+=' · <a href="'+esc(run.source_url)+'">Runtime source</a>';
+  }
+  return text;
+ }
+ if(kind(r)==='joint'&&r.input_configurations)return ['speed','rate'].map(role=>'<b>'+role+' input</b><br>'+one(r.input_configurations[role])).join('<br>');
+ if(!r.generation)return 'Historical hardware; runtime concurrency not established';
+ return one(r)+(r.hardware_context?'<details><summary>Hardware / software disclosure</summary>'+
+ Object.entries(r.hardware_context).filter(([k,v])=>v).map(([k,v])=>'<p><b>'+esc(k)+'</b>: '+esc(v)+'</p>').join('')+'</details>':'');
+}
 function showSelection(){if(!candidates.length){clearSelection();return;}
  const p=candidates[active],r=p.r,c=color(r),m=plot.getScreenCTM(),scale=Math.hypot(m.a,m.b)||1;
- document.querySelector('#highlight').innerHTML=`<path d="${spans(r)}" stroke="${c}" opacity=".75" stroke-width="3" vector-effect="non-scaling-stroke"/>
+ const related=relatives(r),visible=related.map(q=>visiblePoints.get(q.record_id)).filter(Boolean);
+ const connections=visible.length>1?`<path d="${visible.map((q,i)=>(i?'L':'M')+q.x+' '+q.y).join(' ')}" stroke="${c}" fill="none" opacity=".7"/>`:'';
+ document.querySelector('#highlight').innerHTML=connections+visible.map(q=>`<path d="${spans(q.r)}" stroke="${c}" opacity=".35"/><path d="${marker(q,5)}" fill="${c}"/>`).join('')+`<path d="${spans(r)}" stroke="${c}" opacity=".75" stroke-width="3" vector-effect="non-scaling-stroke"/>
  <circle cx="${p.x}" cy="${p.y}" r="${10/scale}" fill="white" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke"/>
  <circle cx="${p.x}" cy="${p.y}" r="${6/scale}" fill="${c}"/>`;
  tip.hidden=false;tip.classList.toggle('pinned',pinned);tip.style.borderColor=c;
  document.querySelector('#tip-content').innerHTML=`<strong>${esc(r.system)}</strong>
  <p>${esc(r.cpu||'CPU unspecified')} · ${esc(r.route)}</p><p>${esc(configurationDetails(r))}</p>
  <p>${esc(modeOf(r))} · ${esc(r.measurement_scope||'historical proxy')}<br>
- Chips ${esc(r.chips||'?')} · cores ${esc(r.cores||'?')} · threads/core ${esc(r.threads_per_core||'?')} · copies ${esc(r.copies_min||'?')}–${esc(r.copies_max||'?')}</p>
- <p><b>${fmt(r.vaxen)}</b><br>CI95: ${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</p>
+ ${resourceDescription(r)}</p>
+ <p>${esc(estimateLabel(r))} · ${esc(matching)}<br><b>${fmt(r.vaxen)}</b><br>CI95: ${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</p>
+ ${related.length?'<details open><summary>Related estimates</summary>'+related.slice(0,8).map(q=>`<p>${esc(estimateLabel(q))}: <b>${fmt(q.vaxen)}</b><br><small>${esc(q.system)} · CI95 ${fmt(q.ci95_low)}–${fmt(q.ci95_high)}</small></p>${q.matched_rate_variants?.[matching]?`<p>Rate-only — matched cohort: ${fmt(q.matched_rate_variants[matching][0])}<br><small>CI95 ${fmt(q.matched_rate_variants[matching][1])}–${fmt(q.matched_rate_variants[matching][2])}</small></p>`:''}`).join('')+(related.length>8?`<small>${related.length} related rows; first 8 shown</small>`:'')+'</details>':''}
+ <p>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">Source ${i+1}</a>`).join(' · ')}</p>
  <p>Year: ${esc(r.year)} (${esc(r.year_low)}–${esc(r.year_high)})<br><small>${esc(r.date_method)}</small></p>
  <p><small>${esc(r.scores)}${r.mix_variant?'<br>'+esc(r.mix_variant)+' · '+esc(r.reported_unit):''}<br>${esc(r.calibration_route||r.route)}<br>${esc(r.uncertainty_scope||'conditional calibration CI95')}<br>${esc(r.limitation||'')}<br>${esc(r.date_notes||'')}</small></p><small>${pinned?'Pinned':'Click to pin'} · ${active+1} / ${candidates.length} nearby point${candidates.length===1?'':'s'}</small>`;
  document.querySelector('#prev').disabled=document.querySelector('#next').disabled=candidates.length<2;
@@ -194,25 +252,32 @@ function renderTable(){const order=sortOrder;
  }
  document.querySelector('#body').innerHTML=rows.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE).map(r=>`<tr><td>${esc(r.year||'Unknown')}<br><small>${esc(r.date_method)} ${esc(r.year_low)}–${esc(r.year_high)}</small></td>
  <td>${esc(r.system)}${r.cpu?'<br>'+esc(r.cpu):''}<br><small>${esc(configurationDetails(r))}</small></td>
- <td>${esc(r.route)} · ${esc(modeOf(r))}<br><small>${esc(r.scores)}</small></td><td>${fmt(r.vaxen)}<br><small>${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</small></td>
- <td><a href="${esc(r.source_url)}">Benchmark</a><br>${r.date_sources.split(';').filter(Boolean).map(u=>`<a href="${esc(u)}">Year source</a>`).join(' ')}<br><small>${esc(r.date_notes)}</small></td></tr>`).join('');
+ <td>${esc(r.route)} · ${esc(modeOf(r))}<br>${esc(estimateLabel(r))}<br><small>${esc(r.scores)}</small></td><td>${fmt(r.vaxen)}<br><small>${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</small></td>
+ <td>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">${kind(r)==='joint'?(i===0?'Speed':'Rate'):'Benchmark'}</a>`).join(' · ')}<br>${r.date_sources.split(';').filter(Boolean).map(u=>`<a href="${esc(u)}">Year source</a>`).join(' ')}<br><small>${esc(r.date_notes)}</small></td></tr>`).join('');
 }
+function marker(p,size){const x=p.x,y=p.y,s=size;if(kind(p.r)==='speed')return `M${x} ${y-s}l${s} ${s*2}h${-s*2}z`;
+ if(kind(p.r)==='joint')return `M${x} ${y-s}l${s} ${s}l${-s} ${s}l${-s} ${-s}z`;
+ return `M${x-s},${y}a${s},${s} 0 1,0 ${s*2},0a${s},${s} 0 1,0 ${-s*2},0`;}
 function draw(){clearSelection();const query=document.querySelector('#q').value.toLowerCase();
- const cohort=data.filter((r,i)=>searchable[i].includes(query)&&enabled.has(r.route)&&enabledModes.has(modeOf(r)));
+ const selected=data.filter((r,i)=>searchable[i].includes(query)&&enabled.has(r.route)&&enabledModes.has(modeOf(r))&&enabledEstimates.has(kind(r)));
+ const cohort=selected.map(variant).filter(Boolean);
+ document.querySelector('#estimate-status').textContent=`${matching}: ${selected.length-cohort.length} estimates unavailable (no fitted coefficient or admitted pair). Historical routes retain their saved calibration.`;
  filtered=cohort.filter(r=>!r.year||(r.year>=viewMin&&r.year<=viewMax));
- document.querySelector('#count').textContent=`${filtered.length} configurations / source submissions; ${filtered.filter(r=>r.year).length} with estimated years`;
+ const sourceCount=new Set(filtered.flatMap(r=>(r.source_record_ids||[r.configuration_id]).map(id=>(r.generation||r.route)+':'+id))).size;
+ document.querySelector('#count').textContent=`${sourceCount} source records · ${filtered.filter(r=>kind(r)==='joint').length} paired estimates · ${filtered.length} displayed points`;
  let s='<defs><clipPath id="plot-region"><rect x="90" y="40" width="1270" height="640"/></clipPath></defs>';for(let y=ymin;y<=ymax;y++){let p=Y(10**y);s+=`<path d="M90 ${p}H1360" stroke="#dde3e8"/><text x="8" y="${p+5}">10^${y} VAXen</text>`;}
  const step=viewMax-viewMin<12?1:5;for(let x=Math.ceil(viewMin/step)*step;x<=viewMax;x+=step)s+=`<path d="M${X(x)} 40V680" stroke="#eee"/><text x="${X(x)-17}" y="710">${x}</text>`;
  points=filtered.filter(r=>r.year).map(r=>({r,x:X(r.year),y:Y(r.vaxen)}));
+ visiblePoints=new Map(points.map(p=>[p.r.record_id,p]));
  // Batch vector geometry per route: all observations retained, without thousands of DOM circles.
  for(const route of routeNames){const ps=points.filter(p=>p.r.route===route);if(!ps.length)continue;const c=color(ps[0].r);
- const intervals=ps.map(p=>spans(p.r)).join(' '),marks=ps.map(p=>`M${p.x-3},${p.y}a3,3 0 1,0 6,0a3,3 0 1,0 -6,0`).join(' ');
+ const intervals=ps.map(p=>spans(p.r)).join(' '),marks=ps.map(p=>marker(p,3)).join(' ');
  s+=`<g clip-path="url(#plot-region)"><path d="${intervals}" stroke="${c}" fill="none" opacity=".12" stroke-width="2"/><path d="${marks}" fill="${c}" opacity=".45"/></g>`;}
- plot.innerHTML=s+'<g id="highlight" clip-path="url(#plot-region)" pointer-events="none"></g>';indexPoints();renderTable();
+ plot.innerHTML=s+'<g id="highlight" clip-path="url(#plot-region)" pointer-events="none"></g>'+predictionMarkup();indexPoints();renderTable();
  document.querySelector('#range-label').textContent=`${viewMin.toFixed(1)}–${viewMax.toFixed(1)}`;
  const bins=new Map();for(const r of cohort)if(r.year)bins.set(r.year,(bins.get(r.year)||0)+1);
  const maxCount=Math.max(0,...bins.values()),left=overviewX(viewMin),right=overviewX(viewMax);
- let overview=`<text x="90" y="13" font-size="12">Records/year · max ${maxCount} · √ height</text>`;
+ let overview=`<text x="90" y="13" font-size="12">Points/year · max ${maxCount} · √ height</text>`;
  for(const [yr,n] of bins)overview+=`<path d="M${overviewX(yr)} 65V${65-42*Math.sqrt(n/Math.max(1,maxCount))}" stroke="#829bad" stroke-width="5" pointer-events="none"/>`;
  overview+=`<rect x="90" y="18" width="${left-90}" height="49" fill="#ccd3da" opacity=".5" pointer-events="none"/>
  <rect x="${right}" y="18" width="${1360-right}" height="49" fill="#ccd3da" opacity=".5" pointer-events="none"/>
@@ -255,6 +320,9 @@ for(const [id,side] of [['brush-left','left'],['brush-right','right']])document.
 document.querySelector('#routes').innerHTML='<legend>Benchmark routes</legend>'+routeNames.map((name,i)=>`<label style="margin-right:14px;color:${palette[i%palette.length]}"><input type="checkbox" style="width:auto" data-route="${esc(name)}" ${enabled.has(name)?'checked':''}> ${esc(name)}</label>`).join('');
 document.querySelector('#routes').addEventListener('change',e=>{const name=e.target.dataset.route;if(!name)return;e.target.checked?enabled.add(name):enabled.delete(name);page=0;draw();});
 document.querySelector('#scores').addEventListener('change',e=>{const mode=e.target.dataset.mode;if(!mode)return;e.target.checked?enabledModes.add(mode):enabledModes.delete(mode);page=0;draw();});
+document.querySelector('#estimates').addEventListener('change',e=>{const k=e.target.dataset.estimate;if(!k)return;e.target.checked?enabledEstimates.add(k):enabledEstimates.delete(k);page=0;draw();});
+function setMatching(value){matching=value;for(const p of ['strict','ram-aliases','cpu-clock'])document.querySelector('#match-'+p).checked=p===value;document.querySelector('#fit-policy').value=value;page=0;draw();resetLineage();drawFit();calculatorView();}
+document.querySelector('#matching').addEventListener('change',e=>setMatching(e.target.value));
 function bindListBrowsing(suffix){
  for(const [id,delta] of [['table-prev',-1],['table-next',1]])document.querySelector('#'+id+suffix).addEventListener('click',()=>{page+=delta;renderTable();});
  document.querySelector('#page-jump'+suffix).addEventListener('submit',e=>{e.preventDefault();const n=Number(document.querySelector('#goto-page'+suffix).value);const max=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));if(!Number.isInteger(n)||n<1||n>max)return;page=n-1;renderTable();});
@@ -263,5 +331,6 @@ function bindListBrowsing(suffix){
 browsingSuffixes.forEach(bindListBrowsing);
 document.querySelector('#q').addEventListener('input',()=>{page=0;draw();});
 __LINEAGE_SCRIPT__
+__CALCULATOR_SCRIPT__
 draw();
 </script></html>"""

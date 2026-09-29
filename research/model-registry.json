@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-28",
+  "updated": "2026-09-29",
   "path_base": "repository root",
   "conventions": {
     "fit": "y = k*x; zero intercept; grouped median log ratios then mean across groups",
@@ -9,7 +9,8 @@
     "dependency": "depends_on records calculation dependencies; dataset_ids and shared_evidence describe evidence reuse",
     "coefficients": "Numerical coefficients remain in referenced outputs, not duplicated in this registry",
     "primary_error": "100*abs(predicted/observed-1); linear P95 over equal model/configuration centers; canonical field model_center_p95_percent",
-    "observation_error": "Secondary only: equal model weights, then equal observations within model; explicitly named weighted CDF P95"
+    "observation_error": "Secondary only: equal model weights, then equal observations within model; explicitly named weighted CDF P95",
+    "execution_admission": "Mode-specific exclusion of confirmed same-track constant-count conflicts; unknown/nonuniform counts remain provisional; no score scaling."
   },
   "tracks": [
     {
@@ -21,7 +22,7 @@
     {
       "id": "spec-rate",
       "order": 2,
-      "title": "SPEC92–2026 rate chain",
+      "title": "SPEC92–2026 speed and rate calibration",
       "path": "research/tracks/spec-rate.md"
     },
     {
@@ -362,6 +363,78 @@
       "status": "planned",
       "variants": [],
       "scope": "No established conversion edge to VAXen"
+    },
+    {
+      "id": "speed-95",
+      "title": "SPEC CPU95 integer speed",
+      "mode": "speed",
+      "unit": "CPU95 raw integer-speed points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Single task; not necessarily single-threaded"
+    },
+    {
+      "id": "speed-2000",
+      "title": "SPEC CPU2000 integer speed",
+      "mode": "speed",
+      "unit": "CPU2000 raw integer-speed points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Single task; not necessarily single-threaded"
+    },
+    {
+      "id": "speed-2006",
+      "title": "SPEC CPU2006 integer speed",
+      "mode": "speed",
+      "unit": "CPU2006 raw integer-speed points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Single task; not necessarily single-threaded"
+    },
+    {
+      "id": "speed-2017",
+      "title": "SPEC CPU2017 integer speed",
+      "mode": "speed",
+      "unit": "CPU2017 raw integer-speed points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Single task; not necessarily single-threaded"
+    },
+    {
+      "id": "speed-2026",
+      "title": "SPEC CPU2026 integer speed",
+      "mode": "speed",
+      "unit": "CPU2026 raw integer-speed points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Single task; not necessarily single-threaded"
+    },
+    {
+      "id": "speed92-equivalent",
+      "title": "Estimated SPEC92 integer speed",
+      "mode": "speed",
+      "unit": "SPECint92-equivalent points",
+      "status": "estimated",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Base follows SPECbase_int92; separate from rate-VAXen"
     }
   ],
   "datasets": [
@@ -502,6 +575,46 @@
       "owner": "research/instruction-mix-bridge.md",
       "optional": false,
       "lineage": "CCTA source ratings; unapproved classical configuration joins; joint fit snapshots"
+    },
+    {
+      "id": "dual-spec",
+      "path": "research/data/spec/dual-track",
+      "kind": "derived",
+      "owner": "research/spec-dual-track.md",
+      "optional": false,
+      "lineage": "Independent targets; source hashes and conditional calibration snapshots"
+    },
+    {
+      "id": "dual-classic",
+      "path": "research/data/classic/dual-track",
+      "kind": "derived",
+      "owner": "research/spec-dual-track.md",
+      "optional": false,
+      "lineage": "Independent targets; source hashes and conditional calibration snapshots"
+    },
+    {
+      "id": "joint-spec-predictors",
+      "path": "research/data/spec/joint-tracks",
+      "kind": "derived",
+      "owner": "research/spec-joint-tracks.md",
+      "optional": false,
+      "lineage": "Distinct older rate/newer speed/newer rate disclosures; automatic three-way configuration matches"
+    },
+    {
+      "id": "spec95-2000-overlap-audit",
+      "path": "research/data/spec/95-2000-audit",
+      "kind": "reviewed-data",
+      "owner": "research/spec95-spec2000-overlap-audit.md",
+      "optional": false,
+      "lineage": "Hash-checked cached official exports and selected original disclosures; sensitivity scenarios are not promoted fits"
+    },
+    {
+      "id": "spec95-2000-relaxed-fits",
+      "path": "research/data/spec/95-2000-refit",
+      "kind": "derived",
+      "owner": "research/spec95-spec2000-relaxed-fitting.md",
+      "optional": false,
+      "lineage": "Same reported inputs under explicit matching assumptions; no resource or frequency score synthesis"
     }
   ],
   "models": [
@@ -558,8 +671,6 @@
         }
       ],
       "output_row_selection": {
-        "new_generation": "cpu95",
-        "old_generation": "cpu92",
         "mode": [
           "base",
           "peak"
@@ -597,7 +708,14 @@
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
           "optional": false
         }
-      ]
+      ],
+      "output_row_selection": {
+        "generation": "cpu95",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
     },
     {
       "id": "rate-2000-to-95",
@@ -668,7 +786,14 @@
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
           "optional": false
         }
-      ]
+      ],
+      "output_row_selection": {
+        "generation": "cpu2000",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
     },
     {
       "id": "rate-2006-to-2000",
@@ -739,7 +864,14 @@
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
           "optional": false
         }
-      ]
+      ],
+      "output_row_selection": {
+        "generation": "cpu2006",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
     },
     {
       "id": "rate-2017-to-2006",
@@ -810,7 +942,14 @@
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
           "optional": false
         }
-      ]
+      ],
+      "output_row_selection": {
+        "generation": "cpu2017",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
     },
     {
       "id": "rate-2026-to-2017",
@@ -881,7 +1020,14 @@
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
           "optional": false
         }
-      ]
+      ],
+      "output_row_selection": {
+        "generation": "cpu2026",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
     },
     {
       "id": "annual-rate",
@@ -978,7 +1124,15 @@
       ],
       "shared_evidence": "DEC columns also appear in classical training; holdout removes model from all edges",
       "command": "cpushowspeed classic spec89-rate-fit",
-      "outputs": []
+      "outputs": [
+        {
+          "path": "research/data/classic/spec89-rate-bridge-summary.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "edge": "int92_to_rate92"
+      }
     },
     {
       "id": "int89-rate-vaxen",
@@ -1007,10 +1161,13 @@
       "command": "cpushowspeed classic spec89-rate-fit",
       "outputs": [
         {
-          "path": "research/data/classic/spec89-rate-estimates.csv",
+          "path": "research/data/classic/spec89-rate-bridge-summary.csv",
           "optional": false
         }
-      ]
+      ],
+      "output_row_selection": {
+        "edge": "int89_to_rate92_chained"
+      }
     },
     {
       "id": "classical-composite",
@@ -1306,6 +1463,10 @@
         {
           "path": "research/data/classic/environment-v2-summary.csv",
           "optional": false
+        },
+        {
+          "path": "research/data/classic/environment-parameters.csv",
+          "optional": false
         }
       ]
     },
@@ -1484,6 +1645,565 @@
         },
         {
           "path": "research/data/classic/mix-study/network-audit.json",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "speed-95-to-92",
+      "title": "CPU95 to CPU92 speed",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-95"
+      ],
+      "target_metric": "int92",
+      "additional_target_metrics": [
+        "base-int92"
+      ],
+      "relationship": "empirical-fit",
+      "formula": "older = k*newer; grouped median log ratios then mean over processor configurations",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-dual-track.md",
+      "dataset_ids": [
+        "dual-spec"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Repeated submissions retained; runtime thread equivalence unverified",
+      "command": "cpushowspeed bridge compare-tracks",
+      "outputs": [
+        {
+          "path": "research/data/spec/dual-track/speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "old_generation": "cpu92",
+        "new_generation": "cpu95",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2000-to-95",
+      "title": "CPU2000 to CPU95 speed",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2000"
+      ],
+      "target_metric": "speed-95",
+      "additional_target_metrics": [],
+      "relationship": "empirical-fit",
+      "formula": "older = k*newer; grouped median log ratios then mean over processor configurations",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-dual-track.md",
+      "dataset_ids": [
+        "dual-spec"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Repeated submissions retained; runtime thread equivalence unverified",
+      "command": "cpushowspeed bridge compare-tracks",
+      "outputs": [
+        {
+          "path": "research/data/spec/dual-track/speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "old_generation": "cpu95",
+        "new_generation": "cpu2000",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2006-to-2000",
+      "title": "CPU2006 to CPU2000 speed",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2006"
+      ],
+      "target_metric": "speed-2000",
+      "additional_target_metrics": [],
+      "relationship": "empirical-fit",
+      "formula": "older = k*newer; grouped median log ratios then mean over processor configurations",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-dual-track.md",
+      "dataset_ids": [
+        "dual-spec"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Repeated submissions retained; runtime thread equivalence unverified",
+      "command": "cpushowspeed bridge compare-tracks",
+      "outputs": [
+        {
+          "path": "research/data/spec/dual-track/speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "old_generation": "cpu2000",
+        "new_generation": "cpu2006",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2017-to-2006",
+      "title": "CPU2017 to CPU2006 speed",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2017"
+      ],
+      "target_metric": "speed-2006",
+      "additional_target_metrics": [],
+      "relationship": "empirical-fit",
+      "formula": "older = k*newer; grouped median log ratios then mean over processor configurations",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-dual-track.md",
+      "dataset_ids": [
+        "dual-spec"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Repeated submissions retained; runtime thread equivalence unverified",
+      "command": "cpushowspeed bridge compare-tracks",
+      "outputs": [
+        {
+          "path": "research/data/spec/dual-track/speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "old_generation": "cpu2006",
+        "new_generation": "cpu2017",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2026-to-2017",
+      "title": "CPU2026 to CPU2017 speed",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2026"
+      ],
+      "target_metric": "speed-2017",
+      "additional_target_metrics": [],
+      "relationship": "empirical-fit",
+      "formula": "older = k*newer; grouped median log ratios then mean over processor configurations",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-dual-track.md",
+      "dataset_ids": [
+        "dual-spec"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Repeated submissions retained; runtime thread equivalence unverified",
+      "command": "cpushowspeed bridge compare-tracks",
+      "outputs": [
+        {
+          "path": "research/data/spec/dual-track/speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "old_generation": "cpu2017",
+        "new_generation": "cpu2026",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-chain",
+      "title": "Independent speed chain to SPEC92",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-95",
+        "speed-2000",
+        "speed-2006",
+        "speed-2017",
+        "speed-2026"
+      ],
+      "target_metric": "speed92-equivalent",
+      "relationship": "composition",
+      "formula": "product of speed-to-speed factors; shared configuration bootstrap",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-dual-track.md",
+      "dataset_ids": [
+        "dual-spec"
+      ],
+      "depends_on": [
+        "speed-95-to-92",
+        "speed-2000-to-95",
+        "speed-2006-to-2000",
+        "speed-2017-to-2006",
+        "speed-2026-to-2017"
+      ],
+      "shared_evidence": "Common configuration weights across edges; no rate conversion",
+      "command": "cpushowspeed bridge compare-tracks",
+      "outputs": [
+        {
+          "path": "research/data/spec/dual-track/speed-chain.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "classical-mix-dual-speed",
+      "title": "Classical/mix speed target comparison",
+      "track": "classical",
+      "input_metrics": [
+        "dhry-11",
+        "dhry-21",
+        "whet-native",
+        "whet-sp",
+        "whet-dp",
+        "linpack-100",
+        "gibson",
+        "adp"
+      ],
+      "target_metric": "speed92-equivalent",
+      "relationship": "joint-fit",
+      "formula": "family/node/model-balanced sparse log WLS; coefficients per metric",
+      "variants": [
+        "peak; reported/linear clocks; direct/with SPEC89; classical/with mixes"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-dual-track.md",
+      "dataset_ids": [
+        "dual-classic",
+        "classic-overlap",
+        "classic-source-vectors",
+        "instruction-mix-study",
+        "spec89-native-bridge"
+      ],
+      "depends_on": [
+        "int89-int92"
+      ],
+      "shared_evidence": "Original observation IDs; whole-model holdouts and joint bridge/bootstrap resampling; distinct observed target kinds",
+      "command": "cpushowspeed classic compare-targets",
+      "outputs": [
+        {
+          "path": "research/data/classic/dual-track/coefficients.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "track": "speed"
+      }
+    },
+    {
+      "id": "classical-mix-dual-rate",
+      "title": "Classical/mix rate target comparison",
+      "track": "classical",
+      "input_metrics": [
+        "dhry-11",
+        "dhry-21",
+        "whet-native",
+        "whet-sp",
+        "whet-dp",
+        "linpack-100",
+        "gibson",
+        "adp"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "joint-fit",
+      "formula": "family/node/model-balanced sparse log WLS; coefficients per metric",
+      "variants": [
+        "peak; reported/linear clocks; direct/with SPEC89; classical/with mixes"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-dual-track.md",
+      "dataset_ids": [
+        "dual-classic",
+        "classic-overlap",
+        "classic-source-vectors",
+        "instruction-mix-study",
+        "spec89-native-bridge"
+      ],
+      "depends_on": [
+        "int89-rate-vaxen",
+        "rate92-unit"
+      ],
+      "shared_evidence": "Original observation IDs; whole-model holdouts and joint bridge/bootstrap resampling; distinct observed target kinds",
+      "command": "cpushowspeed classic compare-targets",
+      "outputs": [
+        {
+          "path": "research/data/classic/dual-track/coefficients.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "track": "rate"
+      }
+    },
+    {
+      "id": "joint-spec-speed_only",
+      "title": "Independent target: speed_only",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-95",
+        "speed-2000",
+        "speed-2006",
+        "speed-2017",
+        "speed-2026"
+      ],
+      "target_metric": "vaxen",
+      "additional_target_metrics": [
+        "rate-92",
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017"
+      ],
+      "relationship": "empirical-fit",
+      "formula": "older rate = k*x; x=S, R or sqrt(S*R); VAXen uses the upstream rate-only prefix",
+      "variants": [
+        "base",
+        "peak",
+        "strict",
+        "ram-aliases across all adjacent generations",
+        "cpu-clock across all adjacent generations"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-joint-tracks.md",
+      "dataset_ids": [
+        "joint-spec-predictors",
+        "modern-rate-inputs",
+        "spec95-2000-relaxed-fits"
+      ],
+      "depends_on": [
+        "rate92-unit",
+        "rate-95-vaxen",
+        "rate-2000-vaxen",
+        "rate-2006-vaxen",
+        "rate-2017-vaxen"
+      ],
+      "shared_evidence": "Identical complete triplets; all configurations of processor key held out from local and prefix edges; shared bootstrap weights",
+      "command": "cpushowspeed bridge fit-joint-tracks",
+      "outputs": [
+        {
+          "path": "research/data/spec/joint-tracks/summary.csv",
+          "optional": false
+        },
+        {
+          "path": "research/data/spec/joint-tracks/ram-aliases/summary.csv",
+          "optional": false
+        },
+        {
+          "path": "research/data/spec/joint-tracks/cpu-clock/summary.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "method": "speed_only"
+      }
+    },
+    {
+      "id": "joint-spec-rate_only",
+      "title": "Independent target: rate_only",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017",
+        "rate-2026"
+      ],
+      "target_metric": "vaxen",
+      "additional_target_metrics": [
+        "rate-92",
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017"
+      ],
+      "relationship": "empirical-fit",
+      "formula": "older rate = k*x; x=S, R or sqrt(S*R); VAXen uses the upstream rate-only prefix",
+      "variants": [
+        "base",
+        "peak",
+        "strict",
+        "ram-aliases across all adjacent generations",
+        "cpu-clock across all adjacent generations"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-joint-tracks.md",
+      "dataset_ids": [
+        "joint-spec-predictors",
+        "modern-rate-inputs",
+        "spec95-2000-relaxed-fits"
+      ],
+      "depends_on": [
+        "rate92-unit",
+        "rate-95-vaxen",
+        "rate-2000-vaxen",
+        "rate-2006-vaxen",
+        "rate-2017-vaxen"
+      ],
+      "shared_evidence": "Identical complete triplets; all configurations of processor key held out from local and prefix edges; shared bootstrap weights",
+      "command": "cpushowspeed bridge fit-joint-tracks",
+      "outputs": [
+        {
+          "path": "research/data/spec/joint-tracks/summary.csv",
+          "optional": false
+        },
+        {
+          "path": "research/data/spec/joint-tracks/ram-aliases/summary.csv",
+          "optional": false
+        },
+        {
+          "path": "research/data/spec/joint-tracks/cpu-clock/summary.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "method": "rate_only"
+      }
+    },
+    {
+      "id": "joint-spec-equal_geometric",
+      "title": "Independent target: equal_geometric",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-95",
+        "speed-2000",
+        "speed-2006",
+        "speed-2017",
+        "speed-2026",
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017",
+        "rate-2026"
+      ],
+      "target_metric": "vaxen",
+      "additional_target_metrics": [
+        "rate-92",
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017"
+      ],
+      "relationship": "empirical-fit",
+      "formula": "older rate = k*x; x=S, R or sqrt(S*R); VAXen uses the upstream rate-only prefix",
+      "variants": [
+        "base",
+        "peak",
+        "strict",
+        "ram-aliases across all adjacent generations",
+        "cpu-clock across all adjacent generations"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec-joint-tracks.md",
+      "dataset_ids": [
+        "joint-spec-predictors",
+        "modern-rate-inputs",
+        "spec95-2000-relaxed-fits"
+      ],
+      "depends_on": [
+        "rate92-unit",
+        "rate-95-vaxen",
+        "rate-2000-vaxen",
+        "rate-2006-vaxen",
+        "rate-2017-vaxen"
+      ],
+      "shared_evidence": "Identical complete triplets; all configurations of processor key held out from local and prefix edges; shared bootstrap weights",
+      "command": "cpushowspeed bridge fit-joint-tracks",
+      "outputs": [
+        {
+          "path": "research/data/spec/joint-tracks/summary.csv",
+          "optional": false
+        },
+        {
+          "path": "research/data/spec/joint-tracks/ram-aliases/summary.csv",
+          "optional": false
+        },
+        {
+          "path": "research/data/spec/joint-tracks/cpu-clock/summary.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "method": "equal_geometric"
+      }
+    },
+    {
+      "id": "spec95-2000-relaxed-single-tracks",
+      "title": "CPU95/2000 matching sensitivity: separate speed and rate",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2000",
+        "rate-2000"
+      ],
+      "target_metric": "rate-95",
+      "additional_target_metrics": [
+        "speed-95"
+      ],
+      "relationship": "empirical-fit",
+      "formula": "older=k*newer within each track; no cross-track substitution",
+      "variants": [
+        "base",
+        "peak",
+        "strict",
+        "ram-aliases",
+        "cpu-clock"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/spec95-spec2000-relaxed-fitting.md",
+      "dataset_ids": [
+        "spec95-2000-relaxed-fits"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Repeated observations retained; matching policies share sources; configuration bootstrap",
+      "command": "cpushowspeed bridge refit-95-2000",
+      "outputs": [
+        {
+          "path": "research/data/spec/95-2000-refit/single-track-factors.csv",
           "optional": false
         }
       ]
@@ -1958,6 +2678,55 @@
       "role": "primary",
       "status": "current",
       "purpose": "Source variants, SPEC overlap feasibility, and conditional joint classical-to-rate calibration"
+    },
+    {
+      "path": "research/spec-dual-track.md",
+      "title": "Independent SPEC speed/rate experiments",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Speed generation chain, resource disclosure audit and classical/mix dual-target calibration"
+    },
+    {
+      "path": "research/spec-joint-tracks.md",
+      "title": "Joint speed/rate predictors",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Independent older-rate targets, complete-case masking, whole-processor holdouts and conditional VAXen coefficients"
+    },
+    {
+      "path": "research/spec95-spec2000-overlap-audit.md",
+      "title": "SPEC95/CPU2000 overlap-loss audit",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Collection coverage, structural pair blockers, RAM/name ablations and original disclosure checks"
+    },
+    {
+      "path": "research/spec95-spec2000-relaxed-fitting.md",
+      "title": "SPEC95/CPU2000 relaxed matching and refits",
+      "role": "primary",
+      "status": "current",
+      "purpose": "RAM/alias and CPU-clock scenarios; joint and independent-track coefficients, uncertainties and coverage"
+    },
+    {
+      "path": "research/spec-resource-field-audit.md",
+      "title": "SPEC source fields and execution-resource audit",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Source field coverage, hardware/resource semantics, execution counts and matching limitations"
+    },
+    {
+      "path": "docs/input-catalog.md",
+      "title": "Shared benchmark input contract",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Shared benchmark input contract"
+    },
+    {
+      "path": "research/input-unification-fitting-review.md",
+      "title": "Shared input migration and fitting review",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Shared input migration and fitting review"
     }
   ]
 }

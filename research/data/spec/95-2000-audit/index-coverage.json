@@ -1,0 +1,26 @@
+{
+  "reviewed_on": "2026-09-29",
+  "command": "cpushowspeed spec verify --generation cpu95 --generation cpu2000",
+  "scope": "cached quarterly index manifest versus cached bulk; all metric types",
+  "manifest_sha256": "6ab4d2609535c1b1b24e6c4216f9427547241dee9e1ab7b9efe838d31a719285",
+  "results": [
+    {
+      "generation": "cpu95",
+      "rows": 2574,
+      "index": 2574,
+      "missing_bulk": 0,
+      "missing_index": 0,
+      "invalid_links": 0,
+      "duplicate_ids": 0
+    },
+    {
+      "generation": "cpu2000",
+      "rows": 7654,
+      "index": 7654,
+      "missing_bulk": 0,
+      "missing_index": 0,
+      "invalid_links": 0,
+      "duplicate_ids": 0
+    }
+  ]
+}

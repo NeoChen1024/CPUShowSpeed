@@ -20,13 +20,18 @@ from cpushowspeed.classic_network_model import (
     train,
 )
 from cpushowspeed.classic_predict import write_prediction_manifest
+from cpushowspeed.input_context import ACTIVE_CATALOG, source_view
 from cpushowspeed.research_io import code_hashes, read_csv, write_csv
 from cpushowspeed.research_plot import save_figure
 
 
 def evaluate(nodes, edges, enabled):
     models = sorted(
-        {n["model_key"] for n in nodes if n["target_kind"] == "observed_rate" or (enabled and n["target_kind"] == "estimated_89")}
+        {
+            n["model_key"]
+            for n in nodes
+            if n["target_kind"] in {"observed_rate", "observed_speed"} or (enabled and n["target_kind"] == "estimated_89")
+        }
     )
     predictions = []
     coverage = []
@@ -183,8 +188,8 @@ def plot(output, summary):
 def network_fit(input_root, source_root, native_bridge, linpack_text, output, draws, seed):
     """Calibrate individual benchmark coefficients jointly with missing measurements."""
     paths = [input_root / n for n in ("classical-records.jsonl", "spec-records.jsonl", "candidate-pairs.csv")]
-    classical, specs = [{r["id"]: r for r in map(json.loads, p.read_text().splitlines())} for p in paths[:2]]
-    vectors = [json.loads(x) for x in (source_root / "vectors.jsonl").read_text().splitlines()]
+    classical, specs = [{r["id"]: r for r in source_view(p, view)} for p, view in zip(paths[:2], ("classical", "historical-spec"))]
+    vectors = source_view(source_root / "vectors.jsonl", "vectors")
     matching = read_csv(source_root / "matching-review.csv")
     pairs = read_csv(paths[2])
     pages = linpack_text.read_text().split("\f")
@@ -279,7 +284,8 @@ def network_fit(input_root, source_root, native_bridge, linpack_text, output, dr
                     informative_models=len(grouped),
                     calibrated_metrics=metrics,
                     anchored_nodes=sum(
-                        n["target_kind"] == "observed_rate" or (enabled and n["target_kind"] == "estimated_89") for n in nodes
+                        n["target_kind"] in {"observed_rate", "observed_speed"} or (enabled and n["target_kind"] == "estimated_89")
+                        for n in nodes
                     ),
                     unknown_target_nodes=sum(n["target_kind"] == "unanchored" for n in nodes),
                 )

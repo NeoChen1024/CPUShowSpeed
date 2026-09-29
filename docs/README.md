@@ -9,7 +9,8 @@ introduces the unit, zero-intercept fitting assumption and local setup.
 
 | Document | Primary responsibility |
 | --- | --- |
-| [Scope and metrics](scope-and-metrics.md) | Whole-machine rate target, historical routes and evidence classes |
+| [Scope and metrics](scope-and-metrics.md) | Speed/rate targets, historical routes and evidence classes |
+| [Shared input catalog](input-catalog.md) | Versioned JSONL, adapters and execution-count admission |
 | [Data contract](data-contract.md) | Identity, units, dates, validity and provenance |
 | [Methods](methods.md) | Estimation, normalization, uncertainty and research selection rules |
 | [Sources](sources.md) | Source selection, acquisition priorities and caveats |

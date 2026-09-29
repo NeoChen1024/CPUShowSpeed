@@ -10,12 +10,17 @@ checked population and numerical comparisons.
 ```sh
 uv run cpushowspeed classic historical-timeline
 uv run cpushowspeed classic mix-network-fit
+uv run cpushowspeed bridge fit-joint-tracks
+uv run cpushowspeed bridge fit-joint-tracks --matching-policy ram-aliases
+uv run cpushowspeed bridge fit-joint-tracks --matching-policy cpu-clock
+uv run cpushowspeed bridge refit-95-2000
 uv run cpushowspeed plot timeline
 ```
 
 The first command regenerates the historical input from existing collected
 records and the saved classical prediction bundle. The second fits the separate
 mix experiment; it can be skipped when its saved inputs and outputs are current.
+Saved fitting bundles can be reused until their inputs or model code change.
 The timeline command validates the
 historical input hashes and modern factor provenance, imports the current
 SPEC92–SPEC2026 rate submissions, and applies saved `same_os` rate factors and
@@ -24,7 +29,7 @@ collection or fitting.
 
 Outputs under `data/derived/figures/timeline/`:
 
-- `records.jsonl`: canonical shared records, schema `vaxen-timeline-v1`.
+- `records.jsonl`: canonical shared records, schema `vaxen-timeline-v2`.
 - `records.csv`: equivalent flattened export; nested values are JSON cells.
 - `vaxen-timeline.html`: combined offline view.
 - `audit.json`: population, date/mode/route counts, input and code hashes.
@@ -131,7 +136,7 @@ intervals. CPU2026 remains explicitly exploratory.
 
 Offline JavaScript tests cover state transitions, sorting, scale-independent
 snapping, mode/route filters and time navigation. Full-population tests use the
-actual generated 61,070-row page. Browser visual verification remains unavailable
+actual generated 101,148-row page, including the unchanged 61,070-row baseline population. Browser visual verification remains unavailable
 because the browser tool blocks local-file navigation; no alternate browser
 workaround was used.
 
@@ -260,8 +265,8 @@ The layout is fixed and scrolls horizontally on narrow screens; the information
 card moves below the graph. Arrow widths do not represent precision or sample
 size. Nodes/arrows support mouse clicks and Enter/Space activation.
 
-The SPEC rate chain displays the actual selected edge scenarios: `same_os` for
-CPU95→92 and `strict` for newer edges. The second SPEC89 edge already outputs
+The SPEC rate chain displays the selected hardware-matching policy across all
+generations, with an additional `same_os` constraint for CPU95→92. The second SPEC89 edge already outputs
 VAXen (including rate normalization); no extra normalization is added visually.
 Classical and mix calibration occupy distinct joint-model blocks with shared
 classical inputs; they are not depicted as independent multiplier chains.
@@ -293,3 +298,145 @@ calibration-CI explanation live inside **How scores become VAXen**, above the
 graph. The VAXen node holds plural, SI-prefix and speed-versus-rate details.
 The main page keeps short scope, chronology and interaction hints; individual
 record qualifications remain in the tooltip and path details.
+
+## Selectable model estimates and matching (2026-09-29)
+
+The page has Estimates checkboxes: Rate baseline / historical (default),
+From speed, and From speed + rate. Matching is single-select: RAM + aliases
+(default), Strict, or CPU + clock (cross-platform). It applies across all five
+adjacent generation boundaries and within-generation predictor matching.
+RAM capacity may differ; reviewed lexical aliases are admitted without inventing
+new hardware equivalences. CPU + clock also permits different platforms at near-equal
+clocks; none of these policies scales scores by frequency. CPU/chip count, clock
+and known enabled-resource compatibility checks remain in force.
+The CPU92/95 rate backbone retains its same-OS admission rule. CPU92's defined
+scale and historical calibrations remain unchanged. Modern rate baselines use
+the saved whole-CPU-model bootstrap backbone for every policy. Full-route factors
+and CI95 change together. No fitting happens during timeline generation.
+
+All displayed values target rate-VAXen. From speed uses the throughput predictor,
+not the independent speed-to-speed SPECint92-equivalent series. Speed inputs
+cover available positive SPEC95–2026 published speed submissions; transfer beyond matched
+hardware remains unvalidated. Joint inputs are the admitted calibration-overlap
+speed/rate pairs, not every conceivable same-generation pair. Unsupported
+policy/generation combinations are hidden with an explicit unavailable count;
+there is no cross-policy fallback in the UI.
+
+Schema v2 adds `estimate_kind`, `variants` (policy to value/CI95 triple),
+`comparison_keys`, and, for joint estimates, `matched_rate_variants` and
+`input_configurations`. `value_scenario` identifies which saved variant supplies
+the exported scalar value: RAM + aliases when supported, otherwise an explicitly
+named available policy. The UI never falls back from an unavailable selection. Policies are alternative views of one record,
+not duplicate observations. All source IDs and raw scores remain available.
+
+A joint record is unique by speed source URL, rate source URL and base/peak mode.
+Multiple older calibration targets do not duplicate that record. Its date follows
+the rate input; both input configurations and dates remain in JSONL. Cross-platform
+pairs show both system names. The page separately counts unique source records,
+paired estimates and displayed points; the overview counts displayed points.
+
+Color retains the benchmark route. Circles indicate baseline, triangles speed
+predictions and diamonds joint predictions. Hover/pin shows related input
+estimates and highlights visible counterparts with connecting lines. The tooltip
+separately labels Rate-only — matched cohort, whose factor can differ from the
+full rate baseline. The compact tooltip lists up to eight related rows and
+reports when more exist; all observations remain available through the list.
+
+How scores become VAXen includes a generation-fit selector covering all five
+adjacent SPEC92–2026 bridges and the recovered SPEC89 → SPEC92 speed bridge.
+Modern views show the saved joint-experiment tuples with base/peak and predictor
+controls (speed, rate on the matched cohort, or their geometric mean), coefficient
+CI95, CPU/configuration counts and model-held-out P95. These matched-cohort plots
+are distinct from the full independent rate-chain fits shown in calibration details.
+SPEC89 uses its native integer-speed pairs and disables the inapplicable mode and
+predictor controls. Axes identify the actual native scores, not VAXen.
+Matching applies to every modern generation view. Coincident score tuples share
+a plotted mark with multiplicity in its title; source tuples remain in the raw
+evidence CSV and count toward the displayed tuple total. Unsupported fits retain their points without a fitted line.
+Selecting a generation arrow opens its comparison. Tracing speed/joint predictions
+also selects the corresponding generation, score mode and predictor, and highlights
+the local speed/joint node and its upstream rate path. The diagram includes a
+modern predictor row; the local input panel shows which speed/rate inputs are
+used, the local coefficient, and the full-route coefficient. Solid colors remain.
+
+Saved joint bundles must match their code, input and CSV hashes. `fit-joint-tracks`
+now exports `backbone-summary.csv` and coherent backbone draws for timeline use.
+Regenerate strict, RAM/alias and CPU-clock joint bundles before
+`plot timeline` when model code changes. Research scope and limits remain owned
+by [joint fitting](../research/spec-joint-tracks.md) and
+[relaxed fitting](../research/spec95-spec2000-relaxed-fitting.md).
+
+## Offline VAXen calculator (2026-09-29)
+
+The calculator sits after the timeline and before the list. Its form uses two
+columns with labels above controls, switching to one column when the calculator
+container is at most 36rem wide. The form is capped at 64rem; controls may shrink
+without overflowing their grid cells. It performs no
+network requests and never fits a model in the browser.
+
+- Historical inputs accept any nonempty subset of Gibson/ADP KIPS, Dhrystone
+  1.1/2.1 DMIPS, Whetstone SP/DP/Native MWIPS and LINPACK n=100 MFLOPS.
+  Only the listed calibrated definitions are supported, not arbitrary versions.
+- Classical-only input uses the same `linear_clock / with_spec89` bundle as
+  `classic predict-rate`. Adding a mix input selects the existing mix+classical
+  joint bundle for **all** supplied historical metrics.
+- Available families receive equal weights, and variants share their family's
+  weight. Gibson and ADP form one InstructionMix family. The point estimate is
+  the weighted geometric mean of individually calibrated scores.
+- CI95 combines matching rows of saved joint log-coefficient draws before taking
+  the 2.5/97.5 percentiles. Marginal interval endpoints are never averaged.
+  All draws are embedded, with full precision; no independent resampling occurs.
+- SPEC accepts one generation and one base/peak mode at a time. SPEC95–2026
+  speed alone uses the speed predictor, rate alone uses the full rate backbone,
+  and both use the saved equal-geometric joint predictor. Matching is shared with
+  the timeline. Unsupported coefficients produce an explicit error.
+- SPEC89 accepts native integer speed only. SPEC92 rate uses its defined factor;
+  the native/peak speed bridge remains historical. Supplying both CPU92 inputs
+  returns separate estimates, because a joint coefficient is not calibrated.
+- Inputs must describe the same machine/configuration. Blank means absent;
+  zero, negative and non-finite values are rejected. No input clock scaling occurs.
+  Changing inputs or matching clears the prior result.
+- Historical and SPEC modes produce separate predictions; no uncalibrated pooled
+  estimate or cross-bundle CI is constructed.
+
+The build records hashes for embedded coefficients, draws, metadata and legacy
+bridge summaries. The calculation panel reports SI-formatted VAXen, calibration
+CI95, the selected route and historical component weights.
+
+### Personal prediction marker
+
+The calculator accepts an optional whole-number year (1–9999). A successful
+calculation with a year adds an orange **You are here** point, a CI95 whisker,
+and a label with year and SI-formatted VAXen. The point is an overlay: it never
+enters source records, the list, counts, fitting or exports. If a legacy request
+returns two independent estimates, both receive labeled markers.
+
+Calculation reveals the supplied year in the current time window and extends
+the chart bounds when necessary to include the point and interval. Normal zoom,
+pan and hover preserve the overlay; panning away hides it until its year is visible
+again. Year alone is not used by the prediction model.
+
+Editing inputs, changing the calculator mode or matching policy, or an invalid
+calculation removes the previous marker. **Reset** clears score/year inputs,
+results and markers, and restores source-data axis bounds while keeping the
+timeline's search, route and score filters. A blank year calculates values without
+placing a marker.
+
+### Resource disclosures
+
+Tooltips distinguish enabled hardware from rate copies and speed benchmark threads.
+Cached disclosures provide mode ranges; runtime_resources retains benchmark-level
+values and source hashes. Missing details are labeled explicitly. Joint points
+show each input's resources through input_configurations. Raw cache/memory/compiler/
+pointer/parallel context is expandable. CPU92 uses a legacy CPU-count label.
+Topology conflicts are flagged without changing numbers. See the
+[source audit](../research/spec-resource-field-audit.md).
+
+### Shared inputs and execution guard
+
+SPEC observations now use the shared input adapter or --input-catalog snapshot.
+The current fits exclude confirmed same-track constant-count conflicts by mode;
+unknown or nonuniform counts remain provisional. Source values are not rescaled.
+The resource-audit report describes the pre-guard snapshot; the
+[input/fitting review](../research/input-unification-fitting-review.md) owns active
+coefficient changes. Whole-route factors and intervals are regenerated together.

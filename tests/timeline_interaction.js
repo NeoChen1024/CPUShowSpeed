@@ -20,12 +20,114 @@ const document={events:{},querySelector:s=>elements[s],addEventListener(t,f){thi
 const window={events:{},addEventListener(t,f){this.events[t]=f;}};
 class DOMPoint{constructor(x,y){this.x=x;this.y=y;}matrixTransform(m){return {x:this.x*m.a+this.y*m.c+m.e,y:this.x*m.b+this.y*m.d+m.f};}}
 const context=vm.createContext({document,window,DOMPoint,innerWidth:1500,innerHeight:900,assert,elements,
- setScale:s=>scale=s});
+ reference:process.argv[4]?JSON.parse(fs.readFileSync(process.argv[4],'utf8')):null,setScale:s=>scale=s});
 if(process.argv[3]==='full'){
  vm.runInContext(script+`
- assert.equal(data.length,61070);
+ assert.equal(data.filter(r=>kind(r)==='baseline').length,61070);
  assert.equal(filtered.length,60710);
  assert.equal((elements['#body'].innerHTML.match(/<tr>/g)||[]).length,200);
+ const baselineCount=filtered.length;
+ elements['#estimates'].events.change({target:{dataset:{estimate:'speed'},checked:true}});
+ assert(filtered.length>baselineCount);
+ assert.equal(matching,'ram-aliases');setMatching('strict');
+ const missingStrict=data.find(r=>kind(r)==='speed'&&r.generation==='cpu2000');assert(missingStrict&&!variant(missingStrict));
+ setMatching('ram-aliases');assert(variant(missingStrict));
+ elements['#estimates'].events.change({target:{dataset:{estimate:'joint'},checked:true}});
+ const paired=points.find(p=>kind(p.r)==='joint'&&p.r.generation==='cpu2000');assert(paired);
+ candidates=[paired];active=0;pinned=true;showSelection();assert(elements['#tip-content'].innerHTML.includes('matched cohort'));
+ assert(relatives(paired.r).some(r=>kind(r)==='speed'));assert(relatives(paired.r).some(r=>kind(r)==='baseline'));
+ assert(marker(paired,3).endsWith('z'));
+ traceLineage(paired.r);assert(lineageActive.includes('predictor-2000'));assert(lineageActive.includes('rate-95'));assert(!lineageActive.includes('rate-2000'));
+ assert(elements['#fit-comparison'].open);assert(elements['#fit-stats'].textContent.includes('3 CPU models'));
+ assert(resourceDescription(paired.r).includes('speed input'));assert(resourceDescription(paired.r).includes('rate input'));
+ const withThreads=data.find(r=>kind(r)==='speed'&&r.runtime_resources?.status==='reported');
+ assert(withThreads&&resourceDescription(withThreads).includes('Speed benchmark threads'));
+ assert.equal(withThreads.runtime_resources.quantity,'threads');
+ const missingDetail=data.find(r=>r.runtime_resources?.status==='not_collected');
+ assert(resourceDescription(missingDetail).includes('detail not collected'));
+ const legacyCount=data.find(r=>r.generation==='cpu92'&&r.reported_cpu_count);
+ assert(resourceDescription(legacyCount).includes('chip equivalence unverified'));
+ const disputed=data.find(r=>r.resource_warning);assert(disputed);
+ assert(resourceDescription(disputed).includes('topology requires review'));
+ const pairIDs=data.filter(r=>kind(r)==='joint').map(r=>r.record_id);assert.equal(new Set(pairIDs).size,pairIDs.length);
+ setMatching('cpu-clock');assert(elements['#fit-stats'].textContent.includes('72 tuples'));
+ elements['#estimates'].events.change({target:{dataset:{estimate:'speed'},checked:false}});
+ elements['#estimates'].events.change({target:{dataset:{estimate:'joint'},checked:false}});
+ setMatching('strict');assert.equal(filtered.length,baselineCount);
+ for(const generation of ['cpu95','cpu2000','cpu2006','cpu2017','cpu2026']){
+  for(const mode of ['base','peak'])for(const method of ['speed_only','rate_only','equal_geometric']){
+   openFit(generation,mode,method);
+   const expected=lineage.experiments.strict.triples.filter(r=>r.new_generation===generation&&r.mode===mode);
+   assert.equal((elements['#fit-scatter'].innerHTML.match(/<circle /g)||[]).length,expected.length);
+   assert(!/NaN|Infinity/.test(elements['#fit-scatter'].innerHTML));
+   assert(elements['#fit-scatter']['aria-label'].includes('SPEC'+generation.slice(3)));
+  }
+ }
+ inspectLineage('edge','rate-2026-to-2017');assert.equal(elements['#fit-generation'].value,'cpu2026');
+ setMatching('cpu-clock');assert(elements['#fit-stats'].textContent.startsWith('cpu-clock'));
+ inspectLineage('edge','int89-int92');
+ assert.equal(elements['#fit-generation'].value,'cpu89');
+ assert(elements['#fit-mode'].disabled&&elements['#fit-method'].disabled);
+ assert.equal((elements['#fit-scatter'].innerHTML.match(/<circle /g)||[]).length,17);
+ assert(elements['#fit-scatter'].innerHTML.includes('SPECint92 speed'));
+ openFit('cpu2000','peak','equal_geometric');assert(!elements['#fit-mode'].disabled);
+ setMatching('strict');
+
+
+ inspectLineage('node','predictor-2017');assert.equal(elements['#fit-generation'].value,'cpu2017');
+ assert(elements['#predictor-path'].innerHTML.includes('SPEC2006 rate'));
+ assert(elements['#predictor-path'].innerHTML.includes('sqrt(speed'));
+ assert.throws(()=>historicalPrediction({}),/at least one/);
+ assert.throws(()=>historicalPrediction({'Dhrystone:v1.1_DMIPS':0}),/greater than zero/);
+ assert.throws(()=>specPrediction('cpu2000','peak',10,20,'strict'),/No supported/);
+ assert.throws(()=>specPrediction('cpu89','peak','',20,'ram-aliases'),/speed only/);
+ assert.throws(()=>specPrediction('cpu92','base',1,'','ram-aliases'),/legacy speed/);
+ assert.throws(()=>specPrediction('cpu2017','peak','NaN',20,'ram-aliases'),/finite/);
+ const defined=specPrediction('cpu92','base','',604800/25500,'ram-aliases')[0];
+ for(const v of defined.values)assert(Math.abs(v-1)<1e-12);
+ assert.equal(specPrediction('cpu92','peak',1,604800/25500,'ram-aliases').length,2);
+ if(reference){
+  for(const c of reference.historical){
+   const r=historicalPrediction(c.scores);
+   r.values.forEach((v,i)=>assert(Math.abs(v/c.values[i]-1)<1e-10));
+  }
+  for(const c of reference.spec){
+   const r=specPrediction(c.generation,c.mode,c.speed,c.rate,c.policy)[0];
+   r.values.forEach((v,i)=>assert(Math.abs(v/c.values[i]-1)<1e-10));
+  }
+ }
+ elements['#calc-kind'].value='spec';calculatorView();
+ assert(elements['#calc-historical'].hidden&&!elements['#calc-spec'].hidden);
+ elements['#calc-generation'].value='cpu92';elements['#calc-rate'].value=604800/25500;runCalculator();
+ assert(elements['#calc-result'].innerHTML.includes('1.000 VAX'));
+
+ const sourceLength=data.length,sourceCount=filtered.length;
+ elements['#calc-year'].value='1985';runCalculator();
+ assert.equal(userPredictions.length,1);assert.equal(userPredictions[0].year,1985);
+ assert(elements['#plot'].innerHTML.includes('You are here'));
+ assert.equal(data.length,sourceLength);assert.equal(filtered.length,sourceCount);
+ clearSelection();assert(elements['#plot'].innerHTML.includes('You are here'));
+ setRange(1990,2000);assert.equal(userPredictions.length,1);
+ assert(!elements['#plot'].innerHTML.includes('You are here'));
+ elements['#reset'].events.click();assert(elements['#plot'].innerHTML.includes('You are here'));
+ elements['#calc-form'].events.input();assert.equal(userPredictions.length,0);
+ elements['#calc-year'].value=originalBounds.xmax+10;elements['#calc-rate'].value='1e20';runCalculator();
+ assert(userPredictions[0].year<=viewMax);assert(ymax>originalBounds.ymax);
+ assert(X(userPredictions[0].year)>107&&X(userPredictions[0].year)<1343);
+ assert(!/NaN|Infinity/.test(predictionMarkup()));
+ elements['#calc-clear'].events.click();assert.equal(userPredictions.length,0);
+ assert.equal(elements['#calc-year'].value,'');assert.equal(ymax,originalBounds.ymax);assert.equal(xmax,originalBounds.xmax);
+ assert.equal(xmin,originalBounds.xmin);assert.equal(ymin,originalBounds.ymin);
+ elements['#calc-rate'].value=604800/25500;
+ elements['#calc-year'].value='1985.5';runCalculator();assert.equal(userPredictions.length,0);
+ assert(elements['#calc-result'].textContent.includes('whole number'));
+ elements['#calc-year'].value='1800';elements['#calc-speed'].value='1';runCalculator();
+ assert.equal(userPredictions.length,2);assert(xmin<=1799);
+ assert(predictionMarkup().includes('Legacy speed estimate'));
+ assert(predictionMarkup().includes('Defined SPEC92 rate scale'));
+ setMatching('ram-aliases');assert.equal(elements['#calc-result'].innerHTML,'');
+ elements['#calc-clear'].events.click();assert.equal(elements['#calc-rate'].value,'');
+ elements['#calc-kind'].value='historical';calculatorView();setMatching('strict');
  for(const mode of ['peak','peak_proxy'])elements['#scores'].events.change({target:{dataset:{mode},checked:false}});assert.equal(filtered.length,32027);
  for(const mode of ['peak','peak_proxy'])elements['#scores'].events.change({target:{dataset:{mode},checked:true}});assert.equal(filtered.length,60710);
  assert.equal(data.filter(r=>r.route==='Gibson mix').length,177);
@@ -67,7 +169,7 @@ if(process.argv[3]==='full'){
  for(const mode of ['base','peak','peak_proxy'])elements['#scores'].events.change({target:{dataset:{mode},checked:true}});
  elements['#q'].value='VAX';elements['#q'].events.input();assert.equal(page,0);assert(filtered.length>0&&filtered.length<countBefore);
  `,context);
- console.log('PASS: complete 61070-row page, 200-row pagination, modes, zoom, reset, numeric sort and search');
+ console.log('PASS: full generated page; baseline parity, estimate/policy switching, paired comparisons, lineage, pagination, zoom and search');
  process.exit(0);
 }
 vm.runInContext(script+`

@@ -1,5 +1,7 @@
 """Command-line entry point for CPUShowSpeed."""
 
+from pathlib import Path
+
 import click
 from cpushowspeed.annual_rate import plot
 from cpushowspeed.annual_rate_ci import annual_rate_ci_command
@@ -11,6 +13,7 @@ from cpushowspeed.classic_89_rate import spec89_rate_fit
 from cpushowspeed.classic_composite import composite_overlap
 from cpushowspeed.classic_composite_fit import composite_fit
 from cpushowspeed.classic_diagnostics import source_diagnostics
+from cpushowspeed.classic_dual_track import compare_targets
 from cpushowspeed.classic_environment import environment_fit
 from cpushowspeed.classic_fit import fit_spec92
 from cpushowspeed.classic_mix import mix_inventory
@@ -25,7 +28,10 @@ from cpushowspeed.classic_rate_composite import rate_composite_fit
 from cpushowspeed.classic_source_fit import source_pair_fit
 from cpushowspeed.classic_timeline import historical_timeline
 from cpushowspeed.documents import documents
+from cpushowspeed.factor_review import compare_factors
 from cpushowspeed.historical_candidates import year_candidates, year_evidence
+from cpushowspeed.input_catalog import inputs
+from cpushowspeed.input_context import ACTIVE_CATALOG
 from cpushowspeed.mix_bridge import mix_bridge
 from cpushowspeed.mix_evidence import mix_evidence
 from cpushowspeed.mix_network import mix_network_fit
@@ -35,14 +41,23 @@ from cpushowspeed.research_registry import research
 from cpushowspeed.spec import spec
 from cpushowspeed.spec89 import spec89
 from cpushowspeed.spec92_rate import legacy92_rate_parse_command
+from cpushowspeed.spec_field_audit import audit_fields, fetch_resources
 from cpushowspeed.table_migrate import migrate_tables_command, render_tables_command
 from cpushowspeed.unified_timeline import timeline_command
 
 
 @click.group()
 @click.version_option(package_name="cpushowspeed")
-def cli() -> None:
+@click.option(
+    "--input-catalog",
+    type=click.Path(path_type=Path, exists=True, file_okay=False),
+    help="Use a hash-checked shared input snapshot for SPEC and classical network readers.",
+)
+@click.pass_context
+def cli(ctx, input_catalog) -> None:
     """Collect and analyze historical CPU performance evidence."""
+    token = ACTIVE_CATALOG.set(input_catalog)
+    ctx.call_on_close(lambda: ACTIVE_CATALOG.reset(token))
 
 
 @click.group("predict")
@@ -57,7 +72,12 @@ cli.add_command(predict)
 
 spec.add_command(legacy92_rate_parse_command)
 cli.add_command(research)
+
+spec.add_command(audit_fields)
+spec.add_command(fetch_resources)
 cli.add_command(spec)
+inputs.add_command(compare_factors)
+cli.add_command(inputs)
 cli.add_command(convert_rate_command)
 cli.add_command(spec89)
 cli.add_command(bridge)
@@ -94,3 +114,5 @@ classic.add_command(mix_evidence)
 classic.add_command(mix_bridge)
 classic.add_command(mix_network_fit)
 cli.add_command(classic)
+
+classic.add_command(compare_targets)

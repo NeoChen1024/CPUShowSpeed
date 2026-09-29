@@ -12,12 +12,16 @@ from cpushowspeed.annual_rate import collect_annual_records
 from cpushowspeed.mix_timeline import mix_records
 from cpushowspeed.rate_convert import convert_rate
 from cpushowspeed.research_io import code_hashes, read_csv, write_csv
+from cpushowspeed.spec_inputs import collect_cpu92_rate, collect_integer
 from cpushowspeed.spec_overlap import _checked_bulk, _frequency, _source_url
+from cpushowspeed.timeline_calculator import calculator_payload, rate_edge_metadata
 from cpushowspeed.timeline_dates import CPUChronology, candidate, select_date
+from cpushowspeed.timeline_estimates import extend_estimates
 from cpushowspeed.timeline_html import render_html
 from cpushowspeed.timeline_lineage import build_lineage
+from cpushowspeed.timeline_resources import resource_fields
 
-SCHEMA = "vaxen-timeline-v1"
+SCHEMA = "vaxen-timeline-v2"
 HISTORICAL = Path("data/derived/classic/historical-timeline")
 RAW = Path("data/raw/spec")
 CPU92 = Path("data/derived/spec/cpu92-rate/cpu92-rate-records.csv")
@@ -103,13 +107,8 @@ def historical_records(chronology):
 
 def spec_records(chronology):
     records, provenance = collect_annual_records(RAW, CPU92, CALIBRATION, FIT)
-    raw = {}
-    for gen in ("cpu95", "cpu2000", "cpu2006", "cpu2017", "cpu2026"):
-        rs, _ = _checked_bulk(RAW / gen / "bulk.csv")
-        for r in rs:
-            if r["Benchmark"] == "CINT" + gen[3:] + "rate":
-                raw[gen, _source_url(r["Disclosure"])] = r
-    old = {r["source_url"]: r for r in read_csv(CPU92)}
+    normalized = {(item.generation, item.source_url): item for group in collect_integer(RAW, "rate").values() for item in group}
+    normalized.update({("cpu92", item.source_url): item for item in collect_cpu92_rate(CPU92, RAW)})
 
     @lru_cache(None)
     def unit(gen, mode):
@@ -118,7 +117,8 @@ def spec_records(chronology):
     rows = []
     for r in records:
         gen, mode = r["generation"], r["mode"]
-        src = old[r["source_url"]] if gen == "cpu92" else raw[gen, r["source_url"]]
+        source_record = normalized[gen, r["source_url"]]
+        src = source_record.raw_fields
         u = unit(gen, mode)
         v = float(r["reported_score"]) * u["vaxen"]
         if not math.isclose(v, float(r["vaxen_same_os"]), rel_tol=1e-12):
@@ -133,8 +133,8 @@ def spec_records(chronology):
             mode=mode,
             system=r["system"],
             cpu=r["processor"],
-            clock_mhz=_frequency({**src, "System": r["system"]}, r["processor"]) or "",
-            os=src.get("os") or src.get("Operating System") or src.get("Op. Sys.") or "",
+            clock_mhz=source_record.clock_mhz or "",
+            os=source_record.os,
             configuration="",
             scores={r["benchmark_id"]: r["reported_score"]},
             reported_score=r["reported_score"],
@@ -153,8 +153,8 @@ def spec_records(chronology):
             calibration_scenario="same_os",
             measurement_scope="reported_system_rate",
             chips=r["chips"],
-            cores=src.get("# Cores") or src.get("# cores") or "",
-            threads_per_core=src.get("# Enabled Threads Per Core") or src.get("# Threads Per Core") or "",
+            cores=source_record.cores or "",
+            threads_per_core=source_record.enabled_threads_per_core or "",
             copies_min=src.get(mode + "_copies_min", ""),
             copies_max=src.get(mode + "_copies_max", ""),
             nodes="",
@@ -163,6 +163,7 @@ def spec_records(chronology):
             submission_date=r["publication_month"],
             test_date=r["test_month"],
         )
+        row.update(resource_fields(row, src, "rate"))
         # Do not equate socket/core/thread/copy counts; bulk exports usually omit copies.
         row.update(
             select_date(
@@ -205,6 +206,8 @@ def timeline_command(output_dir):
             row = by_id[review["record_id"]]
             row.update(select_date(row["date_candidates"], review))
 
+        estimates, estimate_provenance, estimate_bundles = extend_estimates(modern, chronology, SCHEMA)
+        rows += estimates
         assert len({r["record_id"] for r in rows}) == len(rows)
         output_dir.mkdir(parents=True, exist_ok=True)
         (output_dir / "records.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False, allow_nan=False) + "\n" for r in rows))
@@ -214,11 +217,26 @@ def timeline_command(output_dir):
         )
 
         lineage = build_lineage(output_dir / "vaxen-timeline.html")
-        render_html(rows, output_dir / "vaxen-timeline.html", lineage=lineage)
+        lineage["rate_edges"], edge_hashes = rate_edge_metadata(estimate_bundles)
+        lineage["input_sha256"].update(edge_hashes)
+        calculator, calculator_hashes = calculator_payload(estimate_bundles)
+        lineage["input_sha256"].update(calculator_hashes)
+        lineage["experiments"] = {}
+        plot_fields = ("new_generation", "mode", "model_key", "speed_score", "rate_score", "target_rate")
+        for policy, b in estimate_bundles.items():
+            # Coincident tuples share a mark, with multiplicity; all raw tuples remain in the evidence CSV.
+            counts = Counter(tuple(r[k] for k in plot_fields) for r in b[2])
+            lineage["experiments"][policy] = dict(
+                fits=list(b[0].values()),
+                triples=[dict(zip(plot_fields, values), count=count) for values, count in counts.items()],
+            )
+        render_html(rows, output_dir / "vaxen-timeline.html", lineage=lineage, calculator=calculator)
         audit = dict(
             schema_version=SCHEMA,
             lineage_inputs_sha256=lineage["input_sha256"],
             records=len(rows),
+            experimental_estimates=len(estimates),
+            estimate_inputs_sha256=estimate_provenance,
             historical=len(historical),
             spec_rate=len(modern),
             instruction_mix=len(mixes),
@@ -229,7 +247,8 @@ def timeline_command(output_dir):
             year_priority=["cpu", "hardware", "submission", "unknown"],
             submission_date_reviews=len(reviews),
             rejected_submission_dates=sum(r["decision"] == "reject" for r in reviews),
-            scenario="same_os",
+            scenario="ram-aliases",
+            cpu92_anchor_software_policy="same_os",
             scope="single-node/system throughput; no per-core normalization",
             limitations=[
                 "Historical calibration remains one-processor-conditioned; excluded multi-processor historical scores were not synthesized.",

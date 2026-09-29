@@ -141,3 +141,45 @@ score multiplies both the central scale and its CI endpoints. This gives a
 conditional **calibration** interval and does not estimate individual-machine
 prediction error or systematic bias. CPU92's scale is defined, so its
 calibration CI has zero width.
+
+## Independent speed/rate experiment
+
+```sh
+uv run --no-sync cpushowspeed bridge compare-tracks
+uv run --no-sync cpushowspeed classic compare-targets
+```
+
+These commands reuse the cached bulk exports and CPU92 speed details. They
+write separate experimental outputs and do not replace rate factors or public
+prediction manifests. The [dual-track report](../research/spec-dual-track.md)
+owns findings, fit semantics and remaining disclosure checks.
+
+For independent-target joint prediction, run
+`uv run --no-sync cpushowspeed bridge fit-joint-tracks`. The
+[joint experiment](../research/spec-joint-tracks.md) owns cohort restrictions,
+masking tests, conditional VAXen coefficients and results.
+
+`uv run --no-sync cpushowspeed bridge audit-95-2000 --fetch-review` reproduces
+the [SPEC95/CPU2000 overlap-loss audit](../research/spec95-spec2000-overlap-audit.md).
+It exports candidate aliases, RAM/resource ablations and source-field checks
+without changing production matches or coefficients. Omit `--fetch-review`
+for cached-source-only review.
+
+The [relaxed refit](../research/spec95-spec2000-relaxed-fitting.md) is reproduced
+with `bridge fit-joint-tracks --matching-policy ram-aliases` or `cpu-clock`.
+Non-strict policies append their name to the output directory roots.
+`bridge refit-95-2000` compares the same policies for independent speed/speed
+and rate/rate fits. Actual chip/clock conflicts and NC scores remain excluded.
+
+## Field and execution-resource audit
+
+    uv run cpushowspeed spec audit-fields
+    uv run cpushowspeed spec fetch-resources --generation cpu2017 --track integer-speed --limit 25
+    uv run cpushowspeed spec fetch-resources --generation cpu2017 --track integer-rate --limit 25
+
+The audit's --fetch-samples option restores the versioned reviewed sample manifest.
+fetch-resources shares the resumable collector, raw cache and manifest, and accepts
+integer/floating-point speed/rate tracks. Current detailed audit scope is integer.
+Selected CSV tables retain benchmark copies/threads by mode; legacy CPU95/2000 HTML
+rate tables are supported. No runtime count is inferred from enabled CPU resources.
+[Resource audit](../research/spec-resource-field-audit.md) owns findings and coverage.

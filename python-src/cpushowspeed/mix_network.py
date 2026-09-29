@@ -16,6 +16,7 @@ from cpushowspeed.classic_bridge_data import bridge_rows
 from cpushowspeed.classic_network import evaluate
 from cpushowspeed.classic_network_data import build
 from cpushowspeed.classic_network_model import bootstrap, metric_weights, train
+from cpushowspeed.input_context import ACTIVE_CATALOG, source_view
 from cpushowspeed.research_io import code_hashes, read_csv, write_csv
 
 MIX_METRICS = {"Gibson Mix": "InstructionMix:Gibson_KIPS", "ADP Mix": "InstructionMix:ADP_KIPS"}
@@ -102,12 +103,12 @@ def mix_network_fit(output, draws, seed):
         ROOT / "historical-timeline/observations.csv",
         ROOT / "mix-study/mix-records.csv",
     ]
-    classical, specs = [{r["id"]: r for r in map(json.loads, p.read_text().splitlines())} for p in paths[:2]]
-    vectors = [json.loads(l) for l in paths[3].read_text().splitlines()]
+    classical, specs = [{r["id"]: r for r in source_view(p, view)} for p, view in zip(paths[:2], ("classical", "historical-spec"))]
+    vectors = source_view(paths[3], "vectors")
     ev, _ = evidence(list(specs.values()), vectors, bridge_rows(paths[5]))
     pairs = read_csv(paths[7])
     observations = read_csv(paths[8])
-    mixes = read_csv(paths[9])
+    mixes = source_view(paths[9], "mixes") if ACTIVE_CATALOG.get() is not None else read_csv(paths[9])
     for p, digest in json.loads((ROOT / "mix-study/audit.json").read_text())["input_sha256"].items():
         if hashlib.sha256(Path(p).read_bytes()).hexdigest() != digest:
             raise click.ClickException("Stale mix inventory: " + p)

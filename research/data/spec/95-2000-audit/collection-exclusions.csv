@@ -1,0 +1,20 @@
+generation,benchmark,system,raw_result,raw_base,reason,source_url
+cpu2000,CINT2000,AlphaServer ES40 Model 6/833,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2000q3/cpu2000-20000630-00138.html
+cpu2000,CINT2000,PRIMEPOWER900 (1350MHz),0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q4/cpu2000-20020924-01697.html
+cpu2000,CINT2000,hp AlphaServer ES45 68/1250,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01512.html
+cpu2000,CINT2000,hp AlphaServer GS160 68/1224,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01537.html
+cpu2000,CINT2000,hp AlphaServer GS320 68/1224,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01539.html
+cpu2000,CINT2000,hp AlphaServer GS80 68/1224,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01540.html
+cpu2000,CINT2000,SGI 2200 2X 400MHz R12k,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res1999q4/cpu2000-19991130-00023.html
+cpu2000,CINT2000rate,AlphaServer ES40 Model 6/833,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2000q3/cpu2000-20000630-00139.html
+cpu2000,CINT2000rate,"ProLiant DL740 (3.0GHz, Intel Xeon MP)",0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2004q1/cpu2000-20040308-02914.html
+cpu2000,CINT2000rate,"ProLiant DL740 (3.0GHz, Intel Xeon MP)",0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2004q1/cpu2000-20040308-02915.html
+cpu2000,CINT2000rate,hp AlphaServer ES45 68/1250,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01511.html
+cpu2000,CINT2000rate,hp AlphaServer ES45 68/1250,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01514.html
+cpu2000,CINT2000rate,hp AlphaServer ES45 68/1250,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01516.html
+cpu2000,CINT2000rate,hp AlphaServer GS160 68/1224,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01533.html
+cpu2000,CINT2000rate,hp AlphaServer GS160 68/1224,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01534.html
+cpu2000,CINT2000rate,hp AlphaServer GS320 68/1224,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01531.html
+cpu2000,CINT2000rate,hp AlphaServer GS320 68/1224,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01536.html
+cpu2000,CINT2000rate,hp AlphaServer GS80 68/1224,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01532.html
+cpu2000,CINT2000rate,hp AlphaServer GS80 68/1224,0,0,no_positive_score,https://www.spec.org/cpu2000/results/res2002q3/cpu2000-20020801-01535.html

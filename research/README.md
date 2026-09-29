@@ -14,6 +14,20 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 | SPEC89 scavenging | [Recovery and bridge](tracks/spec89.md) | [Two-edge bridge and joint fits](spec89-rate-bridge.md) |
 | Classical benchmarks | [Pre-SPEC extension](tracks/classical.md) | [Direct rate composites](classic-rate-composite-fitting.md), [indirect/joint experiment](spec89-rate-bridge.md) |
 
+## Shared inputs and fitting update
+
+[Input migration and fitting review](input-unification-fitting-review.md) records source parity, execution-count exclusions and before/after coefficients.
+
+## Source resource audit
+
+[Field and runtime-resource audit](spec-resource-field-audit.md) inventories SPEC fields, cached disclosures, resource anomalies and matching limits.
+
+## Independent speed/rate experiment
+
+[Dual-track calibration](spec-dual-track.md) adds a separate CPU92–2026 speed
+chain, resource-field audit and classical/mix target comparison. The old speed
+implementation stays archived; this experiment uses the current shared methods.
+
 ## Source evidence
 
 - SPEC: [early archives](spec-early-archives.md), [CPU92 rate expansion](spec92-archive-expansion.md),
@@ -67,3 +81,14 @@ shared statistics policy, preparation-only commands and parity checks.
 - [Unified historical and SPEC rate timeline](unified-vaxen-timeline.md): shared data and CPU-first interactive chronology.
 
 - [Gibson / ADP bridge preparation](instruction-mix-bridge.md): source definitions and classical-overlap review queue; no fitting yet.
+
+[Joint speed/rate predictors](spec-joint-tracks.md) compare fixed single-input and
+equal-geometric models on independent older-rate targets, with common-case
+masking and whole-processor holdouts.
+
+The [SPEC95/CPU2000 overlap audit](spec95-spec2000-overlap-audit.md) explains
+the joint cohort shortage using field-level blockers and original disclosures.
+
+[Relaxed SPEC95/CPU2000 refits](spec95-spec2000-relaxed-fitting.md) now report
+RAM/alias and broader CPU-clock policies, including the previously unsupported
+joint edge and independent speed/rate sensitivity fits.

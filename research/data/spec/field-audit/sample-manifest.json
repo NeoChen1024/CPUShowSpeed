@@ -1,0 +1,524 @@
+[
+  {
+    "generation": "cpu95",
+    "benchmark": "CINT95",
+    "source_url": "https://www.spec.org/cpu95/results/res2000q1/cpu95-19991220-03945.html",
+    "document_url": "https://www.spec.org/cpu95/results/res2000q1/cpu95-19991220-03945.html",
+    "path": "data/raw/spec/cpu95/res2000q1/cpu95-19991220-03945.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu95",
+    "benchmark": "CINT95",
+    "source_url": "https://www.spec.org/cpu95/results/res99q4/cpu95-19991206-03938.html",
+    "document_url": "https://www.spec.org/cpu95/results/res99q4/cpu95-19991206-03938.html",
+    "path": "data/raw/spec/cpu95/res99q4/cpu95-19991206-03938.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu95",
+    "benchmark": "CINT95rate",
+    "source_url": "https://www.spec.org/cpu95/results/res2000q1/cpu95-19991220-03946.html",
+    "document_url": "https://www.spec.org/cpu95/results/res2000q1/cpu95-19991220-03946.html",
+    "path": "data/raw/spec/cpu95/res2000q1/cpu95-19991220-03946.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu95",
+    "benchmark": "CINT95rate",
+    "source_url": "https://www.spec.org/cpu95/results/res99q4/cpu95-19991203-03929.html",
+    "document_url": "https://www.spec.org/cpu95/results/res99q4/cpu95-19991203-03929.html",
+    "path": "data/raw/spec/cpu95/res99q4/cpu95-19991203-03929.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2000",
+    "benchmark": "CINT2000",
+    "source_url": "https://www.spec.org/cpu2000/results/res1999q4/cpu2000-19991130-00003.html",
+    "document_url": "https://www.spec.org/cpu2000/results/res1999q4/cpu2000-19991130-00003.html",
+    "path": "data/raw/spec/cpu2000/res1999q4/cpu2000-19991130-00003.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2000",
+    "benchmark": "CINT2000",
+    "source_url": "https://www.spec.org/cpu2000/results/res2007q1/cpu2000-20070223-08662.html",
+    "document_url": "https://www.spec.org/cpu2000/results/res2007q1/cpu2000-20070223-08662.html",
+    "path": "data/raw/spec/cpu2000/res2007q1/cpu2000-20070223-08662.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2000",
+    "benchmark": "CINT2000rate",
+    "source_url": "https://www.spec.org/cpu2000/results/res2000q1/cpu2000-20000125-00036.html",
+    "document_url": "https://www.spec.org/cpu2000/results/res2000q1/cpu2000-20000125-00036.html",
+    "path": "data/raw/spec/cpu2000/res2000q1/cpu2000-20000125-00036.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2000",
+    "benchmark": "CINT2000rate",
+    "source_url": "https://www.spec.org/cpu2000/results/res2007q1/cpu2000-20070223-08661.html",
+    "document_url": "https://www.spec.org/cpu2000/results/res2007q1/cpu2000-20070223-08661.html",
+    "path": "data/raw/spec/cpu2000/res2007q1/cpu2000-20070223-08661.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2000",
+    "benchmark": "CINT2000",
+    "source_url": "https://www.spec.org/cpu2000/results/res2006q1/cpu2000-20060220-05629.html",
+    "document_url": "https://www.spec.org/cpu2000/results/res2006q1/cpu2000-20060220-05629.html",
+    "path": "data/raw/spec/cpu2000/res2006q1/cpu2000-20060220-05629.html",
+    "selection_reason": "resource_semantics_review",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006",
+    "source_url": "https://www.spec.org/cpu2006/results/res2006q3/cpu2006-20060513-00001.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2006q3/cpu2006-20060513-00001.html",
+    "path": "data/raw/spec/cpu2006/res2006q3/cpu2006-20060513-00001.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006",
+    "source_url": "https://www.spec.org/cpu2006/results/res2006q3/cpu2006-20060513-00001.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2006q3/cpu2006-20060513-00001.csv",
+    "path": "data/raw/spec/cpu2006/res2006q3/cpu2006-20060513-00001.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006",
+    "source_url": "https://www.spec.org/cpu2006/results/res2018q2/cpu2006-20171225-51601.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2018q2/cpu2006-20171225-51601.html",
+    "path": "data/raw/spec/cpu2006/res2018q2/cpu2006-20171225-51601.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006",
+    "source_url": "https://www.spec.org/cpu2006/results/res2018q2/cpu2006-20171225-51601.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2018q2/cpu2006-20171225-51601.csv",
+    "path": "data/raw/spec/cpu2006/res2018q2/cpu2006-20171225-51601.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006rate",
+    "source_url": "https://www.spec.org/cpu2006/results/res2006q3/cpu2006-20060513-00003.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2006q3/cpu2006-20060513-00003.html",
+    "path": "data/raw/spec/cpu2006/res2006q3/cpu2006-20060513-00003.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006rate",
+    "source_url": "https://www.spec.org/cpu2006/results/res2006q3/cpu2006-20060513-00003.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2006q3/cpu2006-20060513-00003.csv",
+    "path": "data/raw/spec/cpu2006/res2006q3/cpu2006-20060513-00003.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006rate",
+    "source_url": "https://www.spec.org/cpu2006/results/res2018q2/cpu2006-20171225-51606.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2018q2/cpu2006-20171225-51606.html",
+    "path": "data/raw/spec/cpu2006/res2018q2/cpu2006-20171225-51606.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006rate",
+    "source_url": "https://www.spec.org/cpu2006/results/res2018q2/cpu2006-20171225-51606.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2018q2/cpu2006-20171225-51606.csv",
+    "path": "data/raw/spec/cpu2006/res2018q2/cpu2006-20171225-51606.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006",
+    "source_url": "https://www.spec.org/cpu2006/results/res2007q1/cpu2006-20070215-00481.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2007q1/cpu2006-20070215-00481.html",
+    "path": "data/raw/spec/cpu2006/res2007q1/cpu2006-20070215-00481.html",
+    "selection_reason": "resource_semantics_review",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006",
+    "source_url": "https://www.spec.org/cpu2006/results/res2007q1/cpu2006-20070215-00481.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2007q1/cpu2006-20070215-00481.csv",
+    "path": "data/raw/spec/cpu2006/res2007q1/cpu2006-20070215-00481.csv",
+    "selection_reason": "resource_semantics_review",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017",
+    "source_url": "https://www.spec.org/cpu2017/results/res2017q2/cpu2017-20161026-00004.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2017q2/cpu2017-20161026-00004.html",
+    "path": "data/raw/spec/cpu2017/res2017q2/cpu2017-20161026-00004.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017",
+    "source_url": "https://www.spec.org/cpu2017/results/res2017q2/cpu2017-20161026-00004.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2017q2/cpu2017-20161026-00004.csv",
+    "path": "data/raw/spec/cpu2017/res2017q2/cpu2017-20161026-00004.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017",
+    "source_url": "https://www.spec.org/cpu2017/results/res2026q3/cpu2017-20260817-51882.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2026q3/cpu2017-20260817-51882.html",
+    "path": "data/raw/spec/cpu2017/res2026q3/cpu2017-20260817-51882.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017",
+    "source_url": "https://www.spec.org/cpu2017/results/res2026q3/cpu2017-20260817-51882.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2026q3/cpu2017-20260817-51882.csv",
+    "path": "data/raw/spec/cpu2017/res2026q3/cpu2017-20260817-51882.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017rate",
+    "source_url": "https://www.spec.org/cpu2017/results/res2017q2/cpu2017-20161026-00003.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2017q2/cpu2017-20161026-00003.html",
+    "path": "data/raw/spec/cpu2017/res2017q2/cpu2017-20161026-00003.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017rate",
+    "source_url": "https://www.spec.org/cpu2017/results/res2017q2/cpu2017-20161026-00003.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2017q2/cpu2017-20161026-00003.csv",
+    "path": "data/raw/spec/cpu2017/res2017q2/cpu2017-20161026-00003.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017rate",
+    "source_url": "https://www.spec.org/cpu2017/results/res2026q3/cpu2017-20260824-51884.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2026q3/cpu2017-20260824-51884.html",
+    "path": "data/raw/spec/cpu2017/res2026q3/cpu2017-20260824-51884.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017rate",
+    "source_url": "https://www.spec.org/cpu2017/results/res2026q3/cpu2017-20260824-51884.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2026q3/cpu2017-20260824-51884.csv",
+    "path": "data/raw/spec/cpu2017/res2026q3/cpu2017-20260824-51884.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017",
+    "source_url": "https://www.spec.org/cpu2017/results/res2020q1/cpu2017-20200119-20589.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2020q1/cpu2017-20200119-20589.html",
+    "path": "data/raw/spec/cpu2017/res2020q1/cpu2017-20200119-20589.html",
+    "selection_reason": "resource_semantics_review",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017",
+    "source_url": "https://www.spec.org/cpu2017/results/res2020q1/cpu2017-20200119-20589.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2020q1/cpu2017-20200119-20589.csv",
+    "path": "data/raw/spec/cpu2017/res2020q1/cpu2017-20200119-20589.csv",
+    "selection_reason": "resource_semantics_review",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017rate",
+    "source_url": "https://www.spec.org/cpu2017/results/res2020q1/cpu2017-20200119-20586.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2020q1/cpu2017-20200119-20586.html",
+    "path": "data/raw/spec/cpu2017/res2020q1/cpu2017-20200119-20586.html",
+    "selection_reason": "resource_semantics_review",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017rate",
+    "source_url": "https://www.spec.org/cpu2017/results/res2020q1/cpu2017-20200119-20586.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2020q1/cpu2017-20200119-20586.csv",
+    "path": "data/raw/spec/cpu2017/res2020q1/cpu2017-20200119-20586.csv",
+    "selection_reason": "resource_semantics_review",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00004.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00004.html",
+    "path": "data/raw/spec/cpu2026/res2026q2/cpu2026-20260210-00004.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00004.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00004.csv",
+    "path": "data/raw/spec/cpu2026/res2026q2/cpu2026-20260210-00004.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q3/cpu2026-20260825-00498.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q3/cpu2026-20260825-00498.html",
+    "path": "data/raw/spec/cpu2026/res2026q3/cpu2026-20260825-00498.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q3/cpu2026-20260825-00498.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q3/cpu2026-20260825-00498.csv",
+    "path": "data/raw/spec/cpu2026/res2026q3/cpu2026-20260825-00498.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026rate",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00003.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00003.html",
+    "path": "data/raw/spec/cpu2026/res2026q2/cpu2026-20260210-00003.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026rate",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00003.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00003.csv",
+    "path": "data/raw/spec/cpu2026/res2026q2/cpu2026-20260210-00003.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026rate",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q3/cpu2026-20260908-00542.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q3/cpu2026-20260908-00542.html",
+    "path": "data/raw/spec/cpu2026/res2026q3/cpu2026-20260908-00542.html",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026rate",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q3/cpu2026-20260908-00542.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q3/cpu2026-20260908-00542.csv",
+    "path": "data/raw/spec/cpu2026/res2026q3/cpu2026-20260908-00542.csv",
+    "selection_reason": "first_last_by_result_id",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2000",
+    "benchmark": "CINT2000rate",
+    "source_url": "https://www.spec.org/cpu2000/results/res2006q3/cpu2000-20060901-07172.html",
+    "document_url": "https://www.spec.org/cpu2000/results/res2006q3/cpu2000-20060901-07172.html",
+    "path": "data/raw/spec/cpu2000/res2006q3/cpu2000-20060901-07172.html",
+    "selection_reason": "enabled_cores_exceed_declared_chip_capacity",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu95",
+    "benchmark": "CINT95",
+    "source_url": "https://www.spec.org/cpu95/results/res96q4/cpu95-960904-01271.html",
+    "document_url": "https://www.spec.org/cpu95/results/res96q4/cpu95-960904-01271.html",
+    "path": "data/raw/spec/cpu95/res96q4/cpu95-960904-01271.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu95",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu95",
+    "benchmark": "CINT95rate",
+    "source_url": "https://www.spec.org/cpu95/results/res96q4/cpu95-960904-01272.html",
+    "document_url": "https://www.spec.org/cpu95/results/res96q4/cpu95-960904-01272.html",
+    "path": "data/raw/spec/cpu95/res96q4/cpu95-960904-01272.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu95",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu95",
+    "benchmark": "CINT95rate",
+    "source_url": "https://www.spec.org/cpu95/results/res2000q1/cpu95-20000214-04062.html",
+    "document_url": "https://www.spec.org/cpu95/results/res2000q1/cpu95-20000214-04062.html",
+    "path": "data/raw/spec/cpu95/res2000q1/cpu95-20000214-04062.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2000",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2000",
+    "benchmark": "CINT2000",
+    "source_url": "https://www.spec.org/cpu2000/results/res1999q4/cpu2000-19991130-00007.html",
+    "document_url": "https://www.spec.org/cpu2000/results/res1999q4/cpu2000-19991130-00007.html",
+    "path": "data/raw/spec/cpu2000/res1999q4/cpu2000-19991130-00007.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2000",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2000",
+    "benchmark": "CINT2000rate",
+    "source_url": "https://www.spec.org/cpu2000/results/res2000q4/cpu2000-20001106-00288.html",
+    "document_url": "https://www.spec.org/cpu2000/results/res2000q4/cpu2000-20001106-00288.html",
+    "path": "data/raw/spec/cpu2000/res2000q4/cpu2000-20001106-00288.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2000",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2000",
+    "benchmark": "CINT2000rate",
+    "source_url": "https://www.spec.org/cpu2000/results/res2006q2/cpu2000-20060515-05998.html",
+    "document_url": "https://www.spec.org/cpu2000/results/res2006q2/cpu2000-20060515-05998.html",
+    "path": "data/raw/spec/cpu2000/res2006q2/cpu2000-20060515-05998.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2006",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006",
+    "source_url": "https://www.spec.org/cpu2006/results/res2007q4/cpu2006-20070916-02044.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2007q4/cpu2006-20070916-02044.html",
+    "path": "data/raw/spec/cpu2006/res2007q4/cpu2006-20070916-02044.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2006",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006",
+    "source_url": "https://www.spec.org/cpu2006/results/res2007q4/cpu2006-20070916-02044.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2007q4/cpu2006-20070916-02044.csv",
+    "path": "data/raw/spec/cpu2006/res2007q4/cpu2006-20070916-02044.csv",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2006",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006rate",
+    "source_url": "https://www.spec.org/cpu2006/results/res2007q4/cpu2006-20070916-02042.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2007q4/cpu2006-20070916-02042.html",
+    "path": "data/raw/spec/cpu2006/res2007q4/cpu2006-20070916-02042.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2006",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006rate",
+    "source_url": "https://www.spec.org/cpu2006/results/res2007q4/cpu2006-20070916-02042.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2007q4/cpu2006-20070916-02042.csv",
+    "path": "data/raw/spec/cpu2006/res2007q4/cpu2006-20070916-02042.csv",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2006",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006rate",
+    "source_url": "https://www.spec.org/cpu2006/results/res2007q2/cpu2006-20070331-00717.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2007q2/cpu2006-20070331-00717.html",
+    "path": "data/raw/spec/cpu2006/res2007q2/cpu2006-20070331-00717.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2017",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2006",
+    "benchmark": "CINT2006rate",
+    "source_url": "https://www.spec.org/cpu2006/results/res2007q2/cpu2006-20070331-00717.html",
+    "document_url": "https://www.spec.org/cpu2006/results/res2007q2/cpu2006-20070331-00717.csv",
+    "path": "data/raw/spec/cpu2006/res2007q2/cpu2006-20070331-00717.csv",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2017",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017rate",
+    "source_url": "https://www.spec.org/cpu2017/results/res2022q4/cpu2017-20221024-32623.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2022q4/cpu2017-20221024-32623.html",
+    "path": "data/raw/spec/cpu2017/res2022q4/cpu2017-20221024-32623.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2026",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2017",
+    "benchmark": "CINT2017rate",
+    "source_url": "https://www.spec.org/cpu2017/results/res2022q4/cpu2017-20221024-32623.html",
+    "document_url": "https://www.spec.org/cpu2017/results/res2022q4/cpu2017-20221024-32623.csv",
+    "path": "data/raw/spec/cpu2017/res2022q4/cpu2017-20221024-32623.csv",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2026",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00046.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00046.html",
+    "path": "data/raw/spec/cpu2026/res2026q2/cpu2026-20260210-00046.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2026",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00046.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00046.csv",
+    "path": "data/raw/spec/cpu2026/res2026q2/cpu2026-20260210-00046.csv",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2026",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026rate",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00045.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00045.html",
+    "path": "data/raw/spec/cpu2026/res2026q2/cpu2026-20260210-00045.html",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2026",
+    "status": "cached"
+  },
+  {
+    "generation": "cpu2026",
+    "benchmark": "CINT2026rate",
+    "source_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00045.html",
+    "document_url": "https://www.spec.org/cpu2026/results/res2026q2/cpu2026-20260210-00045.csv",
+    "path": "data/raw/spec/cpu2026/res2026q2/cpu2026-20260210-00045.csv",
+    "selection_reason": "first_admitted_ram_aliases_tuple_cpu2026",
+    "status": "cached"
+  }
+]

@@ -1,0 +1,83 @@
+{
+  "code_hashes": {
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_io.py": "7c5345d069e0b41d7bf28cee1efc517f2e804ebd910e1210de856822191cc4da",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec.py": "da3e5a3ba397edf740809d79a8c1708a4b16fc23b5032af17293c688b2f04fb1",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec95_overlap_audit.py": "1712f01929274e1567739b027676f30a871c1c96ec1aa614953ce6746ba74681",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_overlap.py": "7684f3ce543489dcddac0e3321a4c4ae82c5a4b8e449b04b542e9a1018578bab",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_fit.py": "6f868ed80f92e56a908f0e89443b96af89688a3572e91fa5d4b8b1ca8ac17cef"
+  },
+  "disclosure_review_counts": {
+    "fields_extracted": 1,
+    "source_fields_match_bulk": 39
+  },
+  "input_sha256": {
+    "cpu2000": "08d4487927f2c927ee25ad9ff0a7805af195d5a765ce00bd5c0602a79f43ca29",
+    "cpu95": "7fe860a52e3f8c07939fc8f0bfd9b9a3783722ec00011fd4f692e05fccf013b9"
+  },
+  "limitations": [
+    "No factor changes or fit-cohort promotion",
+    "Candidate aliases require source/configuration review",
+    "Missing means absent in this cached export under this identity",
+    "Ignoring resources/platform identity is a diagnostic upper bound only"
+  ],
+  "method_version": "spec95-2000-overlap-audit-v1",
+  "output_sha256": {
+    "candidate-pairs.csv": "f8ee9e2f48432b1da9caecc4fb80fbed34dd4f7da1836c0c4f9788b806300ca8",
+    "scenario-triples.csv": "92b3f15914271fd7fbe2899c6cb6cf8034a68c479a38cc045060141dc594ac79",
+    "source-records.csv": "3bc5f3edab21c9b9797b9d90a6b900cdf2757deb5dcdecb44040e59b820e25c4"
+  },
+  "raw_integer_records": {
+    "cpu2000": {
+      "CINT2000": 1381,
+      "CINT2000rate": 2493
+    },
+    "cpu95": {
+      "CINT95": 548,
+      "CINT95rate": 773
+    }
+  },
+  "scenarios": {
+    "candidate_aliases_only": [
+      "processor_label",
+      "system_name"
+    ],
+    "current_strict": [],
+    "ignore_resources_diagnostic": [
+      "chips",
+      "cores",
+      "threads_per_core"
+    ],
+    "ignore_system_memory_diagnostic": [
+      "memory_mismatch",
+      "memory_unknown",
+      "processor_label",
+      "system_name",
+      "unresolved_system"
+    ],
+    "memory_aliases_ignore_resources_diagnostic": [
+      "chips",
+      "cores",
+      "memory_mismatch",
+      "memory_unknown",
+      "processor_label",
+      "system_name",
+      "threads_per_core"
+    ],
+    "memory_and_candidate_aliases": [
+      "memory_mismatch",
+      "memory_unknown",
+      "processor_label",
+      "system_name"
+    ],
+    "memory_relaxed": [
+      "memory_mismatch",
+      "memory_unknown"
+    ]
+  },
+  "usable_records": {
+    "cpu2000_rate": 2481,
+    "cpu2000_speed": 1374,
+    "cpu95_rate": 773
+  }
+}

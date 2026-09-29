@@ -10,12 +10,13 @@ import random
 import re
 import statistics
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urljoin
 
 import numpy as np
 from cpushowspeed.calibration import absolute_error_percent, quantile
+from cpushowspeed.execution_policy import agreement
 
 BASE_URL = "https://www.spec.org"
 INTERVAL_FIELDS = ("confidence_level", "bootstrap_replicates", "bootstrap_seed", "bootstrap_unit", "quantile_method")
@@ -57,6 +58,10 @@ PAIR_FIELDS = [
     "old_source_container_sha256",
     "new_source_container_sha256",
     "source_check",
+    "base_execution_status",
+    "peak_execution_status",
+    "base_unfiltered_ratio",
+    "peak_unfiltered_ratio",
 ]
 
 
@@ -79,6 +84,9 @@ class Result:
     base: float | None
     source_url: str
     source_container_sha256: str
+    track: str = ""
+    execution: dict = field(default_factory=dict, compare=False, hash=False)
+    raw_fields: dict = field(default_factory=dict, compare=False, hash=False)
 
 
 def _normalized(value: str) -> str:
@@ -146,7 +154,7 @@ def _checked_bulk(path: Path) -> tuple[list[dict[str, str]], str]:
 
 
 def _pair(old: Result, new: Result, tier: str, source_check: str = "bulk_hash_checked") -> dict[str, object]:
-    return {
+    row = {
         "old_generation": old.generation,
         "new_generation": new.generation,
         "old_result_id": old.result_id,
@@ -183,6 +191,13 @@ def _pair(old: Result, new: Result, tier: str, source_check: str = "bulk_hash_ch
         "new_source_container_sha256": new.source_container_sha256,
         "source_check": source_check,
     }
+
+    for mode in ("base", "peak"):
+        row[mode + "_execution_status"] = agreement(old, new, mode)
+        row[mode + "_unfiltered_ratio"] = row[mode + "_ratio"]
+        if row[mode + "_execution_status"] == "confirmed_count_conflict":
+            row[mode + "_ratio"] = ""
+    return row
 
 
 def _automatic_pairs(results: dict[str, list[Result]], older: str, newer: str) -> list[dict[str, object]]:

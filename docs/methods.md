@@ -252,3 +252,25 @@ authorize frequency-conflict conversion. LINPACK stays unscaled. Estimates use
 the actual reported clock unless explicitly normalizing to a paired target.
 Whole-model holdouts remove all accepted aliases and shared bridge evidence;
 coefficient bootstrap samples retain shared calibration dependence.
+
+## Independent speed calibration
+
+The [dual-track experiment](../research/spec-dual-track.md) reuses the current
+rate matcher and grouped log-ratio estimator for speed-only generation edges.
+Full-chain speed CI95 uses shared processor-configuration bootstrap weights
+across edges. The sparse historical network accepts separate observed-speed
+anchors, with only the SPEC89-to-SPEC92 edge for estimated SPEC89 labels.
+No rate normalization is applied to speed observations. Neither conditional
+CI95 nor a small held-out error proves architecture-independent transport.
+
+## Joint speed/rate predictors
+
+The [joint experiment](../research/spec-joint-tracks.md) fits an older measured
+rate target from newer speed, rate or their fixed equal geometric mean. The
+three alternatives use identical complete-case cohorts, separate mask-specific
+coefficients and whole-processor-model holdouts. Later-generation VAXen values
+compose a local predictor with a rate-only prefix; joint coefficients are never
+multiplied into a purported joint chain. Only CPU92 observed targets provide
+direct rate-VAXen validation. The shared sparse historical fitter continues to
+reject mixed speed/rate *targets*; this experiment has multiple predictor types
+and a single rate target.

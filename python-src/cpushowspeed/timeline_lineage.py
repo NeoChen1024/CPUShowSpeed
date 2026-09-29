@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 
+from cpushowspeed.classic_bridge_data import bridge_rows
 from cpushowspeed.research_io import read_csv
 
 
@@ -177,10 +178,39 @@ def build_lineage(output):
             kind="joint",
             details="linear_clock / with_spec89. Original classical observations and SPEC92 rate anchors are jointly fitted; predicted VAXen is not measured training evidence. CI95 retains shared draws and excludes model discrepancy.",
         )
+    # Modern local predictors feed the older rate backbone, not their own rate node.
+    for n in nodes:
+        if n["y"] >= 240:
+            n["y"] += 100
+    for i, (new, old) in enumerate(zip(gens, gens[1:])):
+        nid = "predictor-" + new
+        node(nid, "Speed / joint", "SPEC" + new + " inputs", 25 + i * 190, 180, h=64, kind="predictor")
+        edges.append(
+            dict(
+                id=nid + "-to-rate",
+                source=nid,
+                target="rate-" + old,
+                label="Local predictor",
+                kind="fit",
+                stats=[],
+                formula="older rate = k × speed, or k × sqrt(speed × rate)",
+                status="conditional calibration",
+                details="Select this predictor to inspect speed-only, matched-cohort rate-only and joint models.",
+                owner=os.path.relpath(Path("research/spec-joint-tracks.md").resolve(), output.parent.resolve()),
+            )
+        )
     for n in nodes:
         touching = [e for e in edges if n["id"] in (e["source"], e["target"])]
         n["edge_ids"] = [e["id"] for e in touching]
-    return dict(nodes=nodes, edges=edges, input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs})
+    legacy_path = Path("research/data/spec89/v2.0.0/csv/bridges89_92.csv")
+    inputs.append(legacy_path)
+    legacy = dict(rows=bridge_rows(legacy_path), fit=next(r for r in bridge if r["edge"] == "int89_to_int92"))
+    return dict(
+        nodes=nodes,
+        edges=edges,
+        legacy_fit=legacy,
+        input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},
+    )
 
 
 STYLE = r"""
@@ -204,11 +234,28 @@ VAXen = SPECrate_int92 × 25500 / 604800. The same formula applies to Base score
 Other benchmarks are mapped onto this scale using fitted models.</p>
 <p class="hint">CI95 describes calibration uncertainty, not the prediction range for an individual machine.</p>
 </div>
+<p class="lineage-intro">SPEC calibration is provisional: known fixed-count conflicts are excluded; missing or varying execution counts still require review.</p>
 <div class="lineage-toolbar">
 <span class="hint">Solid: calibration · dashed: candidate links · teal: fixed conversion</span></div>
 <div id="lineage-selection" aria-live="polite">Select a node or arrow to inspect its calibration. Click empty graph space to reset. To trace a plotted result, pin the point and choose View calibration path.</div>
-<div class="lineage-layout"><div class="lineage-scroll"><svg id="lineage-graph" viewBox="0 0 1410 760" aria-label="Benchmark calibration pathways"></svg></div>
-<aside id="lineage-card" aria-live="polite"><h3>Calibration details</h3><p>Select a node or arrow.</p><p>Joint models share evidence; their intervals are correlated.</p></aside></div></details>
+<div class="lineage-layout"><div class="lineage-scroll"><svg id="lineage-graph" viewBox="0 0 1410 860" aria-label="Benchmark calibration pathways"></svg></div>
+<aside id="lineage-card" aria-live="polite"><h3>Calibration details</h3><p>Select a node or arrow.</p><p>Joint models share evidence; their intervals are correlated.</p></aside></div>
+<div id="predictor-path" aria-live="polite"></div>
+<details id="fit-comparison"><summary>Compare generation fits</summary>
+<p><label>Generations <select id="fit-generation">
+<option value="cpu2000">SPEC2000 → SPEC95</option>
+<option value="cpu89">SPEC89 → SPEC92 (speed)</option>
+<option value="cpu95">SPEC95 → SPEC92</option>
+<option value="cpu2006">SPEC2006 → SPEC2000</option>
+<option value="cpu2017">SPEC2017 → SPEC2006</option>
+<option value="cpu2026">SPEC2026 → SPEC2017</option>
+</select></label>
+<label>Matching <select id="fit-policy"><option value="strict">Strict</option><option value="ram-aliases" selected>RAM + aliases</option><option value="cpu-clock">CPU + clock</option></select></label>
+<label>Scores <select id="fit-mode"><option value="peak">Peak</option><option value="base">Base</option></select></label>
+<label>Inputs <select id="fit-method"><option value="equal_geometric">Speed + rate</option><option value="speed_only">Speed only</option><option value="rate_only">Rate only — matched cohort</option></select></label></p>
+<p id="fit-stats"></p><svg id="fit-scatter" viewBox="0 0 700 330" style="max-width:850px" aria-label="Generation calibration scatterplot"></svg>
+<p class="hint">Each mark is a source pairing; repeated submissions remain included. Shading is coefficient CI95. Axes show native benchmark scores. Matching applies across generations. CPU + clock matches near-equal clocks; it does not scale scores.</p>
+</details></details>
 """
 SCRIPT = r"""
 const lineage=__LINEAGE_DATA__;
@@ -216,6 +263,7 @@ let lineageActive=null,lineageRecord=null;
 const lineageNode=id=>lineage.nodes.find(n=>n.id===id);
 const lineageNumber=x=>Number(x).toPrecision(5);
 function pathway(r){
+ if(['speed','joint'].includes(r.estimate_kind)){const old={cpu95:'cpu92',cpu2000:'cpu95',cpu2006:'cpu2000',cpu2017:'cpu2006',cpu2026:'cpu2017'}[r.generation];return old?['predictor-'+r.generation.slice(3),...pathway({...r,estimate_kind:'baseline',generation:old})]:[];}
  if(r.generation&&r.generation.startsWith('cpu')&&r.generation!=='cpu89'){
   const gens=['2026','2017','2006','2000','95','92'],i=gens.indexOf(r.generation.slice(3));
   return i<0?[]:gens.slice(i).map(g=>'rate-'+g).concat('vaxen');
@@ -228,27 +276,38 @@ function pathway(r){
 function drawLineage(){
  const svg=document.querySelector('#lineage-graph'), chosen=lineageActive;
  let s='<defs><marker id="lineage-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#648398"/></marker></defs>';
- s+='<text x="25" y="30" fill="#516a7a" font-size="18">SPEC rate generations</text><text x="30" y="205" fill="#516a7a" font-size="18">Recovered speed results</text><text x="30" y="375" fill="#516a7a" font-size="18">Sparse, jointly calibrated historical scores</text>';
+ s+='<text x="25" y="30" fill="#516a7a" font-size="18">SPEC rate generations</text><text x="30" y="305" fill="#516a7a" font-size="18">Recovered speed results</text><text x="30" y="475" fill="#516a7a" font-size="18">Sparse, jointly calibrated historical scores</text>';
  for(const e of lineage.edges){const a=lineageNode(e.source),b=lineageNode(e.target);if(!a||!b)continue;
   const active=!chosen||(chosen.includes(e.source)&&chosen.includes(e.target));
   const x=a.x+a.w,y=a.y+a.h/2,xx=b.x,yy=b.y+b.h/2;
-  const d=y===yy?`M${x} ${y}L${xx} ${yy}`:`M${x} ${y}C${x+65} ${y},${xx-65} ${yy},${xx} ${yy}`;
+  const d=e.source.startsWith('predictor-')?`M${x} ${y}C${x+25} ${y},${xx-25} ${yy},${xx} ${yy}`:y===yy?`M${x} ${y}L${xx} ${yy}`:`M${x} ${y}C${x+65} ${y},${xx-65} ${yy},${xx} ${yy}`;
   const labelX=(x+xx)/2,labelY=y===yy?y-44:(y+yy)/2-12;
   const c=e.kind==='definition'?'#148c80':e.kind==='candidate'?'#a66c3d':'#497e9d';
-  s+=`<g role="button" tabindex="0" data-key="${esc(e.id)}" data-type="edge" aria-label="${esc(e.label+' '+a.title+' to '+b.title)}" opacity="${active?1:.16}"><path d="${d}" fill="none" stroke="transparent" stroke-width="22"/><path d="${d}" fill="none" stroke="${c}" stroke-width="2.5" ${e.kind==='candidate'?'stroke-dasharray="7 5"':''} marker-end="url(#lineage-arrow)"/><text x="${labelX}" y="${labelY}" text-anchor="middle" font-size="11" fill="${c}">${esc(e.label)}</text><title>${esc(e.label)}</title></g>`;
+  s+=`<g role="button" tabindex="0" data-key="${esc(e.id)}" data-type="edge" aria-label="${esc(e.label+' '+a.title+' to '+b.title)}" opacity="${active?1:.16}"><path d="${d}" fill="none" stroke="transparent" stroke-width="22"/><path d="${d}" fill="none" stroke="${c}" stroke-width="2.5" ${e.kind==='candidate'?'stroke-dasharray="7 5"':''} marker-end="url(#lineage-arrow)"/><text x="${labelX}" y="${labelY}" text-anchor="middle" font-size="11" fill="${c}">${esc(e.source.startsWith('predictor-')?'':e.label)}</text><title>${esc(e.label)}</title></g>`;
  }
- for(const n of lineage.nodes){const active=!chosen||chosen.includes(n.id),c=n.kind==='unit'?'#d9f3ed':n.kind==='model'?'#e8e6f7':'#fff';
+ for(const n of lineage.nodes){const active=!chosen||chosen.includes(n.id),c=n.kind==='unit'?'#d9f3ed':['model','predictor'].includes(n.kind)?'#e8e6f7':'#fff';
  s+=`<g role="button" tabindex="0" data-key="${esc(n.id)}" data-type="node" aria-label="${esc(n.title)}" opacity="${active?1:.2}"><rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="14" fill="${c}" stroke="${active&&chosen?'#1c658e':'#bdccd7'}" stroke-width="${active&&chosen?3:1.5}"/><text x="${n.x+12}" y="${n.y+27}" font-size="17" fill="#213b50">${esc(n.title)}</text><text x="${n.x+12}" y="${n.y+49}" font-size="12" fill="#506676">${esc(n.subtitle)}</text>${n.kind==='model'?`<text x="${n.x+12}" y="${n.y+76}" font-size="11" fill="#60567d">Shared anchors · conditional calibration</text>`:''}</g>`;}
  svg.innerHTML=s;
 }
 function lineageStats(edges){return edges.map(e=>{
  let stats=e.stats||[];
+ const generation=/^rate-(95|2000|2006|2017|2026)-to-/.exec(e.id)?.[1];
+ if(generation)stats=(lineage.rate_edges?.[matching]||[]).filter(r=>r.generation==='cpu'+generation);
  if(lineageRecord){const mode=modeOf(lineageRecord);stats=stats.filter(s=>!s.mode||s.mode===mode);}
- return `<h4>${esc(e.label)}</h4><p><code>${esc(e.formula)}</code><br>${esc(e.details)}</p>`+
+ return `<h4>${esc(e.label)}</h4><p><code>${esc(e.formula)}</code><br>${esc(generation?'Active matching: '+matching+'. Full rate cohort; shared-model bootstrap. Local edge CI95 is separate from full-chain CI95.':e.details)}</p>`+
  (stats.length?'<table><thead><tr><th>Metric / mode</th><th>k · CI95</th></tr></thead><tbody>'+stats.map(r=>`<tr><td>${esc(r.metric||r.mode)}<br>${esc(r.unit)}</td><td>${lineageNumber(r.factor)}<br>${lineageNumber(r.low)}–${lineageNumber(r.high)}${r.groups!==undefined?`<br>${r.groups} groups · ${r.pairs} pairs`:''}${r.error!==undefined?`<br>${esc(r.error_label)}: ${lineageNumber(r.error)}`:''}</td></tr>`).join('')+'</tbody></table>':'')+
  `<p><a href="${esc(e.owner)}">Research / method notes</a> · ${esc(e.status)}</p>`;
  }).join('');}
+function openFit(generation,mode,method){
+ document.querySelector('#fit-generation').value=generation;
+ if(mode)document.querySelector('#fit-mode').value=mode;
+ if(method)document.querySelector('#fit-method').value=method;
+ document.querySelector('#fit-comparison').open=true;drawFit();
+}
 function inspectLineage(type,id){
+ const predictor=/^predictor-(95|2000|2006|2017|2026)/.exec(id)?.[1];
+ const generation=predictor|| (id==='int89-int92'?'cpu89':/^rate-(95|2000|2006|2017|2026)-to-/.exec(id)?.[1]);
+ if(generation)openFit(generation==='cpu89'?generation:'cpu'+generation);
  const edge=lineage.edges.find(e=>e.id===id),node=lineageNode(id);
  const edges=type==='edge'?(edge?[edge]:[]):lineage.edges.filter(e=>(e.source===id||e.target===id)&&(!lineageActive||(lineageActive.includes(e.source)&&lineageActive.includes(e.target))));
  document.querySelector('#lineage-card').innerHTML=`<h3>${esc(type==='edge'?edge?.label:node?.title)}</h3><p>${esc(node?.details||'')}</p>`+lineageStats(edges);
@@ -257,8 +316,9 @@ function traceLineage(r){
  lineageRecord=r;lineageActive=pathway(r);document.querySelector('#lineage').open=true;drawLineage();
  document.querySelector('#lineage-selection').textContent=`${r.system} · ${r.route} · ${modeOf(r)}`;
  let scores;try{scores=JSON.parse(r.scores);}catch{scores={input:r.scores};}
- const formula=r.route==='Combined mixes'?'V = geometric mean(kᵢ × scoreᵢ); aligned joint draws for CI95':r.route==='classical'?'V = family-balanced geometric mean(kᵢ × scoreᵢ)':'V = input score × saved calibration factor(s)';
- document.querySelector('#lineage-card').innerHTML=`<h3>${esc(r.system)}</h3><p class="lineage-badge">${esc(r.route)} · ${esc(modeOf(r))}</p><h4>Actual inputs</h4><pre style="white-space:pre-wrap">${esc(JSON.stringify(scores,null,2))}</pre><p>${esc(formula)}</p><h4>${fmt(r.vaxen)}</h4><p>Calibration CI95<br>${fmt(r.ci95_low)} – ${fmt(r.ci95_high)}</p><p>${esc(r.calibration_scenario||'Saved route calibration')}<br>${esc(r.limitation)}</p><p><a href="${esc(r.source_url)}">Original source</a></p><p>Select a highlighted arrow for details. CI95 uses the saved joint or chain calibration.</p>`;
+ const formula=r.estimate_kind==='joint'?'V = k × sqrt(speed × rate); local model then upstream rate chain':r.estimate_kind==='speed'?'V = k × speed; local throughput predictor then upstream rate chain':r.route==='Combined mixes'?'V = geometric mean(kᵢ × scoreᵢ); aligned joint draws for CI95':r.route==='classical'?'V = family-balanced geometric mean(kᵢ × scoreᵢ)':'V = input score × saved calibration factor(s)';
+ document.querySelector('#lineage-card').innerHTML=`<h3>${esc(r.system)}</h3><p class="lineage-badge">${esc(r.route)} · ${esc(modeOf(r))}</p><h4>Actual inputs</h4><pre style="white-space:pre-wrap">${esc(JSON.stringify(scores,null,2))}</pre><p>${esc(formula)}</p><h4>${fmt(r.vaxen)}</h4><p>Calibration CI95<br>${fmt(r.ci95_low)} – ${fmt(r.ci95_high)}</p><p>${esc(r.variants?matching:(r.calibration_scenario||'Saved route calibration'))}<br>${esc(r.limitation)}</p><p><a href="${esc(r.source_url)}">Original source</a></p><p>Select a highlighted arrow for details. CI95 uses the saved joint or chain calibration.</p>`;
+ if(['speed','joint'].includes(r.estimate_kind)){document.querySelector('#lineage-selection').textContent+=' · '+estimateLabel(r)+' → highlighted upstream rate path';openFit(r.generation,modeOf(r),r.estimate_kind==='joint'?'equal_geometric':'speed_only');}
  clearSelection();document.querySelector('#lineage').scrollIntoView?.({behavior:'smooth',block:'start'});
 }
 for(const event of ['click','keydown'])document.querySelector('#lineage-graph').addEventListener(event,e=>{
@@ -266,7 +326,50 @@ for(const event of ['click','keydown'])document.querySelector('#lineage-graph').
  const target=e.target.closest?.('[data-key]')||e.target;if(!target.dataset?.key){if(event==='click')resetLineage();return;}
  if(event==='keydown')e.preventDefault();inspectLineage(target.dataset.type,target.dataset.key);
 });
-function resetLineage(){lineageActive=null;lineageRecord=null;drawLineage();document.querySelector('#lineage-selection').textContent='All calibration pathways';document.querySelector('#lineage-card').innerHTML='<h3>Calibration details</h3><p>Select a node or arrow.</p><p>Joint models share evidence; their intervals are correlated.</p>';}
+function resetLineage(){lineageActive=null;lineageRecord=null;drawLineage();document.querySelector('#lineage-selection').textContent='Rate, speed and joint calibration pathways';document.querySelector('#lineage-card').innerHTML='<h3>Calibration details</h3><p>Select a node or arrow.</p><p>Joint models share evidence; their intervals are correlated.</p>';}
 document.querySelector('#trace-path').addEventListener('click',()=>{if(candidates.length)traceLineage(candidates[active].r);});
-drawLineage();
+
+function drawPredictorPath(generation,mode,method,fit){
+ const panel=document.querySelector('#predictor-path'),legacy=generation==='cpu89';
+ if(legacy){panel.innerHTML='<strong>Historical speed bridge</strong><p>SPECint89 speed → SPECint92 speed → rate-VAXen</p>';return;}
+ const old={cpu95:'92',cpu2000:'95',cpu2006:'2000',cpu2017:'2006',cpu2026:'2017'}[generation];
+ const speed=method!=='rate_only',rate=method!=='speed_only';
+ const formula=method==='equal_geometric'?'sqrt(speed × rate)':speed?'speed':'rate';
+ panel.innerHTML='<strong>SPEC'+esc(generation.slice(3))+' local predictor · '+esc(mode)+' · '+esc(matching)+'</strong>'+
+ '<div class="predictor-flow"><div class="predictor-inputs"><span class="predictor-box '+(speed?'selected':'')+'">Speed'+(speed?' ✓':' (unused)')+'</span><span class="predictor-box '+(rate?'selected':'')+'">Rate'+(rate?' ✓':' (unused)')+'</span></div><span>→</span><span class="predictor-box">'+esc(formula)+' × k</span><span>→</span><span class="predictor-box">SPEC'+old+' rate</span><span>→ upstream rate chain → VAXen</span></div>'+
+ '<p>'+ (fit?'Local k = '+lineageNumber(fit.coefficient_older_rate)+'. Full-route k = '+lineageNumber(fit.coefficient_vaxen)+'.':'No supported coefficient for this selection.')+
+ '</p><p class="hint">Use the comparison controls below to select a generation and inputs. Rate-only here uses the joint model’s matched cohort; the top rate backbone uses its full cohort. Shared evidence means correlated uncertainty.</p>';
+}
+function drawFit(){
+ const generation=document.querySelector('#fit-generation').value||'cpu2000',legacy=generation==='cpu89';
+ const mode=document.querySelector('#fit-mode').value||'peak',method=document.querySelector('#fit-method').value||'equal_geometric';
+ document.querySelector('#fit-mode').disabled=legacy;
+ document.querySelector('#fit-method').disabled=legacy;
+ document.querySelector('#fit-policy').disabled=legacy;
+ const policy=matching,experiment=lineage.experiments?.[policy];
+ const rows=legacy?(lineage.legacy_fit?.rows||[]):(experiment?.triples||[]).filter(r=>r.new_generation===generation&&r.mode===mode);
+ const saved=lineage.legacy_fit?.fit;
+ const fit=legacy&&saved?{models:saved.models,processor_configs:'unknown',tuples:saved.pairs,coefficient_older_rate:saved.factor,local_ci95_low:saved.factor_ci95_low,local_ci95_high:saved.factor_ci95_high,model_center_p95_percent:saved.model_center_p95_percent}:experiment?.fits.find(r=>r.new_generation===generation&&r.mode===mode&&r.method===method);
+ const older={cpu95:'92',cpu2000:'95',cpu2006:'2000',cpu2017:'2006',cpu2026:'2017'}[generation];
+ const xlabel=legacy?'SPECint89 speed':`SPEC${generation.slice(3)} ${method==='speed_only'?'speed':method==='rate_only'?'rate':'sqrt(speed × rate)'} (${mode})`;
+ const ylabel=legacy?'SPECint92 speed':`SPEC${older} rate (${mode})`;
+ const svg=document.querySelector('#fit-scatter');
+ svg.setAttribute('aria-label',xlabel+' versus measured '+ylabel);
+ const cohort=legacy?'Historical source pairs · speed only':policy+' · '+mode;
+ document.querySelector('#fit-stats').textContent=fit?`${cohort} · ${fit.models} CPU models · ${fit.processor_configs} configurations · ${fit.tuples} tuples · k ${Number(fit.coefficient_older_rate).toPrecision(5)} · CI95 ${Number(fit.local_ci95_low).toPrecision(5)}–${Number(fit.local_ci95_high).toPrecision(5)} · model-held-out P95 ${Number(fit.model_center_p95_percent).toFixed(2)}%`:`${cohort} · ${new Set(rows.map(r=>r.model_key)).size} CPU models · ${rows.length} tuples · insufficient independent CPU models; no fitted coefficient`;
+ drawPredictorPath(generation,mode,method,fit);
+ if(!rows.length){svg.innerHTML='';return;}
+ const values=rows.map(r=>legacy?[+r.SPECint89,+r.SPECint92]:[method==='speed_only'?+r.speed_score:method==='rate_only'?+r.rate_score:Math.sqrt(r.speed_score*r.rate_score),+r.target_rate]);
+ const lo=Math.log10(Math.min(...values.map(r=>r[0])))-.08,hi=Math.log10(Math.max(...values.map(r=>r[0])))+.08;
+ const yl=Math.log10(Math.min(...values.map(r=>r[1])))-.08,yh=Math.log10(Math.max(...values.map(r=>r[1])))+.08;
+ const xx=v=>75+(Math.log10(v)-lo)/(hi-lo)*580,yy=v=>275-(Math.log10(v)-yl)/(yh-yl)*245;
+ let out='';for(let i=0;i<4;i++){const x=10**(lo+(hi-lo)*i/3),y=10**(yl+(yh-yl)*i/3);out+=`<path d="M${xx(x)} 30V275M75 ${yy(y)}H655" stroke="#ddd"/><text x="${xx(x)}" y="295" text-anchor="middle">${x.toPrecision(3)}</text><text x="68" y="${yy(y)}" text-anchor="end">${y.toPrecision(3)}</text>`;}
+ out+='<defs><clipPath id="fit-clip"><rect x="75" y="30" width="580" height="245"/></clipPath></defs><g clip-path="url(#fit-clip)">';
+ if(fit){const a=10**lo,b=10**hi,k=+fit.coefficient_older_rate,l=+fit.local_ci95_low,h=+fit.local_ci95_high;out+=`<path d="M${xx(a)} ${yy(a*l)}L${xx(b)} ${yy(b*l)}L${xx(b)} ${yy(b*h)}L${xx(a)} ${yy(a*h)}Z" fill="#207ca3" opacity=".15"/><path d="M${xx(a)} ${yy(a*k)}L${xx(b)} ${yy(b*k)}" stroke="#207ca3"/>`;}
+ out+=values.map((v,i)=>`<circle cx="${xx(v[0])}" cy="${yy(v[1])}" r="3" fill="#207ca3" opacity=".55"><title>${rows[i].count||1} calibration tuple(s)</title></circle>`).join('');
+ svg.innerHTML=out+`</g><text x="350" y="324" text-anchor="middle">${esc(xlabel)} (log scale)</text><text x="75" y="18">Measured ${esc(ylabel)} (log scale)</text>`;
+}
+for(const id of ['fit-generation','fit-mode','fit-method'])document.querySelector('#'+id).addEventListener('change',drawFit);
+document.querySelector('#fit-policy').addEventListener('change',e=>setMatching(e.target.value));
+drawFit();drawLineage();
 """

@@ -3,12 +3,10 @@
 This document defines interpretation requirements. Specific implemented formats are owned by the historical-observation contract
 and the [shared timeline schema](timeline.md#shared-record-contract).
 
-Source-checked values and other observations recovered from historical documents
-should be stored in a form scripts can read and process. Select the concrete
-schema and serialization format when historical PDF and KIPS extraction starts;
-CSV, JSONL, and JSON remain candidates. Until then, the fields below describe
-information to preserve, not a prescribed file layout. Existing checked examples
-in research notes should be migrated into the chosen format at that point.
+The shared script input is the versioned JSONL [input catalog](input-catalog.md).
+Source-specific extraction formats remain provenance-bearing adapter inputs; they
+are not competing fitting contracts. Historical numerical observations also retain
+their source-owned observation format. No raw source is overwritten by normalization.
 
 ## Result identity
 
@@ -82,3 +80,43 @@ error interval of a multi-edge VAXen chain or a guarantee for one machine.
 When an estimated VAXen value is exported, preserve its original reported
 score, benchmark mode, factor source, evidence class, and the scope of any
 interval. Mark unquantified upstream uncertainty explicitly.
+
+## Experimental speed outputs
+
+The dual-track experiments identify `track` (`speed` or `rate`) independently
+of base/peak. Classical speed outputs use `target_unit=SPECint92_equivalent`;
+rate outputs use `rate_VAXen`. Shared network nodes distinguish `observed_speed`,
+`observed_rate`, `estimated_89` and `unanchored`. Mixed observed speed/rate anchors
+are rejected by the shared fitter. Existing rate schemas retain their meaning.
+
+Generation-chain speed coefficients are older-speed/newer-speed, with separate
+base and peak fits (base terminates at SPECbase_int92). Cross-track diagnostic
+ratios are native rate/native speed, never implicit VAXen or processor counts.
+See the [experiment](../research/spec-dual-track.md) for output paths and limits.
+
+## Joint-predictor experiment
+
+Joint tables retain `method`, fixed `speed_weight`, `old_generation`,
+`new_generation`, and `mode`. `coefficient_older_rate` maps the declared native
+predictor to the older suite; `coefficient_vaxen` includes an explicit upstream
+rate prefix. Held-out `observed_target_vaxen` is populated only for actual CPU92
+rate targets. Other observed targets remain native older-suite rate values.
+Masked-input predictions use independently fitted single-input coefficients.
+See the [joint experiment](../research/spec-joint-tracks.md) for uncertainty and
+insufficient-model policy.
+
+Joint-refit rows now include `matching_scenario` and `local_matching_policy`.
+Relaxed pair tiers (`platform_alias_ram_relaxed`, `cpu_clock_resources`) are
+distinct from `hardware_near`; source values and `matching_blockers` /
+`relaxed_fields` remain visible. Scenario-specific coefficients must not be
+combined with another scenario's uncertainty arrays.
+
+## Enabled hardware and benchmark concurrency
+
+Enabled cores/chips, chip capacity, hardware threads/core, rate copies and speed
+benchmark threads are separate quantities. Enabled counts below chip capacity are
+not automatically errors. CPU92 CPU count remains a legacy matching proxy with
+unverified chip equivalence. Runtime records retain mode, benchmark, quantity,
+raw value, locator and source hash. Uncollected details and missing parsed fields
+are distinct statuses. The [audit](../research/spec-resource-field-audit.md)
+records ambiguities; metadata enrichment does not silently change fitting cohorts.

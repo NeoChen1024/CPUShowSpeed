@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 
 import click
 from cpushowspeed.calibration import absolute_error_percent, quantile
+from cpushowspeed.spec_inputs import collect_cpu92_rate
 from cpushowspeed.spec_overlap import (
     INTERVAL_FIELDS,
     PAIR_FIELDS,
@@ -50,42 +51,6 @@ FACTOR_FIELDS = (
 )
 
 FACTOR_FIELDS = (*FACTOR_FIELDS, "model_center_p95_percent")
-
-
-def collect_cpu92_rate(path: Path, raw_dir: Path | None = None) -> list[Result]:
-    """Load checked Netlib-derived records, retaining each original detail URL/hash."""
-    results = []
-    with path.open(newline="", encoding="utf-8") as stream:
-        for row in csv.DictReader(stream):
-            if raw_dir is not None:
-                source_path = raw_dir / "cpu92" / "netlib" / "rate" / "details" / Path(urlparse(row["source_url"]).path).name
-                actual = hashlib.sha256(source_path.read_bytes()).hexdigest()
-                meta = json.loads(source_path.with_name(source_path.name + ".meta.json").read_text())
-                if actual != row["source_sha256"] or actual != meta.get("sha256") or row["source_url"] != meta.get("source_url"):
-                    raise ValueError(f"CPU92 source identity mismatch: {source_path}")
-            processor = row["processor"]
-            results.append(
-                Result(
-                    "cpu92",
-                    row["source_url"].rsplit("/", 1)[-1],
-                    row["system"],
-                    _normalized(row["system"]),
-                    processor,
-                    _processor_key(processor),
-                    int(row["cpu_count"]),
-                    None,
-                    None,
-                    _frequency({"System": row["system"]}, processor),
-                    float(row["memory_mib"]) if row["memory_mib"] else None,
-                    row["os"],
-                    row["compiler"],
-                    float(row["peak_score"]),
-                    float(row["base_score"]) if row["base_score"] else None,
-                    row["source_url"],
-                    row["source_sha256"],
-                )
-            )
-    return results
 
 
 def _software_near(pair: dict[str, object]) -> bool:

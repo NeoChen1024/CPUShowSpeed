@@ -10,6 +10,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 import click
+from cpushowspeed.spec_inputs import collect_integer
 from cpushowspeed.spec_overlap import (
     INTERVAL_FIELDS,
     PAIR_FIELDS,
@@ -75,52 +76,7 @@ FACTOR_FIELDS = (*FACTOR_FIELDS, "model_center_p95_percent")
 
 
 def collect_rate(raw_dir: Path) -> dict[str, list[Result]]:
-    results: dict[str, list[Result]] = {}
-    for generation in GENERATIONS:
-        rows, digest = _checked_bulk(raw_dir / generation / "bulk.csv")
-        selected: list[Result] = []
-        seen: set[str] = set()
-        for raw in rows:
-            if raw["Benchmark"] != "CINT" + generation[3:] + "rate":
-                continue
-            peak = _positive(raw.get("Result") or raw.get("Peak Result"))
-            base = _positive(raw.get("Baseline") or raw.get("Base Result"))
-            if peak is None and base is None:
-                continue
-            processor = raw.get("Processor") or raw.get("CPU") or ""
-            chips = raw.get("# chips") or raw.get("# Chips") or ""
-            if not processor or not chips.isdigit():
-                continue
-            url = _source_url(raw["Disclosure"])
-            result_id = url.split("/results/", 1)[1].removesuffix(".html")
-            if result_id in seen:
-                raise ValueError(f"duplicate {generation} integer-rate result: {result_id}")
-            seen.add(result_id)
-            cores = raw.get("# Cores") or raw.get("# cores") or ""
-            threads = raw.get("# Enabled Threads Per Core") or raw.get("# Threads Per Core") or ""
-            selected.append(
-                Result(
-                    generation,
-                    result_id,
-                    raw["System"],
-                    _normalized(raw["System"]),
-                    processor,
-                    _processor_key(processor),
-                    int(chips),
-                    int(cores) if cores.isdigit() else None,
-                    int(threads) if threads.isdigit() else None,
-                    _frequency(raw, processor),
-                    _memory_mib(raw.get("Memory", "")),
-                    raw.get("Operating System") or raw.get("Op. Sys.") or "",
-                    raw.get("Compiler", ""),
-                    peak,
-                    base,
-                    url,
-                    digest,
-                )
-            )
-        results[generation] = selected
-    return results
+    return collect_integer(raw_dir, "rate")
 
 
 def _fit_edges(results: dict[str, list[Result]]) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
@@ -238,7 +194,11 @@ def analyze_rate_generations(raw_dir: Path, output_dir: Path, research_dir: Path
     with records_path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(Result.__dataclass_fields__), lineterminator="\n")
         writer.writeheader()
-        writer.writerows(asdict(item) for generation in GENERATIONS for item in results[generation])
+        writer.writerows(
+            {k: json.dumps(v, sort_keys=True) if isinstance(v, dict) else v for k, v in asdict(item).items()}
+            for generation in GENERATIONS
+            for item in results[generation]
+        )
     pair_path = output_dir / "integer-rate-generation-pairs.csv"
     with pair_path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=PAIR_FIELDS, lineterminator="\n")

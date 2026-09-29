@@ -1,4 +1,4 @@
-# Track 2 — SPEC92 through SPEC2026 integer rate
+# Track 2 — SPEC92 through SPEC2026 speed and rate
 
 The [rate fitting report](../spec95-spec2026-rate-fitting.md) owns the current
 five adjacent-suite fits and full-chain uncertainty. The filename predates the
@@ -20,3 +20,6 @@ necessarily CPU launch or submission year. No unmeasured years are filled in.
 Supporting numerical snapshots live under `research/data/spec/`; full generated
 submissions and plots live under `data/derived/spec/`. Registry model and dataset
 IDs connect these artifacts to the classical/historical extensions.
+
+The [independent speed experiment](../spec-dual-track.md) is implemented alongside
+this rate series. It exports SPECint92-equivalent points, separate from rate-VAXen.

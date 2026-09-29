@@ -1,0 +1,5 @@
+edge,candidate_boundary,flag,pair_count,nonexclusive
+95rate_2000speed,exact_system_cpu_chips,clock_mismatch,1,True
+95rate_2000speed,exact_system_cpu_chips,memory_mismatch,7,True
+95rate_2000rate,exact_system_cpu_chips,clock_mismatch,1,True
+95rate_2000rate,exact_system_cpu_chips,memory_mismatch,8,True
