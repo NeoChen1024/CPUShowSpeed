@@ -1,7 +1,7 @@
 # Historical document IR (selected design)
 
 This is the selected CPUShowSpeed DocIR extension for OCR of historical PDFs.
-The table converter, Chandra-to-DocIR page writer, and OCR scheduler are
+The table converter, Chandra and Infinity page writers, and OCR scheduler are
 implemented. The 16-document, 2,213-page watchlist batch was generated
 on 2026-09-26; this is OCR output, not source-checked research evidence.
 This format is independent of FrontendAgentLoop's existing DocIR and does not
@@ -63,9 +63,12 @@ boxes are interpretable:
 ```
 
 `blocks[i]` corresponds to `chunks[i]` in the separately retained,
-immutable Chandra page response. Keep each chunk's original HTML there.
+immutable raw page response. Chandra retains each chunk's original HTML;
+Infinity retains each layout object's `category`, `text`, and normalized `bbox`.
+Its `figure` becomes a visual block, `table` uses the shared HTML converter,
+and other categories retain their content in `markdown`.
 Table cells are the stored normalized structure; table Markdown is a derived
-view. The page writer must emit exactly one DocIR block for each Chandra chunk, in the same order. It may not
+view. The page writer must emit exactly one DocIR block for each source chunk, in the same order. It may not
 filter, merge, or split chunks in DocIR; unsupported content and conversion
 failures retain their block slot with an explicit status. Chandra's empty
 `chunks` array corresponds to an empty `blocks` array. Retrieval-oriented
@@ -73,7 +76,7 @@ splitting or filtering belongs in a separate derived index. The original
 model response may also be retained, but it is the parsed `chunks` array
 that provides this positional mapping.
 
-`source_label` retains Chandra's label without treating the label as
+`source_label` retains the backend's label without treating the label as
 verified document semantics. `bbox_px` is `[left, top, right, bottom]`
 in `page_size_px` coordinates. An invalid or missing bounding box is
 `null`, not an invented full-page box.

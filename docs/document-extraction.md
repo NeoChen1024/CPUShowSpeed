@@ -10,6 +10,16 @@ same date. Its [evidence audit](../research/early-benchmark-evidence.md) records
 structural-table exceptions and reviewed claims. The full corpus has not been
 run or throughput-tuned.
 
+## OCR backends
+
+`documents ocr` automatically detects the wire format from the served model name.
+Without `--model` (or `VLLM_MODEL_NAME`), it discovers the endpoint's single model.
+Unknown or ambiguous names require an explicit `--backend chandra|infinity`. Both backends use local model-format adapters,
+a shared PDFium renderer, and one OpenAI-compatible HTTP client. Neither official
+OCR client is installed; PyMuPDF, pypdf, Transformers and Torch are unnecessary.
+Prompts retain their upstream attribution and Apache-2.0 licenses. See [OCR dispatch](ocr-dispatch.md) for
+backend settings and execution examples.
+
 ## Implemented PDF inventory
 
 `cpushowspeed documents inventory` inventories an existing local PDF tree.
@@ -72,7 +82,7 @@ The [OCR dispatch design](ocr-dispatch.md) owns stage 1 scheduling, resource
 bounds, and restart behavior.
 
 1. **OCR extraction.** Read the immutable PDF and its inventory BLAKE3.
-   Use Chandra's Python API to retain each page's original response,
+   Use the selected local adapter to retain each page's original response,
    ordered chunks, bounding boxes, and generated visual assets. Convert
    every physical page into the [historical DocIR](docir.md), preserving
    blank and failed pages explicitly. Mirror the path below a configurable

@@ -11,11 +11,11 @@ from unittest.mock import patch
 import blake3
 import click
 from click.testing import CliRunner
+from cpushowspeed.chandra import has_repeat as _has_bad_repeat
 from cpushowspeed.ocr import (
     PageETAColumn,
     _convert_page,
     _finalize,
-    _has_bad_repeat,
     _read_file_list,
     _read_stage,
     _record_page,

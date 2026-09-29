@@ -3,9 +3,11 @@ matplotlib>=3.8
 blake3>=1.0
 pypdfium2>=5.0
 rich>=13
-chandra-ocr==0.2.0
 humanize>=4
 openai>=2
 beautifulsoup4>=4.12
+Pillow>=10.2
+markdownify==1.1.0
+python-dotenv>=1.1
 
 pyarrow>=18

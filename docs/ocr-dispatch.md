@@ -4,7 +4,7 @@ The `cpushowspeed documents ocr` command implements stage 1 and completed
 the 16-document, 2,213-page watchlist batch against a real SGLang endpoint
 on 2026-09-26. It has not been run over the full corpus or tuned for its
 throughput. This document covers stage 1 of
-[document extraction](document-extraction.md): PDF pages to raw Chandra JSON,
+[document extraction](document-extraction.md): PDF pages to raw model responses,
 DocIR, and Image Pool assets. It does not run
 image captioning or write Markdown/HTML files. The completed PDF inventory
 currently contains 68,947 PDFs and 6,346,386 known pages, with a median of
@@ -15,21 +15,35 @@ rendered pages in RAM.
 
 ## Library and command boundary
 
-Use the repository-root uv-managed `.venv`. `requirements.txt` includes
-`chandra-ocr` and `humanize`; the installed Chandra 0.2.0 base package
-works against an external OpenAI-compatible SGLang/vLLM server without
-the optional Hugging Face/Torch extras. The raw document header records
-the installed Chandra version.
+Use the repository-root uv-managed `.venv`. Both backends use local adapters
+and an external OpenAI-compatible SGLang/vLLM server. No `chandra-ocr` or
+`infinity-parser2` client is needed. PDFium is the only PDF renderer. Pillow,
+BeautifulSoup and Markdownify provide image/HTML primitives. New raw document
+headers record backend and local adapter versions, not an installed client version.
+
+`ocr.py` owns rendering, asynchronous HTTP dispatch, retries, page conversion,
+ImagePool storage and publication. `ocr_backends.py` selects each model's prompt,
+settings, resize and parsing functions and shares the sampling schedule.
+`chandra.py` and `infinity.py` normalize their model-specific output into blocks;
+table conversion and crop storage then follow the same path. Layout parsing and
+conversion run in worker threads, and invalid layouts re-enter the original
+page's retry queue without occupying an inference slot.
+
+Defaults still honor environment variables and `local.env` (environment wins):
+`VLLM_API_BASE`, `VLLM_API_KEY`, `VLLM_MODEL_NAME`, `MAX_VLLM_RETRIES`, and the
+Chandra-specific `IMAGE_DPI`, `MIN_PDF_IMAGE_DIM`, `MAX_OUTPUT_TOKENS`, `BBOX_SCALE`.
+Infinity has separate fixed model-format settings described below.
 
 The user-facing command is `cpushowspeed documents ocr` with:
 
 - `--database` and optional `--input-root` for the existing PDF inventory
   and source tree; process only inventory records with readable PDFs;
 - `--output-root` for mirrored DocIR and raw JSONL files;
+- `--backend auto|chandra|infinity` for the model format (default: auto);
 - `--api-base` and `--model` for the OpenAI-compatible SGLang/vLLM server;
 - `-j/--jobs` for the **PDF rendering worker-process pool size**;
 - `--inflight-pages` for the global limit on outstanding vLLM page requests;
-- `--buffer-mib` for rendered-page admission control;
+- `--buffer-mib` for rendered-page admission control (default: 4096 MiB);
 - `--file-list` for a UTF-8 file containing one PDF path per line;
 - `--shutdown-grace` for the seconds to wait for in-flight OCR requests
   after Ctrl+C before cancelling them (default 10);
@@ -89,47 +103,92 @@ request thread pool and defeat a global inference cap. Defaults for
 `--inflight-pages` and the buffer should be chosen after a representative
 pilot, not inferred from PDF byte size.
 
+## Infinity-Parser2-Flash integration
+
+With the default `--backend auto`, the command detects the format from `--model`
+(or `VLLM_MODEL_NAME`). If no model is specified, it queries the endpoint's
+`/models` and requires exactly one advertised model; otherwise specify `--model`.
+The exact served ID is used unchanged for inference and run identity.
+
+Detection recognizes Chandra and Infinity-Parser2-Flash family tokens without
+case sensitivity, accepting repository/path prefixes, separator variations,
+and arbitrary quantization suffixes. It does not maintain a quantization-name
+list. Unknown or ambiguous names fail before OCR starts. Use an explicit
+`--backend chandra|infinity` for a custom alias; this overrides format detection.
+An explicit `--model` also allows endpoints without `/models` support. All existing file selection, oldest-document-first dispatch,
+page progress/ETA, interruption, staging and publication behavior is shared.
+
+```sh
+.venv/bin/cpushowspeed documents ocr \
+  --backend infinity --api-base http://localhost:30000/v1 \
+  --database data/derived/documents/inventory.sqlite \
+  --file-list inventories/watchlist-ocr.txt \
+  --output-root data/derived/documents/infinity-ocr \
+  --jobs 16 --inflight-pages 64
+```
+
+The local adapter reproduces the upstream 0.4.0 `doc2json` prompt (Apache-2.0;
+[license](../third-party/Infinity-Parser2-LICENSE.txt)). Its validation and
+conversion are independently implemented. No official Infinity client is needed.
+PDFium renders one page at 300 DPI. Request images use a 32-pixel grid with
+2,048–16,777,216 pixels and bicubic resizing; crops use the full render.
+Requests use up to 32,768 output tokens, initial temperature 0 and top-p 1.
+Retries increase temperature using the existing schedule, retaining top-p 1.
+Configure `enable_thinking: false` on the server; the client does not override it.
+
+Complete JSON arrays, optionally enclosed in a JSON code fence, are accepted.
+Each block requires a known category, string text, and finite nondegenerate
+coordinates in 0–1000. Empty arrays represent blank pages. Empty responses,
+truncation, long repeating suffixes and invalid layouts are retried. No partial
+JSON repair or character-count truncation is performed. The raw response is
+retained verbatim and `chunks` retains the normalized-coordinate layout array;
+DocIR has one block per chunk in the same order. Bounding boxes are floored into
+full-render pixels. HTML tables use the shared converter, formula/text content
+is retained, and figures become ImagePool crops eligible for captioning.
+
+Backend identity, adapter version, prompt hash and render settings belong to the
+run configuration. Use a separate output root when switching backends. Existing
+Chandra run configurations remain compatible with resume.
+
 ## Chandra integration
 
-Do not call Chandra's `load_file()` for PDFs: its current implementation
-renders every selected page into a list before inference. A PDFium worker
-instead opens a document and renders only its assigned short page range,
-using Chandra's current DPI, minimum page size, and form-flattening behavior
-as the reference. PDFium work runs in **processes**, because PDFium is not
-safe for simultaneous calls from multiple threads in one process.
+The local adapter follows the Chandra 0.2.0 prompt and output behavior
+([upstream](https://github.com/datalab-to/chandra),
+[Apache-2.0 license](../third-party/Chandra-LICENSE.txt)). PDFium renders one page
+at a time at 192 DPI with a minimum short dimension of 1,024 pixels and flattened
+forms. Request images use a 28-pixel grid, Lanczos resampling, and the original
+50,176–6,291,456 pixel target. PDFium remains isolated in worker processes.
 
-Use Chandra's OCR prompt, image scaling, and layout/chunk parsing. As a
-correctness baseline, compare a small set of pages against
-`InferenceManager.generate()`. For the bulk hot path, use one
-persistent OpenAI-compatible client and a global asynchronous page-request
-limit. This avoids Chandra's per-call client/thread-pool creation, batch
-completion barrier, and unnecessary Markdown/HTML conversion. Keep this
-transport adapter narrow; validate its raw responses and DocIR conversion
-against the library baseline before a full run. Run image encoding and HTML
-parsing in bounded workers rather than blocking the asynchronous request
-loop. Preserve Chandra's output validation and retry behavior in that
-adapter:
+HTML blocks retain source order and raw chunk content. Nested `data-bbox`
+attributes are removed from chunks as in the baseline; the untouched response
+is also retained. Invalid DocIR bounding boxes remain null. Math, Markdown
+escaping, lists, headers/footers and structured Mermaid diagrams retain baseline
+behavior. Table conversion and image crops use the shared page converter.
 
-- Call `chandra.model.util.detect_repeat_token()` on each raw response, both
-  as returned and, for responses longer than 50 characters, with its final
-  50 characters ignored. Reuse the library detector rather than maintaining
-  a second definition of repetition.
-- Start with Chandra's `temperature=0.0` and `top_p=0.1`. For a repeated
-  response, retry up to `settings.MAX_VLLM_RETRIES` (currently 6, meaning
-  at most 7 total attempts); retry `n` uses temperature
-  `min(0.2 * n, 0.8)` and `top_p=0.95`. Follow the installed library's
-  values if they change, and verify retry parity against a small pilot.
-- Apply a finite request timeout to each request. For transport errors,
-  follow Chandra's bounded retry delay of `2 * n` seconds before retry
-  `n`. Release the global inference slot during that delay; when ready,
-  requeue the page under its original document start time. Record attempt
-  count, retry reasons, and final generation settings in the raw page
-  record without duplicating every failed response by default.
-- If the last response still repeats, is empty, was truncated, or cannot
-  be parsed into the expected page structure, mark that page failed or
-  review-needed. Chandra's current `generate_vllm()` returns its final
-  response after exhausting retries even if repetition remains; the bulk
-  pipeline must not silently treat that response as valid OCR.
+The local repetition detector retains the original suffix thresholds and the
+second check that ignores the last 50 characters, including this project's
+exception for short binary table cells. First attempts use temperature 0 and
+top-p 0.1; retry `n` uses `min(0.2 * n, 0.8)` and top-p 0.95. Both backends default to five
+retries after the initial attempt (at most six requests per page), including invalid
+layout responses. Override this with `--max-retries` or `MAX_VLLM_RETRIES`.
+Transport retries wait `2 * n` seconds while
+releasing the inference slot. Empty responses, token-limit truncation, repeated
+output and invalid layouts cannot be published as successful pages.
+
+On 2026-09-28, all 2,213 watchlist raw pages produced identical conversion hashes
+and repetition decisions before/after replacement, using a fixed blank raster
+and mocked crop storage to compare block structure, tables and crop geometry.
+Five image sizes also matched the original resize pixels, and 400 generated
+cases matched the original suffix detector. A real two-page `2SC3147.PDF` run
+completed against local SGLang after uninstalling the official client; rerunning
+reused the completed pages. These are adapter checks, not corpus OCR accuracy
+measurements or throughput benchmarks.
+
+Legacy runs tagged `chandra_version: 0.2.0` can resume only when all remaining
+settings match the local adapter's version-1 configuration. Their existing run
+metadata stays unchanged; new runs identify the local backend explicitly.
+Changing prompt, rendering settings, model or backend still requires a new
+output root. Old published raw files are never rewritten during this transition.
 
 ## Oldest-document-first dispatcher
 

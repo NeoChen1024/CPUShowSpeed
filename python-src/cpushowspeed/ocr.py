@@ -1,4 +1,4 @@
-"""Bounded, resumable Chandra OCR of an inventoried PDF tree."""
+"""Bounded, resumable OCR of an inventoried PDF tree."""
 
 from __future__ import annotations
 
@@ -9,7 +9,6 @@ import io
 import json
 import multiprocessing
 import os
-import re
 import signal
 import sqlite3
 import sys
@@ -18,7 +17,6 @@ from collections import deque
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from html import escape
 from importlib.metadata import version
 from pathlib import Path
 
@@ -27,14 +25,18 @@ import click
 import humanize
 import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
-from bs4 import BeautifulSoup
-from chandra.model.util import detect_repeat_token, scale_to_fit
-from chandra.output import parse_chunks, parse_markdown
-from chandra.prompts import PROMPT_MAPPING
-from chandra.settings import settings
+from cpushowspeed import ocr_settings
 from cpushowspeed.docir_rich_table import convert_rich_table
 from cpushowspeed.docir_table import TableConversionError
 from cpushowspeed.documents import DEFAULT_DATABASE, _connect
+from cpushowspeed.ocr_backends import (
+    BACKENDS,
+    LayoutError,
+    compatible_settings,
+    detect_backend,
+    get_backend,
+    sampling,
+)
 from openai import AsyncOpenAI
 from PIL import Image
 from rich.console import Console
@@ -49,9 +51,7 @@ from rich.progress import (
 )
 from rich.text import Text
 
-VISUAL_LABELS = {"Image", "Figure", "Diagram", "Chart"}
 RENDER_RESERVATION = 16 * 1024 * 1024
-PROMPT = PROMPT_MAPPING["ocr_layout"]
 CONSOLE = Console(file=sys.stderr)
 
 
@@ -88,14 +88,15 @@ def _render_worker_init() -> None:
     signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 
-def _render_page(path: str, page_number: int) -> tuple[bytes, str, int, int]:
+def _render_page(path: str, page_number: int, backend: str = "chandra") -> tuple[bytes, str, int, int]:
     """One page per PDFium process task; never retain a whole PDF's raster pages."""
+    adapter = get_backend(backend)
     with pdfium.PdfDocument(path) as pdf:
         pdf.init_forms()
         page = pdf[page_number - 1]
         try:
             minimum = min(page.get_width(), page.get_height())
-            dpi = max(settings.IMAGE_DPI, settings.MIN_PDF_IMAGE_DIM / minimum * 72)
+            dpi = max(adapter.DPI, adapter.MIN_PDF_IMAGE_DIM / minimum * 72)
             pdfium_c.FPDFPage_Flatten(page, pdfium_c.FLAT_NORMALDISPLAY)
             image = page.render(scale=dpi / 72).to_pil().convert("RGB")
         finally:
@@ -103,29 +104,10 @@ def _render_page(path: str, page_number: int) -> tuple[bytes, str, int, int]:
     width, height = image.size
     full = io.BytesIO()
     image.save(full, format="PNG")
-    scaled = scale_to_fit(image)
+    scaled = adapter.resize(image)
     request = io.BytesIO()
     scaled.save(request, format="PNG")
     return full.getvalue(), base64.b64encode(request.getvalue()).decode("ascii"), width, height
-
-
-def _bbox(soup_div, width: int, height: int) -> list[int] | None:
-    value = soup_div.get("data-bbox")
-    try:
-        box = [int(part) for part in value.split()]
-        if len(box) != 4 or not (0 <= box[0] < box[2] <= settings.BBOX_SCALE):
-            return None
-        if not (0 <= box[1] < box[3] <= settings.BBOX_SCALE):
-            return None
-        result = [
-            max(0, int(box[0] * width / settings.BBOX_SCALE)),
-            max(0, int(box[1] * height / settings.BBOX_SCALE)),
-            min(width, int(box[2] * width / settings.BBOX_SCALE)),
-            min(height, int(box[3] * height / settings.BBOX_SCALE)),
-        ]
-        return result if result[0] < result[2] and result[1] < result[3] else None
-    except (AttributeError, TypeError, ValueError):
-        return None
 
 
 def _store_image(pool: Path, image: Image.Image, bbox: list[int]) -> dict:
@@ -152,51 +134,33 @@ def _store_image(pool: Path, image: Image.Image, bbox: list[int]) -> dict:
     return {"blake3": digest, "path": relative.as_posix(), "width": crop.width, "height": crop.height}
 
 
-def _convert_page(raw: str, full_png: bytes, page: int, pool: Path) -> tuple[dict, list[dict], list[dict]]:
+def _convert_page(
+    raw: str, full_png: bytes, page: int, pool: Path, backend: str = "chandra"
+) -> tuple[dict, list[dict], list[dict]]:
+    adapter = get_backend(backend)
     with Image.open(io.BytesIO(full_png)) as source:
         image = source.convert("RGB")
     width, height = image.size
-    soup = BeautifulSoup(raw, "html.parser")
-    divs = soup.find_all("div", recursive=False)
-    if not divs:
-        raise ValueError("model response has no top-level layout blocks")
-    chunks = parse_chunks(raw, image, bbox_scale=settings.BBOX_SCALE)
-    content_divs = [div for div in divs if div.get("data-label") != "Blank-Page"]
-    if len(chunks) != len(content_divs):
-        raise ValueError("Chandra chunk count does not match layout blocks")
-    blocks = []
+    try:
+        chunks, blocks = adapter.parse_page(raw, width, height)
+    except (ValueError, TypeError) as exc:
+        raise LayoutError(f"invalid {backend.title()} layout: {exc}") from exc
     assets = []
-    for chunk, div in zip(chunks, content_divs):
-        label = chunk["label"]
-        bbox = _bbox(div, width, height)
-        block = {"kind": "text", "source_label": label, "bbox_px": bbox}
-        content = chunk["content"]
-        if label == "Table":
-            block["kind"] = "table"
+    for block in blocks:
+        if block["kind"] == "table":
+            html = block.pop("html")
             try:
-                block.update(convert_rich_table(content))
+                block.update(convert_rich_table(html))
             except TableConversionError as exc:
                 block.update(table=None, conversion_status="failed", error=str(exc))
-        else:
-            plain = BeautifulSoup(content, "html.parser").get_text("\n").strip()
-            match = re.search(r"(?:^|\n)\s*(?:graph|flowchart)\s+(?:TB|TD|BT|LR|RL)\b", plain, re.I)
-            if match:
-                block.update(kind="diagram", diagram={"format": "mermaid", "code": plain[match.start() :].strip()})
-            elif label in VISUAL_LABELS:
-                block.update(kind="visual", caption=None)
+        if block["source_label"] in adapter.VISUAL_LABELS:
+            if block["bbox_px"] is None:
+                block["crop_error"] = "missing or invalid bounding box"
             else:
-                wrapper = f'<div data-label="{escape(label, quote=True)}">{content}</div>'
-                block["markdown"] = parse_markdown(wrapper, include_headers_footers=True)
-            if label in VISUAL_LABELS:
-                if bbox is None:
-                    block["crop_error"] = "missing or invalid bounding box"
-                else:
-                    asset = _store_image(pool, image, bbox)
-                    block["image_blake3"] = asset["blake3"]
-                    assets.append(asset)
-        blocks.append(block)
-    status = "blank" if not blocks and all(div.get("data-label") == "Blank-Page" for div in divs) else "ok"
-    return {"page": page, "page_size_px": [width, height], "status": status, "blocks": blocks}, chunks, assets
+                asset = _store_image(pool, image, block["bbox_px"])
+                block["image_blake3"] = asset["blake3"]
+                assets.append(asset)
+    return {"page": page, "page_size_px": [width, height], "status": "ok" if blocks else "blank", "blocks": blocks}, chunks, assets
 
 
 def _stage_path(output_root: Path, relative_path: str, page: int | None = None) -> Path:
@@ -352,10 +316,9 @@ def _init_image_catalog(pool: Path) -> sqlite3.Connection:
 
 
 async def _request(
-    client: AsyncOpenAI, model: str, payload: PagePayload, timeout: float
+    client: AsyncOpenAI, model: str, payload: PagePayload, timeout: float, backend: str = "chandra"
 ) -> tuple[str, int, str | None, str | None]:
-    temperature = 0.0 if payload.attempts == 0 else min(0.2 * payload.attempts, 0.8)
-    top_p = 0.1 if payload.attempts == 0 else 0.95
+    adapter = get_backend(backend)
     try:
         response = await client.chat.completions.create(
             model=model,
@@ -364,34 +327,18 @@ async def _request(
                     "role": "user",
                     "content": [
                         {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{payload.request_b64}"}},
-                        {"type": "text", "text": PROMPT},
+                        {"type": "text", "text": adapter.PROMPT},
                     ],
                 }
             ],
-            max_tokens=settings.MAX_OUTPUT_TOKENS,
-            temperature=temperature,
-            top_p=top_p,
+            max_tokens=adapter.MAX_TOKENS,
+            **sampling(backend, payload.attempts),
             timeout=timeout,
         )
         choice = response.choices[0]
         return choice.message.content or "", response.usage.completion_tokens if response.usage else 0, choice.finish_reason, None
     except Exception as exc:
         return "", 0, None, f"{type(exc).__name__}: {exc}"[:500]
-
-
-def _has_bad_repeat(raw: str) -> bool:
-    if detect_repeat_token(raw):
-        return True
-    if len(raw) <= 50 or not detect_repeat_token(raw, cut_from_end=50):
-        return False
-    # Chandra's second check can end inside a legitimate binary table cell
-    # after trimming closing HTML. Do not treat a short complete bit row as
-    # model degeneration; long repeated bit runs remain retryable.
-    trimmed = raw[:-50]
-    cell = re.search(r"<td(?:\s[^>]*)?>([01\s]+)$", trimmed)
-    if cell and raw.rstrip().endswith("</div>") and len(re.findall(r"[01]", cell.group(1))) <= 256:
-        return False
-    return True
 
 
 def _failure_record(page: int, reason: str, payload: PagePayload | None = None) -> tuple[dict, dict]:
@@ -412,9 +359,9 @@ def _failure_record(page: int, reason: str, payload: PagePayload | None = None) 
 
 
 def _prepare_page(
-    payload: PagePayload, raw: str, tokens: int, finish_reason: str | None, pool: Path
+    payload: PagePayload, raw: str, tokens: int, finish_reason: str | None, pool: Path, backend: str = "chandra"
 ) -> tuple[dict, dict, list[dict]]:
-    docir, chunks, assets = _convert_page(raw, payload.full_png, payload.page, pool)
+    docir, chunks, assets = _convert_page(raw, payload.full_png, payload.page, pool, backend)
     record = {
         "page": payload.page,
         "status": docir["status"],
@@ -425,8 +372,7 @@ def _prepare_page(
         "finish_reason": finish_reason,
         "attempts": payload.attempts + 1,
         "retry_reasons": payload.reasons,
-        "temperature": 0.0 if payload.attempts == 0 else min(0.2 * payload.attempts, 0.8),
-        "top_p": 0.1 if payload.attempts == 0 else 0.95,
+        **sampling(backend, payload.attempts),
     }
     return record, docir, assets
 
@@ -508,7 +454,9 @@ async def _run_ocr(
     request_timeout: float,
     max_retries: int,
     shutdown_grace: float,
+    backend: str = "chandra",
 ) -> bool:
+    adapter = get_backend(backend)
     connection = _connect(database, input_root)
     image_catalog = _init_image_catalog(output_root / "ImagePool")
     try:
@@ -527,18 +475,16 @@ async def _run_ocr(
             "output_root": str(output_root),
             "api_base": api_base,
             "model": model,
-            "prompt_blake3": blake3.blake3(PROMPT.encode()).hexdigest(),
-            "chandra_version": version("chandra-ocr"),
+            "prompt_blake3": blake3.blake3(adapter.PROMPT.encode()).hexdigest(),
             "pdfium_version": version("pypdfium2"),
-            "image_dpi": settings.IMAGE_DPI,
-            "min_pdf_image_dim": settings.MIN_PDF_IMAGE_DIM,
-            "bbox_scale": settings.BBOX_SCALE,
-            "max_output_tokens": settings.MAX_OUTPUT_TOKENS,
+            **adapter.CONFIG,
         }
         existing_run = connection.execute("SELECT * FROM ocr_runs WHERE output_root = ?", (str(output_root),)).fetchone()
         if existing_run:
-            if json.loads(existing_run["config_json"]) != config:
+            previous_config = json.loads(existing_run["config_json"])
+            if not compatible_settings(previous_config, config):
                 raise click.ClickException("output root belongs to a run with different OCR settings; choose a new output root")
+            config = previous_config
             run_id = existing_run["run_id"]
         else:
             run_id = uuid.uuid4().hex
@@ -610,7 +556,7 @@ async def _run_ocr(
 
         loop.add_signal_handler(signal.SIGINT, request_stop)
         loop.add_signal_handler(signal.SIGTERM, request_stop)
-        async with AsyncOpenAI(api_key=settings.VLLM_API_KEY, base_url=api_base, max_retries=0) as client:
+        async with AsyncOpenAI(api_key=ocr_settings.API_KEY, base_url=api_base, max_retries=0) as client:
             with (
                 ProcessPoolExecutor(
                     max_workers=jobs, mp_context=multiprocessing.get_context("spawn"), initializer=_render_worker_init
@@ -700,7 +646,9 @@ async def _run_ocr(
                         page = candidate.next_page
                         candidate.next_page += 1
                         candidate.busy += 1
-                        future = loop.run_in_executor(render_pool, _render_page, str(input_root / candidate.relative), page)
+                        future = loop.run_in_executor(
+                            render_pool, _render_page, str(input_root / candidate.relative), page, backend
+                        )
                         render_tasks[future] = (candidate, page)
                     while not stop_requested and len(request_tasks) < inflight_pages:
                         ready = next((doc for doc in active if any(item.ready_at <= loop.time() for item in doc.ready)), None)
@@ -708,7 +656,7 @@ async def _run_ocr(
                             break
                         payload = next(item for item in ready.ready if item.ready_at <= loop.time())
                         ready.ready.remove(payload)
-                        request_tasks[asyncio.create_task(_request(client, model, payload, request_timeout))] = payload
+                        request_tasks[asyncio.create_task(_request(client, model, payload, request_timeout, backend))] = payload
                     waiting = list(render_tasks) + list(request_tasks) + list(process_tasks)
                     if waiting:
                         done, _ = await asyncio.wait(waiting, timeout=0.5, return_when=asyncio.FIRST_COMPLETED)
@@ -753,7 +701,7 @@ async def _run_ocr(
                                 reason = "output truncated at max tokens"
                             if not reason and not raw.strip():
                                 reason = "empty response"
-                            if not reason and _has_bad_repeat(raw):
+                            if not reason and adapter.has_repeat(raw):
                                 reason = "repeated output"
                             if reason:
                                 payload.reasons.append(reason)
@@ -777,12 +725,15 @@ async def _run_ocr(
                                     queued_memory -= payload.memory
                             else:
                                 task = asyncio.create_task(
-                                    asyncio.to_thread(_prepare_page, payload, raw, tokens, finish_reason, output_root / "ImagePool")
+                                    asyncio.to_thread(
+                                        _prepare_page, payload, raw, tokens, finish_reason, output_root / "ImagePool", backend
+                                    )
                                 )
                                 process_tasks[task] = (payload, False)
                             continue
                         payload, _ = process_tasks.pop(future)
                         doc = payload.document
+                        retry_conversion = False
                         try:
                             raw_record, docir, assets = future.result()
                             for asset in assets:
@@ -800,13 +751,22 @@ async def _run_ocr(
                             )
                         except Exception as exc:
                             reason = f"{type(exc).__name__}: {exc}"[:500]
-                            failed_raw, failed_docir = _failure_record(payload.page, reason, payload)
-                            await asyncio.to_thread(_record_page, output_root, doc.relative, failed_raw, failed_docir)
-                            doc.errors += 1
-                            CONSOLE.print(f"[red]Page conversion failed[/red] {doc.relative} page {payload.page}: {reason}")
+                            if isinstance(exc, LayoutError) and not stop_requested and payload.attempts < max_retries:
+                                payload.reasons.append(reason)
+                                payload.attempts += 1
+                                payload.ready_at = loop.time()
+                                doc.ready.appendleft(payload)
+                                retry_conversion = True
+                            else:
+                                payload.reasons.append(reason)
+                                failed_raw, failed_docir = _failure_record(payload.page, reason, payload)
+                                await asyncio.to_thread(_record_page, output_root, doc.relative, failed_raw, failed_docir)
+                                doc.errors += 1
+                                CONSOLE.print(f"[red]Page conversion failed[/red] {doc.relative} page {payload.page}: {reason}")
                         finally:
-                            doc.busy -= 1
-                            queued_memory -= payload.memory
+                            if not retry_conversion:
+                                doc.busy -= 1
+                                queued_memory -= payload.memory
                     for doc in list(active):
                         if stop_requested:
                             continue
@@ -867,17 +827,41 @@ async def _run_ocr(
         image_catalog.close()
 
 
+async def _resolve_model(api_base: str, model: str | None, backend: str) -> tuple[str, str]:
+    if not model:
+        try:
+            async with AsyncOpenAI(api_key=ocr_settings.API_KEY, base_url=api_base, max_retries=0, timeout=10) as client:
+                result = await client.models.list()
+        except Exception as exc:
+            raise click.ClickException(f"cannot list endpoint models: {exc}; specify --model explicitly") from exc
+        names = list(dict.fromkeys(item.id for item in result.data if item.id and item.id.strip()))
+        if len(names) != 1:
+            raise click.ClickException(f"endpoint must advertise exactly one model; found {names!r}; specify --model")
+        model = names[0]
+    if backend == "auto":
+        try:
+            backend = detect_backend(model)
+        except ValueError as exc:
+            raise click.ClickException(str(exc)) from exc
+    return model, backend
+
+
 @click.command("ocr")
 @click.option(
     "--database", type=click.Path(path_type=Path, exists=True, dir_okay=False), default=DEFAULT_DATABASE, show_default=True
 )
 @click.option("--input-root", type=click.Path(path_type=Path, exists=True, file_okay=False), default=None)
 @click.option("--output-root", type=click.Path(path_type=Path, file_okay=False), required=True)
-@click.option("--api-base", default=settings.VLLM_API_BASE, show_default=True)
-@click.option("--model", default=settings.VLLM_MODEL_NAME, show_default=True)
+@click.option("--api-base", default=ocr_settings.API_BASE, show_default=True)
+@click.option("--backend", type=click.Choice(["auto", *BACKENDS]), default="auto", show_default=True)
+@click.option(
+    "--model",
+    default=ocr_settings.value("VLLM_MODEL_NAME", "") or None,
+    help="Exact served model name; otherwise discover the single model at /models.",
+)
 @click.option("-j", "--jobs", type=click.IntRange(1), default=4, show_default=True, help="PDF rendering process pool size.")
 @click.option("--inflight-pages", type=click.IntRange(1), default=8, show_default=True)
-@click.option("--buffer-mib", type=click.IntRange(32), default=512, show_default=True)
+@click.option("--buffer-mib", type=click.IntRange(32), default=4096, show_default=True)
 @click.option(
     "--file-list",
     type=click.Path(path_type=Path, exists=True, dir_okay=False),
@@ -887,7 +871,7 @@ async def _run_ocr(
 @click.option("--all", "all_documents", is_flag=True, help="Explicitly process every inventoried PDF.")
 @click.option("--limit-documents", type=click.IntRange(1), default=None, help="Limit a pilot to this many PDFs.")
 @click.option("--request-timeout", type=click.FloatRange(min=1), default=600.0, show_default=True)
-@click.option("--max-retries", type=click.IntRange(0), default=settings.MAX_VLLM_RETRIES, show_default=True)
+@click.option("--max-retries", type=click.IntRange(0), default=ocr_settings.MAX_RETRIES, show_default=True)
 @click.option(
     "--shutdown-grace",
     type=click.FloatRange(min=0),
@@ -900,7 +884,7 @@ def ocr_command(
     input_root: Path | None,
     output_root: Path,
     api_base: str,
-    model: str,
+    model: str | None,
     jobs: int,
     inflight_pages: int,
     buffer_mib: int,
@@ -911,8 +895,9 @@ def ocr_command(
     request_timeout: float,
     max_retries: int,
     shutdown_grace: float,
+    backend: str,
 ) -> None:
-    """OCR inventoried PDFs into raw Chandra JSONL, DocIR, and ImagePool assets."""
+    """OCR inventoried PDFs into raw JSONL, DocIR, and ImagePool assets."""
     database = database.resolve(strict=True)
     with sqlite3.connect(database) as connection:
         stored = connection.execute("SELECT value FROM metadata WHERE key = 'root'").fetchone()
@@ -930,6 +915,8 @@ def ocr_command(
     output = output_root.resolve()
     if output == root or root in output.parents:
         raise click.ClickException("output root must be outside the source PDF tree")
+    model, backend = asyncio.run(_resolve_model(api_base.rstrip("/"), model, backend))
+    CONSOLE.print(f"OCR model: {model}; backend: {backend}", markup=False)
     output.mkdir(parents=True, exist_ok=True)
     with (output / ".ocr.lock").open("w") as lock:
         try:
@@ -953,6 +940,7 @@ def ocr_command(
                     request_timeout,
                     max_retries,
                     shutdown_grace,
+                    backend,
                 )
             )
             if interrupted:
