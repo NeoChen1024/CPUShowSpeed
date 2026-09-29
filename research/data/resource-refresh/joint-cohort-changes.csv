@@ -1,0 +1,16 @@
+matching_policy,new_generation,before,after,count_kind
+strict,cpu95,62,62,complete_mode_triples_not_independent_models
+strict,cpu2000,4,4,complete_mode_triples_not_independent_models
+strict,cpu2006,62,62,complete_mode_triples_not_independent_models
+strict,cpu2017,118,118,complete_mode_triples_not_independent_models
+strict,cpu2026,71,63,complete_mode_triples_not_independent_models
+ram-aliases,cpu95,180,180,complete_mode_triples_not_independent_models
+ram-aliases,cpu2000,20,20,complete_mode_triples_not_independent_models
+ram-aliases,cpu2006,72,72,complete_mode_triples_not_independent_models
+ram-aliases,cpu2017,162,162,complete_mode_triples_not_independent_models
+ram-aliases,cpu2026,102,94,complete_mode_triples_not_independent_models
+cpu-clock,cpu95,3234,3200,complete_mode_triples_not_independent_models
+cpu-clock,cpu2000,144,142,complete_mode_triples_not_independent_models
+cpu-clock,cpu2006,215023,214883,complete_mode_triples_not_independent_models
+cpu-clock,cpu2017,196869,196869,complete_mode_triples_not_independent_models
+cpu-clock,cpu2026,6998,6894,complete_mode_triples_not_independent_models

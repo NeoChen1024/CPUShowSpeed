@@ -46,10 +46,10 @@ darkhttpd . --addr 127.0.0.1 --port 8080 --hide-dotfiles
 
 Outputs under `data/derived/figures/timeline/`:
 
-- `vaxen-timeline.html`: the sole interactive page, with no embedded datasets.
-- `assets/`: CSS, ES modules, the Web Worker and the pinned decoder source/license.
+- `vaxen-timeline.html`: the sole interactive page, containing CSS, UI code and
+  the bundled Worker/decoder with MIT notices; no benchmark datasets are embedded.
 - `manifest.json`: `vaxen-web-parquet-v1`, artifact schemas, row counts, byte sizes,
-  SHA-256 hashes, decoder revision and small lineage/calculator configuration.
+  SHA-256 hashes (including inline code), decoder revisions and small lineage/calculator configuration.
 - `data/records.parquet`: complete shared research records, retaining the logical
   `vaxen-timeline-v2` contract and all provenance.
 - `data/timeline.parquet`: the display projection used by the page.
@@ -78,7 +78,7 @@ reconstructs the complete logical records in Python. Generic Parquet tools can
 inspect native columns directly; auxiliary presence/empty markers and JSON-cell
 metadata must be honored for an exact logical round trip.
 
-The browser fetches and decodes the display datasets in a module Web Worker,
+The browser fetches and decodes the display datasets in a Blob Web Worker,
 checks byte size and row count, and verifies SHA-256 where Web Crypto is available
 (including localhost). Loading failures remain visible, without showing partial
 results. It does not fetch the full research-record export. This first migration
@@ -86,23 +86,34 @@ loads the entire display projection, fit arrays and calculator draws before
 mounting the page; it retains the existing in-memory filtering/sorting behavior.
 It does not yet implement row-group range requests, lazy detail loading or SQL.
 An ordinary static server is sufficient; HTTP Range support is not required yet.
-Exported ES modules use `.js` so darkhttpd serves the correct MIME type without
-extra configuration. `assets/package.json` only declares the module format for
-Node-based tests; it has no dependencies or build scripts. Serving only the output
-directory also renders the visualization, but repository-relative method-note
-links require the repository root to be available.
+All frontend code and styles are embedded in HTML; the Worker is constructed
+from the embedded source using a Blob URL, which is revoked on completion/error.
+There are no separate JS/CSS, type declarations, package manifests or library
+source files in the export. Serving only the output directory renders the
+visualization, but repository-relative method-note links require the repository
+root to be available. A host applying CSP must permit the inline script/style
+and Blob Worker (or supply appropriate hashes/policy).
+
+When upgrading an old export, unchanged files listed in its `assets_sha256`
+manifest are removed and empty asset directories pruned. Modified or unrelated
+files are retained.
 
 The decoder is `third-party/hyparquet`, pinned to v1.31.2, commit
 `460fb574870606a67eccaf59f7d7c08b46ec551e`. Export verifies the revision and a clean
-submodule, and copies its ES modules and MIT license. Zstd decoding uses fzstd
+submodule. Zstd decoding uses fzstd
 0.1.1, with its source submodule pinned to the npm release's exact gitHead
 `807a854cac2c5766ef030832cc5b66482dc7ca8a`. Its upstream source is TypeScript;
 `third-party/fzstd-browser` holds the official published ES module (renamed from
 `.mjs` to `.js` for static-server MIME compatibility), license and provenance.
 The release archive was verified against npm's SHA-512 integrity; export checks
-the copied files' SHA-256 hashes. No npm or TypeScript build is needed during
-export. Only the ZSTD codec is registered with hyparquet. Updating either decoder
-requires updating its pin/provenance and rerunning the cross-language checks.
+the release files' SHA-256 hashes. `third-party/timeline-decoder` contains the
+prebuilt esbuild 0.25.12 bundle of the required runtime exports, with unused code
+removed. Its provenance checks every build input and the final bundle. The
+complete upstream MIT notices remain inside the embedded decoder. Building this
+bundle is a dependency-maintenance step; daily Python export needs no npm,
+TypeScript or esbuild. Only the ZSTD codec is registered with hyparquet. Updating
+either decoder requires rebuilding the bundle and rerunning the cross-language
+checks; see its README.
 
 
 The earlier annual-rate PNG/SVG reports and their hardware-year statistical
@@ -507,3 +518,12 @@ unknown or nonuniform counts remain provisional. Source values are not rescaled.
 The resource-audit report describes the pre-guard snapshot; the
 [input/fitting review](../research/input-unification-fitting-review.md) owns active
 coefficient changes. Whole-route factors and intervals are regenerated together.
+
+Unparsed runtime declarations are displayed as their escaped source values
+(e.g. `64i`), rather than inferred integers or a missing-download label. The
+[data contract](data-contract.md#unparsed-runtime-declarations) defines these
+statuses and their conservative fitting treatment.
+
+The predictor input family uses one radio group: **Classical / Mixes** (default)
+and **SPEC speed / rate**. Changing the selection clears the previous prediction
+and marker while retaining entered scores; Reset retains the selected family.

@@ -4,7 +4,6 @@ import hashlib
 import json
 import math
 import re
-import shutil
 import subprocess
 from pathlib import Path
 
@@ -95,7 +94,9 @@ class WebExport:
         self.output = output
         self.artifacts = {}
         previous = output / "manifest.json"
-        self.previous = json.loads(previous.read_text()).get("artifacts", {}) if previous.exists() else {}
+        previous_manifest = json.loads(previous.read_text()) if previous.exists() else {}
+        self.previous = previous_manifest.get("artifacts", {})
+        self.previous_assets = previous_manifest.get("assets_sha256", {})
 
     def table(self, name, rows, shape="rows"):
         relative = "data/" + name + ".parquet"
@@ -115,7 +116,7 @@ class WebExport:
             return [self.tree(v, path + "-" + str(i)) for i, v in enumerate(value)]
         return value
 
-    def finish(self, data, lineage, calculator):
+    def finish(self, data, lineage, calculator, inline_sources=None):
         # Every draw index remains aligned across metric columns within its model.
         calculator = dict(calculator, networks={k: dict(v) for k, v in calculator.get("networks", {}).items()})
         for name, network in calculator["networks"].items():
@@ -134,21 +135,35 @@ class WebExport:
             calibration=self.tree(calculator, "calibration"),
             records={"$parquet": "data/records.parquet", "shape": "rows"} if "data/records.parquet" in self.artifacts else None,
             artifacts=self.artifacts,
-            assets_sha256={
-                str(p.relative_to(self.output)): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in sorted((self.output / "assets").rglob("*"))
-                if p.is_file()
-            },
+            inline_sources_sha256=inline_sources or {},
         )
         (self.output / "manifest.json").write_text(compact(manifest) + "\n")
         for name in self.previous.keys() - self.artifacts.keys():
             candidate = self.output / name
             if candidate.parent == self.output / "data" and candidate.suffix == ".parquet":
                 candidate.unlink(missing_ok=True)
+        # Remove only unchanged assets owned by the preceding exporter.
+        assets = (self.output / "assets").resolve()
+        for name, digest in self.previous_assets.items():
+            candidate = (self.output / name).resolve()
+            if (
+                candidate.is_relative_to(assets)
+                and candidate.is_file()
+                and hashlib.sha256(candidate.read_bytes()).hexdigest() == digest
+            ):
+                candidate.unlink()
+        if assets.is_dir():
+            for directory in sorted([p for p in assets.rglob("*") if p.is_dir()], key=lambda p: len(p.parts), reverse=True) + [
+                assets
+            ]:
+                try:
+                    directory.rmdir()
+                except OSError:
+                    pass
         return manifest
 
 
-def copy_browser_assets(output):
+def browser_worker_source():
     vendor = ROOT / "third-party/hyparquet"
     if not (vendor / "src/index.js").is_file():
         raise ValueError("Initialize the decoder: git submodule update --init third-party/hyparquet")
@@ -157,13 +172,6 @@ def copy_browser_assets(output):
         raise ValueError("hyparquet revision differs from the tested export revision")
     if subprocess.check_output(["git", "-C", str(vendor), "status", "--porcelain"], text=True).strip():
         raise ValueError("hyparquet submodule has local modifications")
-    target = output / "assets/vendor/hyparquet"
-    shutil.copytree(vendor / "src", target / "src", dirs_exist_ok=True)
-    for name in ("LICENSE", "package.json"):
-        shutil.copyfile(vendor / name, target / name)
-    for path in (Path(__file__).parent / "web").glob("*.js"):
-        shutil.copyfile(path, output / "assets" / path.name)
-
     zstd_source = ROOT / "third-party/fzstd"
     if not (zstd_source / "src/index.ts").exists():
         raise ValueError("Initialize the decoder: git submodule update --init third-party/fzstd")
@@ -177,13 +185,27 @@ def copy_browser_assets(output):
     provenance = json.loads((distribution / "provenance.json").read_text())
     if provenance["source_commit"] != ZSTD_COMMIT:
         raise ValueError("fzstd release/source mismatch")
-    target = output / "assets/vendor/fzstd"
-    target.mkdir(parents=True, exist_ok=True)
     for name, digest in provenance["files_sha256"].items():
         source = distribution / name
         if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
             raise ValueError("fzstd release checksum mismatch: " + name)
-        shutil.copyfile(source, target / name)
-    shutil.copyfile(distribution / "provenance.json", target / "provenance.json")
-
-    (output / "assets/package.json").write_text('{"type":"module"}\n')
+    bundle_dir = ROOT / "third-party/timeline-decoder"
+    info = json.loads((bundle_dir / "provenance.json").read_text())
+    for name, digest in info["source_sha256"].items():
+        if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest:
+            raise ValueError("Decoder bundle source changed; rebuild the pinned bundle: " + name)
+    decoder = (bundle_dir / "decoder.js").read_bytes()
+    if hashlib.sha256(decoder).hexdigest() != info["bundle_sha256"]:
+        raise ValueError("Decoder bundle checksum mismatch")
+    web = Path(__file__).parent / "web"
+    loader = (web / "parquet-loader.js").read_text()
+    for statement in (
+        "import {parquetReadObjects} from './vendor/hyparquet/src/index.js';",
+        "import {decompress} from './vendor/fzstd/index.js';",
+    ):
+        if statement not in loader:
+            raise ValueError("Unexpected loader import; update inline assembly")
+        loader = loader.replace(statement, "")
+    loader = loader.replace("export function ", "function ").replace("export async function ", "async function ")
+    worker = (web / "parquet-worker.js").read_text().replace("import {loadBundle} from './parquet-loader.js';", "")
+    return decoder.decode() + "\nconst {parquetReadObjects,decompress}=ParquetDecoder;\n" + loader + "\n" + worker

@@ -1,0 +1,12 @@
+{
+  "method_version": "spec-resource-field-audit-v1",
+  "bulk_rows": 105973,
+  "cached_integer_disclosures": 54015,
+  "detail_crosschecks": 164062,
+  "contradictions": 0,
+  "resource_flags": 261,
+  "scope": "Full bulk inventory; cached integer detail extraction and bounded source review, not a census of all disclosures.",
+  "reviewed_on": "2026-09-29",
+  "full_audit_path": "data/derived/resource-refresh/field-audit/audit.json",
+  "full_audit_sha256": "5438b85843ba6631e00b54443a98ed8d70d6d3d1454e2eee9d6e762d78e02b01"
+}

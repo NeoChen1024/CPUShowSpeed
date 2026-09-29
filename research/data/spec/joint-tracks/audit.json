@@ -9,7 +9,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec92_rate.py": "4b00ae0ae5a01fd237fa2bf0da052861345b19f674e752bbf48237bb04f66c93",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec92_rate_fit.py": "5f3c20bda23bdfbd824ed61152d8a7b20476fec7b29655a6071407ad95142e07",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec95_overlap_audit.py": "1712f01929274e1567739b027676f30a871c1c96ec1aa614953ce6746ba74681",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_disclosure.py": "502996bce4e504bcdcadba1abc72db9c167df6879d0d1b8fe34cf42f1d06d41e",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_disclosure.py": "3a763695dd4779c4d2d116046aae442566595af3b12cb9a7a76e22e39732a19c",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_inputs.py": "1f63eefbc202df2c71f95a5a3253352b5a9508e816563d50a0544fb49877a86b",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_joint_tracks.py": "378d63bccecc85b291d373e178d67a41bc766e4c837140169beb0e0a95a445ce",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_overlap.py": "3c8d2c990d44a93960cc978104a9e2394d73b6ea44db517c67ead79d35bf743d",
@@ -23,7 +23,7 @@
   "input_snapshot": {
     "mode": "input_snapshot",
     "path": "data/derived/inputs/audit.json",
-    "sha256": "4b6a419696e2bb2e398bde234115729991538fd228c7b6cd3fb9276e6256e43e"
+    "sha256": "0d40ecb45bbaae79f9f741ce9c45c2a5ea2d25d6b6e52d893fcd5b9205d7b8b9"
   },
   "limitations": [
     "CPU95-to-CPU92 alone has direct measured VAXen targets",
@@ -37,12 +37,12 @@
   "matching_policy": "strict",
   "method_version": "joint-spec-predictors-v4-execution-evidence",
   "output_csv_sha256": {
-    "configuration-centers.csv": "c5cc49a0b897dc2beef3d16e46426133442a4cecd0b0661fb01d3733689a8e8b",
-    "holdout-configurations.csv": "9142baf3f90aef4a4e2c0636c26501765a6ac01a5e0b867f05b4e92b7c4aa96a",
-    "holdout-predictions.csv": "0393147098a1f8ce68d43f54e42aba62f97b05efeb90368839c2fb768567cbab",
-    "rate-backbone-pairs.csv": "2c47ad0d5938b25bd5898010a265884408835d770b0997d403539f996069993a",
-    "rejections.csv": "60594ff203f6b9702cbe4a7a588ff0bdccac757f90127a2ef08994deafe2f6cf",
-    "triples.csv": "3f816e26063d1fd182aaffe98fd8849d10501101b9f6d2fe32c6e6d0a3ffefe2"
+    "configuration-centers.csv": "40a85abde95e4039623d0f3aa9e166e311227906384eb01aef660cd1d32f1d6d",
+    "holdout-configurations.csv": "882011e2585ab5a7c4dda43e900cff058d1d5e21f87e12ca4dbd6ca5a82902e2",
+    "holdout-predictions.csv": "710672cdc64540d0b30f1e70dac7bbbb4a931c00b3b5c56fd9cfb59d854e9f02",
+    "rate-backbone-pairs.csv": "191439a8e5b8386798e5200b57ec09e4ef16db0cfe97688eab58afb3653ae045",
+    "rejections.csv": "a020f91e9b61b0e6125e3745c97e9cffd45a2334a26c60c88a5207dc2cb44de6",
+    "triples.csv": "9309358c60d49c19ab497e6becdd68437191e216e2b0e0b363326ed72ba3c19f"
   },
   "predictor_weights": {
     "equal_geometric": 0.5,
@@ -60,9 +60,9 @@
   "relaxed_edge": "all adjacent generations; includes within-generation speed/rate predictor matching",
   "research_csv_sha256": {
     "backbone-summary.csv": "c96d7a9355b4c672b22742e205dec91c8745d6f47a38f4cbcc56b55d80d988be",
-    "coverage.csv": "6427aa487914f323c902871d8ad9b686cc25906cf36ba53a229ff23284f36b74",
-    "summary.csv": "0cd606fcdd981e822ad08c3a8ddd999f819b7141b96ff49fdb14152216685d75"
+    "coverage.csv": "0bf1222679d9ba5b00f1d1891d2af2aac8859f388656532123024e3380d41cc6",
+    "summary.csv": "61597ea9b1ecd7912756c2c9d658508897bfd73eff4b870b2a2f3c327d3e62bb"
   },
-  "runtime_fingerprint": "a50a4ebd991fc69959c681962f018f8b9f51ab9ce581753f5de64c90275af785",
+  "runtime_fingerprint": "a7e0b57a312f7ac659388449b19eeca2e683eed45b49f277e8d286315b0b1699",
   "seed": 20260929
 }

@@ -20,7 +20,7 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 
 ## Source resource audit
 
-[Field and runtime-resource audit](spec-resource-field-audit.md) inventories SPEC fields, cached disclosures, resource anomalies and matching limits.
+[Field and runtime-resource audit](spec-resource-field-audit.md) records full integer disclosure coverage, resource anomalies and the count-aware refit, with the initial audit retained as history.
 
 ## Independent speed/rate experiment
 

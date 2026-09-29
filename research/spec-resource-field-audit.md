@@ -1,7 +1,113 @@
 # SPEC source fields and execution-resource audit
 
-Reviewed: 2026-09-29. This is the pre-guard audit snapshot.
-The subsequent [input/fitting migration](input-unification-fitting-review.md) excludes known constant-count conflicts and updates affected coefficients.
+Reviewed: 2026-09-29. The full integer disclosure refresh below supersedes the
+acquisition coverage of the earlier bounded audit retained later in this report.
+
+## Full disclosure refresh
+
+All **54,014 indexed integer speed/rate results** across CPU95–CPU2026 now have
+cached detail files. One additional positive bulk result absent from the integer
+index was collected separately: [CPU2017-20170828-00068](https://www.spec.org/cpu2017/results/res2017q3/cpu2017-20170828-00068.html),
+whose base and peak rate tables both declare 88 copies. Original bulk score
+snapshots and source bytes remain unchanged. Acquisition metadata and hashes are
+retained beside each cached document.
+
+The full audit examined **54,015 integer disclosures** and made **164,062 hardware
+crosschecks with zero contradictions**. The existing 261 resource review flags
+remain; disabled cores and historical CPU-count semantics are not automatically
+classified as errors.
+
+Coverage of the **98,072 positive modern score observations**, counting base and
+peak separately:
+
+| Track / declaration status | Observations |
+| --- | ---: |
+| Integer rate: reported copies | 58,340 |
+| Integer speed: reported threads | 17,757 |
+| Integer speed: earlier tables without explicit thread counts | 21,971 |
+| Integer speed: unparsed non-integer thread declarations | 4 |
+| Missing disclosure for a positive modern score | 0 |
+
+The four unparsed observations are base/peak for two HPE submissions. Their
+selected result tables literally report `64i` and `88i`, and the recorded runcpu
+commands contain the same suffix. These are retained as source strings, not
+converted into 64/88 threads or inferred from enabled hardware. See the
+[source-linked exceptions](data/resource-refresh/unparsed-thread-values.csv).
+The parser now distinguishes unparsed declarations from absent fields and stops
+CSV result-table interpretation before aggregate/metadata/compiler sections.
+
+## Count-aware recalibration
+
+The unified snapshot still contains **103,456 observations**. A full record
+comparison found every non-execution field identical, including scores, units,
+hardware, software, original source identity and raw score fields. All modern
+execution records were enriched/reparsed; no benchmark score was rescaled.
+
+Independent speed/rate fits, rate-chain intervals, all three joint matching
+policies, the CPU95/2000 sensitivity experiment, classical and mix networks,
+historical target controls and the timeline were rerun from the refreshed
+snapshot. The existing rule excludes confirmed constant-count conflicts within
+the same track; nonuniform or unresolved declarations remain provisional.
+
+| Joint policy | Previous complete mode tuples | Updated |
+| --- | ---: | ---: |
+| Strict | 317 | 309 |
+| RAM + aliases | 536 | 528 |
+| CPU + clock | 422,268 | 421,988 |
+
+These are combinations of source submissions, not independent CPU models.
+Repeated submissions remain included; no residual-based filtering was added.
+
+For the default RAM + aliases full-rate backbone, CPU95 coefficients are unchanged.
+CPU2000 base changes by **−0.7984%**; CPU2006–2026 base by **−0.6876%**. CPU2000 peak
+is unchanged; CPU2006–2026 peak changes by **−0.02459%**. Joint and speed-only
+predictors have their own coefficients and coherent bootstrap intervals; these
+percentages must not be substituted into those models.
+
+### Reproducible records
+
+- [Acquisition inventory](data/resource-refresh/acquisition-summary.json)
+- [Audit totals and full evidence hash](data/resource-refresh/resource-audit-summary.json)
+- [Positive-score runtime coverage](data/resource-refresh/positive-score-runtime-coverage.csv)
+- [Unchanged score/identity verification](data/resource-refresh/observation-parity.json)
+- [Joint cohort changes](data/resource-refresh/joint-cohort-changes.csv)
+- [Default full-rate coefficients](data/resource-refresh/default-rate-factor-changes.csv)
+- [All coefficient comparisons](data/resource-refresh/factor-changes.csv)
+- [Per-model review](data/resource-refresh/model-review.csv)
+
+Full per-result audit tables remain in `data/derived/resource-refresh/field-audit/`;
+source snapshots are in `data/raw/spec/`. Before-state coefficient tables and the
+input catalog are preserved in `data/derived/resource-refresh/before/`. The
+[collection commands](../docs/spec-collection.md) and
+[input/fitting workflow](input-unification-fitting-review.md#reproduction-and-validation)
+own the reproducible commands. The comparison command accepts `--before` and
+`--output` to keep this refresh separate from the earlier migration.
+
+### Final output validation
+
+The refreshed timeline contains **121,365 display records**, including the
+unchanged **61,070 baseline/historical records**. Modern displayed results have
+**zero `not_collected` runtime entries**; four speed estimates retain the
+source's non-integer thread strings. See the
+[export verification](data/resource-refresh/timeline-verification.json).
+
+The coefficient comparison contains 2,739 table entries, of which 96 changed;
+mirrored tables and chain prefixes mean these are not independent models. The
+registry review marks six models updated, 30 numerically unchanged, two unchanged
+definitions, two without a direct coefficient comparison, and one planned model.
+
+Validation passed 32 SPEC tests, 25 timeline/storage tests, three input-contract
+tests and the full generated-page JavaScript integration check. Browser loading
+through darkhttpd rendered the graph and 200-row first page successfully. The
+JavaScript predictor was compared with independent NumPy/CLI expectations for
+255 historical input combinations and 86 SPEC cases. Registry validation and
+render checks passed (41 models, 74 documents).
+
+## Earlier bounded audit
+
+The following sections and their `data/spec/field-audit/` tables describe the
+initial, pre-guard sample audit. Their acquisition counts are historical; use
+the refresh records above for current coverage and coefficients.
 
 ## Scope and reproducible outputs
 

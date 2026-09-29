@@ -1,6 +1,6 @@
 old_generation,new_generation,matching_policy,target_rate_candidates,target_speed_candidates,target_rate_hardware_near,target_speed_hardware_near,target_rate_eligible,target_speed_eligible,complete_mode_triples,rejected_triples_or_modes,target_reuse_policy
-cpu92,cpu95,cpu-clock,1577,1414,0,0,344,258,3234,2,three_distinct_submission_urls_required
-cpu95,cpu2000,cpu-clock,892,913,0,0,98,78,144,0,three_distinct_submission_urls_required
-cpu2000,cpu2006,cpu-clock,11833,4919,0,0,11510,4133,215023,48961,three_distinct_submission_urls_required
+cpu92,cpu95,cpu-clock,1577,1414,0,0,344,258,3200,36,three_distinct_submission_urls_required
+cpu95,cpu2000,cpu-clock,892,913,0,0,98,78,142,2,three_distinct_submission_urls_required
+cpu2000,cpu2006,cpu-clock,11833,4919,0,0,11510,4133,214883,49101,three_distinct_submission_urls_required
 cpu2006,cpu2017,cpu-clock,38981,27983,0,0,38536,3812,196869,113899,three_distinct_submission_urls_required
-cpu2017,cpu2026,cpu-clock,2940,1174,0,0,2891,809,6998,2064,three_distinct_submission_urls_required
+cpu2017,cpu2026,cpu-clock,2940,1174,0,0,2891,809,6894,2168,three_distinct_submission_urls_required

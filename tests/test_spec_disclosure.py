@@ -53,3 +53,19 @@ Benchmark,Base # Copies,Base Selected,Peak # Copies,Peak Selected
             self.assertEqual(r["hardware"], expected)
             self.assertFalse(r["execution"])
             self.assertIsNone(r["modes"]["base"]["minimum"])
+
+    def test_noninteger_thread_disclosure_is_preserved_not_guessed(self):
+        body = b'"Selected Results Table"\nBenchmark,Base # Threads,Peak # Threads\n600.perlbench_s,64i,88i\n'
+        r = parse_disclosure(body, ".csv", "cpu2017", "speed")
+        self.assertEqual(r["modes"]["base"]["status"], "unparsed_reported_value")
+        self.assertEqual(r["modes"]["base"]["unparsed_values"], ["64i"])
+        self.assertIsNone(r["modes"]["base"]["minimum"])
+        self.assertEqual(r["execution_issues"][1]["raw_value"], "88i")
+        self.assertFalse(r["execution"])
+
+    def test_result_header_does_not_leak_into_compiler_sections(self):
+        body = b'"Selected Results Table"\nBenchmark,Base # Threads,Peak # Threads\n600.perlbench_s,64i,88i\nSPECspeed2017_int_base,12.9\n"Base Other Flags"\n600.perlbench_s,1,2\n'
+        r = parse_disclosure(body, ".csv", "cpu2017", "speed")
+        self.assertEqual(r["modes"]["base"]["unparsed_values"], ["64i"])
+        self.assertEqual(len(r["execution_issues"]), 2)
+        self.assertFalse(r["execution"])

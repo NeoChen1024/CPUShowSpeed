@@ -1,0 +1,52 @@
+{
+  "esbuild": {
+    "version": "0.25.12",
+    "package": "@esbuild/linux-x64",
+    "dist": {
+      "shasum": "0583775685ca82066d04c3507f09524d3cd7a306",
+      "tarball": "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.25.12.tgz",
+      "fileCount": 3,
+      "integrity": "sha512-uqZMTLr/zR/ed4jIGnwSLkaHmPjOjJvnm6TVVitAa08SLS9Z0VM8wIRx7gWbJB5/J54YuIMInDquWyYvQLZkgw==",
+      "signatures": [
+        {
+          "sig": "MEUCIQDqbMeBw+AT0Lhri0gmueZa0LJBx7PkuiNDVIixXLr/gAIgDBTqcyhwwqZ0j0R/JLll801WzObyfNd0LlsbMKRvh7Q=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "unpackedSize": 10359450
+    }
+  },
+  "source_sha256": {
+    "third-party/fzstd-browser/LICENSE": "62249119bb7df6e54300f37a37145c26a6d4420410aac8881a119c5b427cf751",
+    "third-party/fzstd-browser/index.js": "1a901fc5a58c349bbdb4f2aa1e688637ef56891ec58243a9f0cd863166b0d2a4",
+    "third-party/hyparquet/LICENSE": "6e19a315e03f36020f37dedcb1dd93b4eba6ebfd94ccdd13ec55b940776fb55e",
+    "third-party/hyparquet/src/assemble.js": "1f793bcdb8b82926fbd79d27023656ad63ec4cd6b856b2b4813d0e1fc79520e8",
+    "third-party/hyparquet/src/bloom.js": "5176840840f50bfb5b5d2dac7a6e76b86bfa3e8a6f56dee6f1dcaaa849678c41",
+    "third-party/hyparquet/src/column.js": "fef17ac6ad9ce979712e59205bbb403136b268332a0fcfc0821fc1175fe1843b",
+    "third-party/hyparquet/src/constants.js": "b9e1a6a5c03018bd17f8faf05b39fe1abeacaff486f472750db51a5a14158702",
+    "third-party/hyparquet/src/convert.js": "584ce5c1779f43073100645964fa3fcfe4bdd9898e474a7b0ad326e75e44b342",
+    "third-party/hyparquet/src/datapage.js": "dc8316ae2b9e8640a2bd92dd2215df0b4919b98386d8c53b06373e8c499717b2",
+    "third-party/hyparquet/src/delta.js": "f2becbe2e1de7305092a2c6b9e2a20c799e1c294d7e4cf265909a46eff983be1",
+    "third-party/hyparquet/src/encoding.js": "bdf777d370fc2d70b630cae537318308694743aae696c93dd5fa6b944a75d496",
+    "third-party/hyparquet/src/filter.js": "107f00f3956f3f89f6d2c45d606229e2707a5e5bff3bafe7a9e0e400fd14f017",
+    "third-party/hyparquet/src/geoparquet.js": "3be4dc1294c2a6f441411acb631f4ccecc3c42447c3c5bb55c0def2b23703b05",
+    "third-party/hyparquet/src/indexes.js": "a1532b7901db4faa9924478f1b7faea939b73400370d47818b23f8833103a7f5",
+    "third-party/hyparquet/src/metadata.js": "01b40d84a6f4b3a49f295c7ebc887493f9e16e8ede3e49526fbfc6cd4f10a2e0",
+    "third-party/hyparquet/src/plain.js": "39761e015fdba42d4eed6e182f3fa383891be918ba6c1321155ccbc804de7308",
+    "third-party/hyparquet/src/plan.js": "1b17c0589803189540a9a2d6ec7e5cfe5a6e9a48e9e10ca8292b4f27115c6a8b",
+    "third-party/hyparquet/src/read.js": "6e2b518ce6e5dfa3d6da96b410930c064864547d1a97468e1b4c9ad5771ff5ac",
+    "third-party/hyparquet/src/rowgroup.js": "87d2fd1f8b297b2f184e479b11b728bb49bfe005608c9ca8ef6f0c3fd5ffbe08",
+    "third-party/hyparquet/src/scan.js": "fd10854efdaa9a7dea4ff08a62b80583750fa364f096bec5afe632b3fe88a3d2",
+    "third-party/hyparquet/src/schema.js": "fdd79cfea9118ed23b1a1cbad84b14b379b665ad3dc6a1fe9fb4de7e2ea97961",
+    "third-party/hyparquet/src/snappy.js": "e80c24e127874e562d47d685b9712b8067ce76354e24883d0a8badacfd16b8a6",
+    "third-party/hyparquet/src/thrift.js": "cb0c6f8b83df64e953e70f32cdecbcefe84f7e7c60b2b32c258c2760b4baa264",
+    "third-party/hyparquet/src/utils.js": "c231c08de8c04e76ebc8faa7a388d849783a375ddd3aa96ae3c428c0bfbe990e",
+    "third-party/hyparquet/src/variant.js": "2937226366f421e605ed46277f77d0e8e062de6d0cc0aaf57256a3a26d1c5ce2",
+    "third-party/hyparquet/src/wkb.js": "0328003b13e78a07482c989fe141e61f9e6075b2ff05c44be287fa39328bb37a",
+    "third-party/hyparquet/src/xxhash.js": "f51da25c070700500243d954bf5bebff0888d507e3019068c276e3206a51fabe",
+    "third-party/timeline-decoder/entry.js": "1f985af0a84bcdbc052d7252913292ca525e5f1ecac7f740f9b1529c5d99bc6a"
+  },
+  "bundle_sha256": "bf0a29899ec3a5d66093b296b74d97234fd0a9876cef81d98a4d7f66bde2a6ae",
+  "command": "esbuild third-party/timeline-decoder/entry.js --bundle --format=iife --global-name=ParquetDecoder --minify --target=es2020 --legal-comments=inline",
+  "postprocess": "Prepend both upstream MIT license texts in a /*! block, hyparquet then fzstd."
+}

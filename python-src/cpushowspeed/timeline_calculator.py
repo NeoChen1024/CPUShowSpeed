@@ -105,7 +105,9 @@ STYLE = """
 .calc-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px;align-items:start}
 #calculator label{display:grid;gap:6px;min-width:0}
 #calculator input,#calculator select{display:block;width:100%;min-width:0;max-width:100%;box-sizing:border-box}
-#calc-kind{max-width:36rem!important}
+#calc-kind{display:flex;flex-wrap:wrap;gap:12px 24px;margin:16px 0;padding:12px;border:1px solid #bdccd7;border-radius:8px}
+#calc-kind label{display:flex;align-items:center;gap:8px;cursor:pointer}
+#calc-kind input[type="radio"]{width:auto;flex:none;margin:0;accent-color:#207ca3}
 #calculator small{display:block;margin-top:6px}
 .calc-actions{display:flex;flex-wrap:wrap;gap:10px}
 @container (max-width:36rem){.calc-fields{grid-template-columns:minmax(0,1fr)}}
@@ -122,7 +124,10 @@ MARKUP = """
 <h2 id="calc-title">Predict VAXen</h2>
 <p>Enter scores for the same machine and configuration. Leave unavailable scores blank. No clock scaling.</p>
 <form id="calc-form">
-<p><label>Inputs <select id="calc-kind"><option value="historical">Classical benchmarks / instruction mixes</option><option value="spec">SPEC integer speed / rate</option></select></label></p>
+<fieldset id="calc-kind"><legend>Inputs</legend>
+<label><input type="radio" id="calc-kind-historical" name="calc-kind" value="historical" checked> Classical / Mixes</label>
+<label><input type="radio" id="calc-kind-spec" name="calc-kind" value="spec"> SPEC speed / rate</label>
+</fieldset>
 <div id="calc-historical">
 <div class="calc-fields">__HISTORICAL_FIELDS__</div>
 <p class="hint">Dhrystone 1.1 / 2.1 use DMIPS; divide Dhrystones/s by 1757 first. Whetstone Native is distinct from SP and DP.
@@ -241,7 +246,7 @@ function specPrediction(generation,mode,speed,rate,policy){
 }
 function calculatorView(){
  clearPredictionMarkers();
- const spec=document.querySelector('#calc-kind').value==='spec';
+ const spec=document.querySelector('#calc-kind-spec').checked;
  for(const [key] of calibration.historical_inputs)document.querySelector('#calc-'+key).disabled=spec;
  for(const id of ['calc-speed','calc-rate'])document.querySelector('#'+id).disabled=!spec;
  document.querySelector('#calc-spec').hidden=!spec;document.querySelector('#calc-historical').hidden=spec;
@@ -252,7 +257,7 @@ function runCalculator(){
  const out=document.querySelector('#calc-result');clearPredictionMarkers();try{
   const year=predictionYear(document.querySelector('#calc-year').value);
   let results;
-  if(document.querySelector('#calc-kind').value==='spec'){
+  if(document.querySelector('#calc-kind-spec').checked){
    results=specPrediction(document.querySelector('#calc-generation').value||'cpu92',document.querySelector('#calc-mode').value||'peak',
     document.querySelector('#calc-speed').value,document.querySelector('#calc-rate').value,matching);
   }else{

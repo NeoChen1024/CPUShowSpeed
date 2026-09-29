@@ -1,0 +1,6 @@
+generation,bulk_rows,integer_rows,speed_rows,speed_positive_aggregate,speed_cached_details,speed_details_with_runtime_count,rate_rows,rate_positive_aggregate,rate_cached_details,rate_details_with_runtime_count
+cpu95,2574,1321,548,548,548,0,773,773,773,773
+cpu2000,7654,3874,1381,1374,1381,0,2493,2481,2493,2493
+cpu2006,48381,24893,9550,9287,9550,0,15343,15039,15343,15039
+cpu2017,46865,23676,10291,10270,10291,10268,13385,13359,13385,13359
+cpu2026,499,251,75,75,75,75,176,176,176,176

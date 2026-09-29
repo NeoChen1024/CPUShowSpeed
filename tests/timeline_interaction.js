@@ -1,15 +1,18 @@
 // Run generated page logic in a minimal DOM model; no browser or network access.
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 async function main(){
-const path=require('node:path'),{pathToFileURL}=require('node:url');
+const path=require('node:path');
 const html=fs.readFileSync(process.argv[2],'utf8');
 let script,bundle;
-if(html.includes('assets/bootstrap.js')){
+if(html.includes('id="parquet-worker-source"')){
  const root=path.dirname(path.resolve(process.argv[2]));
- const {loadBundle}=await import(pathToFileURL(path.join(root,'assets/parquet-loader.js')));
+ const worker=JSON.parse(html.match(/<script id="parquet-worker-source" type="application\/json">([\s\S]*?)<\/script>/)[1]);
+ const moduleSource='const self={};\n'+worker+'\nexport {loadBundle};';
+ const {loadBundle}=await import('data:text/javascript;base64,'+Buffer.from(moduleSource).toString('base64'));
  const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'));
  bundle=await loadBundle(manifest,async name=>{const b=fs.readFileSync(path.join(root,name));return b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength);});
- script=fs.readFileSync(path.join(root,'assets/timeline.js'),'utf8').replace('export function mountTimeline({data,lineage,calibration}) {','const {data,lineage,calibration}=bundle;').replace(/}\s*$/, '');
+ script=html.match(/<script id="timeline-code">([\s\S]*?)<\/script>/)[1].split('// BOOTSTRAP\n')[0]
+ .replace('function mountTimeline({data,lineage,calibration}) {','const {data,lineage,calibration}=bundle;').replace(/}\s*$/, '');
 }else script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
 class Element {
  constructor(){this.value='';this.innerHTML='';this.hidden=false;this.style={};this.events={};this.classes=new Set();
@@ -52,14 +55,17 @@ if(process.argv[3]==='full'){
  const withThreads=data.find(r=>kind(r)==='speed'&&r.runtime_resources?.status==='reported');
  assert(withThreads&&resourceDescription(withThreads).includes('Speed benchmark threads'));
  assert.equal(withThreads.runtime_resources.quantity,'threads');
- const missingDetail=data.find(r=>r.runtime_resources?.status==='not_collected');
- assert(resourceDescription(missingDetail).includes('detail not collected'));
+ const modernResults=data.filter(r=>/^cpu(95|2000|2006|2017|2026)$/.test(r.generation)&&kind(r)!=='joint');
+ assert(modernResults.every(r=>r.runtime_resources?.status!=='not_collected'));
+ const unparsedThread=data.find(r=>r.runtime_resources?.unparsed_values?.includes('64i'));
+ assert(unparsedThread&&resourceDescription(unparsedThread).includes('unparsed source value: 64i'));
+ assert(resourceDescription({...unparsedThread,runtime_resources:{quantity:'threads',status:'not_collected'}}).includes('detail not collected'));
  const legacyCount=data.find(r=>r.generation==='cpu92'&&r.reported_cpu_count);
  assert(resourceDescription(legacyCount).includes('chip equivalence unverified'));
  const disputed=data.find(r=>r.resource_warning);assert(disputed);
  assert(resourceDescription(disputed).includes('topology requires review'));
  const pairIDs=data.filter(r=>kind(r)==='joint').map(r=>r.record_id);assert.equal(new Set(pairIDs).size,pairIDs.length);
- setMatching('cpu-clock');assert(elements['#fit-stats'].textContent.includes('72 tuples'));
+ setMatching('cpu-clock');assert(elements['#fit-stats'].textContent.includes('71 tuples'));
  elements['#estimates'].events.change({target:{dataset:{estimate:'speed'},checked:false}});
  elements['#estimates'].events.change({target:{dataset:{estimate:'joint'},checked:false}});
  setMatching('strict');assert.equal(filtered.length,baselineCount);
@@ -105,7 +111,7 @@ if(process.argv[3]==='full'){
    r.values.forEach((v,i)=>assert(Math.abs(v/c.values[i]-1)<1e-10));
   }
  }
- elements['#calc-kind'].value='spec';calculatorView();
+ elements['#calc-kind-spec'].checked=true;elements['#calc-kind-historical'].checked=false;calculatorView();
  assert(elements['#calc-historical'].hidden&&!elements['#calc-spec'].hidden);
  elements['#calc-generation'].value='cpu92';elements['#calc-rate'].value=604800/25500;runCalculator();
  assert(elements['#calc-result'].innerHTML.includes('1.000 VAX'));
@@ -136,7 +142,7 @@ if(process.argv[3]==='full'){
  assert(predictionMarkup().includes('Defined SPEC92 rate scale'));
  setMatching('ram-aliases');assert.equal(elements['#calc-result'].innerHTML,'');
  elements['#calc-clear'].events.click();assert.equal(elements['#calc-rate'].value,'');
- elements['#calc-kind'].value='historical';calculatorView();setMatching('strict');
+ elements['#calc-kind-spec'].checked=false;elements['#calc-kind-historical'].checked=true;calculatorView();setMatching('strict');
  for(const mode of ['peak','peak_proxy'])elements['#scores'].events.change({target:{dataset:{mode},checked:false}});assert.equal(filtered.length,32027);
  for(const mode of ['peak','peak_proxy'])elements['#scores'].events.change({target:{dataset:{mode},checked:true}});assert.equal(filtered.length,60710);
  assert.equal(data.filter(r=>r.route==='Gibson mix').length,177);

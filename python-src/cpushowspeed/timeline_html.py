@@ -1,11 +1,14 @@
 """Static HTTP timeline with external Parquet data and screen-space point selection."""
 
+import hashlib
 import json
+import re
 from html import escape
+from pathlib import Path
 
 from cpushowspeed import timeline_calculator
 from cpushowspeed.timeline_lineage import MARKUP, SCRIPT, STYLE
-from cpushowspeed.timeline_storage import WebExport, copy_browser_assets
+from cpushowspeed.timeline_storage import WebExport, browser_worker_source
 
 TITLE = "CPUShowSpeed: 70 years of benchmarks measured in VAXen"
 
@@ -28,7 +31,7 @@ def list_browsing(suffix=""):
 def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
     fields = "record_id resource_warning runtime_resources hardware_context resource_basis reported_cpu_count cores_per_chip input_configurations estimate_kind variants matched_rate_variants comparison_keys source_record_ids benchmark_sources configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit mix_variant evidence_class source_locator generation reported_score benchmark_id calibration_scenario".split()
     output.parent.mkdir(parents=True, exist_ok=True)
-    copy_browser_assets(output.parent)
+    worker = browser_worker_source()
     export = WebExport(output.parent)
     export.table("records", rows)
     display = []
@@ -49,17 +52,25 @@ def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
         .replace("__BROWSING_TOP__", list_browsing())
         .replace("__BROWSING_BOTTOM__", list_browsing("-bottom"))
     )
-    # Serve code/styles separately as well; no dataset is embedded in HTML or JS.
     start, end = page.index("<script>"), page.index("</script>")
     script = page[start + len("<script>") : end]
-    (output.parent / "assets/timeline.js").write_text(
-        "export function mountTimeline({data,lineage,calibration}) {\n" + script + "\n}\n"
+    main = "function mountTimeline({data,lineage,calibration}) {\n" + script + "\n}\n"
+    main += "// BOOTSTRAP\n" + (Path(__file__).parent / "web/bootstrap.js").read_text()
+    # HTML's script terminator is recognized even inside JS strings/comments.
+    main = re.sub(r"</script", r"<\\/script", main, flags=re.I)
+    encoded_worker = json.dumps(worker, ensure_ascii=False).replace("<", "\\u003c")
+    inline = '<script id="parquet-worker-source" type="application/json">' + encoded_worker + "</script>\n"
+    inline += '<script id="timeline-code">' + main + "</script>"
+    page = page[:start] + inline + page[end + len("</script>") :]
+    css = page[page.index("<style>") + len("<style>") : page.index("</style>")]
+    export.finish(
+        data,
+        lineage or {"nodes": [], "edges": []},
+        calculator or {"historical_inputs": []},
+        inline_sources={
+            name: hashlib.sha256(value.encode()).hexdigest() for name, value in {"worker": worker, "main": main, "css": css}.items()
+        },
     )
-    page = page[:start] + '<script type="module" src="./assets/bootstrap.js"></script>' + page[end + len("</script>") :]
-    start, end = page.index("<style>"), page.index("</style>")
-    (output.parent / "assets/timeline.css").write_text(page[start + len("<style>") : end])
-    page = page[:start] + '<link rel="stylesheet" href="./assets/timeline.css">' + page[end + len("</style>") :]
-    export.finish(data, lineage or {"nodes": [], "edges": []}, calculator or {"historical_inputs": []})
     output.write_text(page)
 
 
@@ -221,7 +232,7 @@ function resourceDescription(r){
   const run=q.runtime_resources;
   if(run){text+='<br>'+(run.quantity==='copies'?'Rate copies':'Speed benchmark threads')+': ';
    text+=run.status==='reported'?(String(run.minimum)===String(run.maximum)?count(run.minimum):count(run.minimum)+'–'+count(run.maximum)):
-    run.status==='not_collected'?'detail not collected':'not reported in parsed table';
+    run.status==='not_collected'?'detail not collected':run.unparsed_values?.length?'unparsed source value: '+run.unparsed_values.map(esc).join(', '):'not reported in parsed table';
    if(run.source_url)text+=' · <a href="'+esc(run.source_url)+'">Runtime source</a>';
   }
   return text;

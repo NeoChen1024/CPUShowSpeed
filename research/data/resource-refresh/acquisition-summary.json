@@ -1,0 +1,60 @@
+{
+  "reviewed_on": "2026-09-29",
+  "index_sha256": "6ab4d2609535c1b1b24e6c4216f9427547241dee9e1ab7b9efe838d31a719285",
+  "indexed_integer_results": 54014,
+  "missing_indexed_disclosures": [],
+  "by_generation_track": [
+    {
+      "generation": "cpu2000",
+      "track": "integer-rate",
+      "results": 2493
+    },
+    {
+      "generation": "cpu2000",
+      "track": "integer-speed",
+      "results": 1381
+    },
+    {
+      "generation": "cpu2006",
+      "track": "integer-rate",
+      "results": 15343
+    },
+    {
+      "generation": "cpu2006",
+      "track": "integer-speed",
+      "results": 9550
+    },
+    {
+      "generation": "cpu2017",
+      "track": "integer-rate",
+      "results": 13384
+    },
+    {
+      "generation": "cpu2017",
+      "track": "integer-speed",
+      "results": 10291
+    },
+    {
+      "generation": "cpu2026",
+      "track": "integer-rate",
+      "results": 176
+    },
+    {
+      "generation": "cpu2026",
+      "track": "integer-speed",
+      "results": 75
+    },
+    {
+      "generation": "cpu95",
+      "track": "integer-rate",
+      "results": 773
+    },
+    {
+      "generation": "cpu95",
+      "track": "integer-speed",
+      "results": 548
+    }
+  ],
+  "additional_bulk_result": "https://www.spec.org/cpu2017/results/res2017q3/cpu2017-20170828-00068.html",
+  "qualification": "Original bulk score snapshot retained. Per-result source bytes and metadata are cached under data/raw/spec. All indexed integer result detail files present; content/runtime coverage audited separately."
+}

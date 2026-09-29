@@ -3,4 +3,4 @@ cpu92,cpu95,ram-aliases,60,50,0,0,60,50,180,0,three_distinct_submission_urls_req
 cpu95,cpu2000,ram-aliases,38,21,0,0,36,19,20,0,three_distinct_submission_urls_required
 cpu2000,cpu2006,ram-aliases,136,29,0,0,135,29,72,0,three_distinct_submission_urls_required
 cpu2006,cpu2017,ram-aliases,1097,917,0,0,1079,109,162,74,three_distinct_submission_urls_required
-cpu2017,cpu2026,ram-aliases,185,88,0,0,183,65,102,18,three_distinct_submission_urls_required
+cpu2017,cpu2026,ram-aliases,185,88,0,0,183,65,94,26,three_distinct_submission_urls_required

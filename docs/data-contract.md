@@ -128,3 +128,15 @@ Its default website export uses Zstd level 3 Parquet, with explicit codecs prese
 null, empty strings, absent keys and nested evidence. JSONL/CSV are optional
 exports. [Timeline storage](timeline.md#static-website-export) owns the physical
 layout, browser loading, decoder pin and round-trip guarantees.
+
+### Unparsed runtime declarations
+
+The detail adapter preserves non-integer copies/threads tokens in
+`execution_issues` and per-mode `unparsed_values`. A mode with only such values is
+`unparsed_reported_value`; a mode containing both numeric and unparsed values is
+`partially_parsed`. Neither supplies a verified constant count for fitting.
+These differ from `not_collected` (no cached disclosure) and
+`not_reported_in_parsed_table` (no usable count in the parsed result table).
+Do not strip a suffix or substitute a hardware count to create a measurement.
+CSV result-table headers stop at the aggregate/metadata boundary; later compiler
+sections must not be read as execution data.

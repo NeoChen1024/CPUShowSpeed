@@ -1,5 +1,10 @@
 # Exploratory SPEC CPU92–CPU2026 integer-rate fitting
 
+**Full-disclosure update (2026-09-29):** [Resource refresh](spec-resource-field-audit.md#full-disclosure-refresh)
+records current runtime coverage and the count-aware refit. Numerical tables in
+this report's original narrative describe the preceding experiment; linked
+coefficient files now contain the refreshed results.
+
 Reviewed on 2026-09-26. This is the primary account of the project's
 **throughput/rate** reconstruction from SPEC CPU92 through CPU2026. The
 adjacent-suite fits are reproducible and source-linked; their cumulative

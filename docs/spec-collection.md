@@ -1,7 +1,7 @@
 # SPEC integer-rate collection and fitting
 
 The active collector stores public SPEC result exports and individual
-**rate** disclosures with source URLs, retrieval dates and SHA-256 metadata.
+**integer speed and rate** disclosures with source URLs, retrieval dates and SHA-256 metadata.
 Original downloaded bytes remain under `data/raw/spec/`; generated manifests,
 parsed records and figures remain under ignored `data/derived/spec/`. The
 versioned research tables under `research/data/spec/fitting/` contain

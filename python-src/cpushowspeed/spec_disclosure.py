@@ -82,7 +82,7 @@ def parse_disclosure(body, suffix, generation, track):
         "basepointers": "base_pointer_size",
         "peakpointers": "peak_pointer_size",
     }
-    execution, header, section = [], None, ""
+    execution, unparsed, header, section = [], [], None, ""
     quantity = "copies" if track == "rate" else "threads"
     for row_number, row in enumerate(rows, 1):
         if not row:
@@ -101,7 +101,12 @@ def parse_disclosure(body, suffix, generation, track):
             continue
         if header is None:
             continue
-        bench = next((v for v in row if re.fullmatch(r"\d{3}\.[\w]+", v.strip())), None)
+        if suffix == ".csv" and not re.fullmatch(r"\d{3}\.[A-Za-z_]\w*", row[0].strip()):
+            # Result rows end before aggregate scores, metadata and compiler flags.
+            # Those later sections may also contain benchmark names and numbers.
+            header = None
+            continue
+        bench = next((v for v in row if re.fullmatch(r"\d{3}\.[A-Za-z_]\w*", v.strip())), None)
         if bench is None:
             continue
         for mode in ("base", "peak"):
@@ -112,13 +117,24 @@ def parse_disclosure(body, suffix, generation, track):
             for i in indexes:
                 if i >= len(row):
                     continue
-                value = integer(row[i])
-                if value is None:
-                    continue
                 selected_index = next((j for j, c in enumerate(header) if c == mode + "selected"), None)
                 if suffix == ".csv" and "Selected Results Table" not in section and selected_index is not None:
                     if selected_index >= len(row) or row[selected_index] != "1":
                         continue
+                value = integer(row[i])
+                if value is None:
+                    raw = row[i].strip()
+                    if raw and raw.upper() not in {"NC", "NA", "N/A", "--", "NOT RUN"}:
+                        unparsed.append(
+                            dict(
+                                benchmark=bench,
+                                mode=mode,
+                                quantity=quantity,
+                                raw_value=row[i],
+                                locator=f"{section or 'results table'} row {row_number}",
+                            )
+                        )
+                    continue
                 execution.append(
                     dict(
                         benchmark=bench,
@@ -137,6 +153,10 @@ def parse_disclosure(body, suffix, generation, track):
     for row in execution:
         unique[row["benchmark"], row["mode"], row["quantity"], row["value"]] = row
     execution = list(unique.values())
+    selected_issues = [r for r in unparsed if r["locator"].startswith("Selected Results Table")]
+    if selected_issues:
+        unparsed = selected_issues
+    unparsed = list({(r["benchmark"], r["mode"], r["raw_value"]): r for r in unparsed}.values())
     normalized = {}
     enabled = hardware.get("enabled", "")
     for name, pattern in (
@@ -153,13 +173,27 @@ def parse_disclosure(body, suffix, generation, track):
     modes = {}
     for mode in ("base", "peak"):
         values = [r["value"] for r in execution if r["mode"] == mode]
+        invalid = sorted({r["raw_value"] for r in unparsed if r["mode"] == mode})
         modes[mode] = dict(
             quantity=quantity,
-            status="reported" if values else "not_reported_in_parsed_table",
+            status=(
+                ("partially_parsed" if values else "unparsed_reported_value")
+                if invalid
+                else "reported" if values else "not_reported_in_parsed_table"
+            ),
+            unparsed_values=invalid,
             minimum=min(values) if values else None,
             maximum=max(values) if values else None,
         )
-    return dict(generation=generation, track=track, hardware_raw=hardware, hardware=normalized, execution=execution, modes=modes)
+    return dict(
+        generation=generation,
+        track=track,
+        hardware_raw=hardware,
+        hardware=normalized,
+        execution=execution,
+        execution_issues=unparsed,
+        modes=modes,
+    )
 
 
 def disclosure_path(raw_dir, source_url, suffix):

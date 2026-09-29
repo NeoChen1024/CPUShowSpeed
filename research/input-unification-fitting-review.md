@@ -1,5 +1,10 @@
 # Shared input migration and fitting review
 
+**Full-disclosure update (2026-09-29):** [Resource refresh](spec-resource-field-audit.md#full-disclosure-refresh)
+records current runtime coverage and the count-aware refit. Numerical tables in
+this report's original narrative describe the preceding experiment; linked
+coefficient files now contain the refreshed results.
+
 Reviewed: 2026-09-29.
 
 ## Source and interface changes
