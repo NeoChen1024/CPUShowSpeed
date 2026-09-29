@@ -120,3 +120,11 @@ unverified chip equivalence. Runtime records retain mode, benchmark, quantity,
 raw value, locator and source hash. Uncollected details and missing parsed fields
 are distinct statuses. The [audit](../research/spec-resource-field-audit.md)
 records ambiguities; metadata enrichment does not silently change fitting cohorts.
+
+## Timeline storage
+
+The shared timeline retains its logical `vaxen-timeline-v2` record semantics.
+Its default website export uses Zstd level 3 Parquet, with explicit codecs preserving
+null, empty strings, absent keys and nested evidence. JSONL/CSV are optional
+exports. [Timeline storage](timeline.md#static-website-export) owns the physical
+layout, browser loading, decoder pin and round-trip guarantees.

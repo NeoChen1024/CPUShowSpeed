@@ -27,18 +27,83 @@ SPEC92–SPEC2026 rate submissions, and applies saved `same_os` rate factors and
 pointwise calibration intervals. The timeline command performs no network
 collection or fitting.
 
+## Static website export
+
+The default export uses Zstd level 3 Parquet (implemented 2026-09-29). Run the existing
+`plot timeline` command, then serve the repository root with a static HTTP server
+such as darkhttpd. This also keeps the relative research/method-note links usable.
+Open `data/derived/figures/timeline/vaxen-timeline.html` through that server. No application
+server, npm install, frontend build, or external CDN is required.
+
+Initialize the pinned decoder once after cloning:
+
+```sh
+git submodule update --init third-party/hyparquet third-party/fzstd
+uv run cpushowspeed --input-catalog data/derived/inputs plot timeline
+darkhttpd . --addr 127.0.0.1 --port 8080 --hide-dotfiles
+# Open http://127.0.0.1:8080/data/derived/figures/timeline/vaxen-timeline.html
+```
+
 Outputs under `data/derived/figures/timeline/`:
 
-- `records.jsonl`: canonical shared records, schema `vaxen-timeline-v2`.
-- `records.csv`: equivalent flattened export; nested values are JSON cells.
-- `vaxen-timeline.html`: combined offline view.
-- `audit.json`: population, date/mode/route counts, input and code hashes.
+- `vaxen-timeline.html`: the sole interactive page, with no embedded datasets.
+- `assets/`: CSS, ES modules, the Web Worker and the pinned decoder source/license.
+- `manifest.json`: `vaxen-web-parquet-v1`, artifact schemas, row counts, byte sizes,
+  SHA-256 hashes, decoder revision and small lineage/calculator configuration.
+- `data/records.parquet`: complete shared research records, retaining the logical
+  `vaxen-timeline-v2` contract and all provenance.
+- `data/timeline.parquet`: the display projection used by the page.
+- Other `data/*.parquet`: large lineage/fit arrays and aligned calibration draws.
+- `audit.json`: population, date/mode/route counts, input/code hashes and the
+  exported manifest hash.
 
-`vaxen-timeline.html` is the sole generated interactive page. Use its route and
-mode filters to view historical or SPEC-only subsets. Historical and annual-rate
-commands no longer generate separate HTML pages. The page is self-contained;
-full provenance remains in JSONL/CSV and the audit metadata. Large outputs stay
-outside Git.
+`--text-exports` additionally writes the legacy `records.jsonl` and `records.csv`.
+Without this flag, these two legacy files are removed from the output directory
+after a successful page export. Other research pipelines and immutable raw source
+JSON files are unchanged. Large derived outputs stay outside Git.
+
+### Parquet representation and loading
+
+Scalars are stored in native columns. Float64 preserves the existing prediction
+precision; values are not rounded for storage. Empty strings, nulls and absent keys
+remain distinct using codec metadata and auxiliary columns. Numeric columns with
+empty-string missing values retain native numeric storage plus an empty marker.
+Heterogeneous/nested provenance remains explicitly marked JSON cells inside
+Parquet; no full dataset is packed into one JSON cell. Draw tables have one metric
+per column, preserving the original shared bootstrap row order.
+
+Each file stores its reversible codec in `cpushowspeed.codec` Parquet metadata;
+the manifest also supplies it to the browser. `timeline_storage.read_table(path)`
+reconstructs the complete logical records in Python. Generic Parquet tools can
+inspect native columns directly; auxiliary presence/empty markers and JSON-cell
+metadata must be honored for an exact logical round trip.
+
+The browser fetches and decodes the display datasets in a module Web Worker,
+checks byte size and row count, and verifies SHA-256 where Web Crypto is available
+(including localhost). Loading failures remain visible, without showing partial
+results. It does not fetch the full research-record export. This first migration
+loads the entire display projection, fit arrays and calculator draws before
+mounting the page; it retains the existing in-memory filtering/sorting behavior.
+It does not yet implement row-group range requests, lazy detail loading or SQL.
+An ordinary static server is sufficient; HTTP Range support is not required yet.
+Exported ES modules use `.js` so darkhttpd serves the correct MIME type without
+extra configuration. `assets/package.json` only declares the module format for
+Node-based tests; it has no dependencies or build scripts. Serving only the output
+directory also renders the visualization, but repository-relative method-note
+links require the repository root to be available.
+
+The decoder is `third-party/hyparquet`, pinned to v1.31.2, commit
+`460fb574870606a67eccaf59f7d7c08b46ec551e`. Export verifies the revision and a clean
+submodule, and copies its ES modules and MIT license. Zstd decoding uses fzstd
+0.1.1, with its source submodule pinned to the npm release's exact gitHead
+`807a854cac2c5766ef030832cc5b66482dc7ca8a`. Its upstream source is TypeScript;
+`third-party/fzstd-browser` holds the official published ES module (renamed from
+`.mjs` to `.js` for static-server MIME compatibility), license and provenance.
+The release archive was verified against npm's SHA-512 integrity; export checks
+the copied files' SHA-256 hashes. No npm or TypeScript build is needed during
+export. Only the ZSTD codec is registered with hyparquet. Updating either decoder
+requires updating its pin/provenance and rerunning the cross-language checks.
+
 
 The earlier annual-rate PNG/SVG reports and their hardware-year statistical
 summaries remain reproducible snapshots. The shared timeline is the new
@@ -135,10 +200,12 @@ intervals. CPU2026 remains explicitly exploratory.
   clicking outside, Close or Escape dismisses the selection.
 
 Offline JavaScript tests cover state transitions, sorting, scale-independent
-snapping, mode/route filters and time navigation. Full-population tests use the
-actual generated 101,148-row page, including the unchanged 61,070-row baseline population. Browser visual verification remains unavailable
-because the browser tool blocks local-file navigation; no alternate browser
-workaround was used.
+snapping, mode/route filters and time navigation. Full-population tests load actual Parquet through the pinned JavaScript decoder,
+including the 121,385-row display projection and unchanged 61,070-row baseline
+population. The 2026-09-29 migration was checked against the prior HTML payload,
+lineage and calculator values, and all complete records against the prior JSONL.
+The HTTP page was also loaded in the browser: the plot and 200-row first list page
+rendered successfully after Worker decoding.
 
 ### Layout, numbers and overview brush
 

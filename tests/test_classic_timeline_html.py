@@ -56,4 +56,5 @@ class TimelineHTMLTests(unittest.TestCase):
             render_html([{"system": "</script><script>alert(1)</script>"}], path)
             html = path.read_text()
             self.assertEqual(html.count("</script>"), 1)
-            self.assertIn(r"\u003c/script>", html)
+            self.assertNotIn("alert(1)", html)
+            self.assertTrue((path.parent / "data/timeline.parquet").is_file())

@@ -186,7 +186,8 @@ def spec_records(chronology):
 
 @click.command("timeline")
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/figures/timeline"), show_default=True)
-def timeline_command(output_dir):
+@click.option("--text-exports", is_flag=True, help="Also write the large legacy JSONL and CSV exports.")
+def timeline_command(output_dir, text_exports):
     """Combine historical proxies and every available SPEC92–2026 rate submission; no fitting."""
     try:
         chronology = CPUChronology(read_csv(PROXIES))
@@ -210,11 +211,14 @@ def timeline_command(output_dir):
         rows += estimates
         assert len({r["record_id"] for r in rows}) == len(rows)
         output_dir.mkdir(parents=True, exist_ok=True)
-        (output_dir / "records.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False, allow_nan=False) + "\n" for r in rows))
-        write_csv(
-            output_dir / "records.csv",
-            [{k: json.dumps(v, ensure_ascii=False) if isinstance(v, (dict, list)) else v for k, v in r.items()} for r in rows],
-        )
+        if text_exports:
+            (output_dir / "records.jsonl").write_text(
+                "".join(json.dumps(r, ensure_ascii=False, allow_nan=False) + "\n" for r in rows)
+            )
+            write_csv(
+                output_dir / "records.csv",
+                [{k: json.dumps(v, ensure_ascii=False) if isinstance(v, (dict, list)) else v for k, v in r.items()} for r in rows],
+            )
 
         lineage = build_lineage(output_dir / "vaxen-timeline.html")
         lineage["rate_edges"], edge_hashes = rate_edge_metadata(estimate_bundles)
@@ -231,8 +235,12 @@ def timeline_command(output_dir):
                 triples=[dict(zip(plot_fields, values), count=count) for values, count in counts.items()],
             )
         render_html(rows, output_dir / "vaxen-timeline.html", lineage=lineage, calculator=calculator)
+        if not text_exports:
+            for name in ("records.jsonl", "records.csv"):
+                (output_dir / name).unlink(missing_ok=True)
         audit = dict(
             schema_version=SCHEMA,
+            web_manifest_sha256=sha(output_dir / "manifest.json"),
             lineage_inputs_sha256=lineage["input_sha256"],
             records=len(rows),
             experimental_estimates=len(estimates),

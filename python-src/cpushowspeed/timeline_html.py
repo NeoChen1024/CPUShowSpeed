@@ -1,10 +1,11 @@
-"""Self-contained offline historical timeline with screen-space point selection."""
+"""Static HTTP timeline with external Parquet data and screen-space point selection."""
 
 import json
 from html import escape
 
 from cpushowspeed import timeline_calculator
 from cpushowspeed.timeline_lineage import MARKUP, SCRIPT, STYLE
+from cpushowspeed.timeline_storage import WebExport, copy_browser_assets
 
 TITLE = "CPUShowSpeed: 70 years of benchmarks measured in VAXen"
 
@@ -25,47 +26,41 @@ def list_browsing(suffix=""):
 
 
 def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
-    # Keep rich provenance in JSONL/CSV; share repeated strings in the offline display payload.
     fields = "record_id resource_warning runtime_resources hardware_context resource_basis reported_cpu_count cores_per_chip input_configurations estimate_kind variants matched_rate_variants comparison_keys source_record_ids benchmark_sources configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit mix_variant evidence_class source_locator generation reported_score benchmark_id calibration_scenario".split()
-    strings, indexes, packed = [], {}, []
+    output.parent.mkdir(parents=True, exist_ok=True)
+    copy_browser_assets(output.parent)
+    export = WebExport(output.parent)
+    export.table("records", rows)
+    display = []
     for row in rows:
-        values = []
-        for field in fields:
-            value = row.get(field, "")
-            if isinstance(value, (dict, list)):
-                value = json.dumps(value, ensure_ascii=False)
-            if isinstance(value, str):
-                if value not in indexes:
-                    indexes[value] = len(strings)
-                    strings.append(value)
-                value = "~" + str(indexes[value])
-            values.append(value)
-        packed.append(values)
-    payload = json.dumps(dict(fields=fields, strings=strings, rows=packed), ensure_ascii=False, separators=(",", ":")).replace(
-        "<", "\\u003c"
-    )
-    output.write_text(
+        record = {key: row.get(key, "") for key in fields}
+        # Preserve existing UI string rendering; structured relation/resource fields
+        # are decoded by the same shared page adapter used before this migration.
+        display.append({k: json.dumps(v, ensure_ascii=False) if isinstance(v, (dict, list)) else v for k, v in record.items()})
+    data = export.table("timeline", display)
+    page = (
         PAGE.replace("__TITLE__", escape(title))
-        .replace("__PAYLOAD__", payload)
         .replace("__LINEAGE_STYLE__", STYLE)
         .replace("__LINEAGE_MARKUP__", MARKUP)
-        .replace(
-            "__LINEAGE_SCRIPT__",
-            SCRIPT.replace(
-                "__LINEAGE_DATA__", json.dumps(lineage or {"nodes": [], "edges": []}, ensure_ascii=False).replace("<", "\\u003c")
-            ),
-        )
+        .replace("__LINEAGE_SCRIPT__", SCRIPT.replace("const lineage=__LINEAGE_DATA__;", ""))
         .replace("__CALCULATOR_STYLE__", timeline_calculator.STYLE)
         .replace("__CALCULATOR_MARKUP__", timeline_calculator.calculator_markup())
-        .replace(
-            "__CALCULATOR_SCRIPT__",
-            timeline_calculator.SCRIPT.replace(
-                "__CALCULATOR_DATA__", json.dumps(calculator or {"historical_inputs": []}, allow_nan=False).replace("<", "\\u003c")
-            ),
-        )
+        .replace("__CALCULATOR_SCRIPT__", timeline_calculator.SCRIPT.replace("const calibration=__CALCULATOR_DATA__;", ""))
         .replace("__BROWSING_TOP__", list_browsing())
         .replace("__BROWSING_BOTTOM__", list_browsing("-bottom"))
     )
+    # Serve code/styles separately as well; no dataset is embedded in HTML or JS.
+    start, end = page.index("<script>"), page.index("</script>")
+    script = page[start + len("<script>") : end]
+    (output.parent / "assets/timeline.js").write_text(
+        "export function mountTimeline({data,lineage,calibration}) {\n" + script + "\n}\n"
+    )
+    page = page[:start] + '<script type="module" src="./assets/bootstrap.js"></script>' + page[end + len("</script>") :]
+    start, end = page.index("<style>"), page.index("</style>")
+    (output.parent / "assets/timeline.css").write_text(page[start + len("<style>") : end])
+    page = page[:start] + '<link rel="stylesheet" href="./assets/timeline.css">' + page[end + len("</style>") :]
+    export.finish(data, lineage or {"nodes": [], "edges": []}, calculator or {"historical_inputs": []})
+    output.write_text(page)
 
 
 PAGE = r"""<!doctype html>
@@ -80,6 +75,7 @@ input{width:min(36em,85vw)}button{cursor:pointer}svg{width:100%;background:#fafb
 #overview [data-brush="move"]{cursor:grab}#overview [data-brush="left"],#overview [data-brush="right"]{cursor:ew-resize}
 #overview [role="slider"]:focus{outline:none;stroke:#e78a19;stroke-width:3}
 .chart{overflow:hidden}td,th{padding:7px;text-align:left;border-bottom:1px solid #ddd;vertical-align:top}
+.score-input{display:block;margin:3px 0;overflow-wrap:anywhere}.score-input strong{font-weight:500;color:#223}
 table{border-collapse:collapse;width:100%}small,.hint{color:#556}.table-tools{margin:20px 0 10px}
 #tip{position:fixed;z-index:10;width:340px;max-width:calc(100vw - 36px);max-height:calc(100vh - 24px);
  overflow:auto;background:#fff;border:2px solid #207ca3;border-radius:8px;padding:12px;box-shadow:0 4px 24px #2233;
@@ -90,6 +86,9 @@ __LINEAGE_STYLE__
 __CALCULATOR_STYLE__
 </style>
 <h1>__TITLE__</h1>
+<p id="load-status" role="status">Loading timeline…</p>
+<noscript>JavaScript is required to view the timeline.</noscript>
+<div id="timeline-app" hidden>
 __LINEAGE_MARKUP__
 <label>Search system, CPU, configuration or benchmark: <input id="q" placeholder="VAX, PDP, LINPACK…"></label>
 <fieldset id="scores"><legend>Scores</legend>
@@ -125,9 +124,8 @@ __CALCULATOR_MARKUP__
 __BROWSING_TOP__
 <table><thead><tr><th>Year / evidence</th><th>System / configuration</th><th>Route / inputs</th><th>VAXen / CI95</th><th>Sources</th></tr></thead><tbody id="body"></tbody></table>
 __BROWSING_BOTTOM__
+</div>
 <script>
-const packed=__PAYLOAD__;
-const data=packed.rows.map(values=>Object.fromEntries(packed.fields.map((key,i)=>[key,typeof values[i]==='string'?packed.strings[Number(values[i].slice(1))]:values[i]])));
 for(const r of data)for(const key of ['variants','matched_rate_variants','comparison_keys','source_record_ids','benchmark_sources','runtime_resources','hardware_context','input_configurations']){
  if(typeof r[key]==='string'&&r[key])r[key]=JSON.parse(r[key]);}
 let matching='ram-aliases';const enabledEstimates=new Set(['baseline']);
@@ -184,6 +182,35 @@ function positionTip(){if(tip.hidden||!candidates.length)return;
  tip.style.top=Math.max(12,Math.min(p.y+14,innerHeight-box.height-12))+'px';
 }
 
+function scoreDetails(r){
+ let scores=r.scores;
+ if(typeof scores==='string'){try{scores=JSON.parse(scores);}catch{return esc(scores);}}
+ if(!scores||typeof scores!=='object')return '';
+ const labels={
+  'Dhrystone:v1.1_DMIPS':['Dhrystone 1.1','DMIPS'],
+  'Dhrystone:v2.1_DMIPS':['Dhrystone 2.1','DMIPS'],
+  'Whetstone:MWIPS':['Whetstone Native','MWIPS'],
+  'Whetstone:MWIPS_SP':['Whetstone SP','MWIPS'],
+  'Whetstone:MWIPS_DP':['Whetstone DP','MWIPS'],
+  'LINPACK:n100_MFLOPS':['LINPACK N=100','MFLOPS'],
+  'InstructionMix:Gibson_KIPS':['Gibson Mix','KIPS'],
+  'InstructionMix:ADP_KIPS':['ADP Mix','KIPS'],
+  'SPECint89':['SPECint89',''],
+  'SPECrate_int92':['SPEC92 integer rate',''],
+  'SPECrate_base_int92':['SPEC92 integer rate','']
+ };
+ return Object.entries(scores).map(([key,value])=>{
+  let [label,unit]=labels[key]||[key,''];
+  const rate=/^CINT(95|2000|2006|2017|2026)rate$/.exec(key);
+  const speed=/^CPU(95|2000|2006|2017|2026) integer speed (base|peak)$/.exec(key);
+  if(rate)label='SPEC'+rate[1]+' integer rate';
+  if(speed)label='SPEC'+speed[1]+' integer speed';
+  if(key==='speed'||key==='rate')label=(r.generation||r.route||'SPEC').replace(/^cpu/i,'SPEC')+' integer '+key;
+  const number=typeof value==='number'&&Number.isFinite(value)?value.toLocaleString('en-US',{maximumSignificantDigits:6}):String(value);
+  return '<span class="score-input"><span>'+esc(label)+':</span> <strong>'+esc(number)+(unit?' '+esc(unit):'')+'</strong></span>';
+ }).join('');
+}
+
 function resourceDescription(r){
  const count=v=>v!==''&&v!==null&&v!==undefined?esc(v):'not reported';
  function one(q){
@@ -220,7 +247,7 @@ function showSelection(){if(!candidates.length){clearSelection();return;}
  ${related.length?'<details open><summary>Related estimates</summary>'+related.slice(0,8).map(q=>`<p>${esc(estimateLabel(q))}: <b>${fmt(q.vaxen)}</b><br><small>${esc(q.system)} · CI95 ${fmt(q.ci95_low)}–${fmt(q.ci95_high)}</small></p>${q.matched_rate_variants?.[matching]?`<p>Rate-only — matched cohort: ${fmt(q.matched_rate_variants[matching][0])}<br><small>CI95 ${fmt(q.matched_rate_variants[matching][1])}–${fmt(q.matched_rate_variants[matching][2])}</small></p>`:''}`).join('')+(related.length>8?`<small>${related.length} related rows; first 8 shown</small>`:'')+'</details>':''}
  <p>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">Source ${i+1}</a>`).join(' · ')}</p>
  <p>Year: ${esc(r.year)} (${esc(r.year_low)}–${esc(r.year_high)})<br><small>${esc(r.date_method)}</small></p>
- <p><small>${esc(r.scores)}${r.mix_variant?'<br>'+esc(r.mix_variant)+' · '+esc(r.reported_unit):''}<br>${esc(r.calibration_route||r.route)}<br>${esc(r.uncertainty_scope||'conditional calibration CI95')}<br>${esc(r.limitation||'')}<br>${esc(r.date_notes||'')}</small></p><small>${pinned?'Pinned':'Click to pin'} · ${active+1} / ${candidates.length} nearby point${candidates.length===1?'':'s'}</small>`;
+ <p><small>${scoreDetails(r)}${r.mix_variant?'<br>'+esc(r.mix_variant)+' · '+esc(r.reported_unit):''}<br>${esc(r.calibration_route||r.route)}<br>${esc(r.uncertainty_scope||'conditional calibration CI95')}<br>${esc(r.limitation||'')}<br>${esc(r.date_notes||'')}</small></p><small>${pinned?'Pinned':'Click to pin'} · ${active+1} / ${candidates.length} nearby point${candidates.length===1?'':'s'}</small>`;
  document.querySelector('#prev').disabled=document.querySelector('#next').disabled=candidates.length<2;
  positionTip();
 }
@@ -252,7 +279,7 @@ function renderTable(){const order=sortOrder;
  }
  document.querySelector('#body').innerHTML=rows.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE).map(r=>`<tr><td>${esc(r.year||'Unknown')}<br><small>${esc(r.date_method)} ${esc(r.year_low)}–${esc(r.year_high)}</small></td>
  <td>${esc(r.system)}${r.cpu?'<br>'+esc(r.cpu):''}<br><small>${esc(configurationDetails(r))}</small></td>
- <td>${esc(r.route)} · ${esc(modeOf(r))}<br>${esc(estimateLabel(r))}<br><small>${esc(r.scores)}</small></td><td>${fmt(r.vaxen)}<br><small>${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</small></td>
+ <td>${esc(r.route)} · ${esc(modeOf(r))}<br>${esc(estimateLabel(r))}<br><small>${scoreDetails(r)}</small></td><td>${fmt(r.vaxen)}<br><small>${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</small></td>
  <td>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">${kind(r)==='joint'?(i===0?'Speed':'Rate'):'Benchmark'}</a>`).join(' · ')}<br>${r.date_sources.split(';').filter(Boolean).map(u=>`<a href="${esc(u)}">Year source</a>`).join(' ')}<br><small>${esc(r.date_notes)}</small></td></tr>`).join('');
 }
 function marker(p,size){const x=p.x,y=p.y,s=size;if(kind(p.r)==='speed')return `M${x} ${y-s}l${s} ${s*2}h${-s*2}z`;

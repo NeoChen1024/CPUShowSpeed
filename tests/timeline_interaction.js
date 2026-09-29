@@ -1,7 +1,16 @@
 // Run generated page logic in a minimal DOM model; no browser or network access.
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+async function main(){
+const path=require('node:path'),{pathToFileURL}=require('node:url');
 const html=fs.readFileSync(process.argv[2],'utf8');
-const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+let script,bundle;
+if(html.includes('assets/bootstrap.js')){
+ const root=path.dirname(path.resolve(process.argv[2]));
+ const {loadBundle}=await import(pathToFileURL(path.join(root,'assets/parquet-loader.js')));
+ const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'));
+ bundle=await loadBundle(manifest,async name=>{const b=fs.readFileSync(path.join(root,name));return b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength);});
+ script=fs.readFileSync(path.join(root,'assets/timeline.js'),'utf8').replace('export function mountTimeline({data,lineage,calibration}) {','const {data,lineage,calibration}=bundle;').replace(/}\s*$/, '');
+}else script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
 class Element {
  constructor(){this.value='';this.innerHTML='';this.hidden=false;this.style={};this.events={};this.classes=new Set();
  this.classList={add:x=>this.classes.add(x),remove:x=>this.classes.delete(x),toggle:(x,b)=>b?this.classes.add(x):this.classes.delete(x)};}
@@ -14,12 +23,12 @@ class Element {
  setPointerCapture(){}
 }
 let scale=1;
-const elements=Object.fromEntries([...html.matchAll(/id="([^"]+)"/g)].map(m=>m[1]).concat(['highlight']).map(k=>['#'+k,new Element()]));
+const elements=Object.fromEntries([...(html+script).matchAll(/id="([^"]+)"/g)].map(m=>m[1]).concat(['highlight']).map(k=>['#'+k,new Element()]));
 elements['#sort'].value='year-asc';
 const document={events:{},querySelector:s=>elements[s],addEventListener(t,f){this.events[t]=f;}};
 const window={events:{},addEventListener(t,f){this.events[t]=f;}};
 class DOMPoint{constructor(x,y){this.x=x;this.y=y;}matrixTransform(m){return {x:this.x*m.a+this.y*m.c+m.e,y:this.x*m.b+this.y*m.d+m.f};}}
-const context=vm.createContext({document,window,DOMPoint,innerWidth:1500,innerHeight:900,assert,elements,
+const context=vm.createContext({bundle,document,window,DOMPoint,innerWidth:1500,innerHeight:900,assert,elements,
  reference:process.argv[4]?JSON.parse(fs.readFileSync(process.argv[4],'utf8')):null,setScale:s=>scale=s});
 if(process.argv[3]==='full'){
  vm.runInContext(script+`
@@ -225,3 +234,6 @@ overviewPlot.events.pointerdown(brushEvent(1984,'left'));overviewPlot.events.poi
 
 `,context);
 console.log('PASS: numeric/year/name sorting, unknown placement, search, 12px snapping at two scales, highlight, overlap cycling, pin and dismissal');
+
+}
+main().catch(error=>{console.error(error);process.exitCode=1;});

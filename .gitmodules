@@ -1,0 +1,6 @@
+[submodule "third-party/hyparquet"]
+	path = third-party/hyparquet
+	url = https://github.com/hyparam/hyparquet.git
+[submodule "third-party/fzstd"]
+	path = third-party/fzstd
+	url = https://github.com/101arrowz/fzstd.git

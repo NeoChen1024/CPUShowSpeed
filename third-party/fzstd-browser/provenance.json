@@ -1,0 +1,12 @@
+{
+  "package": "fzstd",
+  "version": "0.1.1",
+  "source_commit": "807a854cac2c5766ef030832cc5b66482dc7ca8a",
+  "npm_git_head": "807a854cac2c5766ef030832cc5b66482dc7ca8a",
+  "tarball": "https://registry.npmjs.org/fzstd/-/fzstd-0.1.1.tgz",
+  "integrity": "sha512-dkuVSOKKwh3eas5VkJy1AW1vFpet8TA/fGmVA5krThl8YcOVE/8ZIoEA1+U1vEn5ckxxhLirSdY837azmbaNHA==",
+  "files_sha256": {
+    "index.js": "1a901fc5a58c349bbdb4f2aa1e688637ef56891ec58243a9f0cd863166b0d2a4",
+    "LICENSE": "62249119bb7df6e54300f37a37145c26a6d4420410aac8881a119c5b427cf751"
+  }
+}

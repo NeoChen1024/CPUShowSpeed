@@ -24,3 +24,6 @@ target-version = ["py311"]
 
 [tool.isort]
 profile = "black"
+
+[tool.setuptools.package-data]
+cpushowspeed = ["web/*.js"]

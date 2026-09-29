@@ -95,6 +95,7 @@ It uses the saved network calibration to estimate SPEC92 peak rate, VAXen and
 joint calibration CI95. Inputs may contain one or several benchmark families.
 
 - [Combined VAXen timeline](docs/timeline.md): CPU-first history, rate baselines, selectable speed/joint estimates, matching scenarios and time zoom (`uv run cpushowspeed plot timeline`).
+  Initialize `third-party/hyparquet` and `third-party/fzstd` with `git submodule update --init`, then serve the Parquet-backed export over HTTP; no npm build is required.
 - [Documentation index](docs/README.md): contracts, methods and acquisition tools.
 - [Research index](research/README.md): current analyses, source evidence and diagnostics.
 - [Annual rate results](research/annual-rate-vaxen.md): configuration-year views.
