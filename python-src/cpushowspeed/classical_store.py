@@ -5,7 +5,9 @@ Whetstone, LINPACK) and SPEC values were reported together. Two results are
 paired only when both resolve to the same `system_id`; names are never
 compared. Pairing records, but does not establish, equal configuration: OS,
 compiler, cache and FPU options remain unverified unless both values come from
-one result (`same_result`).
+one result (`same_result`). A reviewed `result_pair` (target on the left,
+classical result on the right) rejects a pairing the shared system would admit, or
+accepts one unscaled whose reported clocks differ only by convention or rounding.
 """
 
 import json
@@ -61,6 +63,7 @@ class Result:
     values: dict = field(default_factory=dict)
     observation_ids: dict = field(default_factory=dict)
     raw: dict = field(default_factory=dict, repr=False)
+    pair_reviews: dict = field(default_factory=dict, repr=False)
 
     @property
     def classical(self) -> dict:
@@ -106,7 +109,26 @@ def results(db, scopes=SCOPES) -> list[Result]:
             )
         found[result_id].values[metric] = value
         found[result_id].observation_ids[metric] = oid
+    for (target, classical), decision in reviewed_pairs(db).items():
+        if target in found:
+            found[target].pair_reviews[classical] = decision
     return [found[k] for k in sorted(found)]
+
+
+def reviewed_pairs(db) -> dict[tuple[str, str], str]:
+    """(target, classical) result IDs -> accept or reject, from `result_pair` reviews; a selector may match several results."""
+    sides, decisions = defaultdict(lambda: defaultdict(set)), {}
+    query = "SELECT review_id, side, decision, result_id FROM review_result WHERE target_kind = 'result_pair'"
+    for review_id, side, decision, result_id in db.execute(query):
+        sides[review_id][side].add(result_id)
+        decisions[review_id] = decision
+    return {
+        (t, c): decisions[r]
+        for r, s in sides.items()
+        if decisions[r] in ("accept", "reject")
+        for t in s["left"]
+        for c in s["right"]
+    }
 
 
 def clock_relation(a: Result, b: Result) -> str:
@@ -127,6 +149,11 @@ def pair(classical: Result, target: Result, scaling: bool) -> tuple[dict, str]:
         return {}, "reference_definition"
     if classical is target:
         return dict(classical.classical), "same_result"
+    review = target.pair_reviews.get(classical.result_id)
+    if review == "reject":
+        return {}, "review_rejected"
+    if review == "accept":
+        return dict(classical.classical), "review_accepted"
     clocks = clock_relation(classical, target)
     if clocks != "conflict":
         return dict(classical.classical), f"clock_{clocks}"

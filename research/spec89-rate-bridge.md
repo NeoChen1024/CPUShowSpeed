@@ -84,32 +84,35 @@ outside the conditional interval.
 
 | Composite | Rate-only → joint systems | Rate-only P95 | Joint P95 on the same observed-rate systems |
 | --- | ---: | ---: | ---: |
-| Dhrystone 1.1 + LINPACK | 25 → 42 | 28.19% | 40.34% |
-| Dhrystone 2.1 + LINPACK | 25 → 36 | 29.87% | 38.37% |
-| Whetstone native + LINPACK | 8 → 9 | 12.16% | 19.87% |
-| Whetstone DP + LINPACK | 20 → 32 | 13.06% | 23.13% |
+| Dhrystone 1.1 + LINPACK | 25 → 45 | 28.19% | 35.24% |
+| Dhrystone 2.1 + LINPACK | 25 → 40 | 29.87% | 31.57% |
+| Whetstone native + LINPACK | 8 → 11 | 12.16% | 11.99% |
+| Whetstone DP + LINPACK | 20 → 33 | 13.06% | 21.53% |
 | Whetstone SP + LINPACK | 19 → 30 | 14.45% | 18.49% |
 | Dhrystone 1.1 + Whetstone DP | 20 → 31 | 30.55% | 27.38% |
 | Dhrystone 1.1 + Whetstone DP + LINPACK | 20 → 31 | 12.84% | 17.53% |
 | Dhrystone 2.1 + Whetstone DP + LINPACK | 20 → 25 | 15.87% | 14.71% |
 | Dhrystone 1.1 + Whetstone SP + LINPACK | 19 → 30 | 11.27% | 13.63% |
 
-Thirteen of the seventeen patterns now gain SPEC89 systems, including every
-three-family combination with DP or SP Whetstone; the four patterns combining
-Dhrystone with native Whetstone gain none. Full results and baseline comparisons are in
+All seventeen patterns now gain SPEC89 systems; the four combining Dhrystone with
+native Whetstone gain one (IBM RS/6000 530). Full results and baseline comparisons are in
 [the machine-readable summary](data/classic/spec89-rate-summary.csv).
 
-The 17 added Dhrystone 1.1/LINPACK systems are DEC VAX 4000/300 and 4000/400,
+The 20 added Dhrystone 1.1/LINPACK systems are DEC VAX 4000/300 and 4000/400,
 VAXstation 3100/38, 3100/76, 4000 VLC and 4000/60, DECstation 3100 and
-5000/20, /25, /125, /133 and /240, HP 9000/720, /730 and /750, and Sun
-SPARCstation 1+ and 2. They contribute 41 SPEC89 target tuples; repeated
-SPECint89 results of one system are separate tuples, not separate machines.
+5000/20, /25, /125, /133 and /240, HP 9000/720, /730 and /750, IBM RS/6000 320,
+530 and 550, and Sun SPARCstation 1+ and 2. They contribute 50 SPEC89 target
+tuples; repeated SPECint89 results of one system are separate tuples, not
+separate machines.
 
-For Dhrystone 1.1 + LINPACK, the joint classical factor is 1.499819
-(CI95 1.404085–1.603175), compared with the direct factor 1.367455. Its P95
-agreement error on the inferred SPEC89 targets is 37.45%, separate from the
-40.34% error on measured rate targets. Version 2.1's joint factor is 1.476001
-(CI95 1.378734–1.581611), with inferred-target P95 37.76%.
+For Dhrystone 1.1 + LINPACK, the joint classical factor is 1.447277
+(CI95 1.341690–1.560250), compared with the direct factor 1.367455. Its P95
+agreement error on the inferred SPEC89 targets is 67.09%, separate from the
+35.24% error on measured rate targets. Version 2.1's joint factor is 1.406482
+(CI95 1.301751–1.521890), with inferred-target P95 65.69%. The largest
+inferred-target misses are the three RS/6000 systems, overpredicted by +58% to
++79% (median per system): their LINPACK n=100 results are high relative to
+SPECint89, which the shared composite factor cannot follow.
 
 The joint path achieves the intended expansion of historical coverage. Its
 higher observed-rate holdout error for most affected combinations is a tradeoff
@@ -137,8 +140,36 @@ cohorts grew: Dhrystone 1.1 + LINPACK went from 7 to 17 SPEC89 systems, and
 three-family patterns went from none to 5–11. The earlier matching used
 normalized names and required an OS match between DEC columns and archive rows,
 which SPEC89 rows do not carry; resolved-system pairing treats OS as a run
-condition. The added pairs are automatic and not yet individually reviewed, so
-their configuration equivalence is unverified.
+condition. The pairs were reviewed on 2026-10-02 (below); configuration
+equivalence beyond model and clock remains unverified.
+
+### Pair review and spelling merges (2026-10-02)
+
+Every distinct classical↔SPEC text pair that the shared system admits was
+listed (135 on 65 systems before the spelling merges, 156 on 80 after) and checked for
+model, clock and processor agreement. Five `result_pair` reviews resulted
+(`rev:classical-spec-pair/…`):
+
+- **Rejected:** Netlib Dhrystone "SPARCstation 2 (50)" and "SPARCstation 2 (80)"
+  (a 50 MHz SPARC and an 80 MHz Weitek part) against the SPEC89 SPARCstation 2,
+  which shipped at 40 MHz. Where the SPEC89 row gives no clock, the shared system
+  had paired them. The 40 MHz Dhrystone rows stay paired.
+- **Accepted unscaled:** HP 9000/730 result A0217 (66.67 MHz) with the Dhrystone
+  and LINPACK rows reporting 66 MHz, the same clock rounded; and the CPU92
+  Indigo2 Extreme disclosure ("50MHz MIPS R4000SC", the external clock) with
+  Dhrystone and LINPACK rows giving the R4000's 100 MHz internal clock, which
+  linear clock scaling would have halved.
+
+The DEC 7000 Model 610 Dhrystone row (182 MHz) against the 200 MHz CPU92
+disclosure is a genuine clock difference and stays a `linear_clock` scaling. The
+reviews move no factor here by more than 0.5%. The larger shift comes from
+the [catalogue spelling merges](chronology.md#catalogue-spelling-aliases-2026-10-02):
+IBM RS/6000 "RISC Sys/6000-NNN" and "Model NNN" rows now share systems with the
+SPEC89 "RS/6000 NNN" results, adding three SPEC89 systems and their LINPACK and
+Dhrystone pairs. Seven of the eight patterns whose observed-rate holdout changes
+improve (Dhrystone 1.1 + LINPACK 40.34% → 35.24%; Dhrystone 2.1 + native
+Whetstone worsens 10.16% → 10.94%), while agreement with inferred SPEC89 targets worsens (37.45% →
+67.09%) on the RS/6000s.
 
 ## SPEC89-only hardware estimates
 

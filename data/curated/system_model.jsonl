@@ -4,6 +4,11 @@
 {"system_id": "sys:1106multiprocessor", "name": "UNIVAC 1106 multiprocessor", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:1106unitizedstorage", "name": "UNIVAC 1106 Unitized Storage", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:1108multiprocessor", "name": "UNIVAC 1108 multiprocessor", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:1s", "name": "CRAY 1S", "vendor_ids": ["org:cray-research"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:2100a500mp", "name": "DEC Alpha 2100/A500MP", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:3000/300l", "name": "DEC Alpha 3000/300L", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:3000/500s", "name": "DEC Alpha 3000/500S", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:3000/500x", "name": "DEC Alpha 3000/500X", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:3000cx", "name": "HP 3000CX", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:3000series33", "name": "HP 3000 Series 33", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:3000seriesi", "name": "HP 3000 Series I", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -11,16 +16,29 @@
 {"system_id": "sys:3000seriesii/6", "name": "HP 3000 Series II Model 6", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:3000seriesii/8", "name": "HP 3000 Series II Model 8", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:3000seriesiii", "name": "HP 3000 Series III", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:3090/120e", "name": "IBM 3090-120E", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:3090/180e", "name": "IBM 3090-180E", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:3090/180j", "name": "IBM 3090-180J", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:3090/180s", "name": "IBM 3090-180S", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:3090150e", "name": "IBM 3090-150E", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:370/115125135memoryexpansions", "name": "IBM 370/115 125 135 memory expansions", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:386i/250", "name": "Sun 386i/250", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:4/50ipx", "name": "Sun 4/50 IPX", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:4331mg2", "name": "IBM 4331 MG2", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:4341mg10", "name": "IBM 4341 MG10", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:4361mg5", "name": "IBM 4361 MG5", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:4381mg1", "name": "IBM 4381-1", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:4381mg1/2", "name": "IBM 4381 MG1/2", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:470/v6", "name": "Amdahl 470/V6", "vendor_ids": ["org:amdahl"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:470/v7", "name": "Amdahl 470/V7", "vendor_ids": ["org:amdahl"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:470v/8", "name": "Amdahl 470V/8", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:4d/210s", "name": "SGI IRIS 4D/210S", "vendor_ids": ["org:silicon-graphics"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:4d/25", "name": "SGI IRIS 4D/25", "vendor_ids": ["org:silicon-graphics"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:4d/25s", "name": "SGI IRIS 4D/25S", "vendor_ids": ["org:silicon-graphics"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:4d/35", "name": "SGI IRIS 4D/35", "vendor_ids": ["org:sgi"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:4d/420", "name": "SGI IRIS 4D/420", "vendor_ids": ["org:silicon-graphics"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:4d/440", "name": "SGI IRIS 4D/440", "vendor_ids": ["org:silicon-graphics"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:4d/480", "name": "SGI IRIS 4D/480", "vendor_ids": ["org:silicon-graphics"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:5890190e", "name": "Amdahl 5890-190E", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:5890200e", "name": "Amdahl 5890-200E", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:5890300e", "name": "Amdahl 5890-300E", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -38,11 +56,17 @@
 {"system_id": "sys:701353h", "name": "IBM 7013-53H", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:701355l", "name": "IBM 7013-55L", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:701358h", "name": "IBM 7013-58H", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:9000/j200", "name": "HP 9000/J200", "vendor_ids": ["org:hewlett-packard"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:9000series320", "name": "HP 9000/320", "vendor_ids": ["org:hewlett-packard"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:9000series330", "name": "HP 9000/330", "vendor_ids": ["org:hewlett-packard"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:9000series350", "name": "HP 9000/350", "vendor_ids": ["org:hewlett-packard"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:acorna5000", "name": "Acorn A5000", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:acornriscpc", "name": "Acorn RiscPC", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:alliantfx/2800", "name": "Alliant FX/2800", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:alliantfx/40andfx/80", "name": "Alliant FX/40 and FX/80", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:alliantfx/80", "name": "Alliant FX/80", "vendor_ids": ["org:alliant"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:alpha2504/266", "name": "DEC Alpha ASTN 250 4/266", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:alpha6005/266", "name": "DEC Alpha ASTN 600 5/266", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:alphaserver21004/200", "name": "AlphaServer 2100 4/200", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:alphaserver21004/233", "name": "AlphaServer 2100 4/233", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:alphaserver21004/275", "name": "AlphaServer 2100 4/275", "note": "Model with a reviewed year proxy; added 2026-10-02."}
@@ -64,6 +88,10 @@
 {"system_id": "sys:alphastation2504/266", "name": "DEC AlphaStation 250 4/266", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:alphastation500/500", "name": "DEC AlphaStation 500/500", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:alphastation6005/266", "name": "DEC AlphaStation 600 5/266", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl1100", "name": "Amdahl 1100 VP", "vendor_ids": ["org:amdahl"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:amdahl1200", "name": "Amdahl 1200 VP", "vendor_ids": ["org:amdahl"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:amdahl1400", "name": "Amdahl 1400 VP", "vendor_ids": ["org:amdahl"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:amdahl500", "name": "Amdahl 500 VP", "vendor_ids": ["org:amdahl"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:amdahl5840", "name": "Amdahl 5840", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:amdahl5850", "name": "Amdahl 5850", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:amdahl5860", "name": "Amdahl 5860", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -100,6 +128,8 @@
 {"system_id": "sys:attpc6300", "name": "AT&T PC6300", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:attpc6300plus", "name": "AT&T PC6300 Plus", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:attpc7300", "name": "AT&T PC7300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:av310", "name": "Data General AV/310", "vendor_ids": ["org:data-general"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:av410", "name": "Data General AV/410", "vendor_ids": ["org:data-general"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:c160", "name": "HP C160", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:c200", "name": "HP C200", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:c240", "name": "HP C240", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -140,6 +170,8 @@
 {"system_id": "sys:cyber810a", "name": "CDC Cyber 810A", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cyber830a", "name": "CDC Cyber 830A", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cyber830adualcp", "name": "CDC Cyber 830A Dual-CP", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datageneral5010", "name": "Data General AV/5010", "vendor_ids": ["org:data-general"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:datageneral530", "name": "Data General AV/530", "vendor_ids": ["org:data-general"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:datasystem520", "name": "DEC Datasystem 520", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:datasystem530", "name": "DEC Datasystem 530", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:datasystem540", "name": "DEC Datasystem 540", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -154,7 +186,10 @@
 {"system_id": "sys:dec10000", "name": "DEC 10000", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:dec10000/610", "name": "DEC 10000 Model 610 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec10000/640", "name": "DEC 10000/640 AXP", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:dec10000610", "name": "DEC Alpha 10000/610", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:dec2000300", "name": "DEC 2000-300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:dec2004/166", "name": "DEC Alpha ASTN 200 4/166", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:dec2004/233", "name": "DEC Alpha ASTN 200 4/233", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:dec3000/300", "name": "DEC 3000 Model 300 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec3000/400", "name": "DEC 3000 Model 400 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec3000/500", "name": "DEC 3000 Model 500 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
@@ -162,13 +197,19 @@
 {"system_id": "sys:dec3000/700", "name": "DEC 3000 Model 700 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec3000/800", "name": "DEC 3000 Model 800 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec3000/900", "name": "DEC 3000 Model 900 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:dec3000400", "name": "DEC Alpha 3000/400", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:dec3000500", "name": "DEC Alpha 3000/500", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:dec3000600", "name": "DEC 3000-600", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:dec3000700", "name": "DEC Alpha 3000/700", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:dec3000800", "name": "DEC 3000-800", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:dec3000900", "name": "DEC Alpha 3000/900", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:dec4000", "name": "DEC 4000", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:dec4000/5/400", "name": "DEC 4000/5/400", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:dec4000/610", "name": "DEC 4000 Model 610 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec4000/620", "name": "DEC 4000/620 AXP", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:dec4000/710", "name": "DEC 4000 Model 710 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:dec4000610", "name": "DEC Alpha 4000/610", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:dec4000710", "name": "DEC Alpha 4000/710", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:dec7000/600", "name": "DEC 7000/600 AXP", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:dec7000/610", "name": "DEC 7000 Model 610 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec7000/620", "name": "DEC 7000 Model 620", "note": "Model with a reviewed year proxy; added 2026-10-02."}
@@ -178,13 +219,16 @@
 {"system_id": "sys:dec7000/710", "name": "DEC 7000 Model 710", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:decstation2100", "name": "DECstation 2100", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation3100", "name": "DECstation 3100", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:decstation5000/120", "name": "DECSTN 5000/120", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:decstation5000/125", "name": "DECstation 5000 Model 125", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation5000/133", "name": "DECstation 5000 Model 133", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:decstation5000/150", "name": "DECSTN 5000/150", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:decstation5000/20", "name": "Personal DECstation 5000 Model 20", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation5000/200", "name": "DECstation 5000 Model 200", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation5000/240", "name": "DECstation 5000 Model 240", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation5000/25", "name": "Personal DECstation 5000 Model 25", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation5000/33", "name": "DECstation 5000/33", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:decstation5000/50", "name": "DECSTN 5000/50", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:decsystem10", "name": "DECsystem-10", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:decsystem5000/200", "name": "DECsystem 5000/200", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:decsystem5100", "name": "DECsystem 5100", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -194,12 +238,15 @@
 {"system_id": "sys:decsystem5830", "name": "DECsystem 5830", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:decsystem5840", "name": "DECsystem 5840", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:e", "name": "Apple ][e", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:es/9000/320", "name": "IBM ES/9000-320", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:es/9000/340", "name": "IBM ES/9000-340", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:eserverbladecenterjs20", "name": "IBM eServer BladeCenter JS20 (1 proc, 2.2 GHz PowerPC 970)", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:eserverpseries640", "name": "IBM eServer pSeries 640 (1 proc,375MHz,4MB L2)", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:eserverpseries660/6h11cpu", "name": "IBM eServer pSeries 660/6H1 1 CPU (600 MHz 2 xlf 7.1 -O -Q -qfloat=hsflt -qarch=pwr3 MB L2)", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:eserverpseries670", "name": "IBM eServer pSeries 670 (1 proc 1.5GHz)", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:ferrantiargus700gswf", "name": "Ferranti Argus 700G swf", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:gecelliott903c", "name": "GEC Elliott 903C", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:harrish800", "name": "Harris H800", "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:hp3000", "name": "HP 3000", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:hp755", "name": "HP 755", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:hp825", "name": "HP 825", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -216,6 +263,10 @@
 {"system_id": "sys:hp9000/730", "name": "HP 9000 Model 730", "vendor_ids": ["org:hewlett-packard"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:hp9000/735", "name": "HP 9000 Model 735", "vendor_ids": ["org:hewlett-packard"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:hp9000/750", "name": "HP 9000 Model 750", "vendor_ids": ["org:hewlett-packard"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:hp9000870/100", "name": "HP 9000/870S/100", "vendor_ids": ["org:hewlett-packard"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:hp9000870/200", "name": "HP 9000/870S/200", "vendor_ids": ["org:hewlett-packard"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:hp9000870/300", "name": "HP 9000/870S/300", "vendor_ids": ["org:hewlett-packard"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:hp9000870/400", "name": "HP 9000/870S/400", "vendor_ids": ["org:hewlett-packard"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:i2000", "name": "HP i2000", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:i486", "name": "Intel i486", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
 {"system_id": "sys:i486dx", "name": "i486DX", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
@@ -223,6 +274,7 @@
 {"system_id": "sys:i486dx250", "name": "Intel i486DX2-50", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
 {"system_id": "sys:i486dx266", "name": "Intel i486DX2-66", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
 {"system_id": "sys:ibm3033", "name": "IBM 3033", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm3090180", "name": "IBM 3090-180", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:ibm360/65", "name": "IBM System/360 Model 65", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:ibm370/115", "name": "IBM 370/115", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:ibm370/125", "name": "IBM 370/125", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -236,6 +288,7 @@
 {"system_id": "sys:ibm370/168", "name": "IBM 370/168", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:ibm370/195", "name": "IBM 370/195", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:ibm43311", "name": "IBM 4331-1", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm43812", "name": "IBM 4381-2", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:ibm7011220", "name": "IBM 7011-220", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:ibm7011230", "name": "IBM 7011-230", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:ibm7011250", "name": "IBM 7011-250", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -291,6 +344,7 @@
 {"system_id": "sys:icl3980", "name": "ICL 3980", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:indigo", "name": "SGI IRIS Indigo", "vendor_ids": ["org:sgi"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:indigo2", "name": "SGI Indigo2", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:indigo4000", "name": "SGI INDIGOR4000", "vendor_ids": ["org:silicon-graphics"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:indigor3000", "name": "SGI Indigo R3000", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:indigor4000", "name": "SGI Indigo R4000", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:integrityrx16202", "name": "HP Integrity rx1620-2 (1 proc, 1.6GHz/3MB Itanium 2)", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -321,6 +375,7 @@
 {"system_id": "sys:micropdp11/83", "name": "MicroPDP-11/83", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:micropdp11/83plus", "name": "MicroPDP-11/83 Plus", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:micropdp11/93", "name": "MicroPDP-11/93", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:microvax3100/90", "name": "DEC MICROVX 3100/90", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:microvaxii", "name": "DEC MicroVAX II", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:multiflowtrace14/200", "name": "Multiflow TRACE 14/200", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:n4000", "name": "HP N4000", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -366,6 +421,7 @@
 {"system_id": "sys:prime450", "name": "Prime 450", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:prime500", "name": "Prime 500", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:prime550", "name": "Prime 550", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime6350", "name": "Prime 6350", "vendor_ids": ["org:prime-computer"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:prime650", "name": "Prime 650", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:prime750", "name": "Prime 750", "vendor_ids": ["org:prime-computer"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:proliantbl20pg3", "name": "HP ProLiant BL20p G3 (1 proc (1 cpu core per single chip), 3.6GHz Intel Xeon)", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -382,16 +438,30 @@
 {"system_id": "sys:proliantml370g4", "name": "HP ProLiant ML370 G4 (1 proc (1 cpu core per single chip), 3.8GHz Intel Xeon)", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:pyramid90x", "name": "Pyramid 90x", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:rc2030", "name": "MIPS RC2030", "vendor_ids": ["org:mips-computer-systems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:rc3230", "name": "MIPS RC3230", "vendor_ids": ["org:mips-computer-systems"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:rc3260", "name": "MIPS RC3260", "vendor_ids": ["org:mips-computer-systems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:rc6280", "name": "MIPS RC6280", "vendor_ids": ["org:mips-computer-systems"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:riscsys/6000230", "name": "IBM RS/6000 230", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:rs/6000/59h", "name": "IBM RS/6000 59H", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:rs/6000220", "name": "IBM RS/6000 220", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
 {"system_id": "sys:rs/6000320", "name": "IBM RS/6000 Model 320", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:rs/6000320h", "name": "IBM RS/6000 Model 320H", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:rs/6000340", "name": "IBM RS/6000 340", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
 {"system_id": "sys:rs/6000350", "name": "IBM RS/6000 Model 350", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:rs/6000370", "name": "IBM RS/6000 370", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:rs/6000520", "name": "IBM RS/6000 520", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:rs/6000520h", "name": "IBM RS/6000 520H", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:rs/6000530", "name": "IBM RS/6000 Model 530", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:rs/6000530h", "name": "IBM RS/6000 530H", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:rs/6000540", "name": "IBM RS/6000 540", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:rs/6000550", "name": "IBM RS/6000 Model 550", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:rs/6000550l", "name": "IBM RS/6000 550L", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:rs/6000560", "name": "IBM RS/6000 Model 560", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:rs/6000570", "name": "IBM RS/6000 570", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:rs/6000580", "name": "IBM RS/6000 580", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:rs/6000930", "name": "IBM RS/6000 930", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:rs/6000970", "name": "IBM RS/6000 970", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
+{"system_id": "sys:rs/6000980", "name": "IBM RS/6000 980", "vendor_ids": ["org:ibm"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:rx1620", "name": "HP rx1620", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:rx2620", "name": "HP rx2620", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:rx4640", "name": "HP rx4640", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -404,6 +474,7 @@
 {"system_id": "sys:sonyplaystation2", "name": "Sony PlayStation 2", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:sparcstation1", "name": "Sun SPARCstation 1", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:sparcstation1+", "name": "Sun SPARCstation 1+", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:sparcstation10/20", "name": "Sun SparcSTN 10/20", "vendor_ids": ["org:sun-microsystems"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:sparcstation10/30", "name": "Sun SPARCstation 10 Model 30", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:sparcstation10/41", "name": "Sun SPARCstation 10 Model 41", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:sparcstation2", "name": "Sun SPARCstation 2", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
@@ -482,6 +553,7 @@
 {"system_id": "sys:vaxstation3100/76", "name": "DEC VAXstation 3100 Model 76", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vaxstation4000/60", "name": "DEC VAXstation 4000 Model 60", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vaxstation4000/90", "name": "VAXstation 4000 Model 90", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vaxstation400060", "name": "DEC VAXSTN 4000-60", "vendor_ids": ["org:digital-equipment"], "note": "Added 2026-10-02 for a reviewed spelling alias; named by its Longbottom MIPS catalogue spelling.", "source_ids": ["src:longbottom-mips"]}
 {"system_id": "sys:vaxstation4000vlc", "name": "DEC VAXstation 4000 VLC", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vp100", "name": "Fujitsu VP-100", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:vp200", "name": "Fujitsu VP-200", "note": "Machine with curated date evidence; added 2026-10-02."}

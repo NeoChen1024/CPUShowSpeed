@@ -245,7 +245,7 @@ def rate_composite_fit(database, output, research_dir, bootstrap, seed):
         comparison_cohort="same_result",
         target_unit="SPEC92 integer-rate VAXen",
         rate_to_vaxen=ANCHOR,
-        pairing="same resolved system_id; reported clocks must agree within 1% when both are known; no clock scaling",
+        pairing="same resolved system_id; reported clocks must agree within 1% when both are known; no clock scaling; reviewed result_pair rejections drop a pairing and acceptances admit it",
         inputs_sha256=digest,
         target_rows=len(rows),
         comparisons=len(summaries),

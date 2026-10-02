@@ -62,7 +62,8 @@ The export now has 115,335 records, all with unique IDs and positive finite
 VAXen inside their CI95.
 
 - **Mix:** every former mix record has a counterpart. Values change by one
-  factor per mix (Gibson +9.5%, ADP +7.1%), from the refitted coefficients.
+  factor per mix (Gibson +9.5%, ADP +7.1% at the step-5 refit; +1.1% and +0.4% after
+the spelling merges below), from the refitted coefficients.
   283 keep their year, 6 change, 4 gain one and 67 stay undated.
 - **Speed:** every former CPU95, CPU2006, CPU2017 and CPU2026 speed record
   remains. Values change by one factor per suite and mode, listed in the
@@ -75,6 +76,20 @@ VAXen inside their CI95.
 The page still expects per-policy `variants`. The offline JavaScript
 full-population test fails on its hard-coded counts, and the calculator does not
 yet receive the mix or predictor bundles.
+
+## Spelling merges, pair reviews and EPYC review — 2026-10-02
+
+Same 115,335 records. Dates: hardware 26,702 → 26,826 and unknown 855 → 731
+records, from the [catalogue spelling aliases](chronology.md#catalogue-spelling-aliases-2026-10-02);
+no dated record changed year. The added EPYC 7313 rate-date review leaves its year
+at 2021.
+
+Values: classical rows follow the refitted network (`linear_clock / with_spec89`:
+Dhrystone −4.1% to −4.2%, Whetstone −4.2% to −5.6%, LINPACK −19.6%; see
+[classical network](classic-network-fitting.md#pair-review-and-spelling-merges-2026-10-02)),
+and mix rows the refitted mix coefficients (Gibson −7.7%, ADP −6.3% against the
+step-5 refit). SPEC89 values are unchanged; 2 of their rows carry a merged
+system ID. SPEC rate, speed and joint rows are unchanged.
 
 ## Checked population (2026-09-28)
 

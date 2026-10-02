@@ -81,5 +81,6 @@ a coverage limitation rather than a negative research finding.
 - No conversion factors, hardware-year corrections or manual source-row
   exclusions were applied. Score columns remain source-specific.
 
-Next, review the automatic pairings by system: disclosed processors, FPU/options,
-concurrency, software and reprint provenance.
+The pairings were reviewed by model, clock and processor on 2026-10-02; five
+`result_pair` reviews resulted ([SPEC89 bridge](spec89-rate-bridge.md#pair-review-and-spelling-merges-2026-10-02)).
+FPU/options, concurrency, software and reprint provenance remain unreviewed.

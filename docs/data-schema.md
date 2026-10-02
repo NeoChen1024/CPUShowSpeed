@@ -270,9 +270,12 @@ resolves them into `review_result` (one row per matched result and side) and
 `review_finding` any selector that matches nothing and any unreviewed link the
 identity rules already merge. A rejected result date leaves every chronology use
 (own tier and model-level dates for other results) and is kept in the candidates
-as `rejected_<field>`; the extracted record is unchanged. The CPU92 rate fit reads
-`result_pair` decisions (step 5b) and `mix-bridge` reads open system links
-(step 5c); the CPU92–CPU95 speed pairs have no consumer yet.
+as `rejected_<field>`; the extracted record is unchanged. The CPU92 rate fit and
+speed predictors read CPU92–CPU95 `result_pair` decisions (step 5b); the classical
+fitters read classical↔SPEC `result_pair` decisions (target left, classical result
+right; a rejection drops a same-system pairing, an acceptance admits one unscaled
+across a clock-reporting difference); `mix-bridge` reads open system links (step 5c).
+The CPU92–CPU95 speed pairs have no consumer yet.
 
 ## Built views and consistency checks
 
@@ -374,7 +377,8 @@ changed.
      `network-fit` and `mix-bridge` read the database and pair a classical result
      with a SPEC or mix result only when both resolve to the same `system_id`
      (`classical_store`); OS is a run condition, clocks must agree within 1% when
-     both are known. The pairings are automatic; their review is later work. The
+     both are known. Reviewed classical↔SPEC `result_pair` decisions (2026-10-02)
+     reject or admit individual pairings. The
      duplicate `historical-spec:spec92-netlib` view of the Netlib CPU92 pages is
      dropped, and the SPEC89 integer bridge rows and DEC N3909 report columns
      become observations (`historical-spec:spec89-bridge`,

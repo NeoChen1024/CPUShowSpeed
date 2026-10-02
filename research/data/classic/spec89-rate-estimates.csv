@@ -69,7 +69,7 @@ historical-spec:spec89:A0205,AT&T Starserver E,sys:attstarservere,17.2,16.461619
 historical-spec:spec89:A0206,Stardent 3010,sys:stardent3010,18.6,17.801518945903034,17.459435611123645,18.171473238509975,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
 historical-spec:spec89:A0207,DECstation 5000/200,sys:decstation5000/200,18.9,18.08864021922405,17.741039411303056,18.464561516550454,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
 historical-spec:spec89:A0208,MIPS RC3260,sys:rc3260,19.3,18.471468583652072,18.11651114487561,18.8553458872711,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-historical-spec:spec89:A0209,MIPS Magnum (RC3230),sys:magnum,19.5,18.662882765866083,18.304247011661886,19.05073807263142,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0209,MIPS Magnum (RC3230),sys:rc3230,19.5,18.662882765866083,18.304247011661886,19.05073807263142,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
 historical-spec:spec89:A0210,CDC 4360,sys:cdc4360,19.7,18.854296948080094,18.49198287844816,19.246130257991744,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
 historical-spec:spec89:A0211,MIPS M/2000,sys:m/2000,19.8,18.950004039187103,18.5858508118413,19.343826350671907,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
 historical-spec:spec89:A0212,Sun SPARCstation 2,sys:sparcstation2,20.2,19.33283240361512,18.96132254541385,19.73461072139255,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
@@ -131,7 +131,7 @@ historical-spec:spec89:R3H0014,DECstation 3100,sys:decstation3100,11.45,10.95846
 historical-spec:spec89:R3H0015,DECstation 5000/200,sys:decstation5000/200,19.1,18.280054401438065,17.928775278089333,18.65995370191078,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
 historical-spec:spec89:R3H0016,DECsystem 5400,sys:decsystem5400,12.64,12.097376315925503,11.864906780892627,12.348786114772368,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
 historical-spec:spec89:R3H0017,DECsystem 5810,sys:decsystem5810,12.84,12.288790498139514,12.052642647678903,12.54417830013269,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-historical-spec:spec89:R3H0018,MIPS 6280 (beta),sys:mips6280,42.05,40.24483181049583,39.47146599181447,41.081206972007756,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0018,MIPS 6280 (beta),sys:rc6280,42.05,40.24483181049583,39.47146599181447,41.081206972007756,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
 historical-spec:spec89:R3H0019,MIPS M/120-5,sys:m/1205,12.94,12.38449758924652,12.14651058107204,12.64187439281285,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
 historical-spec:spec89:R3H0020,MIPS M/2000,sys:m/2000,19.55,18.710736311419588,18.351180978358453,19.099586118971505,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
 historical-spec:spec89:R3H0021,MIPS M/2000,sys:m/2000,19.69,18.844726238969397,18.48259608510885,19.23636064872373,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip

@@ -33,6 +33,12 @@ class PairingTests(unittest.TestCase):
         only_linpack = result("l", "sys:a", {L: 2}, clock=25, entity="cpu:x")
         self.assertEqual(pair(only_linpack, target, True), ({}, "clock_conflict"))
 
+    def test_reviews_reject_a_shared_system_pair_or_accept_one_unscaled(self):
+        target = result("t", "sys:a", {"SPECint92": 20}, clock=50, entity="cpu:x")
+        target.pair_reviews = {"r": "reject", "a": "accept"}
+        self.assertEqual(pair(result("r", "sys:a", {D: 10}, clock=50), target, True), ({}, "review_rejected"))
+        self.assertEqual(pair(result("a", "sys:a", {D: 10}, clock=100, entity="cpu:x"), target, True), ({D: 10}, "review_accepted"))
+
     def test_multiprocessor_classical_and_reference_targets_are_rejected(self):
         target = result("t", "sys:a", {"SPECint92": 20})
         self.assertEqual(pair(result("c", "sys:a", {D: 10}, cpus=2), target, False)[1], "classical_cpu_count_not_one")

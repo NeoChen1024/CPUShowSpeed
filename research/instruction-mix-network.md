@@ -30,7 +30,7 @@ history. Source definitions and the pairing review queue are in the
   dependence is kept.
 
 Without mixes, `resolved_system` reproduces the saved network coefficients
-exactly. Merging pending-linked clusters moves them by at most 0.3%.
+exactly. Merging pending-linked clusters moves them by at most 0.34%.
 
 ## Results
 
@@ -45,14 +45,14 @@ VAXen per KIPS, `linear_clock / with_spec89`:
 
 | Links | Gibson | ADP |
 | --- | --- | --- |
-| `resolved_system` | 0.00047787 (0.00031813–0.00065659) | 0.00024426 (0.00012476–0.00038332) |
-| `plus_pending_links` | 0.00040335 (0.00027748–0.00055052) | 0.00019571 (0.00011212–0.00031375) |
+| `resolved_system` | 0.00043653 (0.00029911–0.00059303) | 0.00022795 (0.00011593–0.00035543) |
+| `plus_pending_links` | 0.00037246 (0.00025972–0.00050516) | 0.00018340 (0.00010649–0.00029672) |
 
 The whole-cluster holdout compares a mix-only prediction with the held-out
 node's classical-network prediction (a proxy, not a SPEC measurement). The
-model-center P95 is 201.5% for `resolved_system` (10 clusters) and 192.2% for
-`plus_pending_links` (15 clusters). On the 28 observed-rate models, adding the
-mixes changes the network's held-out P95 from 48.0% to 47.6% / 47.5%.
+model-center P95 is 194.8% for `resolved_system` (10 clusters) and 187.8% for
+`plus_pending_links` (15 clusters). On the 29 observed-rate models, adding the
+mixes changes the network's held-out P95 from 42.5% to 42.4% / 42.4%.
 
 The timeline uses `plus_pending_links / linear_clock / with_spec89`, as the
 former experiment used its unapproved name candidates. `resolved_system` is the
@@ -68,8 +68,11 @@ eight runs are saved in:
 
 The former fit (2026-09-28) joined ratings through name-matched classical
 candidate pairs. Its `linear_clock / with_spec89` coefficients were Gibson
-0.00036847 and ADP 0.00018273 VAXen/KIPS. The timeline run now gives +9.5% and
-+7.1%, which every mix estimate inherits.
+0.00036847 and ADP 0.00018273 VAXen/KIPS. The timeline run now gives +1.1% and
++0.4%, which every mix estimate inherits. Before the 2026-10-02 catalogue spelling
+merges it gave +9.5% and +7.1%; the merges lowered the classical coefficients the
+mixes are calibrated through (see
+[classical network](classic-network-fitting.md#pair-review-and-spelling-merges-2026-10-02)).
 
 ## Limitations
 

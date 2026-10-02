@@ -1,9 +1,9 @@
 # Date events and chronology selection
 
 Reviewed: 2026-10-02. Status: **implemented** as step 3 of the
-[data schema](../docs/data-schema.md#migration-plan). The selection replaces the
-timeline's private date code but is not yet consumed by any page; the former
-timeline (built before the 2026-10-02 removals) serves as the comparison.
+[data schema](../docs/data-schema.md#migration-plan). The selection replaced the
+timeline's private date code; `plot timeline` reads it since schema step 5d. The
+former timeline (built before the 2026-10-02 removals) serves as the comparison.
 
 ## Reproduce
 
@@ -46,13 +46,13 @@ excluded events never select.
 
 | Selected kind | Observations |
 | --- | ---: |
-| CPU release | 74,513 |
-| Hardware | 27,472 |
-| Fallback proxy | 86 |
-| Unknown | 1,333 |
+| CPU release | 74,551 |
+| Hardware | 27,420 |
+| Fallback proxy | 104 |
+| Unknown | 1,044 |
 
-Counts are after the 2026-10-02 CPU92 speed adapter rewrite and the step-4 reviews
-(both below).
+Counts are after the 2026-10-02 CPU92 speed adapter rewrite, the step-4 reviews and
+the catalogue spelling aliases (all below).
 
 ## Comparison with the former timeline
 
@@ -109,6 +109,7 @@ Step 4 moved four date decisions into `data/curated/review.jsonl`:
 | Longbottom Whetstone "Ferranti Argus 700G swf" | table year 1963 | model event 1973 (unchanged) |
 | Longbottom Whetstone "GEC Elliott 903C" | table year 1963 | model event 1965 (unchanged) |
 | Longbottom Whetstone "GEC Elliott 905" | table year 1963 | unknown (was 1963) |
+| SPEC CPU2017 rate `res2021q4/cpu2017-20211025-29879` (same EPYC 7313 system), added 2026-10-02 | hardware availability 2019-08 | CPU release 2021 (unchanged) |
 
 The EPYC 7313 exclusion cited AMD's launch date (2021-03-15); that date is now a
 release event of a new `sku:amd-epyc-7313`, which moves all 26 EPYC 7313 results
@@ -117,8 +118,12 @@ availability and keep their year; the two that reported 2019-08 move to 2021.
 Rejecting the hardware date alone would have left 2019: other configurations of
 the same system model carry Rome processors available in 2019. The second 2019-08
 result, the rate result of the same submission (`cpu2017-20211025-29879`), was not
-in the exclusion file; CPU dating already outranks its reported date, and it is
-listed as a `cpu_release_after_hardware_availability` finding.
+in the exclusion file. CPU dating already outranked its reported date, so its
+year was 2021 either way, but the 2019-08 month still entered model-level dates and
+the result's reported fields. A review now rejects it too (SPEC disclosure re-read
+2026-10-02: "Hardware Availability: Aug-2019"), with the same AMD source. The
+annual hardware-year figure, which reads reported availability without reviews
+([annual rate](annual-rate-vaxen.md#interpretation-limits)), is unchanged.
 
 ### CDC Cyber 73 and 74 (2026-10-02)
 
@@ -137,7 +142,39 @@ The six results (Cyber 73: 2; Cyber 74: 4) move from 1964 to 1971 via the existi
 Datapro introduction events. Their 1964 table years are rejected in `review`, and
 the mix "CDC 6600" ↔ "6600 (Cyber74)" candidate link is rejected.
 
+### Catalogue spelling aliases (2026-10-02)
+
+Longbottom's MIPS catalogue spells many models differently from the benchmark
+tables ("DECSTN 5000/200", "IBM RS/6000 320", "DEC Alpha 3000/500S"), so their
+catalogue years reached no result. 97 reviewed exact-text `system_model` aliases
+(source `src:longbottom-mips`) now link them, accepting only the same model
+designation in another spelling; a different suffix (S, E, J, VF, X, L) is a
+different model unless both sides carry it. Two forms are used:
+
+- **Identity merges (35 aliases).** Where the catalogue spelling already resolves
+  to a system with its own records, the variant record texts join that system
+  ("IBM RISC Sys/6000-320" and "IBM RS/6000 Model 320" → `sys:rs/6000320`;
+  "DEC VAX 11/780" in SPEC89 → `sys:vax11/780`; "MIPS 3230" and "MIPS Magnum
+  (RC3230)" → `sys:rc3230`). 34 duplicate system IDs disappear, and the merged
+  results also pair with each other in the fits.
+- **Catalogue aliases (62 aliases).** Otherwise the catalogue text points at the
+  benchmark system ("DECSTN 5000/200" → `sys:decstation5000/200`). Catalogue
+  years now resolve exact-text aliases before the system key; they date the model
+  only.
+
+167 previously undated results (312 observations) gained a hardware-tier year:
+62 SPEC89-era results (54 SPEC89, 3 bridge, 4 throughput, 1 DEC SPEC92), 60
+LINPACK, 32 Dhrystone and 13 DEC-report results. No previously dated result changed. The candidate list
+came from a token match of undated systems against the catalogue; each accepted
+pair was checked by name, not against an independent source.
+
 ## Known gaps
 
-- LINPACK, Dhrystone, SPEC89 and DEC-report rows without a dated model stay unknown.
-- Catalogue spelling variants need exact-text aliases to recover the 161 losses.
+- LINPACK, Dhrystone, SPEC89 and DEC-report rows without a dated model stay unknown
+  (834 results). Of SPEC89's 106 undated results, most name a model the Longbottom
+  catalogue lists only as a variant (SPARCstation 330 vs SparcSERVER 330,
+  HP 9000/425s vs 425T, DEC 3000/400S vs 3000/400) or not at all; the former
+  processor-family proxies (for example "Intel 486/25") are not restored.
+- Variant-suffix and option matches (3090-180E VF, 5860 HSFPF, 4D/310 vs 4D/310S)
+  and ambiguous ones (SGI Indigo vs Indigo R4000, DEC 7000-610 as VAX or Alpha)
+  were left unaliased.

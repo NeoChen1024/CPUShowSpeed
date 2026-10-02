@@ -172,11 +172,18 @@ def build_chronology(db, tables):
         if sys_id and r["hardware_availability"]:
             model_dates[sys_id].append(dict(kind="hardware_model_spec", date=r["hardware_availability"], result_id=r["result_id"]))
     brands = brand_prefixes(tables)
+    # Reviewed exact-text aliases name the system of a catalogue spelling ("DECSTN 5000/200").
+    aliases = {a["text"]: a for a in tables["alias"] if a["entity_kind"] == "system_model" and a["status"] != "candidate"}
     if MODEL_YEARS.exists():
         for m in (json.loads(line) for line in MODEL_YEARS.read_text().splitlines()):
-            _, key, _, _ = system_key(m["system"], "", brands)
-            if key:
-                model_dates[model_id(key)].append(dict(kind="hardware_model_catalogue", date=m["year"], locator=m["locator"]))
+            alias = aliases.get(m["system"])
+            if alias:
+                system_id = alias["entity_id"] if alias["status"] == "accepted" else None
+            else:
+                _, key, _, _ = system_key(m["system"], "", brands)
+                system_id = model_id(key) if key else None
+            if system_id:
+                model_dates[system_id].append(dict(kind="hardware_model_catalogue", date=m["year"], locator=m["locator"]))
 
     def model_level(system_id, r):
         if not system_id:

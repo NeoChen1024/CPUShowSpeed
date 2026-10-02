@@ -432,7 +432,7 @@ def network_fit(database, output, research_dir, draws, seed):
         runs=runs,
         frequency_check_rows=len(clock_checks),
         target="SPEC92 integer-rate VAXen; peak only",
-        pairing="same resolved system_id; reported clocks agree within 1% or one is unknown",
+        pairing="same resolved system_id; reported clocks agree within 1% or one is unknown; reviewed result_pair rejections drop a pairing and acceptances admit it unscaled",
         clock_assumption="linear_clock scales Dhrystone/Whetstone to the target clock only when both results resolve to one processor; unknown clocks unscaled; LINPACK never scaled",
         fit="family/variant/node/model balanced log least squares; unanchored node values eliminated analytically",
         qualification="hardware/clock/FPU/cache/software equivalence unverified across sources; coefficient intervals omit model discrepancy and scaling exponent uncertainty",

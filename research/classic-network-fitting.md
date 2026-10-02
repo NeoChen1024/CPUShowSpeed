@@ -83,12 +83,13 @@ necessary but does not establish equal cache, memory or compiler behavior.
 
 ### Clock decisions
 
-Of the target/classical pairings, 48 are same-result, 109 clock-compatible,
-246 clock-unknown, 14 clock-conflicting and 21 reference-definition targets.
-Under `linear_clock`, two conflicts are scaled and twelve stay excluded because
-the processors do not resolve to one entity: processor changes such as a
-SPARCstation 2 Weitek upgrade or PA-RISC 7100 versus 7100LC can no longer
-authorize scaling. The two scaled pairings are one Netlib Dhrystone row for the
+Of the 487 target/classical pairings, 48 are same-result, 132 clock-compatible,
+263 clock-unknown, 6 clock-conflicting and 21 reference-definition targets;
+reviews reject 14 and accept 3 unscaled (see
+[pair review](#pair-review-and-spelling-merges-2026-10-02)). Under `linear_clock`,
+two conflicts are scaled and four stay excluded because the processors do not
+resolve to one entity: processor changes such as PA-RISC 7100 versus 7150 or
+R4400 versus R10000 can no longer authorize scaling. The two scaled pairings are one Netlib Dhrystone row for the
 DEC 7000/610 at 182 MHz carried to two 200 MHz CPU92 rate results (factor 1.0989,
 four metric links). The two scenarios therefore differ by at most 0.03% in any
 coefficient. Every decision is recorded in `clock-audit.csv`.
@@ -136,26 +137,26 @@ counts are recorded in `fold-coverage.csv`, not silently scored as success.
 
 ## Results
 
-Both scenarios identify all six coefficients. The rate-only network has 466
-informative systems; the SPEC89-enabled network has 475. These include
+Both scenarios identify all six coefficients. The rate-only network has 468
+informative systems; the SPEC89-enabled network has 486. These include
 unanchored co-observations constraining relative scales and are **not** hundreds
-of measured SPEC anchor machines. The SPEC89-enabled run has 73 observed-rate
-nodes, 80 inferred-89 nodes and 1,172 unanchored nodes; one-metric unanchored
+of measured SPEC anchor machines. The SPEC89-enabled run has 74 observed-rate
+nodes, 107 inferred-89 nodes and 1,151 unanchored nodes; one-metric unanchored
 nodes do not influence training.
 
 For `linear_clock / with_spec89`:
 
 | Input metric | Score unit | VAXen coefficient k | Conditional factor CI95 |
 | --- | --- | ---: | --- |
-| Dhrystone 1.1 | DMIPS | 0.65970 | 0.60694–0.71935 |
-| Dhrystone 2.1 | DMIPS | 0.70850 | 0.65607–0.76996 |
-| Whetstone native | MWIPS | 0.55661 | 0.45215–0.66058 |
-| Whetstone SP | MWIPS | 0.52290 | 0.44663–0.59725 |
-| Whetstone DP | MWIPS | 0.97946 | 0.80867–1.15050 |
-| LINPACK n=100 | MFLOPS | 3.75630 | 3.32136–4.22859 |
+| Dhrystone 1.1 | DMIPS | 0.63251 | 0.58505–0.68527 |
+| Dhrystone 2.1 | DMIPS | 0.67856 | 0.62928–0.73304 |
+| Whetstone native | MWIPS | 0.52517 | 0.42479–0.62905 |
+| Whetstone SP | MWIPS | 0.50084 | 0.42453–0.57576 |
+| Whetstone DP | MWIPS | 0.92958 | 0.76675–1.09691 |
+| LINPACK n=100 | MFLOPS | 3.01985 | 2.62306–3.50192 |
 
 For example, a Dhrystone **1.1** score of **10 DMIPS** maps to approximately
-6.597 VAXen using this experimental coefficient. Raw Dhrystones/second first
+6.325 VAXen using this experimental coefficient. Raw Dhrystones/second first
 need the declared /1757 DMIPS conversion; coefficients must not be applied to
 uninterpreted KIPS or printed unit labels with unresolved meaning.
 
@@ -164,24 +165,24 @@ families (`linear_clock / with_spec89`):
 
 | Available inputs | Network P95 | Anchored-only control P95 |
 | --- | ---: | ---: |
-| Dhrystone 1.1 only | 27.15% | 18.76% |
-| Dhrystone 2.1 only | 43.26% | 32.02% |
-| Whetstone SP only (19 systems) | 36.70% | 27.54% |
-| Whetstone DP only | 66.35% | 47.44% |
-| LINPACK only | 39.30% | 37.19% |
-| Dhrystone + Whetstone families | 21.19% | 17.26% |
-| Dhrystone + LINPACK families | 31.98% | 26.07% |
-| Whetstone + LINPACK families | 16.15% | 20.07% |
-| All available measurements | 14.74% | 15.42% |
+| Dhrystone 1.1 only | 21.75% | 18.92% |
+| Dhrystone 2.1 only | 37.00% | 29.48% |
+| Whetstone SP only (19 systems) | 39.45% | 27.54% |
+| Whetstone DP only | 57.72% | 48.11% |
+| LINPACK only | 23.27% | 25.76% |
+| Dhrystone + Whetstone families | 17.54% | 16.86% |
+| Dhrystone + LINPACK families | 15.59% | 17.47% |
+| Whetstone + LINPACK families | 18.07% | 12.36% |
+| All available measurements | 15.06% | 14.36% |
 
 More available workloads do not guarantee a lower error, and the unanchored
 coupling does not uniformly beat the anchored-only control on this population.
 All combinations remain; the table is not a residual-based selection rule.
 
-The network emits full-availability estimates for **1,172 unanchored nodes on
-1,130 system keys** (an unresolved result counts as its own key). Of these, 1,139
-nodes have one benchmark family, 12 have two and 21 have three. They are not
-1,172 newly verified machines: configuration identity and source interpretation
+The network emits full-availability estimates for **1,151 unanchored nodes on
+1,102 system keys** (an unresolved result counts as its own key). Of these, 1,116
+nodes have one benchmark family, 14 have two and 21 have three. They are not
+1,151 newly verified machines: configuration identity and source interpretation
 still need source-specific review. Their estimates are stored separately from
 observed SPEC targets.
 
@@ -197,6 +198,30 @@ configurations, while SPEC89 anchors grew as in the
 The all-available observed-rate holdout P95 improved (for example
 `reported_clock / rate_only` anchored-only 50.7% → 33.6%). Cohorts differ, so
 the improvement is not a controlled comparison.
+
+### Pair review and spelling merges (2026-10-02)
+
+Two curated changes reached the network. Exact-text
+[catalogue spelling aliases](chronology.md#catalogue-spelling-aliases-2026-10-02)
+merged duplicate systems (34 fewer system IDs), so IBM RS/6000 "RISC Sys/6000-NNN"
+and "Model NNN" rows, HP9000/J200 and others now pair with SPEC results of the
+same model. Five classical↔SPEC `result_pair` reviews reject the upgraded
+SPARCstation 2 Dhrystone rows and accept two clock-convention pairs unscaled
+(details in the [SPEC89 bridge](spec89-rate-bridge.md#pair-review-and-spelling-merges-2026-10-02)).
+
+Nearly all of the change comes from the merges; the reviews move coefficients by
+at most 0.13%. With SPEC89 targets, coefficients fall 4–6% and LINPACK 19.6%
+(`linear_clock / with_spec89` 3.756 → 3.020). The inferred-89 nodes grew from 80
+to 107, among them three RS/6000 systems with high LINPACK relative to
+SPECint89. Rate-only coefficients rise 1.7–10.3%. On the all-node observed-rate holdout, the
+SPEC89-enabled network improves (P95 48.0% → 42.5%; LINPACK only 53.2% → 27.9%),
+but its agreement with the inferred SPEC89 targets worsens (P95 73.9% → 129.8%;
+33 → 47 models),
+while the rate-only network worsens (39.2% → 49.1%) because it gains the
+HP 9000/J200 (29 observed-rate models), which it underpredicts by 67% (anchored-only
+control: 70%). Its two
+LINPACK rows are 38 MFLOPS (`+O3`) and 5.5 MFLOPS (`fort77 -o`) for the same
+machine; both are source values and both remain.
 
 ## Predict from new measurements
 

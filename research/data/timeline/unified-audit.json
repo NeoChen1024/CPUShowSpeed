@@ -1,17 +1,17 @@
 {
   "schema_version": "vaxen-timeline-v3",
   "database": "data/derived/schema/cpushowspeed.sqlite",
-  "inputs_sha256": "5ce45f4059125f980a5e966edea8de8c3f5f84e961dfcde466596e149027fa7e",
-  "web_manifest_sha256": "dea416bcb40e62386f857c6989f53ab43eb0c48dec4a65f4b2752f75c075986f",
+  "inputs_sha256": "1fa01ab58edaf27225d6102ac2790ecd99ecdcbba43c3ef81008e1aa9cf473c0",
+  "web_manifest_sha256": "ff96e47e997cb72cf8e8f35a9370c83893dd7b415517008505cbf46503520b63",
   "lineage_inputs_sha256": {
-    "research/model-registry.json": "5758b5cbb224258df75a199f0b779b26d973eff418fd3972f513e0fc45b2f0ce",
+    "research/model-registry.json": "ce49e5e286ac77e3edcb32e06b82b68f25051068343fb4418f92cc2dba9761ac",
     "research/data/spec/fitting/integer-rate-edge-intervals.csv": "da9bc031a120ff9f55fe945f012676310bd3b59a639f648c524b983ca6e01d51",
     "research/data/classic/spec89-rate-bridge-summary.csv": "47944744b8b75370e9f096d221202f7cc6a0477b9f581407f7e24400098062bf",
     "research/data/classic/spec89-rate-bridge-evidence.csv": "f3e19880479b4091041ae9be40729e202d15e5491993999bf5dec92de7a035de",
-    "research/data/classic/network-coefficients.csv": "42e98559ceb7f918aa8122a74daba3c1fe3f68eae2daaaabea942dc555fe480d",
-    "data/derived/classic/network-fit/coefficients.csv": "42e98559ceb7f918aa8122a74daba3c1fe3f68eae2daaaabea942dc555fe480d",
-    "data/derived/classic/network-fit/coefficient-log-draws.npz": "cbd165a078b3b58448d5e0db47e2367eb59d09fc9e2e8392b916bbd47cb60dbc",
-    "data/derived/classic/network-fit/prediction-calibration.json": "e1f4cbf87e263650a0d31ad9093fbf815db931b8c71d01de07f7e44d74ca34fc"
+    "research/data/classic/network-coefficients.csv": "9826a774359c639aed6e922b1ad5f38ce966a965d78227a0a0354bf6e9fee4c4",
+    "data/derived/classic/network-fit/coefficients.csv": "9826a774359c639aed6e922b1ad5f38ce966a965d78227a0a0354bf6e9fee4c4",
+    "data/derived/classic/network-fit/coefficient-log-draws.npz": "ca5771820f93685eb5c7e789cc525f91008594b7538a70113682cedb550e6ba4",
+    "data/derived/classic/network-fit/prediction-calibration.json": "5d09c32e2b0145ca6091e5974affc7f9d7188f880847c04ebe00ddcd3e353c42"
   },
   "records": 115335,
   "spec_rate": 58813,
@@ -25,9 +25,9 @@
     "joint": 17039
   },
   "dates": {
-    "hardware": 26702,
+    "hardware": 26826,
     "cpu": 87761,
-    "unknown": 855,
+    "unknown": 731,
     "fallback": 17
   },
   "routes": {
@@ -62,9 +62,9 @@
     "speed_predictors": "spec-speed-rate-predictors-v5-resolved-identity"
   },
   "inputs_file_sha256": {
-    "research/data/classic/spec89-rate-estimates.csv": "b0d62a16d02c10eaba06d559a23a0d400fd97d503c2948944f7154ad314f2880",
-    "data/derived/classic/network-fit/prediction-calibration.json": "e1f4cbf87e263650a0d31ad9093fbf815db931b8c71d01de07f7e44d74ca34fc",
-    "data/derived/classic/mix-network-fit/mix-estimates.csv": "c6a19d769fe0f151d2b01863ba51e0051899d0d4747743573a5e7e8859bbad5e",
+    "research/data/classic/spec89-rate-estimates.csv": "a9da90731e4a09b70a3744172a873b178e7234339fcc16119a1743dc69cc2a02",
+    "data/derived/classic/network-fit/prediction-calibration.json": "5d09c32e2b0145ca6091e5974affc7f9d7188f880847c04ebe00ddcd3e353c42",
+    "data/derived/classic/mix-network-fit/mix-estimates.csv": "e514a242077bf8e4ca46c3172e3002b4e95d22a40cf286465b18b75fbb3e0cdc",
     "research/data/spec/speed-predictors/summary.csv": "de52fe2171548c24e0c6337d8ebfbfd8725818d2fd2d911d6e47db980a13ca47",
     "data/derived/spec/speed-predictors/speed-rate-pairs.csv": "37bc8d2596a6ae2cacd055b695199b5a029191e21e25b068783cd55fadcca3a6",
     "research/data/spec/fitting/integer-rate-chain-intervals.csv": "9223a0b85bb0e2f54bf87c2248ac96db03f214db8cc12ebfb868c6e2bdfb6723",
@@ -75,17 +75,17 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration_edges.py": "b6e4cbe854b1fa3b36f9490ed8f253af05899c826a658726b5c4b9a441a785d6",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network.py": "2234abaaff2a66a799166101929ae7f36338a04319dc041a95cbb12505842286",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network.py": "c31b118d847c853da1b7827c0e33cba5aaa28ae67398ca98c4d30a94105cdfca",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network_model.py": "27fd80246f3793ce68607c3880477ab175c5ec8813e8898e8cc5efd4fd93d384",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "169d21f7160d99a6b8414043ece5cf140c6861b7eda3ed89929792d1e11b7c9c",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pdf.py": "29e6cef097152568a8506667e8718fa35936ac37a9bbbf32198a8d99da5ef282",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_predict.py": "573f74c657e838807bd293b2adee2b21d78804407331ff6a8a922aa881655545",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_data.py": "0ac98d3fd4fe1e3c8abc2f4090205028dca534f18e78dc8ec520897361408d77",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_fit.py": "5506bfdc14c0a845ca67f5b380b6d157aaf8bb9ef9a3246eb27264c2382b577a",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "705524836fa50beeda35fb7da95c36ae1f3a9d8d35e2c5e519eb44735131f935",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_fit.py": "c3d7bc53b3e9307ff021ef19e91ca8fa21cfe80850ae10818f0ef31b584bba04",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "639a54857f479e3e3d7156f33a0a1f0254d4a27f860a005b4973f52269d12b60",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated.py": "7c35f291c6a275114c1c1ed3c2ce7be017ab59692a1a94e4a5bdb214cddddfdb",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "660bbc0bb7c3cf04325e8feea3cec3446f0d271cb7db417038696115963e63f5",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "481fc3b5d600caf5b76209672a6ccdeb1a3c64b37a51f915204de173cfa336f9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_identity.py": "686c50a95e11fece1eba1410d399f073c988a43ab719f5a728702bd38b1de87c",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_observation.py": "2c5a6ea1276bddf0bb43b0458f1d4e7811fe7f3f2acf1ed608a7c9e2556699c3",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_review.py": "0c8578492eeee9982083ac4996dc18dd4bfef4932ddbc594a64e8ffbb76c9057",
