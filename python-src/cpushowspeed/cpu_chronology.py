@@ -1,7 +1,7 @@
 """Secondary-source CPU SKU release chronology from cached Wikipedia processor tables.
 
-Dates describe CPU SKU release, not system availability. Matching is a conservative
-SKU-key rule plus a nominal-clock check; ambiguous processor text is never matched.
+Dates describe CPU SKU release, not system availability. `sku_key` is the versioned
+identity rule `sku-key-v1`; matching against observations happens in curated_identity.
 """
 
 import csv
@@ -13,7 +13,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from collections import Counter, defaultdict
+from collections import defaultdict
 from datetime import date
 from pathlib import Path
 
@@ -26,8 +26,6 @@ AUDIT = Path("research/data/historical/cpu-sku-audit.json")
 CACHE = Path("data/derived/documents/cpu-chronology")
 API = "https://en.wikipedia.org/w/api.php"
 USER_AGENT = "CPUShowSpeed CPU chronology research (https://github.com/NeoChen1024/CPUShowSpeed)"
-# Relative tolerance between a record's nominal clock and the table's base frequency.
-CLOCK_TOLERANCE = 0.02
 
 PAGES = [
     "List of Intel Xeon processors (P6-based)",
@@ -63,6 +61,7 @@ FIELDS = [
     "source_title",
     "source_url",
     "source_locator",
+    "source_section",
     "source_revision",
     "snapshot_sha256",
     "reviewed_on",
@@ -84,8 +83,10 @@ _AMD_MODEL = re.compile(r"\b(?P<num>\d(?=(?:[a-z]*\d){1,})[0-9a-z]{2,5})(?:\s+(?
 
 
 def _clean(text):
-    text = re.sub(r"\([^)]*(?:ghz|mhz|bus|cache)[^)]*\)", " ", str(text or ""), flags=re.I)
-    return re.sub(r"\s+", " ", _NOISE.sub(" ", text.replace("\xa0", " "))).strip()
+    # Trademarks first, then every parenthetical: clocks, buses, caches, sockets ("939-pin") are never the model.
+    text = _NOISE.sub(" ", str(text or "").replace("\xa0", " "))
+    text = re.sub(r"\([^)]*\)", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def sku_key(text):
@@ -110,7 +111,11 @@ def sku_key(text):
             if len(models) != 1 or rest[: models[0].start()].strip():
                 return None
             m = models[0]
-            return "amd " + family + " " + m["num"].upper() + (" " + m["suffix"].upper() if m["suffix"] else "")
+            num, suffix = m["num"].upper(), (m["suffix"] or "").upper()
+            attached = re.fullmatch(r"(\d{3,4})(SE|HE|EE)", num) if family == "opteron" else None
+            if attached and not suffix:
+                num, suffix = attached[1], attached[2]
+            return "amd " + family + " " + num + (" " + suffix if suffix else "")
     return None
 
 
@@ -275,10 +280,25 @@ def model_variants(model):
     return [m[1], m[1] + m[2]] if m else [model]
 
 
+def table_section(table):
+    """Verbatim heading path above a table (h2 › h3 › h4); generation labels are not interpreted."""
+    path = []
+    for level in ("h2", "h3", "h4"):
+        heading = table.find_previous(level)
+        if heading is None:
+            continue
+        # A lower heading belongs to the path only if it follows the higher one.
+        if path and path[-1][0].find_all_next(level, limit=1) and heading not in path[-1][0].find_all_next(level):
+            continue
+        path.append((heading, re.sub(r"\s+", " ", heading.get_text(" ", strip=True).replace("[ edit ]", "")).strip()))
+    return " › ".join(text for _, text in path)
+
+
 def parse_page(meta, family_hint):
     soup = BeautifulSoup(Path(meta["path"]).read_text(), "html.parser")
     rows = []
     for t_index, table in enumerate(soup.find_all("table", class_="wikitable")):
+        section = table_section(table)
         grid = table_grid(table)
         header = None
         for r_index, (tr, cells) in enumerate(grid):
@@ -315,6 +335,7 @@ def parse_page(meta, family_hint):
                         source_title=meta["title"],
                         source_url=meta["url"],
                         source_locator=f"wikitable {t_index + 1}, row {r_index + 1}",
+                        source_section=section,
                         source_revision=meta["revision_id"],
                         snapshot_sha256=meta["sha256"],
                         reviewed_on=meta["retrieved_on"],
@@ -323,46 +344,14 @@ def parse_page(meta, family_hint):
     return rows
 
 
-# ---------------------------------------------------------------- lookup
-
-
-def read_catalog(path=CATALOG):
-    with open(path, newline="") as f:
-        return list(csv.DictReader(f))
-
-
-class SKUChronology:
-    """Catalog lookup returning date candidates plus a reason when nothing applies."""
-
-    def __init__(self, catalog):
-        self.by_key = defaultdict(list)
-        for r in catalog:
-            self.by_key[r["sku_key"]].append(r)
-
-    def match(self, cpu, clock_mhz):
-        key = sku_key(cpu)
-        if key is None:
-            return [], "no_single_sku"
-        entries = self.by_key.get(key)
-        if not entries:
-            return [], "sku_not_in_catalog"
-        clocks = {float(e["base_clock_mhz"]) for e in entries if e["base_clock_mhz"]}
-        if clock_mhz and clocks:
-            c = float(clock_mhz)
-            if not any(abs(c - b) <= CLOCK_TOLERANCE * b for b in clocks):
-                return [], "clock_conflict"
-        return entries, "matched"
-
-
 # ---------------------------------------------------------------- command
 
 
 @click.command("cpu-chronology")
 @click.option("--cache-dir", type=click.Path(path_type=Path), default=CACHE, show_default=True)
 @click.option("--refresh", is_flag=True, help="Refetch every page even when a cached revision exists.")
-@click.option("--coverage/--no-coverage", default=True, show_default=True, help="Audit matches against SPEC rate records.")
-def cpu_chronology_command(cache_dir, refresh, coverage):
-    """Build the Wikipedia CPU SKU release catalog and audit its SPEC coverage."""
+def cpu_chronology_command(cache_dir, refresh):
+    """Build the Wikipedia CPU SKU release catalog; coverage is reported by `data build`."""
     try:
         if refresh:
             for p in cache_dir.glob("*.json"):
@@ -399,11 +388,8 @@ def cpu_chronology_command(cache_dir, refresh, coverage):
             catalog_rows=len(unique),
             sku_keys=len(years),
             sku_keys_with_conflicting_years=sorted(k for k, v in years.items() if len(v) > 1),
-            clock_tolerance=CLOCK_TOLERANCE,
             catalog_sha256=hashlib.sha256(CATALOG.read_bytes()).hexdigest(),
         )
-        if coverage:
-            audit["spec_rate_coverage"] = spec_coverage(unique)
         AUDIT.write_text(json.dumps(audit, indent=2, ensure_ascii=False) + "\n")
         json.dump({k: v for k, v in audit.items() if k != "sku_keys_with_conflicting_years"}, sys.stdout, indent=2)
         click.echo()
@@ -411,23 +397,3 @@ def cpu_chronology_command(cache_dir, refresh, coverage):
         raise click.ClickException(str(exc)) from exc
 
 
-def spec_coverage(catalog):
-    from cpushowspeed.annual_rate import collect_annual_records
-    from cpushowspeed.unified_timeline import CALIBRATION, CPU92, FIT, RAW, normalized_clocks
-
-    records, _ = collect_annual_records(RAW, CPU92, CALIBRATION, FIT)
-    clocks = normalized_clocks()
-    chronology = SKUChronology(catalog)
-    status, by_gen, unmatched = Counter(), defaultdict(Counter), Counter()
-    for r in records:
-        _, reason = chronology.match(r["processor"], clocks.get((r["generation"], r["source_url"])))
-        status[reason] += 1
-        by_gen[r["generation"]][reason] += 1
-        if reason != "matched":
-            unmatched[reason, r["processor"]] += 1
-    return dict(
-        records=len(records),
-        status=dict(status),
-        by_generation={g: dict(c) for g, c in sorted(by_gen.items())},
-        top_unmatched=[dict(reason=k[0], processor=k[1], records=n) for k, n in unmatched.most_common(60)],
-    )

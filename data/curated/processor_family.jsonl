@@ -1,0 +1,108 @@
+{"family_id": "fam:amd-epyc", "vendor": "AMD", "name": "EPYC", "source_ids": ["src:wikipedia/epyc@1377481559"]}
+{"family_id": "fam:amd-opteron", "vendor": "AMD", "name": "Opteron", "source_ids": ["src:wikipedia/list_of_amd_opteron_processors@1374681203"]}
+{"family_id": "fam:dec-alpha-21064", "vendor": "DEC/Compaq", "name": "Alpha 21064", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21064a", "vendor": "DEC/Compaq", "name": "Alpha 21064A", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21066", "vendor": "DEC/Compaq", "name": "Alpha 21066", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21164", "vendor": "DEC/Compaq", "name": "Alpha 21164", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21164a", "vendor": "DEC/Compaq", "name": "Alpha 21164A", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21164pc", "vendor": "DEC/Compaq", "name": "Alpha 21164PC", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21264", "vendor": "DEC/Compaq", "name": "Alpha 21264", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21264a", "vendor": "DEC/Compaq", "name": "Alpha 21264A", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21264b", "vendor": "DEC/Compaq", "name": "Alpha 21264B", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21264c", "vendor": "DEC/Compaq", "name": "Alpha 21264C", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:dec-alpha-21364", "vendor": "DEC/Compaq", "name": "Alpha 21364", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-gp", "vendor": "Fujitsu", "name": "SPARC64 GP", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-ii", "vendor": "Fujitsu", "name": "SPARC64 II", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-iii", "vendor": "Fujitsu", "name": "SPARC64 III", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-iv", "vendor": "Fujitsu", "name": "SPARC64 IV", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-v", "vendor": "Fujitsu", "name": "SPARC64 V", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-vi", "vendor": "Fujitsu", "name": "SPARC64 VI", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-vii", "vendor": "Fujitsu", "name": "SPARC64 VII", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-viiplus", "vendor": "Fujitsu", "name": "SPARC64 VII+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-x", "vendor": "Fujitsu", "name": "SPARC64 X", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-xi", "vendor": "Fujitsu", "name": "SPARC64 XI", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-xii", "vendor": "Fujitsu", "name": "SPARC64 XII", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:fujitsu-sparc64-xplus", "vendor": "Fujitsu", "name": "SPARC64 X+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-7000", "vendor": "HP", "name": "PA-7000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-7100", "vendor": "HP", "name": "PA-7100", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-7100lc", "vendor": "HP", "name": "PA-7100LC", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-7150", "vendor": "HP", "name": "PA-7150", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-7200", "vendor": "HP", "name": "PA-7200", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-7300lc", "vendor": "HP", "name": "PA-7300LC", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-8000", "vendor": "HP", "name": "PA-8000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-8200", "vendor": "HP", "name": "PA-8200", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-8500", "vendor": "HP", "name": "PA-8500", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-8600", "vendor": "HP", "name": "PA-8600", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-8700", "vendor": "HP", "name": "PA-8700", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-8800", "vendor": "HP", "name": "PA-8800", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:hp-pa-8900", "vendor": "HP", "name": "PA-8900", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power10", "vendor": "IBM", "name": "POWER10", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power10plus", "vendor": "IBM", "name": "POWER10+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power3", "vendor": "IBM", "name": "POWER3", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power3-ii", "vendor": "IBM", "name": "POWER3-II", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power3plus", "vendor": "IBM", "name": "POWER3+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power4", "vendor": "IBM", "name": "POWER4", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power4plus", "vendor": "IBM", "name": "POWER4+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power5", "vendor": "IBM", "name": "POWER5", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power5plus", "vendor": "IBM", "name": "POWER5+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power6", "vendor": "IBM", "name": "POWER6", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power6plus", "vendor": "IBM", "name": "POWER6+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power7", "vendor": "IBM", "name": "POWER7", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power7plus", "vendor": "IBM", "name": "POWER7+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power8", "vendor": "IBM", "name": "POWER8", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power8plus", "vendor": "IBM", "name": "POWER8+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power9", "vendor": "IBM", "name": "POWER9", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-power9plus", "vendor": "IBM", "name": "POWER9+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-rs64-ii", "vendor": "IBM", "name": "RS64-II", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-rs64-iii", "vendor": "IBM", "name": "RS64-III", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:ibm-rs64-iv", "vendor": "IBM", "name": "RS64-IV", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-itanium", "vendor": "Intel", "name": "Itanium (not Itanium 2)", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-itanium-2", "vendor": "Intel", "name": "Itanium 2", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-pentium-4", "vendor": "Intel", "name": "Pentium 4", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-pentium-ii", "vendor": "Intel", "name": "Pentium II", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-pentium-ii-xeon", "vendor": "Intel", "name": "Pentium II Xeon", "note": "Chip-model line seeded from SPEC processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-pentium-iii", "vendor": "Intel", "name": "Pentium III", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-pentium-iii-xeon", "vendor": "Intel", "name": "Pentium III Xeon", "note": "Chip-model line seeded from SPEC processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-pentium-pro", "vendor": "Intel", "name": "Pentium Pro", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-xeon", "vendor": "Intel", "name": "Xeon", "source_ids": ["src:wikipedia/list_of_intel_xeon_processors_-28broadwell-based-29@1362915879", "src:wikipedia/list_of_intel_xeon_processors_-28cascade_lake-e2-80-93based-29@1362298362", "src:wikipedia/list_of_intel_xeon_processors_-28coffee_lake-based-29@1339738082", "src:wikipedia/list_of_intel_xeon_processors_-28comet_lake-based-29@1334627889", "src:wikipedia/list_of_intel_xeon_processors_-28core-based-29@1339906419", "src:wikipedia/list_of_intel_xeon_processors_-28haswell-based-29@1344872412", "src:wikipedia/list_of_intel_xeon_processors_-28ice_lake-based-29@1362298361", "src:wikipedia/list_of_intel_xeon_processors_-28ivy_bridge-e2-80-93based-29@1334629619", "src:wikipedia/list_of_intel_xeon_processors_-28kaby_lake-based-29@1362915881", "src:wikipedia/list_of_intel_xeon_processors_-28nehalem-based-29@1352909520", "src:wikipedia/list_of_intel_xeon_processors_-28netburst-based-29@1339837086", "src:wikipedia/list_of_intel_xeon_processors_-28rocket_lake-based-29@1334626524", "src:wikipedia/list_of_intel_xeon_processors_-28sandy_bridge-e2-80-93based-29@1334629871", "src:wikipedia/list_of_intel_xeon_processors_-28skylake-based-29@1377207682", "src:wikipedia/sierra_forest@1359904899"]}
+{"family_id": "fam:mips-r10000", "vendor": "MIPS", "name": "R10000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r12000", "vendor": "MIPS", "name": "R12000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r14000", "vendor": "MIPS", "name": "R14000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r16000", "vendor": "MIPS", "name": "R16000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r2000", "vendor": "MIPS", "name": "R2000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r3000", "vendor": "MIPS", "name": "R3000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r4000", "vendor": "MIPS", "name": "R4000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r4400", "vendor": "MIPS", "name": "R4400", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r4600", "vendor": "MIPS", "name": "R4600", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r5000", "vendor": "MIPS", "name": "R5000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:mips-r8000", "vendor": "MIPS", "name": "R8000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:oracle-sparc-m5", "vendor": "Oracle", "name": "SPARC M5", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:oracle-sparc-m6", "vendor": "Oracle", "name": "SPARC M6", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:oracle-sparc-m7", "vendor": "Oracle", "name": "SPARC M7", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:oracle-sparc-m8", "vendor": "Oracle", "name": "SPARC M8", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:oracle-sparc-t3", "vendor": "Oracle", "name": "SPARC T3", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:oracle-sparc-t4", "vendor": "Oracle", "name": "SPARC T4", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:oracle-sparc-t5", "vendor": "Oracle", "name": "SPARC T5", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-601", "vendor": "IBM/Motorola", "name": "PowerPC 601", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-603", "vendor": "IBM/Motorola", "name": "PowerPC 603", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-603e", "vendor": "IBM/Motorola", "name": "PowerPC 603e", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-604", "vendor": "IBM/Motorola", "name": "PowerPC 604", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-604e", "vendor": "IBM/Motorola", "name": "PowerPC 604e", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-620", "vendor": "IBM/Motorola", "name": "PowerPC 620", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-7400", "vendor": "IBM/Motorola", "name": "PowerPC 7400", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-7410", "vendor": "IBM/Motorola", "name": "PowerPC 7410", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-7450", "vendor": "IBM/Motorola", "name": "PowerPC 7450", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-750", "vendor": "IBM/Motorola", "name": "PowerPC 750", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:powerpc-970", "vendor": "IBM/Motorola", "name": "PowerPC 970", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-i", "vendor": "Sun", "name": "UltraSPARC (I)", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-ii", "vendor": "Sun", "name": "UltraSPARC II", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-ii-e", "vendor": "Sun", "name": "UltraSPARC IIe", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-ii-i", "vendor": "Sun", "name": "UltraSPARC IIi", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-iii", "vendor": "Sun", "name": "UltraSPARC III", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-iii-cu", "vendor": "Sun", "name": "UltraSPARC III Cu", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-iii-i", "vendor": "Sun", "name": "UltraSPARC IIIi", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-iv", "vendor": "Sun", "name": "UltraSPARC IV", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-ivplus", "vendor": "Sun", "name": "UltraSPARC IV+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-t1", "vendor": "Sun", "name": "UltraSPARC T1", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-t2", "vendor": "Sun", "name": "UltraSPARC T2", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:sun-ultrasparc-t2plus", "vendor": "Sun", "name": "UltraSPARC T2+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}

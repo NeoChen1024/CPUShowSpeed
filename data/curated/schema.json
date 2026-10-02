@@ -3,13 +3,42 @@
   "$id": "https://github.com/NeoChen1024/CPUShowSpeed/data/curated/schema.json",
   "title": "CPUShowSpeed curated tables",
   "description": "Row schemas and table contracts for data/curated. Semantics are owned by docs/data-schema.md.",
-  "x-schema-version": "1.0.0",
+  "x-schema-version": "1.1.0",
   "x-tables": {
     "source": {
       "file": "source.jsonl",
       "row": "#/$defs/source",
       "primary_key": "source_id",
       "description": "One identified document, page revision or dataset snapshot."
+    },
+    "processor_family": {
+      "file": "processor_family.jsonl",
+      "row": "#/$defs/processor_family",
+      "primary_key": "family_id",
+      "foreign_keys": {
+        "source_ids": "source"
+      },
+      "description": "Most specific processor line a source text can identify (e.g. Intel Xeon, IBM POWER7)."
+    },
+    "processor_sku": {
+      "file": "processor_sku.jsonl",
+      "row": "#/$defs/processor_sku",
+      "primary_key": "sku_id",
+      "foreign_keys": {
+        "family_id": "processor_family",
+        "source_ids": "source"
+      },
+      "description": "One sold processor model; generation labels stay verbatim from sources."
+    },
+    "alias": {
+      "file": "alias.jsonl",
+      "row": "#/$defs/alias",
+      "primary_key": "alias_id",
+      "foreign_keys": {
+        "entity_id": "@entity_kind",
+        "source_id": "source"
+      },
+      "description": "Judgements linking source text to entities: exact text, regex pattern or a versioned rule."
     }
   },
   "$defs": {
@@ -238,6 +267,231 @@
           "local_path"
         ]
       }
+    },
+    "family_id": {
+      "type": "string",
+      "pattern": "^fam:[a-z0-9][a-z0-9.+-]*$"
+    },
+    "sku_id": {
+      "type": "string",
+      "pattern": "^sku:[a-z0-9][a-z0-9.+-]*$"
+    },
+    "alias_id": {
+      "type": "string",
+      "pattern": "^alias:[a-z0-9][a-z0-9./+-]*$"
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_id"
+      },
+      "uniqueItems": true
+    },
+    "processor_family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "vendor",
+        "name"
+      ],
+      "properties": {
+        "family_id": {
+          "$ref": "#/$defs/family_id"
+        },
+        "vendor": {
+          "$ref": "#/$defs/text"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "$ref": "#/$defs/source_ids"
+        }
+      }
+    },
+    "processor_sku": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sku_id",
+        "family_id",
+        "vendor",
+        "model",
+        "keys",
+        "source_ids"
+      ],
+      "properties": {
+        "sku_id": {
+          "$ref": "#/$defs/sku_id"
+        },
+        "family_id": {
+          "$ref": "#/$defs/family_id"
+        },
+        "vendor": {
+          "$ref": "#/$defs/text"
+        },
+        "model": {
+          "description": "Model name as printed in the source table.",
+          "$ref": "#/$defs/text"
+        },
+        "keys": {
+          "description": "Match keys produced by versioned rules, as <rule>:<key>.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "base_clocks_mhz": {
+          "description": "Every base frequency listed for this model; several when revisions differ.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "uniqueItems": true
+        },
+        "sections": {
+          "description": "Verbatim source heading paths (generation, codename).",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "uniqueItems": true
+        },
+        "source_ids": {
+          "$ref": "#/$defs/source_ids",
+          "minItems": 1
+        }
+      }
+    },
+    "alias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alias_id",
+        "entity_kind",
+        "match_kind",
+        "scope",
+        "status"
+      ],
+      "properties": {
+        "alias_id": {
+          "$ref": "#/$defs/alias_id"
+        },
+        "entity_kind": {
+          "enum": [
+            "processor_sku",
+            "processor_family"
+          ]
+        },
+        "entity_id": {
+          "description": "Target entity; omitted for rules, whose output names the entity.",
+          "$ref": "#/$defs/text"
+        },
+        "match_kind": {
+          "enum": [
+            "exact_text",
+            "pattern",
+            "rule"
+          ]
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "pattern": {
+          "$ref": "#/$defs/text"
+        },
+        "rule_id": {
+          "$ref": "#/$defs/text"
+        },
+        "scope": {
+          "description": "Field and source scope, e.g. processor or processor@spec:*.",
+          "$ref": "#/$defs/text"
+        },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "clock_within": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "candidate",
+            "rejected"
+          ]
+        },
+        "source_id": {
+          "$ref": "#/$defs/source_id"
+        },
+        "reviewed_on": {
+          "$ref": "#/$defs/iso_day"
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "match_kind": {
+                "const": "exact_text"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "text",
+              "entity_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "match_kind": {
+                "const": "pattern"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "pattern",
+              "entity_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "match_kind": {
+                "const": "rule"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "rule_id"
+            ],
+            "not": {
+              "required": [
+                "entity_id"
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }

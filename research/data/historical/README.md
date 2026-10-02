@@ -122,11 +122,13 @@ changes. The generated date-evidence export includes applied CPU mappings.
 from cached Wikipedia table revisions. Fields: normalized `sku_key`, source
 `model_text`, `base_clock_mhz` (blank when the table gives none), `release_date`
 at its stated precision with the original `release_date_raw`, page title/URL,
-`source_locator` (wikitable and expanded row number), `source_revision`,
+`source_locator` (wikitable and expanded row number), `source_section` (verbatim
+heading path), `source_revision`,
 `snapshot_sha256` of the cached HTML and `reviewed_on` (retrieval date). One SKU
 may have several rows, for example revisions sold under one model number.
 `cpu-sku-sources.json` lists every page revision, hash and row count;
-`cpu-sku-audit.json` records catalog conflicts and SPEC coverage. The cached HTML
+`cpu-sku-audit.json` records catalog conflicts; SPEC coverage now comes from
+`data build` ([processor identity](../../processor-identity.md)). The cached HTML
 stays under ignored `data/derived/documents/cpu-chronology/`. Rows are parsed
 secondary evidence, not individually reviewed claims; see
 [the catalog report](../../cpu-sku-chronology.md) for its checks.

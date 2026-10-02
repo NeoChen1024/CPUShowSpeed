@@ -7,11 +7,15 @@ row schema; tables are JSONL, one row per line, sorted by primary key.
 | File | Table | Since |
 | --- | --- | --- |
 | `source.jsonl` | `source`: documents, page revisions and dataset snapshots | 2026-10-02 |
+| `processor_family.jsonl` | `processor_family`: processor lines | 2026-10-02 |
+| `processor_sku.jsonl` | `processor_sku`: sold processor models | 2026-10-02 |
+| `alias.jsonl` | `alias`: exact-text, pattern and rule links from text to entities | 2026-10-02 |
 
 Edit rows directly, then run:
 
 ```sh
 uv run cpushowspeed data validate --check-local
+uv run cpushowspeed data extract-mentions   # when the input catalogue changes
 uv run cpushowspeed data build
 ```
 

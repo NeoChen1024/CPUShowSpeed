@@ -1,6 +1,7 @@
 # Data schema design
 
-Status: **step 1 (sources) implemented 2026-10-02; steps 2–5 designed, not implemented.**
+Status: **steps 1 (sources) and 2 (processor identity) implemented 2026-10-02; system
+identity (2b) and steps 3–5 designed, not implemented.**
 This document owns the target
 data model and its migration plan. Until each step lands, the current formats in
 the [data contract](data-contract.md), [input catalog](input-catalog.md),
@@ -134,8 +135,8 @@ The command refuses to overwrite an existing `source.jsonl` without `--force`.
 
 | Table | Key | Main columns |
 | --- | --- | --- |
-| `processor_family` | `fam:` | vendor, family, generation/codename |
-| `processor_sku` | `sku:` | family_id, vendor, model, variant suffix, base_clock_mhz |
+| `processor_family` | `fam:` | vendor, name: the most specific processor line a text can identify (Intel Xeon, IBM POWER7, Alpha 21164) |
+| `processor_sku` | `sku:` | family_id, vendor, model, rule match `keys`, every listed `base_clocks_mhz`, verbatim heading `sections` (generation/codename), source_ids |
 | `system_model` | `sys:` | vendor, family, model (model variants such as RS/6000 530 and 530H are separate) |
 | `hardware_config` | `hw:` | system_id, processor ref (sku or family), clock, hardware options (FPU/FPA, vector unit), chips, cores, threads/core, memory, each with `*_status` |
 
@@ -188,17 +189,21 @@ Maps source text to an entity.
 | --- | --- |
 | `alias_id` | Primary key |
 | `entity_kind`, `entity_id` | Target |
-| `match_kind` | `exact_text` or `rule` |
-| `text` / `rule_id` | Exact normalized text, or a versioned rule (for example `sku-key-v1`) |
-| `scope` | Field and source family it applies to (for example `spec.processor`) |
+| `match_kind` | `exact_text`, `pattern` (regex, case-insensitive unless switched off locally) or `rule` |
+| `text` / `pattern` / `rule_id` | Exact text, regex, or a versioned rule (for example `sku-key-v1`); rules carry no `entity_id` |
+| `scope` | `processor`, or `processor@<glob>` limiting it to mention scopes such as `spec:*` |
 | `constraints` | Extra checks, for example `clock_within: 0.02` |
 | `status` | `accepted`, `candidate`, `rejected` |
 | provenance | `source_id` of the evidence and review fields |
 
-Rules live in code with a version; `data build` materializes a `resolution`
-view (raw text → entity, alias, rule version, status, failed constraint). Every
-consumer reads `resolution`; none re-implements matching. Ambiguous text
-(several SKUs, family-only) resolves to the family or to nothing, explicitly.
+Rules live in code with a version; `data build` materializes `processor_resolution`
+(scope, text, clock → level, entity, alias, failure reason) from the extracted
+`processor_mention` table (`data extract-mentions`, from the input catalogue).
+Order: exact text, then rules with their constraints, then family patterns. A
+failed SKU rule keeps its reason when a pattern resolves the family; overlapping
+patterns are reported as ambiguous instead of being ordered. Every consumer reads
+the resolution; none re-implements matching. The step-2 results and comparison
+with the previous key are in [processor identity](../research/processor-identity.md).
 
 ### `observation`
 
@@ -287,10 +292,13 @@ is intended and listed in that step's report.
    map to 276 sources, each legacy ID to exactly one source, every legacy hash and
    every cited URL is represented; 21 Wikipedia pages retrieved but never cited
    (archived pass log) are intentionally not sources. No product changed.
-2. **Identity.** Create entity tables, `alias`, rule `sku-key-v1` and the
-   `resolution` view. Port `cpu_key`, `_processor_key`/`_system_key`, regex
-   overrides and mix aliases. Parity: current matches reproduced exactly; new
-   matches reported separately.
+2. **Processor identity** (done 2026-10-02). Families, SKUs, aliases, `sku-key-v1`
+   and the resolution table. By user decision the rules were designed afresh;
+   the previous `_processor_key` served only as a comparison (no wrong SKU merges,
+   nine prefix splits, an empty key grouping clock-only texts). 71.7% of input
+   observations resolve to a SKU and 20.2% to a family.
+   **2b. System identity** (next): `system_model` and `hardware_config`, including
+   CPUs that older sources write only into system names.
 3. **Dates.** Create `date_event`; convert proxies, hardware evidence, overrides
    and SPEC date fields; implement `chronology_selected`. Parity: current timeline
    years reproduced. Enabling the SKU catalog is a separate, reported change.

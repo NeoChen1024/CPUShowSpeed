@@ -504,6 +504,22 @@
       "lineage": "One-time merge of nine legacy source registries (2026-10-02); edited directly thereafter"
     },
     {
+      "id": "curated-processors",
+      "path": "data/curated/processor_sku.jsonl",
+      "kind": "curated-table",
+      "owner": "research/processor-identity.md",
+      "optional": false,
+      "lineage": "Seeded from the CPU SKU catalogue (2026-10-02) with processor_family.jsonl and alias.jsonl; edited directly thereafter"
+    },
+    {
+      "id": "processor-mentions",
+      "path": "data/derived/schema/processor-mentions.jsonl",
+      "kind": "derived",
+      "owner": "research/processor-identity.md",
+      "optional": true,
+      "lineage": "Distinct processor text/clock mentions extracted from the input catalogue"
+    },
+    {
       "id": "instruction-mix-study",
       "path": "research/data/classic/mix-study",
       "kind": "reviewed-data",
@@ -1693,6 +1709,13 @@
       "role": "evidence",
       "status": "current",
       "purpose": "Wikipedia SKU catalog for CPU-first timeline dates: matching rule, SPEC coverage, clock conflicts and spot checks"
+    },
+    {
+      "path": "research/processor-identity.md",
+      "title": "Processor identity resolution",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Schema step 2: processor families, SKUs, aliases, resolution coverage and comparison with the previous key"
     },
     {
       "path": "docs/timeline.md",

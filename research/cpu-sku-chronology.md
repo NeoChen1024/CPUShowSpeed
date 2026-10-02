@@ -50,6 +50,10 @@ dates are retained.
 
 ## Matching rule (`sku-key-v1`)
 
+Refined on 2026-10-02 before first use (all parentheticals removed, attached
+Opteron suffixes split); current coverage is reported by the resolution table in
+[processor identity](processor-identity.md). The coverage table below predates it.
+
 A processor string matches only when it names exactly one Xeon, Opteron or
 Epyc SKU after removing trademarks, "processor" and clock/bus parentheticals.
 Tier words are part of the key: Xeon 5120 (2006) and Xeon Gold 5120 (2017) are
@@ -59,7 +63,9 @@ system bus)") do not match. Table cells such as "7443 (P)" yield two SKUs.
 When both sides give a clock, the record's nominal clock must lie within 2% of
 a catalog base frequency; otherwise the SKU date is not used.
 
-## SPEC coverage
+## SPEC coverage (2026-10-02, before the rule refinement)
+
+This table was produced by the since-removed `--coverage` audit.
 
 | Generation | Matched | Not a single SKU | SKU not in catalog | Clock conflict |
 | --- | ---: | ---: | ---: | ---: |

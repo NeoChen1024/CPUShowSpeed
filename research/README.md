@@ -31,6 +31,7 @@ Reports distinguish measured evidence, derived estimates and proposed work.
   [prior work](classic-spec-literature.md), [DEC/SSCL/Tomari tables](classic-pdf-extraction.md),
   [initial hardware overlaps](classic-spec-overlap.md).
 - Chronology: [CPU SKU release catalog](cpu-sku-chronology.md) (built, not yet used by the timeline).
+- Identity: [processor identity resolution](processor-identity.md) (schema step 2).
 - Earlier reconstruction: [mix/timing observations](early-benchmark-evidence.md),
   [OCR sample checks](chandra-timesharing-sample.md), [historical data contract](data/historical/README.md).
 

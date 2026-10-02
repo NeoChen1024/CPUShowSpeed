@@ -108,6 +108,23 @@ def local_findings(rows):
     return findings
 
 
+def foreign_key_errors(schema, tables):
+    """Every referenced ID exists; a target of '@field' names the table in that row field."""
+    keys = {name: {r[spec["primary_key"]] for r in tables[name]} for name, spec in schema["x-tables"].items()}
+    errors = []
+    for name, spec in schema["x-tables"].items():
+        pk = spec["primary_key"]
+        for column, target in spec.get("foreign_keys", {}).items():
+            for row in tables[name]:
+                values = row.get(column)
+                values = values if isinstance(values, list) else [] if values is None else [values]
+                table = row.get(target[1:]) if target.startswith("@") else target
+                for value in values:
+                    if value not in keys.get(table, set()):
+                        errors.append(f"{name} {row[pk]}: {column} {value} not found in {table}")
+    return errors
+
+
 def validate(root=CURATED, check_local=False):
     schema, tables = load_tables(root)
     errors, findings = [], []
@@ -115,6 +132,7 @@ def validate(root=CURATED, check_local=False):
         errors += row_errors(name, spec, tables[name], row_validator(schema, spec["row"]))
         if check_local:
             findings += local_findings(tables[name])
+    errors += foreign_key_errors(schema, tables)
     return schema, tables, errors, findings
 
 
@@ -159,6 +177,9 @@ def build(root=CURATED, database=DATABASE):
             )
             meta[f"table:{name}:rows"] = str(len(tables[name]))
             meta[f"table:{name}:sha256"] = sha256(root / spec["file"])
+        from cpushowspeed.curated_identity import build_resolution
+
+        meta.update(build_resolution(db, tables))
         db.executemany("INSERT INTO _meta VALUES (?, ?)", sorted(meta.items()))
         db.commit()
     partial.replace(database)
