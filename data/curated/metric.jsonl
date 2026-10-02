@@ -1,0 +1,42 @@
+{"metric_id": "Dhrystone:v1.1_DMIPS", "registry_metric": "dhry-11", "mode": "reported", "unit": "DMIPS", "track": "classical"}
+{"metric_id": "Dhrystone:v2.1_DMIPS", "registry_metric": "dhry-21", "mode": "reported", "unit": "DMIPS", "track": "classical"}
+{"metric_id": "InstructionMix:ADP_KIPS", "registry_metric": "adp", "mode": "reported", "unit": "KIPS", "track": "instruction_mix"}
+{"metric_id": "InstructionMix:Gibson_KIPS", "registry_metric": "gibson", "mode": "reported", "unit": "KIPS", "track": "instruction_mix"}
+{"metric_id": "LINPACK:n100_MFLOPS", "registry_metric": "linpack-100", "mode": "reported", "unit": "MFLOPS", "track": "classical"}
+{"metric_id": "SPECbase_int92", "registry_metric": "base-int92", "mode": "base", "unit": "native_suite_points", "track": "speed", "note": "Historical collections; same suite as cpu92:integer:speed:base"}
+{"metric_id": "SPECfp89", "registry_metric": "fp89", "mode": "reported", "unit": "native_suite_points", "track": "speed", "note": "Historical collections and the SPEC89 package"}
+{"metric_id": "SPECfp92", "registry_metric": "fp92", "mode": "reported", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "SPECint89", "registry_metric": "int89", "mode": "reported", "unit": "native_suite_points", "track": "speed", "note": "Historical collections and the SPEC89 package"}
+{"metric_id": "SPECint92", "registry_metric": "int92", "mode": "peak", "unit": "native_suite_points", "track": "speed", "note": "Historical collections; same suite as cpu92:integer:speed:peak"}
+{"metric_id": "SPECmark89", "registry_metric": "mark89", "mode": "reported", "unit": "native_suite_points", "track": "speed", "note": "Historical collections and the SPEC89 package"}
+{"metric_id": "SPECrate_base_int92", "registry_metric": "rate-92", "mode": "base", "unit": "native_suite_points", "track": "rate", "note": "Historical collections; same suite as cpu92:integer:rate:base"}
+{"metric_id": "SPECrate_fp92", "registry_metric": "rate-fp92", "mode": "reported", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "SPECrate_int92", "registry_metric": "rate-92", "mode": "peak", "unit": "native_suite_points", "track": "rate", "note": "Historical collections; same suite as cpu92:integer:rate:peak"}
+{"metric_id": "SPECthruput89", "registry_metric": "throughput89", "mode": "reported", "unit": "native_suite_points", "track": "rate", "note": "Multiprocessor throughput; adapter files it under speed"}
+{"metric_id": "Whetstone:MWIPS", "registry_metric": "whet-native", "mode": "reported", "unit": "MWIPS", "track": "classical", "note": "Longbottom single-precision or native column"}
+{"metric_id": "Whetstone:MWIPS_DP", "registry_metric": "whet-dp", "mode": "reported", "unit": "MWIPS", "track": "classical"}
+{"metric_id": "Whetstone:MWIPS_SP", "registry_metric": "whet-sp", "mode": "reported", "unit": "MWIPS", "track": "classical"}
+{"metric_id": "cpu2000:integer:rate:base", "registry_metric": "rate-2000", "mode": "base", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu2000:integer:rate:peak", "registry_metric": "rate-2000", "mode": "peak", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu2000:integer:speed:base", "registry_metric": "retired-spec-speed", "mode": "base", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "cpu2000:integer:speed:peak", "registry_metric": "retired-spec-speed", "mode": "peak", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "cpu2006:integer:rate:base", "registry_metric": "rate-2006", "mode": "base", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu2006:integer:rate:peak", "registry_metric": "rate-2006", "mode": "peak", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu2006:integer:speed:base", "registry_metric": "retired-spec-speed", "mode": "base", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "cpu2006:integer:speed:peak", "registry_metric": "retired-spec-speed", "mode": "peak", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "cpu2017:integer:rate:base", "registry_metric": "rate-2017", "mode": "base", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu2017:integer:rate:peak", "registry_metric": "rate-2017", "mode": "peak", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu2017:integer:speed:base", "registry_metric": "retired-spec-speed", "mode": "base", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "cpu2017:integer:speed:peak", "registry_metric": "retired-spec-speed", "mode": "peak", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "cpu2026:integer:rate:base", "registry_metric": "rate-2026", "mode": "base", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu2026:integer:rate:peak", "registry_metric": "rate-2026", "mode": "peak", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu2026:integer:speed:base", "registry_metric": "retired-spec-speed", "mode": "base", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "cpu2026:integer:speed:peak", "registry_metric": "retired-spec-speed", "mode": "peak", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "cpu92:integer:rate:base", "registry_metric": "rate-92", "mode": "base", "unit": "native_suite_points", "track": "rate", "note": "Netlib PDS CPU92 disclosure pages"}
+{"metric_id": "cpu92:integer:rate:peak", "registry_metric": "rate-92", "mode": "peak", "unit": "native_suite_points", "track": "rate", "note": "Netlib PDS CPU92 disclosure pages"}
+{"metric_id": "cpu92:integer:speed:base", "registry_metric": "base-int92", "mode": "base", "unit": "native_suite_points", "track": "speed", "note": "Netlib PDS CPU92 disclosure pages"}
+{"metric_id": "cpu92:integer:speed:peak", "registry_metric": "int92", "mode": "peak", "unit": "native_suite_points", "track": "speed", "note": "Netlib PDS CPU92 disclosure pages"}
+{"metric_id": "cpu95:integer:rate:base", "registry_metric": "rate-95", "mode": "base", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu95:integer:rate:peak", "registry_metric": "rate-95", "mode": "peak", "unit": "native_suite_points", "track": "rate"}
+{"metric_id": "cpu95:integer:speed:base", "registry_metric": "retired-spec-speed", "mode": "base", "unit": "native_suite_points", "track": "speed"}
+{"metric_id": "cpu95:integer:speed:peak", "registry_metric": "retired-spec-speed", "mode": "peak", "unit": "native_suite_points", "track": "speed"}

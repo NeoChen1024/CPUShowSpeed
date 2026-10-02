@@ -34,6 +34,21 @@ def score_unit(metric):
     return "native_suite_points"
 
 
+SPEC89_PACKAGE = Path("research/data/spec89/v2.0.0")
+
+
+def package_source(record):
+    """SPEC89 package rows cite a package source ID and, for saved messages, the saved bytes."""
+    raw = record.get("raw_record") if isinstance(record.get("raw_record"), dict) else {}
+    found = {}
+    if raw.get("source_id"):
+        found["legacy_id"] = "spec89/v2.0.0/sources:" + raw["source_id"]
+    if raw.get("source_file"):
+        path = next(p for p in (Path(raw["source_file"]), SPEC89_PACKAGE / raw["source_file"]) if p.exists())
+        found["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return found
+
+
 def historical_observation(record, metric, score, prefix):
     return observation(
         prefix + ":" + record["id"] + ":" + metric,
@@ -44,17 +59,24 @@ def historical_observation(record, metric, score, prefix):
         mode="base" if "base" in metric.lower() else "reported",
         system=record.get("system") or record.get("machine"),
         source=dict(
-            url=record["source_url"],
-            locator=record.get("locator") or record.get("pdf_page"),
-            sha256=record.get("source_container_sha256") or record.get("source_sha256"),
-            blake3=record.get("source_blake3") or record.get("pdf_blake3"),
+            dict(
+                url=record["source_url"],
+                locator=record.get("locator") or record.get("pdf_page"),
+                sha256=record.get("source_container_sha256") or record.get("source_sha256"),
+                blake3=record.get("source_blake3") or record.get("pdf_blake3"),
+            ),
+            **package_source(record),
         ),
         hardware=dict(
             processor=record.get("processor_raw"),
             nominal_mhz=record.get("clock_mhz"),
             legacy_cpu_count=record.get("cpu_count") or record.get("reported_processor_count"),
         ),
-        software=dict(os=record.get("os_raw") or record.get("os")),
+        run=dict(
+            os=record.get("os_raw") or record.get("os"),
+            language=record.get("language_raw"),
+            optimization=record.get("optimization_raw"),
+        ),
         evidence=record.get("evidence_class") or record.get("evidence_kind") or "historical_source_observation",
         raw=record,
         qualification=record.get("qualification", ""),

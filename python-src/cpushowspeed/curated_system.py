@@ -225,10 +225,6 @@ def system_key(system, processor, prefixes, vendor_brand=None):
     return text, key, options, used
 
 
-def scope_of(source_record_id):
-    return ":".join(source_record_id.split(":")[:2])
-
-
 def extract_records(inputs):
     counts = Counter()
     for line in inputs.read_text().splitlines():
@@ -237,7 +233,7 @@ def extract_records(inputs):
         f = (o.get("raw") or {}).get("fields") or {}
         vendor = (f.get("Hardware Vendor") or f.get("Company") or f.get("company") or "").strip()
         key = (
-            scope_of(o["source_record_id"]),
+            o["scope"],
             vendor,
             " ".join((o.get("system") or "").split()),
             " ".join((hw.get("processor") or "").split()),
@@ -260,7 +256,7 @@ def import_vendors_command(root, force):
     if any((root / n).exists() for n in ("vendor.jsonl", "system_model.jsonl")) and not force:
         raise click.ClickException("vendor tables exist and are curated data; pass --force to reseed them")
     if not RECORDS.exists():
-        raise click.ClickException("run `cpushowspeed data extract-mentions` first")
+        raise click.ClickException("run `cpushowspeed data extract` first")
     records = [json.loads(line) for line in RECORDS.read_text().splitlines()]
     vendors, vendor_aliases = seed_vendors(records)
     aliases = [a for a in read_table(root, dict(file="alias.jsonl")) if a["entity_kind"] != "vendor"]
@@ -296,7 +292,7 @@ def model_id(key):
 def build_systems(db, tables):
     """Write hardware_record, system_model_derived and hardware_config tables."""
     if not RECORDS.exists():
-        return {"systems": "skipped: run `cpushowspeed data extract-mentions`"}
+        return {"systems": "skipped: run `cpushowspeed data extract`"}
     records = [json.loads(line) for line in RECORDS.read_text().splitlines()]
     resolver = Resolver(tables)
     vendor_alias = {a["text"]: a for a in tables["alias"] if a["entity_kind"] == "vendor" and a["status"] == "accepted"}

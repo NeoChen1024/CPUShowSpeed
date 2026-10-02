@@ -9,8 +9,7 @@ resolution yet.
 ## Reproduce
 
 ```sh
-uv run cpushowspeed inputs build            # existing input catalogue
-uv run cpushowspeed data extract-mentions   # data/derived/schema/processor-mentions.jsonl
+uv run cpushowspeed data extract   # observations and data/derived/schema/processor-mentions.jsonl
 uv run cpushowspeed data build              # adds processor_mention / processor_resolution
 ```
 

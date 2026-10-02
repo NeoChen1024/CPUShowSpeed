@@ -6,7 +6,7 @@ import math
 
 from cpushowspeed.classic_values import linpack_n100, numeric
 
-SCHEMA = "benchmark-observation-v1"
+SCHEMA = "benchmark-observation-v2"
 
 
 def classical_values(record, pages):
@@ -24,7 +24,7 @@ def classical_values(record, pages):
 
 def observation(
     identity,
-    metric,
+    metric_id,
     value,
     *,
     unit,
@@ -32,33 +32,43 @@ def observation(
     mode,
     system,
     source,
+    result_id=None,
     hardware=None,
     execution=None,
-    software=None,
+    run=None,
     evidence="reported_measurement",
+    verification="parsed_unreviewed",
     raw=None,
     qualification="",
 ):
-    """One positive score per metric/mode; hardware capacity never fills execution counts."""
+    """One positive score per metric/mode; hardware capacity never fills execution counts.
+
+    `result_id` names the reported result the score belongs to (one SPEC disclosure
+    carries base and peak); chronology and reviews address results, not scores.
+    `run` holds how the benchmark was run (OS, compiler, language, options), as text.
+    """
     value = float(value)
     if not math.isfinite(value) or value <= 0:
         raise ValueError("observation must have a finite positive score")
-    if not identity or not metric or not source.get("url"):
+    if not identity or not metric_id or not source.get("url"):
         raise ValueError("observation requires identity, metric and source URL")
     return dict(
         schema_version=SCHEMA,
         observation_id=hashlib.sha256(identity.encode()).hexdigest(),
         source_record_id=identity,
-        metric=metric,
+        result_id=result_id or identity,
+        scope=":".join(identity.split(":")[:2]),
+        metric_id=metric_id,
         value=value,
         unit=unit,
         track=track,
         mode=mode,
         system=system,
         hardware=hardware or {},
-        software=software or {},
+        run={k: v for k, v in (run or {}).items() if v not in (None, "")},
         execution=execution or dict(status="not_reported", observed_worker_count=None),
         evidence_class=evidence,
+        verification=verification,
         source=source,
         raw=raw,
         qualification=qualification,
@@ -98,7 +108,8 @@ def spec_observations(result):
             system=result.system,
             hardware=hardware,
             execution=runtime,
-            software=dict(os=result.os, compiler=result.compiler),
+            result_id=f"spec:{result.generation}:{result.track}:{result.result_id}",
+            run=dict(os=result.os, compiler=result.compiler),
             source=dict(url=result.source_url, sha256=result.source_container_sha256),
             raw=dict(
                 score=result.raw_fields.get("Baseline" if mode == "base" else "Result")

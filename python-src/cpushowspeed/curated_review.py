@@ -210,7 +210,7 @@ def import_reviews_command(root, force):
     if (root / "review.jsonl").exists() and not force:
         raise click.ClickException("review.jsonl exists and is curated data; pass --force to rebuild it")
     if not DATABASE.exists() or not RESULTS.exists():
-        raise click.ClickException("run `cpushowspeed data extract-mentions` and `cpushowspeed data build` first")
+        raise click.ClickException("run `cpushowspeed data extract` and `cpushowspeed data build` first")
     tables = {n: read_table(root, dict(file=n + ".jsonl")) for n in ("source", "processor_sku", "date_event")}
     with closing(sqlite3.connect(DATABASE)) as db:
         out, report = seed_reviews(tables, db)
@@ -236,7 +236,7 @@ def build_reviews(db, tables):
     )
     db.execute("CREATE TABLE review_finding (review_id TEXT, finding TEXT, detail TEXT)")
     if not RESULTS.exists():
-        return {"reviews": "skipped: run `cpushowspeed data extract-mentions`"}
+        return {"reviews": "skipped: run `cpushowspeed data extract`"}
     by_id, by_text = set(), defaultdict(list)
     for line in RESULTS.read_text().splitlines():
         r = json.loads(line)

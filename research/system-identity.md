@@ -7,7 +7,7 @@ no fitter or timeline consumes them yet.
 ## Reproduce
 
 ```sh
-uv run cpushowspeed data extract-mentions   # also writes data/derived/schema/hardware-records.jsonl
+uv run cpushowspeed data extract   # also writes data/derived/schema/hardware-records.jsonl
 uv run cpushowspeed data build              # hardware_record, system_model_derived, hardware_config
 ```
 

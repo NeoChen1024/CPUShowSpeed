@@ -1,7 +1,8 @@
 # Data schema design
 
-Status: **steps 1 (sources), 2/2b (processor and system identity), 3 (dates) and 4
-(reviews) implemented 2026-10-02; step 5 designed, not implemented.**
+Status: **steps 1 (sources), 2/2b (processor and system identity), 3 (dates), 4
+(reviews) and 5a (observations) implemented 2026-10-02; steps 5b–5d (fitters and
+timeline) not implemented.**
 This document owns the target
 data model and its migration plan. Until each step lands, the current formats in
 the [data contract](data-contract.md), [input catalog](input-catalog.md),
@@ -199,7 +200,7 @@ Maps source text to an entity.
 
 Rules live in code with a version; `data build` materializes `processor_resolution`
 (scope, text, clock → level, entity, alias, failure reason) from the extracted
-`processor_mention` table (`data extract-mentions`, from the input catalogue).
+`processor_mention` table (`data extract`, from the extracted observations).
 Order: exact text, then rules with their constraints, then family patterns. A
 failed SKU rule keeps its reason when a pattern resolves the family; overlapping
 patterns are reported as ambiguous instead of being ordered. Every consumer reads
@@ -208,14 +209,26 @@ with the previous key are in [processor identity](../research/processor-identity
 
 ### `observation`
 
-`benchmark-observation-v2` = the current v1 envelope plus `source_id`,
-`hardware_ref` (the most specific resolved entity), a structured `run` object,
-`metric_id` and `verification`. Values, units, raw records,
-execution vectors and software context are unchanged. SPEC observations are
-extracted; curated historical observations (`observations.jsonl`) and future
-KIPS/Auerbach/VUP values are curated rows of the same schema. A `metric` table
-merges registry metrics with the input-catalog metric strings
-(`cpu95:integer:rate:base`).
+Implemented 2026-10-02 (step 5a). `data extract` runs every source adapter into
+`data/derived/schema/observations.jsonl`, `benchmark-observation-v2`: the v1
+envelope (value, unit, track, mode, hardware, execution vector, evidence class,
+source block, raw record, qualification) plus
+
+| Field | Meaning |
+| --- | --- |
+| `result_id` | The reported result the score belongs to; one SPEC disclosure has base and peak scores. Chronology and reviews address results |
+| `scope` | Origin and source or suite (`spec:cpu2006`, `classical:netlib-linpack-report`) |
+| `metric_id` | Key of the curated `metric` table, which names the [registry](../research/model-registry.json) metric; adapters of one suite (`cpu92:integer:rate:peak`, `SPECrate_int92`) share it |
+| `run` | How the benchmark was run, as source text: OS, compiler, language, optimization. Copies/threads stay in the execution vector |
+| `verification` | As in the provenance block; every extracted row is `parsed_unreviewed` (adapter checks such as CPU92 ratio means are not reviews) |
+
+`data build` loads them into the `observation` table with the resolved
+`source_id` (by content hash, then a registry key the adapter cites such as a
+SPEC89 package source ID, then an address claimed by one source, then a dataset's
+`member_url_prefix`), the result's `hardware_id`, `system_id` and
+`processor_entity`, and its selected chronology year. All 103,456 observations
+resolve to a source. Curated observations (`historical/observations.jsonl`,
+future KIPS/Auerbach/VUP values) are not yet loaded.
 
 ### `date_event`
 
@@ -300,10 +313,11 @@ into `observation`/`alias` rows rather than restructured.
 
 ## Migration plan
 
-Each step ships separately and must pass a parity check before the old format
-is removed. Parity means: identical fitted coefficients and intervals, identical
-timeline record IDs, VAXen values and selected years, unless a documented change
-is intended and listed in that step's report.
+Each step ships separately. Step 1 was held to parity (identical fitted
+coefficients and intervals, timeline record IDs, VAXen values and selected
+years). Steps 2–5 redesign identity and dates by user decision, so their outputs
+are compared with the former ones instead, and each step's report lists what
+changed.
 
 1. **Sources and provenance** (done 2026-10-02). Create `source` and convert the
    registries. Legacy rows are linked through `legacy_ids` rather than edited,
@@ -326,14 +340,30 @@ is intended and listed in that step's report.
    the former timeline rather than held to parity: 50,298 of 58,813 SPEC records
    keep their year (most changes are CPU dating, one year earlier); 898 classical
    configurations are dated in both and 161 lose a year to unmatched spellings.
-4. **Reviews** (done 2026-10-02). 29 rows: 4 rejected result dates (one SPEC
-   hardware availability before its processor's launch; three Longbottom table
-   years), 13 accepted CPU92–CPU95 speed pairs and 12 mix↔classical system links
-   awaiting review. The EPYC 7313 launch date that justified the exclusion became a
+4. **Reviews** (done 2026-10-02). 31 rows: 6 rejected result dates (one SPEC
+   hardware availability before its processor's launch; five Longbottom table
+   years, two of them the CDC Cyber 73/74 rows dated with the 6400/6600), 13
+   accepted CPU92–CPU95 speed pairs and 12 mix↔classical system links (11 awaiting
+   review, one rejected). The EPYC 7313 launch date that justified the exclusion became a
    SKU release event, so all 26 EPYC 7313 results are CPU-dated (2021), including
    the two that reported 2019 availability. See [chronology](../research/chronology.md#reviews).
-5. **Observations.** Emit `benchmark-observation-v2` with entity references; switch
-   fitters and timeline to the built database; regenerate the input catalog from it.
+5. **Observations**, in four parts.
+   - **5a** (done 2026-10-02): `benchmark-observation-v2`, the `metric` table, the
+     `observation` table and dataset sources for the SPEC bulk exports, the SPEC89
+     package sources and the Netlib CPU92 pages. Extraction counts are unchanged
+     (103,456 observations, 58,356 results) and so is every chronology selection.
+   - **5b**: SPEC rate fitters read the `observation` table and pair over resolved
+     system models and processors instead of private keys; accepted result pairs
+     feed the CPU92 fit.
+   - **5c**: classical, SPEC89 and mix fitters likewise; the duplicate
+     `historical-spec:spec92-netlib` view of the Netlib CPU92 pages is dropped.
+   - **5d**: the timeline reads `result_chronology`; the legacy date files, the
+     input catalog snapshot (`inputs build`, `--input-catalog`) and their readers
+     are deleted.
+
+   By user decision (2026-10-02) step 5 is compared with the former products, not
+   held to parity: identity and dates were redesigned in steps 2–4, so coefficients
+   change and each change is reported. The frontend may stay broken meanwhile.
 
 `data validate` and `data build` were implemented in step 1 and are extended per step.
 

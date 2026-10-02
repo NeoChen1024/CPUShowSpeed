@@ -14,13 +14,16 @@ row schema; tables are JSONL, one row per line, sorted by primary key.
 | `system_model.jsonl` | `system_model`: curated machines and canonical names; other models are rule-derived | 2026-10-02 |
 | `date_event.jsonl` | `date_event`: dated events of processors and system models | 2026-10-02 |
 | `review.jsonl` | `review`: rejected result dates, accepted result pairs, identity links awaiting review | 2026-10-02 |
+| `metric.jsonl` | `metric`: observation metric strings and the registry metric each measures | 2026-10-02 |
 
 Edit rows directly, then run:
 
 ```sh
 uv run cpushowspeed data validate --check-local
-uv run cpushowspeed data extract-mentions   # when the input catalogue changes
+uv run cpushowspeed data extract   # when a source adapter or raw input changes
 uv run cpushowspeed data build
 ```
 
-`data build` writes the ignored SQLite database `data/derived/schema/cpushowspeed.sqlite`.
+`data extract` runs every source adapter into `data/derived/schema/observations.jsonl`
+(`benchmark-observation-v2`); `data build` writes the ignored SQLite database
+`data/derived/schema/cpushowspeed.sqlite`, including the `observation` table.

@@ -21,7 +21,7 @@ from cpushowspeed.classic_timeline import historical_timeline
 from cpushowspeed.cpu_chronology import cpu_chronology_command
 from cpushowspeed.curated import data
 from cpushowspeed.curated_dates import import_dates_command
-from cpushowspeed.curated_identity import extract_mentions_command, import_processors_command
+from cpushowspeed.curated_identity import extract_command, import_processors_command
 from cpushowspeed.curated_review import import_reviews_command
 from cpushowspeed.curated_sources import migrate_sources_command
 from cpushowspeed.curated_system import import_vendors_command
@@ -72,7 +72,7 @@ research.add_command(cpu_chronology_command)
 cli.add_command(research)
 data.add_command(migrate_sources_command)
 data.add_command(import_processors_command)
-data.add_command(extract_mentions_command)
+data.add_command(extract_command)
 data.add_command(import_vendors_command)
 data.add_command(import_dates_command)
 data.add_command(import_reviews_command)

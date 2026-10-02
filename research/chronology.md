@@ -8,7 +8,7 @@ timeline (built before the 2026-10-02 removals) serves as the comparison.
 ## Reproduce
 
 ```sh
-uv run cpushowspeed data extract-mentions   # also result-records.jsonl and model-years.jsonl
+uv run cpushowspeed data extract   # observations, result-records.jsonl and model-years.jsonl
 uv run cpushowspeed data build              # result_chronology and consistency_finding
 ```
 

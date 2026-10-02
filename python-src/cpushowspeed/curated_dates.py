@@ -25,7 +25,14 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import click
-from cpushowspeed.curated import CURATED, DATABASE, read_table, sha256, validate, write_jsonl
+from cpushowspeed.curated import (
+    CURATED,
+    DATABASE,
+    read_table,
+    sha256,
+    validate,
+    write_jsonl,
+)
 from cpushowspeed.curated_identity import CATALOG, slug
 from cpushowspeed.curated_sources import norm_url
 from cpushowspeed.curated_system import brand_prefixes, model_id, system_key
@@ -469,16 +476,10 @@ def month(text):
 
 def extract_results(inputs):
     """One row per benchmark result: its hardware tuple and the dates it reports."""
-    from cpushowspeed.curated_system import scope_of
-
     results = {}
     for line in inputs.read_text().splitlines():
         o = json.loads(line)
-        rid = (
-            re.sub(r":(?:base|peak)$", "", o["source_record_id"])
-            if o["source_record_id"].startswith("spec:")
-            else o["source_record_id"]
-        )
+        rid = o["result_id"]
         hw = o.get("hardware") or {}
         raw = o.get("raw") or {}
         f = raw.get("fields") or raw
@@ -486,7 +487,7 @@ def extract_results(inputs):
             year = str(f.get("introduction_year_raw") or "").strip()
             results[rid] = dict(
                 result_id=rid,
-                scope=scope_of(o["source_record_id"]),
+                scope=o["scope"],
                 vendor=(f.get("Hardware Vendor") or f.get("Company") or f.get("company") or "").strip(),
                 system=" ".join((o.get("system") or "").split()),
                 processor=" ".join((hw.get("processor") or "").split()),
@@ -571,7 +572,7 @@ def build_chronology(db, tables):
     from cpushowspeed.curated_review import rejected_dates
 
     if not RESULTS.exists():
-        return {"chronology": "skipped: run `cpushowspeed data extract-mentions`"}
+        return {"chronology": "skipped: run `cpushowspeed data extract`"}
     usable = [e for e in tables["date_event"] if e["chronology"] != "excluded" and e["claim_status"] not in UNCONFIRMED]
     by_subject = defaultdict(list)
     for e in usable:

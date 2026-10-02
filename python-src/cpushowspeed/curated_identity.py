@@ -23,7 +23,6 @@ from cpushowspeed.cpu_chronology import sku_key
 from cpushowspeed.curated import CURATED, read_table, sha256, validate, write_jsonl
 
 CATALOG = Path("research/data/historical/cpu-sku-chronology.csv")
-INPUTS = Path("data/derived/inputs/observations.jsonl")
 MENTIONS = Path("data/derived/schema/processor-mentions.jsonl")
 RULES = {"sku-key-v1": sku_key}
 FAMILIES = {
@@ -141,47 +140,49 @@ def import_processors_command(root, force):
         sys.exit(1)
 
 
-def mention_scope(source_record_id):
-    """'spec:cpu2006:rate:...' -> 'spec:cpu2006'; the origin and its source or suite."""
-    return ":".join(source_record_id.split(":")[:2])
+@click.command("extract")
+@click.option("--raw-dir", type=click.Path(path_type=Path, file_okay=False), default=Path("data/raw/spec"), show_default=True)
+def extract_command(raw_dir):
+    """Run every source adapter into benchmark-observation-v2, then extract mentions, hardware and results."""
+    from cpushowspeed.benchmark_records import write_jsonl as write_observations
+    from cpushowspeed.curated_observation import OBSERVATIONS
+    from cpushowspeed.input_catalog import records
 
-
-@click.command("extract-mentions")
-@click.option("--inputs", type=click.Path(path_type=Path, exists=True, dir_okay=False), default=INPUTS, show_default=True)
-@click.option("--output", type=click.Path(path_type=Path, dir_okay=False), default=MENTIONS, show_default=True)
-def extract_mentions_command(inputs, output):
-    """Extract distinct processor mentions (scope, text, nominal clock) from the input catalogue."""
+    observations = write_observations(OBSERVATIONS, records(raw_dir))
     counts = Counter()
-    for line in inputs.read_text().splitlines():
-        o = json.loads(line)
-        hw = o.get("hardware") or {}
-        text = re.sub(r"\s+", " ", hw.get("processor") or "").strip()
-        counts[mention_scope(o["source_record_id"]), text, hw.get("nominal_mhz")] += 1
+    with OBSERVATIONS.open() as stream:
+        for line in stream:
+            o = json.loads(line)
+            text = re.sub(r"\s+", " ", o["hardware"].get("processor") or "").strip()
+            counts[o["scope"], text, o["hardware"].get("nominal_mhz")] += 1
     rows = [
         dict(scope=s, text=t, clock_mhz=c, observations=n)
         for (s, t, c), n in sorted(counts.items(), key=lambda kv: (kv[0][0], kv[0][1], kv[0][2] is None, kv[0][2] or 0))
     ]
-    write_jsonl(output, rows)
+    write_jsonl(MENTIONS, rows)
     from cpushowspeed.curated_system import RECORDS, extract_records
 
-    records = extract_records(inputs)
-    write_jsonl(RECORDS, records)
-    from cpushowspeed.curated_dates import RESULTS, extract_results
+    records_ = extract_records(OBSERVATIONS)
+    write_jsonl(RECORDS, records_)
+    from cpushowspeed.curated_dates import (
+        MODEL_YEARS,
+        RESULTS,
+        extract_model_years,
+        extract_results,
+    )
 
-    results = extract_results(inputs)
+    results = extract_results(OBSERVATIONS)
     write_jsonl(RESULTS, results)
-    from cpushowspeed.curated_dates import MODEL_YEARS, extract_model_years
-
     write_jsonl(MODEL_YEARS, extract_model_years())
     meta = dict(
-        inputs={str(inputs): sha256(inputs)},
+        observations={str(OBSERVATIONS): sha256(OBSERVATIONS)},
         code_sha256={str(p): sha256(p) for p in [Path(__file__), Path(sys.modules[sku_key.__module__].__file__)]},
         mentions=len(rows),
-        hardware_records=len(records),
+        hardware_records=len(records_),
         results=len(results),
-        observations=sum(counts.values()),
+        observation_count=observations,
     )
-    output.with_name(output.name + ".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+    MENTIONS.with_name(MENTIONS.name + ".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
     json.dump(meta, sys.stdout, indent=2)
     click.echo()
 
@@ -259,7 +260,7 @@ class Resolver:
 def build_resolution(db, tables):
     """Write processor_mention and processor_resolution when extracted mentions exist."""
     if not MENTIONS.exists():
-        return {"resolution": "skipped: run `cpushowspeed data extract-mentions`"}
+        return {"resolution": "skipped: run `cpushowspeed data extract`"}
     resolver = Resolver(tables)
     mentions = [json.loads(line) for line in MENTIONS.read_text().splitlines()]
     db.execute("CREATE TABLE processor_mention (scope TEXT, text TEXT, clock_mhz REAL, observations INTEGER)")

@@ -188,6 +188,9 @@ def build(root=CURATED, database=DATABASE):
         meta.update(build_reviews(db, tables))
 
         meta.update(build_chronology(db, tables))
+        from cpushowspeed.curated_observation import build_observations
+
+        meta.update(build_observations(db, tables))
         db.executemany("INSERT INTO _meta VALUES (?, ?)", sorted(meta.items()))
         db.commit()
     partial.replace(database)

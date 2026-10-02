@@ -3,7 +3,7 @@
   "$id": "https://github.com/NeoChen1024/CPUShowSpeed/data/curated/schema.json",
   "title": "CPUShowSpeed curated tables",
   "description": "Row schemas and table contracts for data/curated. Semantics are owned by docs/data-schema.md.",
-  "x-schema-version": "1.4.0",
+  "x-schema-version": "1.5.0",
   "x-tables": {
     "source": {
       "file": "source.jsonl",
@@ -74,6 +74,12 @@
         "source_id": "source"
       },
       "description": "Judgements qualifying extracted evidence: rejected result dates, accepted result pairs, identity links awaiting review."
+    },
+    "metric": {
+      "file": "metric.jsonl",
+      "row": "#/$defs/metric",
+      "primary_key": "metric_id",
+      "description": "Observation metric strings and the registry metric each measures."
     }
   },
   "$defs": {
@@ -191,6 +197,11 @@
             "$ref": "#/$defs/text"
           },
           "uniqueItems": true
+        },
+        "member_url_prefix": {
+          "description": "Dataset of individually retrieved pages: a page whose URL starts with this prefix belongs to it.",
+          "type": "string",
+          "pattern": "^https?://"
         },
         "store": {
           "description": "Root that local_path is relative to.",
@@ -933,6 +944,53 @@
           }
         }
       ]
+    },
+    "metric_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:]+$"
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric_id",
+        "registry_metric",
+        "mode",
+        "unit",
+        "track"
+      ],
+      "properties": {
+        "metric_id": {
+          "$ref": "#/$defs/metric_id",
+          "description": "The metric string observations carry."
+        },
+        "registry_metric": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Metric id in research/model-registry.json; adapters of one suite share it."
+        },
+        "mode": {
+          "enum": [
+            "base",
+            "peak",
+            "reported"
+          ]
+        },
+        "unit": {
+          "$ref": "#/$defs/text"
+        },
+        "track": {
+          "enum": [
+            "rate",
+            "speed",
+            "classical",
+            "instruction_mix"
+          ]
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        }
+      }
     }
   }
 }
