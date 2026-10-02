@@ -138,8 +138,8 @@ The command refuses to overwrite an existing `source.jsonl` without `--force`.
 | `processor_family` | `fam:` | vendor, name: the most specific processor line a text can identify (Intel Xeon, IBM POWER7, Alpha 21164) |
 | `processor_sku` | `sku:` | family_id, vendor, model, rule match `keys`, every listed `base_clocks_mhz`, verbatim heading `sections` (generation/codename), source_ids |
 | `vendor` | `org:` | name, `model_prefixes`; only spellings of one legal entity merge |
-| `system_model` | `sys:` | name, vendor_ids; curated rows plus models derived by `spec-system-v1` (key excludes the vendor, so lines that changed owner stay one model; RS/6000 530 and 530H stay separate) |
-| `hardware_config` | `hw:` | derived: equal tuples of system model, processor entity, nominal clock, chips, cores, threads/core and memory; unknown values never equal known ones. Hardware options (FPU/FPA) await curated classical models |
+| `system_model` | `sys:` | name, vendor_ids; curated rows plus models derived by `spec-system-v1` and `name-system-v1` in one key space (key excludes the vendor, so lines that changed owner stay one model; RS/6000 530 and 530H stay separate). A curated row with a rule key's ID names that model |
+| `hardware_config` | `hw:` | derived: equal tuples of system model, processor entity, nominal clock, chips, cores, threads/core, memory and hardware options (FPA, w/68882); unknown values never equal known ones |
 
 A processor reference may stop at the family when the source names only a family
 ("Intel Itanium 2", "SPARC64 V"). Family-level date events are family launches

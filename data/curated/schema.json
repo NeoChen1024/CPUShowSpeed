@@ -409,7 +409,7 @@
           ]
         },
         "entity_id": {
-          "description": "Target entity; omitted for rules, whose output names the entity.",
+          "description": "Target entity; omitted for rules and for rejected exact-text aliases.",
           "$ref": "#/$defs/text"
         },
         "match_kind": {
@@ -470,9 +470,20 @@
           },
           "then": {
             "required": [
-              "text",
-              "entity_id"
-            ]
+              "text"
+            ],
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "rejected"
+                }
+              }
+            },
+            "else": {
+              "required": [
+                "entity_id"
+              ]
+            }
           }
         },
         {

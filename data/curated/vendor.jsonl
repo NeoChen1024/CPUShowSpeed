@@ -2,8 +2,10 @@
 {"vendor_id": "org:acer", "name": "Acer Incorporated", "model_prefixes": ["acer"]}
 {"vendor_id": "org:action", "name": "ACTION S.A."}
 {"vendor_id": "org:advanced-micro-devices", "name": "Advanced Micro Devices"}
+{"vendor_id": "org:alliant", "name": "Alliant Computer Systems", "note": "Added for classical machine models on 2026-10-02; no SPEC vendor spelling."}
 {"vendor_id": "org:alpha-processor", "name": "Alpha Processor, Inc."}
 {"vendor_id": "org:altos-computing", "name": "Altos Computing Inc."}
+{"vendor_id": "org:amdahl", "name": "Amdahl", "note": "Added for classical machine models on 2026-10-02; no SPEC vendor spelling."}
 {"vendor_id": "org:apple", "name": "Apple Computer, Inc.", "model_prefixes": ["apple"]}
 {"vendor_id": "org:asrock-rack", "name": "ASRock Rack Inc."}
 {"vendor_id": "org:asus-international", "name": "ASUS Computer International", "model_prefixes": ["asus"]}
@@ -18,6 +20,8 @@
 {"vendor_id": "org:clevo", "name": "Clevo"}
 {"vendor_id": "org:compal-electronics", "name": "Compal Electronics, Inc."}
 {"vendor_id": "org:compaq", "name": "Compaq Computer Corporation", "model_prefixes": ["compaq"]}
+{"vendor_id": "org:control-data", "name": "Control Data Corporation", "note": "Added for classical machine models on 2026-10-02; no SPEC vendor spelling."}
+{"vendor_id": "org:convex", "name": "Convex Computer", "note": "Added for classical machine models on 2026-10-02; no SPEC vendor spelling."}
 {"vendor_id": "org:cray-research", "name": "Cray Research, Inc."}
 {"vendor_id": "org:cray-research-superservers", "name": "Cray Research Superservers, Inc."}
 {"vendor_id": "org:cryo-performance-computing", "name": "Cryo Performance Computing Ltd"}
@@ -53,6 +57,7 @@
 {"vendor_id": "org:huawei", "name": "Huawei", "model_prefixes": ["huawei"]}
 {"vendor_id": "org:hypertechnologies-ciara", "name": "Hypertechnologies Ciara, Inc"}
 {"vendor_id": "org:ibm", "name": "IBM Corporation", "model_prefixes": ["ibm"]}
+{"vendor_id": "org:icl", "name": "International Computers Limited", "note": "Added for classical machine models on 2026-10-02; no SPEC vendor spelling."}
 {"vendor_id": "org:ieit-systems", "name": "IEIT Systems Co., Ltd."}
 {"vendor_id": "org:incom", "name": "Incom S.A."}
 {"vendor_id": "org:inspur", "name": "Inspur Corporation", "model_prefixes": ["inspur"]}
@@ -76,6 +81,7 @@
 {"vendor_id": "org:maxdata", "name": "Maxdata AG"}
 {"vendor_id": "org:microsoft", "name": "Microsoft Corporation"}
 {"vendor_id": "org:minis-forum", "name": "MINIS FORUM"}
+{"vendor_id": "org:mips-computer-systems", "name": "MIPS Computer Systems", "note": "Added for classical machine models on 2026-10-02; no SPEC vendor spelling."}
 {"vendor_id": "org:motorola", "name": "Motorola"}
 {"vendor_id": "org:motorola-group", "name": "Motorola Computer Group"}
 {"vendor_id": "org:msi", "name": "MSI"}
@@ -89,6 +95,7 @@
 {"vendor_id": "org:pathscale", "name": "PathScale, Inc."}
 {"vendor_id": "org:pc-factory", "name": "PC Factory S.A."}
 {"vendor_id": "org:positivo", "name": "Positivo"}
+{"vendor_id": "org:prime-computer", "name": "Prime Computer", "note": "Added for classical machine models on 2026-10-02; no SPEC vendor spelling."}
 {"vendor_id": "org:pyramid-technology", "name": "Pyramid Technology"}
 {"vendor_id": "org:quanta", "name": "Quanta Computer Inc."}
 {"vendor_id": "org:quanta-cloud-technology", "name": "Quanta Cloud Technology"}
