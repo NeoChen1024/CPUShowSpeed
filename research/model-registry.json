@@ -50,6 +50,16 @@
       "evidence_class": "per value: normalized observation or estimate"
     },
     {
+      "id": "speed-vaxen",
+      "title": "VAX-11/780 equivalent SPEC92 integer speed",
+      "mode": "speed",
+      "unit": "speed-VAXen",
+      "status": "defined",
+      "variants": [],
+      "reference": "VAX-11/780 is the SPEC92 reference machine: SPECint92 speed = 1 speed-VAXen",
+      "evidence_class": "per value: normalized observation or estimate"
+    },
+    {
       "id": "rate-92",
       "title": "SPEC CPU92 integer rate",
       "mode": "rate",
@@ -585,6 +595,14 @@
       "owner": "research/instruction-mix-network.md",
       "optional": false,
       "lineage": "CCTA Gibson/ADP ratings attached to classical network nodes by resolved system_id or needs_review link; schema database"
+    },
+    {
+      "id": "modern-speed-chain",
+      "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
+      "kind": "snapshot",
+      "owner": "research/spec-speed-chain.md",
+      "optional": false,
+      "lineage": "Automatic hardware_near SPEC92–2026 integer-speed pairs from the schema database"
     }
   ],
   "models": [
@@ -1391,6 +1409,424 @@
       ]
     },
     {
+      "id": "int92-speed-vaxen",
+      "title": "SPECint92 → speed-VAXen",
+      "track": "spec-rate",
+      "input_metrics": [
+        "int92"
+      ],
+      "target_metric": "speed-vaxen",
+      "relationship": "definition",
+      "formula": "y = x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "defined",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [],
+      "depends_on": [],
+      "shared_evidence": "Defined: VAX-11/780 is the SPEC92 reference machine",
+      "command": "",
+      "outputs": []
+    },
+    {
+      "id": "speed-95-to-92",
+      "title": "CPU95 → CPU92 speed calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-95"
+      ],
+      "target_metric": "int92",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain",
+        "schema-database"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Edges share no configuration or submission (checked)",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu95",
+        "old_generation": "cpu92",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-95-vaxen",
+      "title": "CPU95 speed → speed-VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-95"
+      ],
+      "target_metric": "speed-vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older speed factors; SPECint92 = 1",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain"
+      ],
+      "depends_on": [
+        "speed-95-to-92",
+        "int92-speed-vaxen"
+      ],
+      "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "generation": "cpu95",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2000-to-95",
+      "title": "CPU2000 → CPU95 speed calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2000"
+      ],
+      "target_metric": "speed-95",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain",
+        "schema-database"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Edges share no configuration or submission (checked)",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu2000",
+        "old_generation": "cpu95",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2000-vaxen",
+      "title": "CPU2000 speed → speed-VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2000"
+      ],
+      "target_metric": "speed-vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older speed factors; SPECint92 = 1",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain"
+      ],
+      "depends_on": [
+        "speed-2000-to-95",
+        "speed-95-vaxen"
+      ],
+      "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "generation": "cpu2000",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2006-to-2000",
+      "title": "CPU2006 → CPU2000 speed calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2006"
+      ],
+      "target_metric": "speed-2000",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain",
+        "schema-database"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Edges share no configuration or submission (checked)",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu2006",
+        "old_generation": "cpu2000",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2006-vaxen",
+      "title": "CPU2006 speed → speed-VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2006"
+      ],
+      "target_metric": "speed-vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older speed factors; SPECint92 = 1",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain"
+      ],
+      "depends_on": [
+        "speed-2006-to-2000",
+        "speed-2000-vaxen"
+      ],
+      "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "generation": "cpu2006",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2017-to-2006",
+      "title": "CPU2017 → CPU2006 speed calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2017"
+      ],
+      "target_metric": "speed-2006",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain",
+        "schema-database"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Edges share no configuration or submission (checked)",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu2017",
+        "old_generation": "cpu2006",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2017-vaxen",
+      "title": "CPU2017 speed → speed-VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2017"
+      ],
+      "target_metric": "speed-vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older speed factors; SPECint92 = 1",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain"
+      ],
+      "depends_on": [
+        "speed-2017-to-2006",
+        "speed-2006-vaxen"
+      ],
+      "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "generation": "cpu2017",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2026-to-2017",
+      "title": "CPU2026 → CPU2017 speed calibration",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2026"
+      ],
+      "target_metric": "speed-2017",
+      "relationship": "empirical-fit",
+      "formula": "y = k*x",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain",
+        "schema-database"
+      ],
+      "depends_on": [],
+      "shared_evidence": "Edges share no configuration or submission (checked)",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-factors.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "new_generation": "cpu2026",
+        "old_generation": "cpu2017",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
+      "id": "speed-2026-vaxen",
+      "title": "CPU2026 speed → speed-VAXen chain",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-2026"
+      ],
+      "target_metric": "speed-vaxen",
+      "relationship": "composition",
+      "formula": "product of fitted newer-to-older speed factors; SPECint92 = 1",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-chain.md",
+      "dataset_ids": [
+        "modern-speed-chain"
+      ],
+      "depends_on": [
+        "speed-2026-to-2017",
+        "speed-2017-vaxen"
+      ],
+      "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
+      "command": "cpushowspeed bridge fit-speed-chain",
+      "outputs": [
+        {
+          "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "generation": "cpu2026",
+        "mode": [
+          "base",
+          "peak"
+        ]
+      }
+    },
+    {
       "id": "spec-predictor-speed-only",
       "title": "Older-rate predictor: speed_only",
       "track": "spec-rate",
@@ -2070,6 +2506,13 @@
       "role": "primary",
       "status": "current",
       "purpose": "Shared input migration and fitting review"
+    },
+    {
+      "path": "research/spec-speed-chain.md",
+      "title": "SPEC integer-speed chain (speed-VAXen)",
+      "role": "primary",
+      "status": "current",
+      "purpose": "CPU92–CPU2026 integer-speed chain to SPECint92 = 1 speed-VAXen, parallel to the rate chain"
     }
   ]
 }

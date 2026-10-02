@@ -9,6 +9,7 @@ Start with the [four-track overview](overview.md).
 | ID | Meaning | Mode / unit | Status |
 | --- | --- | --- | --- |
 | vaxen | VAX-11/780 equivalent SPEC92 integer-rate throughput | rate / VAXen | defined |
+| speed-vaxen | VAX-11/780 equivalent SPEC92 integer speed | speed / speed-VAXen | defined |
 | rate-92 | SPEC CPU92 integer rate | rate / CPU92 raw integer-rate points | recorded |
 | rate-95 | SPEC CPU95 integer rate | rate / CPU95 raw integer-rate points | recorded |
 | rate-2000 | SPEC CPU2000 integer rate | rate / CPU2000 raw integer-rate points | recorded |
@@ -105,6 +106,27 @@ flowchart TD
     classical_sparse_network --> instruction_mix_joint_network
     rate92_unit --> instruction_mix_joint_network
     int89_rate_vaxen --> instruction_mix_joint_network
+    int92_speed_vaxen["int92-speed-vaxen"]
+    speed_95_to_92["speed-95-to-92"]
+    speed_95_vaxen["speed-95-vaxen"]
+    speed_95_to_92 --> speed_95_vaxen
+    int92_speed_vaxen --> speed_95_vaxen
+    speed_2000_to_95["speed-2000-to-95"]
+    speed_2000_vaxen["speed-2000-vaxen"]
+    speed_2000_to_95 --> speed_2000_vaxen
+    speed_95_vaxen --> speed_2000_vaxen
+    speed_2006_to_2000["speed-2006-to-2000"]
+    speed_2006_vaxen["speed-2006-vaxen"]
+    speed_2006_to_2000 --> speed_2006_vaxen
+    speed_2000_vaxen --> speed_2006_vaxen
+    speed_2017_to_2006["speed-2017-to-2006"]
+    speed_2017_vaxen["speed-2017-vaxen"]
+    speed_2017_to_2006 --> speed_2017_vaxen
+    speed_2006_vaxen --> speed_2017_vaxen
+    speed_2026_to_2017["speed-2026-to-2017"]
+    speed_2026_vaxen["speed-2026-vaxen"]
+    speed_2026_to_2017 --> speed_2026_vaxen
+    speed_2017_vaxen --> speed_2026_vaxen
     spec_predictor_speed_only["spec-predictor-speed-only"]
     rate92_unit --> spec_predictor_speed_only
     rate_95_vaxen --> spec_predictor_speed_only
@@ -149,6 +171,17 @@ flowchart TD
 | [timing-reconstruction](../docs/methods.md) | gibson, adp, process-control, trace-timing → vaxen | planned; planned; planned | none |
 | [classical-sparse-network](../research/classic-network-fitting.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; primary; implemented-conditional | rate92-unit, int89-rate-vaxen |
 | [instruction-mix-joint-network](../research/instruction-mix-network.md) | gibson, adp, dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; primary; implemented-conditional | classical-sparse-network, rate92-unit, int89-rate-vaxen |
+| [int92-speed-vaxen](../research/spec-speed-chain.md) | int92 → speed-vaxen | definition; primary; defined | none |
+| [speed-95-to-92](../research/spec-speed-chain.md) | speed-95 → int92 | empirical-fit; primary; implemented-conditional | none |
+| [speed-95-vaxen](../research/spec-speed-chain.md) | speed-95 → speed-vaxen | composition; primary; implemented-conditional | speed-95-to-92, int92-speed-vaxen |
+| [speed-2000-to-95](../research/spec-speed-chain.md) | speed-2000 → speed-95 | empirical-fit; primary; implemented-conditional | none |
+| [speed-2000-vaxen](../research/spec-speed-chain.md) | speed-2000 → speed-vaxen | composition; primary; implemented-conditional | speed-2000-to-95, speed-95-vaxen |
+| [speed-2006-to-2000](../research/spec-speed-chain.md) | speed-2006 → speed-2000 | empirical-fit; primary; implemented-conditional | none |
+| [speed-2006-vaxen](../research/spec-speed-chain.md) | speed-2006 → speed-vaxen | composition; primary; implemented-conditional | speed-2006-to-2000, speed-2000-vaxen |
+| [speed-2017-to-2006](../research/spec-speed-chain.md) | speed-2017 → speed-2006 | empirical-fit; primary; implemented-conditional | none |
+| [speed-2017-vaxen](../research/spec-speed-chain.md) | speed-2017 → speed-vaxen | composition; primary; implemented-conditional | speed-2017-to-2006, speed-2006-vaxen |
+| [speed-2026-to-2017](../research/spec-speed-chain.md) | speed-2026 → speed-2017 | empirical-fit; primary; implemented-conditional | none |
+| [speed-2026-vaxen](../research/spec-speed-chain.md) | speed-2026 → speed-vaxen | composition; primary; implemented-conditional | speed-2026-to-2017, speed-2017-vaxen |
 | [spec-predictor-speed-only](../research/spec-speed-rate-predictors.md) | speed-95, speed-2000, speed-2006, speed-2017, speed-2026 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
 | [spec-predictor-rate-only](../research/spec-speed-rate-predictors.md) | rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
 | [spec-predictor-equal-geometric](../research/spec-speed-rate-predictors.md) | speed-95, speed-2000, speed-2006, speed-2017, speed-2026, rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
@@ -180,6 +213,7 @@ flowchart TD
 | spec95-2000-overlap-audit | [guide](../research/spec95-spec2000-overlap-audit.md) | `research/data/spec/95-2000-audit` | required in checkout |
 | spec-speed-predictors | [guide](../research/spec-speed-rate-predictors.md) | `research/data/spec/speed-predictors` | required in checkout |
 | mix-network | [guide](../research/instruction-mix-network.md) | `research/data/classic/mix-network-coefficients.csv` | required in checkout |
+| modern-speed-chain | [guide](../research/spec-speed-chain.md) | `research/data/spec/fitting/integer-speed-chain-intervals.csv` | required in checkout |
 
 ## Document inventory
 
@@ -262,3 +296,4 @@ analysis from evidence, diagnostics and retired work.
 | [SPEC source fields and execution-resource audit](../research/spec-resource-field-audit.md) | primary | current |
 | [Shared benchmark input contract](../docs/input-catalog.md) | guide | current |
 | [Shared input migration and fitting review](../research/input-unification-fitting-review.md) | primary | current |
+| [SPEC integer-speed chain (speed-VAXen)](../research/spec-speed-chain.md) | primary | current |
