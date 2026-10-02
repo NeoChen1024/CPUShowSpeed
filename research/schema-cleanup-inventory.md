@@ -129,7 +129,9 @@ diagnostic group and was removed with it. Preparation (`prepare-pairs`,
 `prepare-sources`) and the primary rate, SPEC89 bridge and network fits are
 unchanged. `plot timeline` is knowingly left broken: it consumed the joint,
 relaxed and mix-network outputs and will be rebuilt on the schema. Everything
-removed remains recoverable from Git history.
+removed remains recoverable from Git history. Their 12 test modules (and one
+environment-model test in `test_calibration_policy.py`) were missed in that commit
+and removed on the same day; the test suite imports cleanly again.
 
 ## Retirement procedure
 

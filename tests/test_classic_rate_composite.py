@@ -2,7 +2,7 @@ import json
 import math
 import unittest
 
-from cpushowspeed.classic_fit import ANCHOR
+from cpushowspeed.calibration import ANCHOR
 from cpushowspeed.classic_rate_composite import calculate, prepare
 
 

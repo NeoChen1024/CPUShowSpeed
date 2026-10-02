@@ -4,7 +4,6 @@ import unittest
 from pathlib import Path
 
 from cpushowspeed.calibration import absolute_error_percent, error_summary, fit
-from cpushowspeed.classic_environment import train
 from cpushowspeed.research_io import read_csv, write_csv
 
 
@@ -19,14 +18,6 @@ class CalibrationPolicyTests(unittest.TestCase):
         self.assertAlmostEqual(result["model_center_p95_percent"], 97.5)
         self.assertEqual(result["model_balanced_observation_p95_percent"], 100)
         self.assertEqual(result, error_summary(rows[:20] * 3 + rows[20:]))
-
-    def test_environment_pooled_matches_main_estimator_even_with_uneven_environments(self):
-        rows = [dict(model_key="a", environment="x", z=0, x=1, y_vaxen=1)] * 9
-        rows += [
-            dict(model_key="a", environment="y", z=math.log(4), x=1, y_vaxen=4),
-            dict(model_key="b", environment="x", z=math.log(2), x=1, y_vaxen=2),
-        ]
-        self.assertAlmostEqual(math.exp(train(rows, "pooled")["alpha"]), fit(rows, 100, 1)["factor"])
 
     def test_csv_policies_keep_bom_and_newlines_explicit(self):
         with tempfile.TemporaryDirectory() as d:
