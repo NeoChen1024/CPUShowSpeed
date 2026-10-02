@@ -41,10 +41,12 @@ owning document as work lands; remove superseded items.
 
 ## Historical calibration follow-up
 
-- [ ] Seek direct SPECint89/SPEC92 rate overlaps; the implemented two-edge bridge
-      currently relies on separate native-score and DEC speed/rate cohorts.
-- [ ] Validate older-machine estimates against independent throughput evidence;
-      agreement with inferred SPEC89 targets is not observed-rate validation.
+- [ ] Seek more SPECint89/SPECint92 hardware-near overlaps; the one-edge speed
+      bridge has a narrow peak-only cohort.
+- [ ] Validate older-machine estimates against independent evidence; agreement
+      with inferred SPEC89 targets is not observed-target validation.
+- [ ] Review the CPU92/CPU95 speed pairs (the speed chain uses automatic
+      hardware-near pairs; the rate anchor's pairs are reviewed).
 - [ ] Assess architecture/source holdouts and chronological extrapolation while
       retaining valid diverse observations regardless of residual magnitude.
 - [ ] Define a trace/timing measurement contract before implementing the PDP-8/E

@@ -1,35 +1,36 @@
 # Research overview
 
-Updated: 2026-09-27. Read the four tracks in order to understand the common
+Updated: 2026-10-03. Read the four tracks in order to understand the common
 unit, modern calibration, SPEC89 extension and classical workload pivots.
 
 ## How the routes connect
 
 ```mermaid
 flowchart TD
-    modern[CPU2026 / 2017 / 2006 / 2000 / 95 integer rate] -->|adjacent empirical fits, base and peak separate| rate92[SPEC92 integer rate]
-    rate92 -->|defined factor 25500/604800| vax[VAXen]
-    int89[SPECint89 speed] -->|17 source pairs / 15 models| int92[SPECint92 speed]
-    int92 -->|48 DEC columns / 24 models, peak only| inferred[Estimated SPEC92 rate-VAXen]
-    classic[Classical pair / triple geometric composites] -->|direct empirical fit| vax
-    classic -->|89-only calibration route| int89
-    classic -->|joint calibration: observed and inferred targets| joint[Estimated rate-VAXen]
-    inferred -->|supplies estimated targets| joint
-    rate92 -->|supplies observed rate targets after normalization| joint
+    modernRate[CPU2026 / 2017 / 2006 / 2000 / 95 integer rate] -->|adjacent empirical fits, base and peak separate| rate92[SPEC92 integer rate]
+    rate92 -->|defined factor 25500/604800| rvax[rate-VAXen]
+    modernSpeed[CPU2026 / 2017 / 2006 / 2000 / 95 integer speed] -->|adjacent empirical fits, base and peak separate| int92[SPECint92 speed]
+    int92 -->|defined: VAX-11/780 = 1| svax[speed-VAXen]
+    int89[SPECint89 speed] -->|one-edge hardware-near bridge, peak only| int92
+    classic[Classical pair / triple geometric composites and network] -->|direct and joint empirical fits| svax
+    mix[Gibson / ADP instruction mixes] -->|joint network with classical scores| svax
+    int92 -.->|diagnostic only: rate ÷ speed| rvax
 ```
 
 The graph shows logical relationships, not statistical independence. The
-registry records actual fitted direction and dependencies. In particular,
-SPEC89→rate is a two-edge estimate: no directly paired 89/rate machine exists
-in the current inventory. Its inferred targets cannot validate themselves as
-rate measurements. Classical→SPEC89 is supported only for the available
-classical intersections, not for arbitrary early machines.
+registry records actual fitted direction and dependencies. Rate and speed are
+two parallel quantities (user decision 2026-10-03), each with its own chain;
+neither is converted into the other, and the dotted edge is a diagnostic only.
+Historical routes are anchored to SPECint92 speed. SPEC89 estimates are inferred
+targets and cannot validate themselves as SPECint92 measurements.
+Classical→SPEC89 is supported only for the available classical intersections,
+not for arbitrary early machines.
 
 ## Read by track
 
 1. [VAXen reference](tracks/vaxen.md): unit, score types and uncertainty.
-2. [Modern integer-rate chain](tracks/spec-rate.md): matching, factors, annual views.
-3. [SPEC89 recovery](tracks/spec89.md): sources and the two-edge rate bridge.
+2. [Modern integer-rate and speed chains](tracks/spec-rate.md): matching, factors, annual views.
+3. [SPEC89 recovery](tracks/spec89.md): sources and the one-edge SPECint92 speed bridge.
 4. [Classical extension](tracks/classical.md): direct, indirect and joint routes.
 
 ## Find the authoritative detail

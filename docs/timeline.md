@@ -1,9 +1,10 @@
 # Shared VAXen timeline
 
 **Status 2026-10-03:** `plot timeline` is built on the
-[data schema](data-schema.md) database (schema step 5d, `vaxen-timeline-v3`).
-The page, pathway explorer and calculator were reworked for it on 2026-10-03;
-everything below describes current behavior.
+[data schema](data-schema.md) database (`vaxen-timeline-v4`). Rate and speed are
+two parallel quantities, rate-VAXen and speed-VAXen, each with its own chain;
+they are never converted into each other or combined (user decision 2026-10-03).
+Everything below describes current behavior.
 
 This document owns the combined view's data contract, date handling and
 interaction. It consumes saved calibration; it does not fit a model.
@@ -18,10 +19,12 @@ uv run cpushowspeed data build
 uv run cpushowspeed bridge fit-rate92-anchor
 uv run cpushowspeed bridge fit-rate-generations
 uv run cpushowspeed bridge bootstrap-rate-chain
-uv run cpushowspeed classic spec89-rate-fit
+uv run cpushowspeed bridge fit-speed-chain
+uv run cpushowspeed classic composite-fit
+uv run cpushowspeed classic spec89-fit
 uv run cpushowspeed classic network-fit
 uv run cpushowspeed classic mix-network-fit
-uv run cpushowspeed bridge fit-speed-predictors
+uv run cpushowspeed classic mix-bridge
 uv run cpushowspeed plot timeline
 ```
 
@@ -30,27 +33,27 @@ The fitting commands regenerate the saved calibration the timeline reads; they
 can be skipped when their outputs are current (see each command's `--help`).
 `plot timeline --database PATH --output-dir DIR` reads only the database and
 saved calibration files, records their hashes in `audit.json`, and performs no
-network collection or fitting. It refuses a mix or predictor bundle fitted on
+network collection or fitting. It refuses a speed-chain or mix bundle fitted on
 other database inputs or with changed code.
 
 The population is:
 
-| Route | Rows | Value |
-| --- | ---: | --- |
-| SPEC92–SPEC2026 integer rate | one per result and base/peak mode | Reported score × saved `same_os` rate-chain factor, with its pointwise CI95 |
-| Classical | one per one-processor (or unknown-count) classical result | Saved classical network prediction (`linear_clock / with_spec89`) |
-| SPEC89 | one per SPEC89 result in the saved estimates | Saved two-edge bridge estimate |
-| Gibson / ADP mix | one per positive rating | Saved [mix network](../research/instruction-mix-network.md) estimate (`plus_pending_links / linear_clock / with_spec89`) |
-| Combined mixes | one per source table row | Equal-log-weight combination of the row's available ratings, CI95 from aligned draws |
-| SPEC95–2026 speed | one per speed result and mode with a fitted speed predictor | Speed × saved [speed-only predictor](../research/spec-speed-rate-predictors.md) VAXen coefficient |
-| SPEC95–2026 speed + rate | one per hardware-near speed/rate pair and mode with a fitted joint predictor | `sqrt(speed × rate)` × saved joint predictor coefficient |
+| Route | Quantity | Rows | Value |
+| --- | --- | ---: | --- |
+| SPEC92–SPEC2026 integer rate | rate | one per result and base/peak mode | Reported score × saved `same_os` [rate-chain](../research/spec95-spec2026-rate-fitting.md) factor, with its pointwise CI95 |
+| SPEC92–SPEC2026 integer speed | speed | one per result and base/peak mode | Reported score × saved [speed-chain](../research/spec-speed-chain.md) factor (CPU92 SPECint92 = 1 by definition), with its pointwise CI95 |
+| Classical | speed | one per one-processor (or unknown-count) classical result | Saved classical network prediction (`linear_clock / with_spec89`) |
+| SPEC89 | speed | one per SPEC89 result in the saved estimates | Saved one-edge [SPEC89 → SPECint92 bridge](../research/spec89-bridge.md) estimate |
+| Gibson / ADP mix | speed | one per positive rating | Saved [mix network](../research/instruction-mix-network.md) estimate (`plus_pending_links / linear_clock / with_spec89`) |
+| Combined mixes | speed | one per source table row | Equal-log-weight combination of the row's available ratings, CI95 from aligned draws |
 
-The first three routes are the **baseline** (`estimate_kind = baseline`); the
-others are model estimates (`mix`, `mix_combined`, `speed`, `joint`), correlated
-with the baseline routes and never counted as extra evidence. On 2026-10-02 this
-gave 115,335 records: 58,813 SPEC rate, 1,641 classical, 179 SPEC89, 360 mix,
-186 combined mix, 37,117 speed and 17,039 joint. CPU2000 has no speed or joint
-rows because its predictor boundary has one processor model.
+Every record carries `quantity` (`rate` or `speed`). The SPEC and historical
+routes are the **baseline** (`estimate_kind = baseline`); the mix rows are model
+estimates (`mix`, `mix_combined`), correlated with the classical route and never
+counted as extra evidence. On 2026-10-03 this gave 101,427 records: 58,813 SPEC
+rate, 40,248 SPEC speed, 1,641 classical, 179 SPEC89, 360 mix and 186 combined
+mix (58,813 rate and 42,614 speed). The former speed-only and speed + rate
+predictor rows (and their 17,039 joint rows) were removed on 2026-10-03.
 
 ## Static website export
 
@@ -76,7 +79,7 @@ Outputs under `data/derived/figures/timeline/`:
 - `manifest.json`: `vaxen-web-parquet-v1`, artifact schemas, row counts, byte sizes,
   SHA-256 hashes (including inline code), decoder revisions and small lineage/calculator configuration.
 - `data/records.parquet`: complete shared research records, retaining the logical
-  `vaxen-timeline-v3` contract and all provenance.
+  `vaxen-timeline-v4` contract and all provenance.
 - `data/timeline.parquet`: the display projection used by the page.
 - Other `data/*.parquet`: large lineage/fit arrays and aligned calibration draws.
 - `audit.json`: population, date/mode/route counts, input/code hashes and the
@@ -155,15 +158,16 @@ submissions are never deduplicated merely because system, CPU, year or scores ag
 | `route`, `generation`, `mode` | Source/calibration route and original suite; historical estimates use `peak_proxy`, not an asserted peak measurement |
 | `system`, `cpu`, `clock_mhz`, `os`, `configuration` | Source identity; unknown fields remain empty |
 | `scores`, `reported_score`, `benchmark_id` | Original input scores; classical composites have no single reported score |
-| `vaxen`, `ci95_low`, `ci95_high` | Saved estimate and conditional calibration interval, without per-core normalization |
+| `quantity` | `rate` (rate-VAXen, throughput) or `speed` (speed-VAXen, one job) |
+| `vaxen`, `ci95_low`, `ci95_high` | Saved estimate in the row's quantity and conditional calibration interval, without per-core normalization |
 | `calibration_route`, `calibration_scenario`, `uncertainty_scope` | How the estimate was obtained and what its interval covers |
 | `source_record_ids`, `benchmark_sources`, `source_url` | Contributing observations and source links |
 | `observation_count`, `evidence_class` | Population meaning and evidence status |
 | `measurement_scope`, `chips`, `cores`, `threads_per_core`, `copies_min`, `copies_max`, `nodes` | Distinct reported quantities; unknown counts remain empty, never inferred from one another |
 | `year`, `year_low`, `year_high`, `date_kind`, `date_method`, `date_sources`, `date_candidates` | Copied from `result_chronology`; unknown years are empty strings |
 | `hardware_date`, `submission_date`, `test_date` | SPEC source months as reported, for display only |
-| `estimate_kind` | `baseline`, `mix`, `mix_combined`, `speed` or `joint` |
-| `reported_unit`, `mix_combination`, `estimated_specint92_rate`, `speed_system` | Estimate-specific: input unit, mix combination, predicted SPEC92 rate, the speed input's system name |
+| `estimate_kind` | `baseline`, `mix` or `mix_combined` |
+| `reported_unit`, `mix_combination` | Mix-specific: input unit and mix combination |
 | `limitation` | Route-specific caveats, including sparse CPU2026 calibration |
 
 No benchmark score is changed when a date changes.
@@ -179,8 +183,8 @@ owns date interpretation. `date_kind` is `cpu`, `hardware`, `fallback` or
 candidate event; and `date_sources` lists the URLs of the candidate events'
 sources. The year range is the evidence span, not a statistical interval.
 
-On 2026-10-02: 44,899 rows were dated by CPU, 14,964 by hardware, 17 by a
-reviewed fallback and 753 were unknown. Unknown rows are concentrated in
+On 2026-10-03: 74,475 rows were dated by CPU, 26,204 by hardware, 17 by a
+reviewed fallback and 731 were unknown. Unknown rows are concentrated in
 classical sources without model-year evidence (Netlib LINPACK alone has 573
 of its 815 rows unknown) and in SPEC89; they stay in the list but are not plotted.
 The former per-pass date tables are archived in
@@ -198,9 +202,13 @@ Some SPEC records name clusters. They remain included and source-linked; missing
 node counts are not guessed and these rows are not certified as single-node
 measurements. No division by cores/chips/copies is performed.
 
-Each route retains its own CI95. CPU92 uses a defined reference scale; later
-SPEC modes use the corresponding saved chain interval. Classical and SPEC89
-proxies use their saved intervals, both targeting the peak rate anchor.
+Rate-VAXen are throughput (every copy a system runs); speed-VAXen time one job
+(CPU2017 speed may run threads). Both set the VAX-11/780 to 1; on multi-core
+systems they differ by roughly the effective parallelism, and neither is
+converted into the other. Each route retains its own CI95. CPU92 rate and speed
+use defined reference scales; later SPEC modes use their own chain's saved
+interval. Classical, SPEC89 and mix proxies use their saved intervals, all
+targeting the SPECint92 speed anchor.
 They appear when **Historical estimates** is selected, independently of the
 **SPEC Base** and **SPEC Peak** selections. All three score checkboxes default on.
 Intervals are not pooled across routes or advertised as machine prediction
@@ -208,7 +216,9 @@ intervals. CPU2026 remains explicitly exploratory.
 
 ## Interaction and testing
 
-- Route checkboxes, score checkboxes and text search select the displayed records.
+- Quantity, route, score and estimate checkboxes and text search select the
+  displayed records. Rate markers are circles, speed markers triangles and mix
+  markers squares; every VAXen value is labelled rate-VAXen or speed-VAXen.
 - Year, VAXen and name sorts affect the list; unknown years stay last in year sorts.
 - The list uses pages of 200 records, retaining all eligible records in memory.
 - Wheel zoom anchors on the cursor; drag pans; +/- buttons, presets and overview
@@ -232,10 +242,12 @@ generated page's actual Parquet through the pinned JavaScript decoder:
 node tests/timeline_interaction.js data/derived/figures/timeline/vaxen-timeline.html full
 ```
 
-It asserts the 2026-10-03 population (115,335 rows by estimate kind), estimate
-filters, related rows, predictor scatterplots, lineage traces, pagination, and that
-the calculator reproduces timeline rows (a reported CPU2017 rate, a CPU2026
-speed/rate pair, a Gibson rating, a two-rating combined mix) to 1e-6 or better.
+It asserts the 2026-10-03 population (101,427 rows by estimate kind and
+quantity), quantity and estimate filters, related rows, speed-chain fit
+scatterplots, lineage traces, pagination, and that the calculator reproduces
+timeline rows in their own quantity (CPU2017 rate; CPU92, CPU95, CPU2006 and
+CPU2026 speed; SPEC89; a multi-score classical row; a Gibson rating; a two-rating
+combined mix) to 1e-6 or better. Its counts change whenever the data does.
 Its counts change whenever the data does.
 
 ### Layout, numbers and overview brush
@@ -261,24 +273,26 @@ is local SVG/JavaScript; no pvvx script or external chart library is required.
 
 ### Estimate filters and related rows
 
-The **Estimates** checkboxes select by `estimate_kind`: reported rate /
-historical baseline (●) and combined mixes (■) are on by default; single mix
-ratings (■), speed (▲) and speed + rate (◆) are optional. Route checkboxes
+The **Quantity** checkboxes (throughput · rate-VAXen ●, single job ·
+speed-VAXen ▲) both default on. The **Estimates** checkboxes select by
+`estimate_kind`: reported SPEC / historical baseline and combined mixes (■) are
+on by default; single mix ratings (■) are optional. Route checkboxes
 default on for every route. A status line counts model estimates beside
 baseline rows, which they are correlated with rather than independent of.
 
 There is one cross-generation policy, `hardware_near` over resolved identity, so
 records carry no per-policy variants and the page has no matching selector
 (Strict / RAM + aliases / CPU + clock were removed with the name-matched
-experiments). A joint row exists for every hardware-near speed/rate pair; its
-date follows the rate input. Mix record IDs are the database result IDs
+experiments). SPEC speed record IDs are `spec:{generation}:speed:{result}:{mode}`.
+Mix record IDs are the database result IDs
 (`mix:longbottom-cpumix:…`); combined rows append `:combined`.
 
 A pinned point lists rows **from the same source results**: rows sharing a
-`source_record_ids` entry (base/peak of one result, a speed or rate result and
-its joint rows, a single rating and its combined row). These are connected on the
+`source_record_ids` entry (base/peak of one result, a single rating and its
+combined row). These are connected on the
 plot. A collapsed **Same resolved system** list adds other rows with the same
-`system_id`, other routes first. Neither list is a validation.
+`system_id`, other routes first; it can show a system's speed and rate rows
+side by side. Neither list is a validation.
 
 Submission-era compatibility reviews were removed in step 5d: the review table
 is archived and reviewed fallbacks enter through the database chronology.
@@ -307,27 +321,27 @@ an assumed CPU clock.
 
 The collapsed **How scores become VAXen** section contains an offline SVG graph
 and a details card. Nodes and edges use the model registry; saved rate edge
-intervals, SPEC89 bridge summaries, the classical and mix network coefficients
-and the speed/rate predictor summary supply numerical details. Input hashes are recorded in the timeline audit.
+intervals, the saved speed-chain factors, the SPEC89 bridge summary, and the
+classical and mix network coefficients supply numerical details. Input hashes are recorded in the timeline audit.
 The layout is fixed and scrolls horizontally on narrow screens; the information
 card moves below the graph. Arrow widths do not represent precision or sample
 size. Nodes/arrows support mouse clicks and Enter/Space activation.
 
-The SPEC rate chain displays the saved rate-chain edges, with the `same_os`
-constraint for CPU95→92. The second SPEC89 edge already outputs
-VAXen (including rate normalization); no extra normalization is added visually.
-Classical calibration is one network block; it is not depicted as an
-independent multiplier chain. Gibson/ADP ratings feed a separate classical + mix
-joint model node (the timeline run, `plus_pending_links / linear_clock /
-with_spec89`), which the classical scores also feed. Each SPEC suite with a
-fitted predictor (CPU95, 2006, 2017, 2026; CPU2000 has too few tuples) has a
-speed node whose arrow enters the older suite's rate; its card lists speed-only,
-rate-only and joint local factors, CI95 and model-held-out P95 by mode.
+The graph has two parallel rows. The upper rate row chains CPU2026 → … →
+SPEC92 rate (with the `same_os` constraint for CPU95→92) and ends in
+**rate-VAXen** through the fixed `× 25500 / 604800` definition. The lower speed
+row chains CPU2026 → … → SPECint92 speed, which is **speed-VAXen** by definition.
+SPEC89 enters SPECint92 speed through its one bridge edge (dashed). A dotted grey
+SPECint92 → rate-VAXen edge is a diagnostic of the two quantities only; it is
+never chained. Classical calibration is one network block feeding speed-VAXen;
+it is not depicted as an independent multiplier chain. Gibson/ADP ratings feed
+a separate classical + mix joint model node (the timeline run,
+`plus_pending_links / linear_clock / with_spec89`), which the classical scores
+also feed.
 
-**Compare predictor fits** plots the hardware-near tuples of one boundary and
-mode (older rate against speed, rate or `sqrt(speed × rate)`) with the saved
-local factor and CI95, or the SPEC89→92 source pairs. Tracing a speed or joint
-row opens it on that row's boundary and inputs.
+**Speed chain and SPEC89 bridge fits** plots the hardware-near configurations of
+one speed-chain edge and mode with the saved factor and CI95, or the SPEC89→92
+source pairs. Tracing a speed row opens it on that row's newest edge.
 
 Pin a timeline point, then choose **View calibration path**. Its route is
 highlighted, unrelated nodes fade, and the card shows the original input scores,
@@ -338,13 +352,14 @@ not change the main timeline filters, zoom or pagination. Unestablished connecti
 research report and are not shown in the explorer.
 
 Factor CI95 and held-out error are separately labelled. The legacy rate-edge
-relative-error field is multiplied by 100 for percentage display. Joint-model
-component intervals are not multiplied to reconstruct a record's interval;
-the trace shows the record's existing joint/chain interval. Research links are
+relative-error field is multiplied by 100 for percentage display. Edge
+intervals are not multiplied to reconstruct a record's interval; the trace shows
+the record's existing chain or network interval. Research links are
 relative local paths; the explorer itself needs no network or external library.
 
-Validation covers complete-page route tracing for CPU2026, SPEC89, classical,
-combined-mix and joint records, metadata edge identities, path reset,
+Validation covers complete-page route tracing for CPU2026 rate and speed,
+SPEC89, classical and combined-mix records (a speed trace never lights a rate
+node), metadata edge identities, path reset,
 existing timeline controls, and standalone SVG rendering. This is not a claim
 of full browser visual interaction verification.
 
@@ -368,8 +383,8 @@ network requests and never fits a model in the browser.
 - Historical inputs accept any nonempty subset of Gibson/ADP KIPS, Dhrystone
   1.1/2.1 DMIPS, Whetstone SP/DP/Native MWIPS and LINPACK n=100 MFLOPS.
   Only the listed calibrated definitions are supported, not arbitrary versions.
-- Classical-only input uses the same `linear_clock / with_spec89` bundle as
-  `classic predict-rate`. Adding a mix input selects the mix network's timeline
+- Historical inputs give speed-VAXen. Classical-only input uses the same
+  `linear_clock / with_spec89` bundle as `classic predict-speed`. Adding a mix input selects the mix network's timeline
   run (`plus_pending_links / linear_clock / with_spec89`) for **all** supplied
   historical metrics.
 - Available families receive equal weights, and variants share their family's
@@ -378,14 +393,14 @@ network requests and never fits a model in the browser.
 - CI95 combines matching rows of saved joint log-coefficient draws before taking
   the 2.5/97.5 percentiles. Marginal interval endpoints are never averaged.
   All draws are embedded, with full precision; no independent resampling occurs.
-- SPEC accepts one generation and one base/peak mode at a time. SPEC95–2026
-  rate alone uses the saved `same_os` rate chain (as the timeline's rate rows);
-  speed alone uses the speed-only predictor and both use the equal-geometric
-  predictor, each with its saved VAXen coefficient and CI95. CPU2000 speed has no
-  predictor and produces an explicit error.
-- SPEC89 accepts native integer speed only. SPEC92 rate uses its defined factor;
-  the native/peak speed bridge remains historical. Supplying both CPU92 inputs
-  returns separate estimates, because a joint coefficient is not calibrated.
+- SPEC accepts one generation and one base/peak mode at a time. Rate uses the
+  saved `same_os` rate chain and gives rate-VAXen; speed uses the integer-speed
+  chain and gives speed-VAXen, each exactly as the timeline's rows. CPU92 uses
+  the definitions (SPECint92 speed = 1 speed-VAXen; SPEC92 rate × 25500 / 604800).
+  Supplying both returns two separate results; the rate ÷ speed ratio is shown
+  as a diagnostic, not a combined estimate.
+- SPEC89 accepts native integer speed (SPECint89, peak) only and applies the
+  saved one-edge bridge factor and CI95 to speed-VAXen.
 - Inputs must describe the same machine/configuration. Blank means absent;
   zero, negative and non-finite values are rejected. No input clock scaling occurs.
   Changing inputs clears the prior result.
@@ -393,7 +408,8 @@ network requests and never fits a model in the browser.
   estimate or cross-bundle CI is constructed.
 
 The build records hashes for embedded coefficients, draws, metadata and legacy
-bridge summaries. The calculation panel reports SI-formatted VAXen, calibration
+bridge summaries. The calculation panel reports SI-formatted rate-VAXen or
+speed-VAXen, calibration
 CI95, the selected route and historical component weights.
 
 ### Personal prediction marker
@@ -401,8 +417,8 @@ CI95, the selected route and historical component weights.
 The calculator accepts an optional whole-number year (1–9999). A successful
 calculation with a year adds an orange **You are here** point, a CI95 whisker,
 and a label with year and SI-formatted VAXen. The point is an overlay: it never
-enters source records, the list, counts, fitting or exports. If a legacy request
-returns two independent estimates, both receive labeled markers.
+enters source records, the list, counts, fitting or exports. If a SPEC request
+returns separate speed and rate results, both receive labeled markers.
 
 Calculation reveals the supplied year in the current time window and extends
 the chart bounds when necessary to include the point and interval. Normal zoom,
@@ -419,9 +435,7 @@ placing a marker.
 
 Tooltips distinguish enabled hardware from rate copies and speed benchmark threads.
 Cached disclosures provide mode ranges; runtime_resources retains benchmark-level
-values and source hashes. Missing details are labeled explicitly. Speed and
-joint rows show the enabled hardware of their speed or rate input but no runtime
-threads or copies; their `runtime_resources` are not exported yet. Raw cache/memory/compiler/
+values and source hashes. Missing details are labeled explicitly. Raw cache/memory/compiler/
 pointer/parallel context is expandable. CPU92 uses a legacy CPU-count label.
 Topology conflicts are flagged without changing numbers. See the
 [source audit](../research/spec-resource-field-audit.md).

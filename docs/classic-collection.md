@@ -1,7 +1,7 @@
 # Classic benchmark source collection
 
-Implemented on 2026-09-26. The active VAXen series remains integer rate; this
-collector preserves broader historical evidence without declaring benchmarks
+Implemented on 2026-09-26. Classical, SPEC89 and mix routes are calibrated to
+speed-VAXen (SPECint92 speed = 1; user decision 2026-10-03); this collector preserves broader historical evidence without declaring benchmarks
 interchangeable or importing normalized scores.
 
 ## Pipeline
@@ -9,7 +9,7 @@ interchangeable or importing normalized scores.
 Collectors and parsers (`classic collect`, `extract`, `extract-pdf-tables`,
 `overlap-spec`, `mix-inventory`) write derived records; `data extract` and
 `data build` load them into the built database. The fitters
-(`classic rate-composite-fit`, `spec89-rate-fit`, `network-fit`, `mix-bridge`)
+(`classic composite-fit`, `spec89-fit`, `network-fit`, `mix-network-fit`, `mix-bridge`)
 read only that database and pair classical with SPEC results by resolved
 `system_id` (schema step 5c, 2026-10-02). The former `prepare-pairs` /
 `prepare-sources` name-matching stage and the earlier diagnostic fitting commands
@@ -24,8 +24,8 @@ For the research interpretation, start with the [classical track](../research/tr
 | Acquire source snapshots | `classic collect`, `classic extract` below |
 | Extract reviewed PDF tables | [Selected tables](#selected-historical-pdf-tables) |
 | Parse records and build the database | `classic overlap-spec`, `classic mix-inventory`, then `data extract`, `data build` |
-| Fit current direct rate models | [Primary rate fitting](#primary-classical-rate-fitting) |
-| Add the SPEC89 estimated-target route | `classic spec89-rate-fit` in the primary fitting section |
+| Fit current direct speed models | [Primary speed fitting](#primary-classical-speed-fitting) |
+| Add the SPEC89 estimated-target route | `classic spec89-fit` in the primary fitting section |
 
 The [model registry](../research/model-registry.json) distinguishes each target,
 input dataset and dependency. Acquisition preserves source values; fitting uses
@@ -159,34 +159,34 @@ Dhrystone K suffixes use the explicit user-selected thousands interpretation.
 Original observations stay literal. `data extract` reads the interpreted DEC
 report columns as `reviewed-vector:dec-n3909-1994` results.
 
-### Primary classical rate fitting
+### Primary classical speed fitting
 
-`uv run cpushowspeed classic rate-composite-fit` fits two/three-family geometric
-composites directly to SPEC92 integer-rate VAXen, with separate base and peak
-cohorts and matched single-score baselines, in `same_result` and `same_system`
-cohorts. `--database`, `--output`, `--research-dir`, `--bootstrap` and `--seed`
-control inputs, outputs and resampling. It applies the rate-to-VAXen
-normalization once and excludes ordinary SPECint89/92 targets. See [results and
+`uv run cpushowspeed classic composite-fit` fits two/three-family geometric
+composites directly to speed-VAXen (SPECint92 / SPECbase_int92 speed, defined
+as 1 for the VAX-11/780), with separate base and peak cohorts and matched
+single-score baselines, in `same_result` and `same_system` cohorts.
+`--database`, `--output`, `--research-dir`, `--bootstrap` and `--seed` control
+inputs, outputs and resampling. SPECint89 targets are excluded. See [results and
 validation](../research/classic-composite-fitting.md).
 
-`uv run cpushowspeed classic spec89-rate-fit` audits direct SPECint89/rate hardware
-overlap, fits the observed two-edge native-integer/rate path, and evaluates joint
-classical models. `--database`, `--output`, `--research-dir`, `--bootstrap` and
-`--seed` select inputs and settings. See [bridge findings](../research/spec89-bridge.md)
-for the absence of direct pairs, peak-only scope and separation of observed-rate
-validation from agreement with estimated targets.
+`uv run cpushowspeed classic spec89-fit` estimates the one-edge SPECint89 →
+SPECint92 speed bridge from hardware-near overlap, writes SPEC89 speed-VAXen
+estimates, and evaluates joint classical models. `--database`, `--output`,
+`--research-dir`, `--bootstrap` and `--seed` select inputs and settings. See
+[bridge findings](../research/spec89-bridge.md) for the peak-only scope and the
+separation of observed-target validation from agreement with estimated targets.
 
 ### Sparse per-benchmark calibration
 
 `uv run cpushowspeed classic network-fit` estimates individual benchmark
 coefficients jointly from anchor observations and unanchored co-measurements.
-It runs reported/linear-clock scenarios and rate-only/SPEC89-enabled cohorts,
+It runs reported/linear-clock scenarios and `spec92_only`/SPEC89-enabled cohorts,
 with availability-masked whole-system holdouts. See [network methods and
 results](../research/classic-network-fitting.md) for weighting, eligibility,
-identifiability and conditional CI95. It writes estimates without updating
-the production SPEC rate converter.
+identifiability and conditional CI95. Targets are SPECint92 speed (speed-VAXen);
+the SPEC chains are not changed.
 
-`classic predict-rate` consumes the saved network calibration and accepts any
+`classic predict-speed` consumes the saved network calibration and accepts any
 nonempty score subset. See [input units, examples and CI95 semantics](classical-prediction.md).
 
 ## Instruction-mix preparation

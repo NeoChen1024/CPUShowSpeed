@@ -2,25 +2,37 @@
 ## 60 Years of CPU Benchmarks
 
 CPUShowSpeed studies historical computer performance on a common **VAXen**
-scale. The established VAXen series measures whole-machine integer throughput.
-An independent integer-speed calibration is also implemented as a research experiment. Published benchmark
-results, inferred scores and manual reconstructions remain distinguishable.
+scale in two parallel quantities: **rate-VAXen** (whole-machine integer
+throughput) and **speed-VAXen** (one integer job). They are never merged or
+converted into each other. Published benchmark results, inferred scores and manual reconstructions remain distinguishable.
 The subtitle describes the research horizon; a complete sixty-year series has
 not yet been established.
 
 ## The unit: 1 VAX
 
-**1 VAX is the VAX-11/780 reference throughput under the SPEC CPU92 integer-rate
-convention.** Its reference rate score is `604800 / 25500 ≈ 23.717647`, so:
+Both quantities set the VAX-11/780 to 1.
+
+**1 rate-VAX is the VAX-11/780 reference throughput under the SPEC CPU92
+integer-rate convention.** Its reference rate score is `604800 / 25500 ≈ 23.717647`, so:
 
 ```text
-VAXen = SPECrate_int92 × 25500 / 604800
+rate-VAXen = SPECrate_int92 × 25500 / 604800
 ```
 
 The same normalization applies to the base metric `SPECrate_base_int92`.
-`SPECint92` is a different, speed metric: do not apply this rate-score conversion
-to it. A value inferred from another suite is an **estimated** VAX-equivalent
-throughput, not a measured SPEC92 submission. `1 VAX`, `2 VAXen`, `1k VAXen`,
+
+**1 speed-VAX is one SPECint92 speed point.** The VAX-11/780 is the SPEC92
+reference machine, so its SPECint92 is 1 by definition:
+
+```text
+speed-VAXen = SPECint92   (or SPECbase_int92)
+```
+
+Do not apply the rate conversion to a speed score or vice versa. A value inferred
+from another suite is an **estimated** VAX-equivalent, not a measured SPEC92
+submission. Classical, SPEC89 and instruction-mix estimates are speed-VAXen.
+On a multi-core machine rate ÷ speed approximates effective parallelism; it is a
+diagnostic, not a conversion. `1 VAX`, `2 VAXen`, `1k VAXen`,
 `2M VAXen` and `26m VAX` are display labels; stored values are unprefixed numbers.
 See [unit definitions](research/tracks/vaxen.md) and the
 [SPEC CPU92 rate definition](https://www.spec.org/cpu92/specrate.txt).
@@ -46,17 +58,17 @@ combination. Factor CI95, held-out P95 error and prediction uncertainty are
 reported separately. Broader historical coverage is a research objective;
 increased error after adding valid evidence is not by itself a failed experiment.
 
-Integer speed is a separate target with no current calibration; it does not
-change the rate-VAXen definition.
+Integer speed has its own chain to SPECint92 (speed-VAXen); it is never
+fitted against rate and does not change the rate-VAXen definition.
 
 ## Four research tracks
 
 | Track | Purpose | Current position |
 | --- | --- | --- |
-| [1. VAXen reference](research/tracks/vaxen.md) | Define the common unit and evidence classes | Defined CPU92 rate normalization |
-| [2. SPEC92–2026 rate chain](research/tracks/spec-rate.md) | Fit successive integer-rate suites and produce annual views | Implemented, conditional calibration; CPU2026 coverage remains limited |
-| [3. SPEC89 recovery and bridge](research/tracks/spec89.md) | Recover scattered scores and link SPECint89 → SPECint92 → SPEC92 rate | Implemented two-edge peak estimate; no direct 89/rate hardware pairs in current inputs |
-| [4. Classical benchmark extension](research/tracks/classical.md) | Use early workloads to establish historical calibration points | Direct and joint pair/triple experiments; older-machine extrapolation remains conditional |
+| [1. VAXen reference](research/tracks/vaxen.md) | Define the common unit and evidence classes | Two parallel quantities: rate-VAXen (CPU92 rate normalization) and speed-VAXen (SPECint92 = 1) |
+| [2. SPEC92–2026 rate and speed chains](research/tracks/spec-rate.md) | Fit successive integer-rate and integer-speed suites, separately | Both implemented, conditional calibration; CPU2026 coverage remains limited |
+| [3. SPEC89 recovery and bridge](research/tracks/spec89.md) | Recover scattered scores and link SPECint89 → SPECint92 speed | Implemented one-edge peak estimate |
+| [4. Classical benchmark extension](research/tracks/classical.md) | Use early workloads to establish historical speed-VAXen calibration points | Direct and joint pair/triple experiments; older-machine extrapolation remains conditional |
 
 Start with the [research overview](research/overview.md). The
 [model registry](research/model-registry.json) records metric types, datasets,
@@ -89,10 +101,10 @@ For arbitrary classical score subsets, use the [classical predictor](docs/classi
 uv run --no-sync cpushowspeed predict classical --dhrystone-1-1 10 --format text
 ```
 
-It uses the saved network calibration to estimate SPEC92 peak rate, VAXen and
-joint calibration CI95. Inputs may contain one or several benchmark families.
+It uses the saved network calibration to estimate SPECint92 peak speed
+(speed-VAXen) and joint calibration CI95. Inputs may contain one or several benchmark families.
 
-- [Combined VAXen timeline](docs/timeline.md): CPU-first history, rate baselines, selectable speed/joint estimates, matching scenarios and time zoom (`uv run cpushowspeed plot timeline`).
+- [Combined VAXen timeline](docs/timeline.md): CPU-first history, rate-VAXen and speed-VAXen side by side, historical speed estimates and time zoom (`uv run cpushowspeed plot timeline`).
   Initialize `third-party/hyparquet` and `third-party/fzstd` with `git submodule update --init`, then serve the Parquet-backed export over HTTP; no npm build is required.
 - [Documentation index](docs/README.md): contracts, methods and acquisition tools.
 - [Research index](research/README.md): current analyses, source evidence and diagnostics.

@@ -1,18 +1,27 @@
 # Scope and metrics
 
-The established timeline and rate target is **single-node / documented-system throughput**,
-not single-core performance. A result belongs to the tested processors, memory, operating
+The rate target is **single-node / documented-system throughput**, not
+single-core performance; the parallel speed target is one job on that system. A result belongs to the tested processors, memory, operating
 system, compiler and benchmark run settings. The principal evidence is a
 published integer-rate measurement, with its concurrent copy counts when the
 disclosure provides them. Reported scores and cross-generation estimates must
 remain distinguishable.
 
-## Independent speed research
+## Two parallel quantities: rate-VAXen and speed-VAXen
 
-Integer speed and rate are distinct research targets. Speed denotes task
-completion, not a single-core guarantee; no speed calibration is currently
-implemented (the earlier dual-track and joint experiments were removed on
-2026-10-02). The rate-VAXen unit remains throughput-only. Base/peak is an
+By user decision (2026-10-03) VAXen has two parallel quantities, each with its
+own chain, and they are never merged or converted into each other:
+
+- **rate-VAXen** (throughput): `SPECrate_int92 × 25500 / 604800`, with later
+  suites chained through their integer-rate metrics.
+- **speed-VAXen** (one job): SPECint92 speed, since the VAX-11/780 is the SPEC92
+  reference machine; later suites are chained through their integer-speed
+  metrics ([speed chain](../research/spec-speed-chain.md)).
+
+Both set the VAX-11/780 to 1. Speed denotes task completion, not a single-core
+guarantee (CPU2017 speed may run threads). Classical, SPEC89 and instruction-mix
+routes are calibrated to speed-VAXen. The rate ÷ speed ratio of one machine
+approximates effective parallelism and is a diagnostic only. Base/peak is an
 independent dimension. Never combine speed and rate observations into one fit.
 
 ## Active SPEC rate series
@@ -32,8 +41,9 @@ cores, threads or measured runtime workers. Keep base and peak results
 separate. A system's introduction, test and publication dates are different
 events; the [data contract](data-contract.md) defines how to preserve them.
 
-The [shared timeline](timeline.md) is the current interactive view, combining
-historical proxies and SPEC92–2026 rate records with CPU-first dating. It keeps
+The [shared timeline](timeline.md) is the current interactive view, showing
+SPEC92–2026 rate-VAXen and speed-VAXen records side by side with historical
+speed-VAXen proxies, all with CPU-first dating. It keeps
 source scope and node-count uncertainty visible; reported cluster results are
 not silently certified as single-node measurements.
 
@@ -51,12 +61,12 @@ instruction mix, memory assumptions and source pages; it is never a
 retroactively executed SPEC submission. Floating-point/scientific capacity
 benchmarks and embedded benchmarks such as CoreMark may become separate
 tracks after their workload, parallelism and reference conventions are
-specified. The SPEC89 corpus now supports an implemented two-edge peak
-estimate, SPECint89 → SPECint92 → SPEC92 rate-VAXen. Direct classical rate fits
+specified. The SPEC89 corpus now supports an implemented one-edge peak
+estimate, SPECint89 → SPECint92 speed-VAXen. Direct classical speed fits
 and joint fits with these estimated targets are implemented; reported and
 inferred targets remain separate. See the [historical track guides](../research/overview.md).
 These extensions do not turn native SPECint89/92 scores into measured rate
-submissions or change the official rate-to-rate chain inputs.
+submissions or change either SPEC chain's inputs.
 
 ## Evidence classes
 

@@ -1,8 +1,8 @@
 # Research methods
 
 This document owns shared scientific rules for the [four research tracks](../research/overview.md).
-The modern SPEC rate chain, classical rate composites and SPEC89 two-edge
-bridge are implemented conditional estimates. Manual instruction-mix/SIMH
+The modern SPEC rate and speed chains, classical speed composites and the
+one-edge SPEC89 → SPECint92 bridge are implemented conditional estimates. Manual instruction-mix/SIMH
 reconstruction and a universal historical converter remain unimplemented.
 The [registry](../research/model-registry.json) records exact model directions,
 dependencies and artifact owners.

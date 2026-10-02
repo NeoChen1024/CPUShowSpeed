@@ -270,12 +270,13 @@ resolves them into `review_result` (one row per matched result and side) and
 `review_finding` any selector that matches nothing and any unreviewed link the
 identity rules already merge. A rejected result date leaves every chronology use
 (own tier and model-level dates for other results) and is kept in the candidates
-as `rejected_<field>`; the extracted record is unchanged. The CPU92 rate fit and
-speed predictors read CPU92–CPU95 `result_pair` decisions (step 5b); the classical
+as `rejected_<field>`; the extracted record is unchanged. The CPU92 rate fit
+reads CPU92–CPU95 `result_pair` decisions (step 5b); the classical
 fitters read classical↔SPEC `result_pair` decisions (target left, classical result
 right; a rejection drops a same-system pairing, an acceptance admits one unscaled
 across a clock-reporting difference); `mix-bridge` reads open system links (step 5c).
-The CPU92–CPU95 speed pairs have no consumer yet.
+The CPU92–CPU95 speed pairs have no consumer yet: the speed chain uses
+automatic hardware-near pairs and does not read them.
 
 ## Built views and consistency checks
 
@@ -398,7 +399,7 @@ changed.
      60,633 records (58,813 / 1,641 / 179), of which 753 are undated. Mix rows,
      speed/joint estimates and matching policies are dropped from the timeline;
      the same day the [mix network](../research/instruction-mix-network.md) and
-     [speed/rate predictors](../research/spec-speed-rate-predictors.md) are refitted
+     speed/rate predictors (removed in 5e) are refitted
      on the database and their rows restored, without the matching policies. The
      legacy date files above and the per-pass date tables are archived in
      [`research/data/archive/legacy-dates/`](../research/data/archive/legacy-dates/README.md);
@@ -407,6 +408,14 @@ changed.
      `import-reviews`, `import-processors`, `migrate-sources`) and the input catalog
      snapshot (`inputs build`, `--input-catalog`) are deleted. `data build` output
      is unchanged by the deletion.
+   - **5e** (done 2026-10-03): speed and rate become two parallel quantities by
+     user decision. `bridge fit-speed-chain` fits the
+     [integer-speed chain](../research/spec-speed-chain.md) to SPECint92 speed
+     (speed-VAXen); classical, SPEC89 and mix routes are re-anchored to it
+     (`composite-fit`, `spec89-fit`, `predict-speed` replace the rate-named
+     commands); the speed/rate predictors and their joint rows are removed; and
+     `plot timeline` writes `vaxen-timeline-v4` with a `quantity` per row:
+     101,427 records (58,813 rate, 42,614 speed).
 
    By user decision (2026-10-02) step 5 is compared with the former products, not
    held to parity: identity and dates were redesigned in steps 2–4, so coefficients

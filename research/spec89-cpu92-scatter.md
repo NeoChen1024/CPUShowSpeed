@@ -1,7 +1,7 @@
 # SPEC89–CPU92 source-paired scatter
 > Source-evidence review from the earlier speed-era investigation.
 > Its original plotting command is retired; its integer pairs are reused by the
-> [current two-edge rate bridge](spec89-bridge.md).
+> [current one-edge speed bridge](spec89-bridge.md).
 > Present-tense descriptions below refer to the original 2026-09-26 research snapshot.
 
 Plotted and reviewed on 2026-09-26 from the versioned

@@ -41,9 +41,9 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 [Per-benchmark network fitting](classic-network-fitting.md) jointly estimates
 individual coefficients from incomplete observations, with explicit clock
 scaling and single/two-family/full-availability holdouts. The
-[mix network](instruction-mix-network.md) adds Gibson/ADP ratings to it, and the
-[speed/rate predictors](spec-speed-rate-predictors.md) estimate rate from SPEC
-speed scores.
+[mix network](instruction-mix-network.md) adds Gibson/ADP ratings to it. Both
+target speed-VAXen, which the [integer-speed chain](spec-speed-chain.md) extends
+from SPECint92 to CPU2026 in parallel with the rate chain.
 
 ## Historical analyses and storage
 

@@ -1,9 +1,11 @@
-# Unified historical and SPEC rate timeline
+# Unified historical and SPEC timeline
 
-Reviewed: 2026-10-03. Status: rebuilt on the schema database (step 5d,
-`vaxen-timeline-v3`), with mix, speed and joint estimate rows restored on
-2026-10-02 and the page reworked for them on 2026-10-03. Sections from
-"Checked population (2026-09-28)" on describe earlier exports.
+Reviewed: 2026-10-03. Status: rebuilt on the schema database
+(`vaxen-timeline-v4`): rate-VAXen and speed-VAXen are parallel quantities
+([latest section](#parallel-rate-and-speed-quantities--2026-10-03)). Earlier
+sections record the v3 exports; the speed predictor and joint rows they describe
+were removed. Sections from "Checked population (2026-09-28)" on describe
+earlier exports.
 
 The [shared contract and commands](../docs/timeline.md) combine saved calibration
 with the database results. No fitting, score scaling by processor count, or
@@ -49,7 +51,7 @@ estimates without the policies.
 ## Estimate rows — 2026-10-02
 
 Rebuilt from the [mix network](instruction-mix-network.md) and the
-[speed/rate predictors](spec-speed-rate-predictors.md) on the database:
+speed/rate predictors (removed 2026-10-03; in Git history) on the database:
 
 | Estimate rows | Records | Dated (CPU / hardware) | Unknown | Former export |
 | --- | ---: | ---: | ---: | ---: |
@@ -67,7 +69,7 @@ the spelling merges below), from the refitted coefficients.
   283 keep their year, 6 change, 4 gain one and 67 stay undated.
 - **Speed:** every former CPU95, CPU2006, CPU2017 and CPU2026 speed record
   remains. Values change by one factor per suite and mode, listed in the
-  [predictor report](spec-speed-rate-predictors.md#changes-from-the-name-matched-experiment).
+  former predictor report (in Git history).
   The 2,615 CPU2000 speed records are gone: that boundary has one processor model.
 - **Joint:** one row per hardware-near speed/rate pair and mode. The former rows
   were the union of three policies' calibration pairs, so the rows are not
@@ -114,6 +116,51 @@ joint row, a Gibson row and a two-rating combined mix through the calculator
 tuple count, which equals the saved summary's. In Chromium (2026-10-03) the page
 loaded with no console errors; the lineage graph, the all-kinds scatterplot and a
 pinned CPU2006 tooltip were inspected.
+
+## Parallel rate and speed quantities — 2026-10-03
+
+By user decision, speed and rate are two parallel chains, never merged; historical
+routes are anchored to SPECint92 speed ([scope](../docs/scope-and-metrics.md#two-parallel-quantities-rate-vaxen-and-speed-vaxen)).
+The export is `vaxen-timeline-v4`; every row carries `quantity`.
+
+| Rows | Quantity | Records | Change |
+| --- | --- | ---: | --- |
+| SPEC92–2026 rate | rate | 58,813 | Unchanged |
+| SPEC92–2026 speed | speed | 40,248 | Through the [integer-speed chain](spec-speed-chain.md) instead of the speed-only predictor |
+| Classical | speed | 1,641 | Network re-anchored to SPECint92 |
+| SPEC89 | speed | 179 | One-edge bridge to SPECint92 |
+| Gibson / ADP mix, combined | speed | 360 / 186 | Mix network re-anchored |
+| Speed + rate (joint) | — | 0 | Removed (was 17,039) |
+
+101,427 records (formerly 115,335): 58,813 rate and 42,614 speed. All have
+unique IDs and positive finite values inside their CI95 (checked 2026-10-03).
+Dates: 74,475 CPU, 26,204 hardware, 17 fallback, 731 unknown.
+
+- **SPEC speed.** CPU95, CPU2006, CPU2017 and CPU2026 keep their 37,117 speed
+  records; CPU2000 regains its 2,615 (the chain needs no per-boundary predictor),
+  and CPU92 adds 516 SPECint92 / SPECbase_int92 rows equal to their score. Values
+  are now speed-VAXen, not predicted rate-VAXen, so they are not compared one to
+  one with the former rows; the per-point factors are in the
+  [speed chain](spec-speed-chain.md#results).
+- **Classical.** `linear_clock / with_spec89` coefficients rose about 2%
+  (Dhrystone 1.1 0.63251 → 0.64637, LINPACK 3.01985 → 3.06007, Whetstone DP
+  0.92958 → 0.94877); see the [network report](classic-network-fitting.md).
+- **SPEC89.** The bridge factor moved 0.9570709 (two edges, to rate-VAXen) →
+  0.9603866 (one edge, to SPECint92); see the [bridge](spec89-bridge.md).
+- **Mix.** Gibson 0.00037246 → 0.00037966, ADP 0.00018340 → 0.00018706
+  speed-VAXen per KIPS ([mix network](instruction-mix-network.md)).
+- **Page.** A Quantity filter (throughput · rate-VAXen ●, single job ·
+  speed-VAXen ▲); values are labelled with their quantity. The lineage has
+  parallel rate and speed rows, with a dotted diagnostic-only SPECint92 →
+  rate-VAXen edge; its fit panel plots the speed-chain edges and SPEC89 pairs.
+  The calculator returns separate speed and rate results and shows rate ÷ speed
+  as a diagnostic only.
+
+Checked: the full-population Node test (2026-10-03) reproduces CPU2017 rate,
+CPU92/CPU95/CPU2006/CPU2026 speed, SPEC89, a multi-score classical row, a Gibson
+row and a two-rating combined mix through the calculator, and checks that a speed
+trace lights no rate node. In Chromium (2026-10-03) the page loaded with no
+console errors.
 
 ## Checked population (2026-09-28)
 
@@ -201,7 +248,7 @@ strict when SPEC95/CPU2000 matching is relaxed. Browser visual inspection remain
 rejects local file URLs. No alternate browser transport was used.
 
 These views were removed on 2026-10-02 (see the
-[timeline contract](../docs/timeline.md#estimate-rows-and-removed-views-2026-10-02)). Earlier counts above describe the
+[timeline contract](../docs/timeline.md#estimate-filters-and-related-rows)). Earlier counts above describe the
 baseline population, which is still preserved.
 
 ## All-generation matching and calculator — 2026-09-29
