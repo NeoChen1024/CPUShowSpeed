@@ -1,8 +1,9 @@
 # Unified historical and SPEC rate timeline
 
 Reviewed: 2026-10-02. Status: rebuilt on the schema database (step 5d,
-`vaxen-timeline-v3`); the page frontend was not updated and parts of it are
-broken (see below). Sections after the first describe earlier exports.
+`vaxen-timeline-v3`), with mix, speed and joint estimate rows restored the same
+day; the page frontend was not updated and parts of it are broken (see below).
+Sections after the first two describe earlier exports.
 
 The [shared contract and commands](../docs/timeline.md) combine saved calibration
 with the database results. No fitting, score scaling by processor count, or
@@ -41,11 +42,39 @@ Checked against the 2026-09-29 export (121,365 records):
   configurations merged by source and name, so values are not compared row by
   row; each is the saved network prediction for that result's scores.
 
-Removed from the export: 360 individual and 186 combined instruction-mix views,
-39,732 speed-derived and 20,584 speed+rate joint estimates, and the three matching
-policies. The page code still expects them; the offline JavaScript full-population
-test fails on its hard-coded counts, and the calculator's mix and SPEC
-speed/joint inputs have no saved bundle.
+Step 5d first removed the instruction-mix views, speed-derived and joint
+estimates and the three matching policies; the next section restores the
+estimates without the policies.
+
+## Estimate rows — 2026-10-02
+
+Rebuilt from the [mix network](instruction-mix-network.md) and the
+[speed/rate predictors](spec-speed-rate-predictors.md) on the database:
+
+| Estimate rows | Records | Dated (CPU / hardware) | Unknown | Former export |
+| --- | ---: | ---: | ---: | ---: |
+| Gibson / ADP mix | 360 | 0 / 293 | 67 | 360 |
+| Combined mixes | 186 | 0 / 151 | 35 | 186 |
+| Speed only | 37,117 | 28,854 / 8,263 | 0 | 39,732 |
+| Speed + rate (joint) | 17,039 | 14,008 / 3,031 | 0 | 20,563 |
+
+The export now has 115,335 records, all with unique IDs and positive finite
+VAXen inside their CI95.
+
+- **Mix:** every former mix record has a counterpart. Values change by one
+  factor per mix (Gibson +9.5%, ADP +7.1%), from the refitted coefficients.
+  283 keep their year, 6 change, 4 gain one and 67 stay undated.
+- **Speed:** every former CPU95, CPU2006, CPU2017 and CPU2026 speed record
+  remains. Values change by one factor per suite and mode, listed in the
+  [predictor report](spec-speed-rate-predictors.md#changes-from-the-name-matched-experiment).
+  The 2,615 CPU2000 speed records are gone: that boundary has one processor model.
+- **Joint:** one row per hardware-near speed/rate pair and mode. The former rows
+  were the union of three policies' calibration pairs, so the rows are not
+  compared one to one.
+
+The page still expects per-policy `variants`. The offline JavaScript
+full-population test fails on its hard-coded counts, and the calculator does not
+yet receive the mix or predictor bundles.
 
 ## Checked population (2026-09-28)
 
@@ -133,7 +162,7 @@ strict when SPEC95/CPU2000 matching is relaxed. Browser visual inspection remain
 rejects local file URLs. No alternate browser transport was used.
 
 These views were removed on 2026-10-02 (see the
-[timeline contract](../docs/timeline.md#removed-views-2026-10-02)). Earlier counts above describe the
+[timeline contract](../docs/timeline.md#estimate-rows-and-removed-views-2026-10-02)). Earlier counts above describe the
 baseline population, which is still preserved.
 
 ## All-generation matching and calculator — 2026-09-29

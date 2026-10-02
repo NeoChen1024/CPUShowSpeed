@@ -30,7 +30,7 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 - Classical: [source acquisition](classic-benchmark-collection.md),
   [prior work](classic-spec-literature.md), [DEC/SSCL/Tomari tables](classic-pdf-extraction.md),
   [initial hardware overlaps](classic-spec-overlap.md).
-- Chronology: [CPU SKU release catalog](cpu-sku-chronology.md) (built, not yet used by the timeline).
+- Chronology: [CPU SKU release catalog](cpu-sku-chronology.md) (converted into date events).
 - Identity: [processor](processor-identity.md) and [system](system-identity.md) resolution (schema steps 2 and 2b).
 - Dates: [date events and chronology selection](chronology.md) (schema step 3).
 - Earlier reconstruction: [mix/timing observations](early-benchmark-evidence.md),
@@ -40,7 +40,10 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 
 [Per-benchmark network fitting](classic-network-fitting.md) jointly estimates
 individual coefficients from incomplete observations, with explicit clock
-scaling and single/two-family/full-availability holdouts.
+scaling and single/two-family/full-availability holdouts. The
+[mix network](instruction-mix-network.md) adds Gibson/ADP ratings to it, and the
+[speed/rate predictors](spec-speed-rate-predictors.md) estimate rate from SPEC
+speed scores.
 
 ## Historical analyses and storage
 
@@ -65,7 +68,7 @@ shared statistics policy, preparation-only commands and parity checks.
 [Schema cleanup inventory](schema-cleanup-inventory.md) maps designs made obsolete
 by the [data schema](../docs/data-schema.md) to migration steps; nothing is removed by it.
 
-- [Gibson / ADP bridge preparation](instruction-mix-bridge.md): source definitions and classical-overlap review queue; no fitting yet.
+- [Gibson / ADP bridge preparation](instruction-mix-bridge.md): source definitions and classical-overlap review queue; the [mix network](instruction-mix-network.md) owns the fit.
 
 The [SPEC95/CPU2000 overlap audit](spec95-spec2000-overlap-audit.md) explains
 cross-generation cohort losses using field-level blockers and original disclosures.

@@ -21,6 +21,7 @@ from cpushowspeed.factor_review import compare_factors
 from cpushowspeed.input_catalog import inputs
 from cpushowspeed.mix_bridge import mix_bridge
 from cpushowspeed.mix_evidence import mix_evidence
+from cpushowspeed.mix_network import mix_network_fit
 from cpushowspeed.ocr import ocr_command
 from cpushowspeed.rate_convert import convert_rate_command
 from cpushowspeed.research_registry import research
@@ -77,6 +78,7 @@ classic.add_command(extract_pdf_tables)
 classic.add_command(rate_composite_fit)
 classic.add_command(spec89_rate_fit)
 classic.add_command(network_fit)
+classic.add_command(mix_network_fit)
 classic.add_command(predict_rate)
 classic.add_command(mix_evidence)
 classic.add_command(mix_bridge)

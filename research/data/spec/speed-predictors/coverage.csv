@@ -1,0 +1,6 @@
+old_generation,new_generation,hardware_near_speed_rate_pairs,tuples,rejected
+cpu92,cpu95,347,108,0
+cpu95,cpu2000,714,4,0
+cpu2000,cpu2006,4795,130,42
+cpu2006,cpu2017,4332,118,62
+cpu2017,cpu2026,45,60,12

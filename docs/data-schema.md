@@ -392,7 +392,10 @@ changed.
      SPEC92–2026 rate results through the saved rate chain, every one-processor
      classical result through the saved network and the saved SPEC89 estimates:
      60,633 records (58,813 / 1,641 / 179), of which 753 are undated. Mix rows,
-     speed/joint estimates and matching policies are dropped from the timeline. The
+     speed/joint estimates and matching policies are dropped from the timeline;
+     the same day the [mix network](../research/instruction-mix-network.md) and
+     [speed/rate predictors](../research/spec-speed-rate-predictors.md) are refitted
+     on the database and their rows restored, without the matching policies. The
      legacy date files above and the per-pass date tables are archived in
      [`research/data/archive/legacy-dates/`](../research/data/archive/legacy-dates/README.md);
      their readers (`cpu-chronology`, `documents year-candidates`/`year-evidence`,

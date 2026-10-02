@@ -4,7 +4,7 @@
 [data schema](data-schema.md) database (schema step 5d, `vaxen-timeline-v3`).
 The record population, chronology and reproduction steps below describe that
 current behavior. The page sections (interaction, pathway explorer, calculator)
-still describe the earlier page; parts depending on removed views are marked
+still describe the earlier page; parts that no longer match the data are marked
 and may be broken until the frontend is reworked.
 
 This document owns the combined view's data contract, date handling and
@@ -22,6 +22,8 @@ uv run cpushowspeed bridge fit-rate-generations
 uv run cpushowspeed bridge bootstrap-rate-chain
 uv run cpushowspeed classic spec89-rate-fit
 uv run cpushowspeed classic network-fit
+uv run cpushowspeed classic mix-network-fit
+uv run cpushowspeed bridge fit-speed-predictors
 uv run cpushowspeed plot timeline
 ```
 
@@ -30,7 +32,8 @@ The fitting commands regenerate the saved calibration the timeline reads; they
 can be skipped when their outputs are current (see each command's `--help`).
 `plot timeline --database PATH --output-dir DIR` reads only the database and
 saved calibration files, records their hashes in `audit.json`, and performs no
-network collection or fitting.
+network collection or fitting. It refuses a mix or predictor bundle fitted on
+other database inputs or with changed code.
 
 The population is:
 
@@ -39,10 +42,17 @@ The population is:
 | SPEC92–SPEC2026 integer rate | one per result and base/peak mode | Reported score × saved `same_os` rate-chain factor, with its pointwise CI95 |
 | Classical | one per one-processor (or unknown-count) classical result | Saved classical network prediction (`linear_clock / with_spec89`) |
 | SPEC89 | one per SPEC89 result in the saved estimates | Saved two-edge bridge estimate |
+| Gibson / ADP mix | one per positive rating | Saved [mix network](../research/instruction-mix-network.md) estimate (`plus_pending_links / linear_clock / with_spec89`) |
+| Combined mixes | one per source table row | Equal-log-weight combination of the row's available ratings, CI95 from aligned draws |
+| SPEC95–2026 speed | one per speed result and mode with a fitted speed predictor | Speed × saved [speed-only predictor](../research/spec-speed-rate-predictors.md) VAXen coefficient |
+| SPEC95–2026 speed + rate | one per hardware-near speed/rate pair and mode with a fitted joint predictor | `sqrt(speed × rate)` × saved joint predictor coefficient |
 
-On 2026-10-02 this gave 60,633 records: 58,813 SPEC rate, 1,641 classical and
-179 SPEC89. Instruction-mix rows, speed-derived and speed+rate joint estimates,
-and the selectable hardware-matching policies were removed in step 5d.
+The first three routes are the **baseline** (`estimate_kind = baseline`); the
+others are model estimates (`mix`, `mix_combined`, `speed`, `joint`), correlated
+with the baseline routes and never counted as extra evidence. On 2026-10-02 this
+gave 115,335 records: 58,813 SPEC rate, 1,641 classical, 179 SPEC89, 360 mix,
+186 combined mix, 37,117 speed and 17,039 joint. CPU2000 has no speed or joint
+rows because its predictor boundary has one processor model.
 
 ## Static website export
 
@@ -154,6 +164,8 @@ submissions are never deduplicated merely because system, CPU, year or scores ag
 | `measurement_scope`, `chips`, `cores`, `threads_per_core`, `copies_min`, `copies_max`, `nodes` | Distinct reported quantities; unknown counts remain empty, never inferred from one another |
 | `year`, `year_low`, `year_high`, `date_kind`, `date_method`, `date_sources`, `date_candidates` | Copied from `result_chronology`; unknown years are empty strings |
 | `hardware_date`, `submission_date`, `test_date` | SPEC source months as reported, for display only |
+| `estimate_kind` | `baseline`, `mix`, `mix_combined`, `speed` or `joint` |
+| `reported_unit`, `mix_combination`, `estimated_specint92_rate`, `speed_system` | Estimate-specific: input unit, mix combination, predicted SPEC92 rate, the speed input's system name |
 | `limitation` | Route-specific caveats, including sparse CPU2026 calibration |
 
 No benchmark score is changed when a date changes.
@@ -239,19 +251,21 @@ remains on the handles while drawing; arrow keys adjust them by one year.
 The former separate From/To range inputs have been removed. The implementation
 is local SVG/JavaScript; no pvvx script or external chart library is required.
 
-### Removed views (2026-10-02)
+### Estimate rows and removed views (2026-10-02)
 
-Step 5d removed these views and their inputs; the page code that still expects
-them may be broken:
+Mix, speed and joint rows were rebuilt on the database the same day. They
+differ from the earlier page's data:
 
-- Submission-era compatibility reviews: the review table is archived; reviewed
-  fallbacks now enter through the database chronology.
-- Instruction-mix records and the combined mix display: the mix network fit
-  and its timeline adapter were removed. The Gibson/ADP observations remain in
-  the database.
-- Selectable model estimates (From speed, From speed + rate) and the matching
-  policies (Strict, RAM + aliases, CPU + clock): the joint-track bundles they
-  read were removed earlier on 2026-10-02.
+- Matching policies (Strict, RAM + aliases, CPU + clock) are gone. One
+  `hardware_near` policy over resolved identity applies, so records carry no
+  per-policy `variants`; the page's policy selector has nothing to select.
+- A joint row exists for every hardware-near speed/rate pair, not only pairs in
+  the calibration tuples. Its date follows the rate input.
+- Mix record IDs are the database result IDs (`mix:longbottom-cpumix:…`);
+  combined rows append `:combined`.
+
+Submission-era compatibility reviews were removed in step 5d: the review table
+is archived and reviewed fallbacks enter through the database chronology.
 
 ### Score selection and list navigation
 
@@ -318,9 +332,10 @@ record qualifications remain in the tooltip and path details.
 
 ## Offline VAXen calculator (2026-09-29)
 
-Since step 5d the calculator payload carries only the classical network; the
-Gibson/ADP inputs and the SPEC speed/joint predictors have no saved bundle and
-that part of the page is broken. The description below is the earlier behavior.
+Since step 5d the calculator payload carries only the classical network. The
+mix network and speed predictors are fitted again but not yet passed to the
+calculator, so its Gibson/ADP inputs and SPEC speed/joint mode are broken. The
+description below is the earlier behavior.
 
 The calculator sits after the timeline and before the list. Its form uses two
 columns with labels above controls, switching to one column when the calculator

@@ -21,5 +21,7 @@ Supporting numerical snapshots live under `research/data/spec/`; full generated
 submissions and plots live under `data/derived/spec/`. Registry model and dataset
 IDs connect these artifacts to the classical/historical extensions.
 
-No independent speed calibration is currently implemented; the earlier
-dual-track experiment was removed on 2026-10-02.
+No independent speed calibration is implemented; the earlier dual-track
+experiment was removed on 2026-10-02. The
+[speed/rate predictors](../spec-speed-rate-predictors.md) predict the older
+suite's rate from newer speed, rate or both, and reach VAXen through the rate chain.

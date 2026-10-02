@@ -54,6 +54,12 @@ coefficient applies to its named metric/version/unit. Estimated hardware values
 are not measured rate scores; intervals describe conditional calibration only.
 See [method and validation](../../classic-network-fitting.md).
 
+`mix-network-coefficients.csv`, `mix-network-holdout-summary.csv`,
+`mix-network-anchor-comparison.csv` and `mix-network-audit.json` hold the same
+network with Gibson/ADP ratings attached, one row per link scenario, clock policy,
+cohort and metric. Mix coefficients are VAXen per KIPS and rest on unapproved
+system links. See the [mix network](../../instruction-mix-network.md).
+
 ## Instruction-mix bridge preparation
 
 `mix-candidate-aliases.csv` is the frozen input of the step-4 review import,

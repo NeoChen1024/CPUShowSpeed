@@ -1,0 +1,17 @@
+links,scenario,cohort,reference,models,nodes,statistics_policy,model_center_p95_percent,model_balanced_observation_p95_percent,within_model_p95_max_percent
+resolved_system,reported_clock,rate_only,observed_target,0,0,,,,
+resolved_system,reported_clock,rate_only,classical_proxy,10,11,model-balanced-relative-error-v2,208.4926687874781,315.26632838561335,315.26632838561335
+resolved_system,reported_clock,with_spec89,observed_target,0,0,,,,
+resolved_system,reported_clock,with_spec89,classical_proxy,10,11,model-balanced-relative-error-v2,201.49741354247254,305.19163104673873,305.19163104673873
+plus_pending_links,reported_clock,rate_only,observed_target,0,0,,,,
+plus_pending_links,reported_clock,rate_only,classical_proxy,15,17,model-balanced-relative-error-v2,196.31641129392656,227.51834279021713,227.51834279021713
+plus_pending_links,reported_clock,with_spec89,observed_target,0,0,,,,
+plus_pending_links,reported_clock,with_spec89,classical_proxy,15,17,model-balanced-relative-error-v2,192.2275865276965,221.70737115904552,221.70737115904552
+resolved_system,linear_clock,rate_only,observed_target,0,0,,,,
+resolved_system,linear_clock,rate_only,classical_proxy,10,11,model-balanced-relative-error-v2,208.49238231921962,315.2659180799076,315.2659180799076
+resolved_system,linear_clock,with_spec89,observed_target,0,0,,,,
+resolved_system,linear_clock,with_spec89,classical_proxy,10,11,model-balanced-relative-error-v2,201.4974012818773,305.1915966899361,305.1915966899361
+plus_pending_links,linear_clock,rate_only,observed_target,0,0,,,,
+plus_pending_links,linear_clock,rate_only,classical_proxy,15,17,model-balanced-relative-error-v2,196.31623931329477,227.51810384125233,227.51810384125233
+plus_pending_links,linear_clock,with_spec89,observed_target,0,0,,,,
+plus_pending_links,linear_clock,with_spec89,classical_proxy,15,17,model-balanced-relative-error-v2,192.22758661437342,221.7073357836454,221.7073357836454

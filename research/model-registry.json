@@ -186,19 +186,64 @@
       "variants": []
     },
     {
-      "id": "retired-spec-speed",
-      "title": "Later SPEC integer-speed scores",
+      "id": "speed-95",
+      "title": "SPEC CPU95 integer speed",
       "mode": "speed",
-      "unit": "suite-specific raw points",
-      "status": "retired",
+      "unit": "CPU95 raw integer-speed points",
+      "status": "recorded",
       "variants": [
-        "95",
-        "2000",
-        "2006",
-        "2017",
-        "2026"
+        "base",
+        "peak"
       ],
-      "scope": "Historical reports only; never interchangeable across suites"
+      "scope": "Single task; not necessarily single-threaded"
+    },
+    {
+      "id": "speed-2000",
+      "title": "SPEC CPU2000 integer speed",
+      "mode": "speed",
+      "unit": "CPU2000 raw integer-speed points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Single task; not necessarily single-threaded"
+    },
+    {
+      "id": "speed-2006",
+      "title": "SPEC CPU2006 integer speed",
+      "mode": "speed",
+      "unit": "CPU2006 raw integer-speed points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Single task; not necessarily single-threaded"
+    },
+    {
+      "id": "speed-2017",
+      "title": "SPEC CPU2017 integer speed",
+      "mode": "speed",
+      "unit": "CPU2017 raw integer-speed points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Single task; not necessarily single-threaded"
+    },
+    {
+      "id": "speed-2026",
+      "title": "SPEC CPU2026 integer speed",
+      "mode": "speed",
+      "unit": "CPU2026 raw integer-speed points",
+      "status": "recorded",
+      "variants": [
+        "base",
+        "peak"
+      ],
+      "scope": "Single task; not necessarily single-threaded"
     },
     {
       "id": "dhry-11",
@@ -524,6 +569,22 @@
       "owner": "research/spec95-spec2000-overlap-audit.md",
       "optional": false,
       "lineage": "Hash-checked cached official exports and selected original disclosures; sensitivity scenarios are not promoted fits"
+    },
+    {
+      "id": "spec-speed-predictors",
+      "path": "research/data/spec/speed-predictors",
+      "kind": "derived",
+      "owner": "research/spec-speed-rate-predictors.md",
+      "optional": false,
+      "lineage": "Older rate / newer speed / newer rate results of one resolved hardware configuration from the schema database; saved same_os rate-chain draws"
+    },
+    {
+      "id": "mix-network",
+      "path": "research/data/classic/mix-network-coefficients.csv",
+      "kind": "derived",
+      "owner": "research/instruction-mix-network.md",
+      "optional": false,
+      "lineage": "CCTA Gibson/ADP ratings attached to classical network nodes by resolved system_id or needs_review link; schema database"
     }
   ],
   "models": [
@@ -1277,6 +1338,218 @@
       ],
       "prediction_command": "cpushowspeed classic predict-rate",
       "prediction_guide": "docs/classical-prediction.md"
+    },
+    {
+      "id": "instruction-mix-joint-network",
+      "title": "Conditional Gibson/ADP joint classical-rate calibration",
+      "track": "classical",
+      "input_metrics": [
+        "gibson",
+        "adp",
+        "dhry-11",
+        "dhry-21",
+        "whet-native",
+        "whet-sp",
+        "whet-dp",
+        "linpack-100"
+      ],
+      "target_metric": "vaxen",
+      "relationship": "joint-fit",
+      "formula": "Classical sparse family/node/model-balanced log WLS; InstructionMix variants share a family; y=k_b*x_b",
+      "variants": [
+        "CCTA/TSU only; peak; resolved_system/plus_pending_links; reported_clock/linear_clock; rate_only/with_spec89"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/instruction-mix-network.md",
+      "dataset_ids": [
+        "mix-network",
+        "instruction-mix-study",
+        "schema-database",
+        "spec89-native-bridge"
+      ],
+      "depends_on": [
+        "classical-sparse-network",
+        "rate92-unit",
+        "int89-rate-vaxen"
+      ],
+      "shared_evidence": "Ratings attach by resolved system; nodes sharing a rating form one bootstrap/holdout cluster; proxy holdouts are not SPEC errors",
+      "command": "cpushowspeed classic mix-network-fit",
+      "outputs": [
+        {
+          "path": "research/data/classic/mix-network-coefficients.csv",
+          "optional": false
+        },
+        {
+          "path": "research/data/classic/mix-network-audit.json",
+          "optional": false
+        },
+        {
+          "path": "data/derived/classic/mix-network-fit/mix-estimates.csv",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "spec-predictor-speed-only",
+      "title": "Older-rate predictor: speed_only",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-95",
+        "speed-2000",
+        "speed-2006",
+        "speed-2017",
+        "speed-2026"
+      ],
+      "target_metric": "vaxen",
+      "additional_target_metrics": [
+        "rate-92",
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017"
+      ],
+      "relationship": "empirical-fit",
+      "formula": "older rate = k*x; x=S, R or sqrt(S*R); VAXen multiplies the saved same_os rate chain of the older suite",
+      "variants": [
+        "base",
+        "peak",
+        "hardware_near"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-rate-predictors.md",
+      "dataset_ids": [
+        "spec-speed-predictors",
+        "schema-database"
+      ],
+      "depends_on": [
+        "rate92-unit",
+        "rate-95-vaxen",
+        "rate-2000-vaxen",
+        "rate-2006-vaxen",
+        "rate-2017-vaxen"
+      ],
+      "shared_evidence": "Identical complete tuples for all three predictors; processor-model holdouts; tuples disjoint from the rate-chain cohorts they rely on",
+      "command": "cpushowspeed bridge fit-speed-predictors",
+      "outputs": [
+        {
+          "path": "research/data/spec/speed-predictors/summary.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "method": "speed_only"
+      }
+    },
+    {
+      "id": "spec-predictor-rate-only",
+      "title": "Older-rate predictor: rate_only",
+      "track": "spec-rate",
+      "input_metrics": [
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017",
+        "rate-2026"
+      ],
+      "target_metric": "vaxen",
+      "additional_target_metrics": [
+        "rate-92",
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017"
+      ],
+      "relationship": "empirical-fit",
+      "formula": "older rate = k*x; x=S, R or sqrt(S*R); VAXen multiplies the saved same_os rate chain of the older suite",
+      "variants": [
+        "base",
+        "peak",
+        "hardware_near"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-rate-predictors.md",
+      "dataset_ids": [
+        "spec-speed-predictors",
+        "schema-database"
+      ],
+      "depends_on": [
+        "rate92-unit",
+        "rate-95-vaxen",
+        "rate-2000-vaxen",
+        "rate-2006-vaxen",
+        "rate-2017-vaxen"
+      ],
+      "shared_evidence": "Identical complete tuples for all three predictors; processor-model holdouts; tuples disjoint from the rate-chain cohorts they rely on",
+      "command": "cpushowspeed bridge fit-speed-predictors",
+      "outputs": [
+        {
+          "path": "research/data/spec/speed-predictors/summary.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "method": "rate_only"
+      }
+    },
+    {
+      "id": "spec-predictor-equal-geometric",
+      "title": "Older-rate predictor: equal_geometric",
+      "track": "spec-rate",
+      "input_metrics": [
+        "speed-95",
+        "speed-2000",
+        "speed-2006",
+        "speed-2017",
+        "speed-2026",
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017",
+        "rate-2026"
+      ],
+      "target_metric": "vaxen",
+      "additional_target_metrics": [
+        "rate-92",
+        "rate-95",
+        "rate-2000",
+        "rate-2006",
+        "rate-2017"
+      ],
+      "relationship": "empirical-fit",
+      "formula": "older rate = k*x; x=S, R or sqrt(S*R); VAXen multiplies the saved same_os rate chain of the older suite",
+      "variants": [
+        "base",
+        "peak",
+        "hardware_near"
+      ],
+      "role": "primary",
+      "status": "implemented-conditional",
+      "owner": "research/spec-speed-rate-predictors.md",
+      "dataset_ids": [
+        "spec-speed-predictors",
+        "schema-database"
+      ],
+      "depends_on": [
+        "rate92-unit",
+        "rate-95-vaxen",
+        "rate-2000-vaxen",
+        "rate-2006-vaxen",
+        "rate-2017-vaxen"
+      ],
+      "shared_evidence": "Identical complete tuples for all three predictors; processor-model holdouts; tuples disjoint from the rate-chain cohorts they rely on",
+      "command": "cpushowspeed bridge fit-speed-predictors",
+      "outputs": [
+        {
+          "path": "research/data/spec/speed-predictors/summary.csv",
+          "optional": false
+        }
+      ],
+      "output_row_selection": {
+        "method": "equal_geometric"
+      }
     }
   ],
   "documents": [
@@ -1755,6 +2028,20 @@
       "role": "primary",
       "status": "current",
       "purpose": "Source variants, SPEC overlap feasibility, and conditional joint classical-to-rate calibration"
+    },
+    {
+      "path": "research/instruction-mix-network.md",
+      "title": "Gibson/ADP ratings in the classical network",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Mix network over resolved systems: attachment, coefficients, proxy holdouts and timeline run"
+    },
+    {
+      "path": "research/spec-speed-rate-predictors.md",
+      "title": "SPEC speed, rate and joint predictors of the older suite's rate",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Speed/rate/joint predictors over hardware-near tuples: holdouts, VAXen coefficients and timeline estimates"
     },
     {
       "path": "research/spec95-spec2000-overlap-audit.md",

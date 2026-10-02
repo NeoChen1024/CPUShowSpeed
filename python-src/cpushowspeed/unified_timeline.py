@@ -1,8 +1,10 @@
 """One single-node/system VAXen timeline from the built database.
 
-Rows are SPEC92–2026 integer-rate results (reported scores through the saved rate
-chain), classical results (predicted through the saved classical network) and
-SPEC89 results (the saved two-edge bridge estimates). Every row takes its year
+Baseline rows are SPEC92–2026 integer-rate results (reported scores through the
+saved rate chain), classical results (predicted through the saved classical
+network) and SPEC89 results (the saved two-edge bridge estimates). Estimate rows
+add instruction-mix ratings (saved mix network), SPEC speed results and
+hardware-near speed/rate pairs (saved speed/rate predictors). Every row takes its year
 from `result_chronology`; nothing here selects or overrides a date.
 """
 
@@ -22,6 +24,13 @@ from cpushowspeed.rate_convert import convert_rate
 from cpushowspeed.research_io import code_hashes, read_csv
 from cpushowspeed.spec_rate_fit import GENERATIONS
 from cpushowspeed.timeline_calculator import calculator_payload
+from cpushowspeed.timeline_estimates import (
+    MIX_OUTPUT,
+    PREDICTOR_OUTPUT,
+    PREDICTOR_RESEARCH,
+    mix_rows,
+    predictor_rows,
+)
 from cpushowspeed.timeline_html import render_html
 from cpushowspeed.timeline_lineage import build_lineage
 
@@ -263,10 +272,13 @@ def timeline_command(database, output_dir):
             dates = chronology(db)
             modern = spec_rows(db, dates)
             classical = classical_rows(db, dates)
+            predicted, predictor_audit = predictor_rows(db, dates, digest)
         historical = spec89_rows(dates)
-        rows = modern + classical + historical
+        mixes, mix_audit = mix_rows(dates, digest)
+        rows = modern + classical + historical + mixes + predicted
         for row in rows:
             row["schema_version"] = SCHEMA
+            row.setdefault("estimate_kind", "baseline")
         if len({r["record_id"] for r in rows}) != len(rows):
             raise ValueError("duplicate timeline record")
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -285,6 +297,7 @@ def timeline_command(database, output_dir):
             spec_rate=len(modern),
             classical=len(classical),
             spec89=len(historical),
+            estimates=dict(Counter(r["estimate_kind"] for r in rows)),
             dates=dict(Counter(r["date_kind"] for r in rows)),
             routes=dict(Counter(r["route"] for r in rows)),
             modes=dict(Counter(r["mode"] for r in rows)),
@@ -295,12 +308,17 @@ def timeline_command(database, output_dir):
                 "Classical and SPEC89 rows are one-processor-conditioned estimates, not rate measurements.",
                 "Reported cluster submissions retained; node count is not inferred from system name or chip count.",
                 "Copies missing from bulk exports remain blank.",
+                "Mix, speed and joint rows are model predictions correlated with the baseline routes, not extra evidence.",
             ],
+            estimate_bundles=dict(mix_network=mix_audit["method"], speed_predictors=predictor_audit["method_version"]),
             inputs_file_sha256={
                 str(p): sha(p)
                 for p in [
                     SPEC89_ESTIMATES,
                     NETWORK / "prediction-calibration.json",
+                    MIX_OUTPUT / "mix-estimates.csv",
+                    PREDICTOR_RESEARCH / "summary.csv",
+                    PREDICTOR_OUTPUT / "speed-rate-pairs.csv",
                     CALIBRATION / "integer-rate-chain-intervals.csv",
                     CALIBRATION / "integer-rate-cpu92-vaxen-chain.csv",
                 ]
@@ -308,6 +326,6 @@ def timeline_command(database, output_dir):
             code_sha256=code_hashes(Path(__file__)),
         )
         (output_dir / "audit.json").write_text(json.dumps(audit, indent=2, ensure_ascii=False) + "\n")
-        click.echo(json.dumps({k: audit[k] for k in ["records", "spec_rate", "classical", "spec89", "dates"]}))
+        click.echo(json.dumps({k: audit[k] for k in ["records", "spec_rate", "classical", "spec89", "estimates", "dates"]}))
     except (OSError, ValueError, KeyError) as exc:
         raise click.ClickException(str(exc)) from exc

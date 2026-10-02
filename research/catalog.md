@@ -23,7 +23,11 @@ Start with the [four-track overview](overview.md).
 | fp92 | SPECfp92 | speed-fp / raw SPECfp92 points | recorded |
 | rate-fp92 | SPECrate_fp92 | rate-fp / raw SPECrate_fp92 points | recorded |
 | throughput89 | SPECthruput89 | legacy-throughput / raw SPECthruput89 points | recorded |
-| retired-spec-speed | Later SPEC integer-speed scores | speed / suite-specific raw points | retired |
+| speed-95 | SPEC CPU95 integer speed | speed / CPU95 raw integer-speed points | recorded |
+| speed-2000 | SPEC CPU2000 integer speed | speed / CPU2000 raw integer-speed points | recorded |
+| speed-2006 | SPEC CPU2006 integer speed | speed / CPU2006 raw integer-speed points | recorded |
+| speed-2017 | SPEC CPU2017 integer speed | speed / CPU2017 raw integer-speed points | recorded |
+| speed-2026 | SPEC CPU2026 integer speed | speed / CPU2026 raw integer-speed points | recorded |
 | dhry-11 | Dhrystone 1.1 | classical / DMIPS | recorded |
 | dhry-21 | Dhrystone 2.1 | classical / DMIPS | recorded |
 | dhry-unknown | Dhrystone unknown | classical / source-labelled iterations/time | recorded |
@@ -97,6 +101,28 @@ flowchart TD
     classical_sparse_network["classical-sparse-network"]
     rate92_unit --> classical_sparse_network
     int89_rate_vaxen --> classical_sparse_network
+    instruction_mix_joint_network["instruction-mix-joint-network"]
+    classical_sparse_network --> instruction_mix_joint_network
+    rate92_unit --> instruction_mix_joint_network
+    int89_rate_vaxen --> instruction_mix_joint_network
+    spec_predictor_speed_only["spec-predictor-speed-only"]
+    rate92_unit --> spec_predictor_speed_only
+    rate_95_vaxen --> spec_predictor_speed_only
+    rate_2000_vaxen --> spec_predictor_speed_only
+    rate_2006_vaxen --> spec_predictor_speed_only
+    rate_2017_vaxen --> spec_predictor_speed_only
+    spec_predictor_rate_only["spec-predictor-rate-only"]
+    rate92_unit --> spec_predictor_rate_only
+    rate_95_vaxen --> spec_predictor_rate_only
+    rate_2000_vaxen --> spec_predictor_rate_only
+    rate_2006_vaxen --> spec_predictor_rate_only
+    rate_2017_vaxen --> spec_predictor_rate_only
+    spec_predictor_equal_geometric["spec-predictor-equal-geometric"]
+    rate92_unit --> spec_predictor_equal_geometric
+    rate_95_vaxen --> spec_predictor_equal_geometric
+    rate_2000_vaxen --> spec_predictor_equal_geometric
+    rate_2006_vaxen --> spec_predictor_equal_geometric
+    rate_2017_vaxen --> spec_predictor_equal_geometric
 ```
 
 | Model / owner | Inputs → target | Relationship; role; status | Dependencies |
@@ -122,6 +148,10 @@ flowchart TD
 | [classical-joint](../research/spec89-rate-bridge.md) | composite → vaxen | joint-fit; primary; implemented-conditional | classical-composite, rate92-unit, int89-rate-vaxen |
 | [timing-reconstruction](../docs/methods.md) | gibson, adp, process-control, trace-timing → vaxen | planned; planned; planned | none |
 | [classical-sparse-network](../research/classic-network-fitting.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; primary; implemented-conditional | rate92-unit, int89-rate-vaxen |
+| [instruction-mix-joint-network](../research/instruction-mix-network.md) | gibson, adp, dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; primary; implemented-conditional | classical-sparse-network, rate92-unit, int89-rate-vaxen |
+| [spec-predictor-speed-only](../research/spec-speed-rate-predictors.md) | speed-95, speed-2000, speed-2006, speed-2017, speed-2026 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
+| [spec-predictor-rate-only](../research/spec-speed-rate-predictors.md) | rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
+| [spec-predictor-equal-geometric](../research/spec-speed-rate-predictors.md) | speed-95, speed-2000, speed-2006, speed-2017, speed-2026, rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
 
 ## Datasets
 
@@ -148,6 +178,8 @@ flowchart TD
 | result-records | [guide](../research/chronology.md) | `data/derived/schema/result-records.jsonl` | optional derived input |
 | instruction-mix-study | [guide](../research/instruction-mix-bridge.md) | `research/data/classic/mix-study` | required in checkout |
 | spec95-2000-overlap-audit | [guide](../research/spec95-spec2000-overlap-audit.md) | `research/data/spec/95-2000-audit` | required in checkout |
+| spec-speed-predictors | [guide](../research/spec-speed-rate-predictors.md) | `research/data/spec/speed-predictors` | required in checkout |
+| mix-network | [guide](../research/instruction-mix-network.md) | `research/data/classic/mix-network-coefficients.csv` | required in checkout |
 
 ## Document inventory
 
@@ -224,6 +256,8 @@ analysis from evidence, diagnostics and retired work.
 | [Shared VAXen timeline](../docs/timeline.md) | guide | current |
 | [Unified historical and SPEC rate timeline](../research/unified-vaxen-timeline.md) | primary | current |
 | [Gibson and ADP evidence and calibration experiments](../research/instruction-mix-bridge.md) | primary | current |
+| [Gibson/ADP ratings in the classical network](../research/instruction-mix-network.md) | primary | current |
+| [SPEC speed, rate and joint predictors of the older suite's rate](../research/spec-speed-rate-predictors.md) | primary | current |
 | [SPEC95/CPU2000 overlap-loss audit](../research/spec95-spec2000-overlap-audit.md) | primary | current |
 | [SPEC source fields and execution-resource audit](../research/spec-resource-field-audit.md) | primary | current |
 | [Shared benchmark input contract](../docs/input-catalog.md) | guide | current |

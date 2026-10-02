@@ -2,8 +2,9 @@
 
 Reviewed: 2026-09-28; pairing recomputed on resolved systems 2026-10-02 (schema
 step 5c). Status: implemented source inventory, resolved-system pairing and
-SPEC89/SPEC92 feasibility audits. The joint network fit was removed on
-2026-10-02; no mix value is calibrated to VAXen.
+SPEC89/SPEC92 feasibility audits. The joint network fit that calibrates mix
+values to VAXen is the [mix network](instruction-mix-network.md), refitted on
+resolved systems on 2026-10-02.
 
 ## Reproduce and inspect
 
@@ -554,6 +555,6 @@ by bare model number or manufacturer would manufacture spurious overlap.
 Thus both SPEC89 and SPEC92 direct edges remain **unidentified from the current
 inventory**, while the classical route has data for conditional exploration.
 
-The joint mix → classical → SPEC92 rate network experiment (`classic mix-network-fit`)
-was removed on 2026-10-02 with the other diagnostic experiments; it remains in Git history.
-The timeline's mix rows, which used it, were removed in schema step 5d the same day.
+The joint mix → classical → SPEC92 rate network (`classic mix-network-fit`) was
+removed on 2026-10-02 and rebuilt the same day on resolved systems; see the
+[mix network](instruction-mix-network.md).

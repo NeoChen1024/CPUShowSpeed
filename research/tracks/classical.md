@@ -31,9 +31,11 @@ model, distinct from the earlier fixed-composite coefficient estimator.
 
 - [Acquisition](../classic-benchmark-collection.md), [literature](../classic-spec-literature.md),
   and [PDF tables](../classic-pdf-extraction.md) establish source evidence.
-- Earlier single/pair/triple, source-column, environment, pooled-native and
-  instruction-mix network experiments were removed on 2026-10-02; they remain in
-  Git history and are listed in the [schema cleanup inventory](../schema-cleanup-inventory.md).
+- Earlier single/pair/triple, source-column, environment and pooled-native
+  experiments were removed on 2026-10-02; they remain in Git history and are
+  listed in the [schema cleanup inventory](../schema-cleanup-inventory.md).
+- The [mix network](../instruction-mix-network.md) attaches Gibson/ADP ratings to
+  the classical network over resolved systems; its links are unapproved.
 
 ## Earlier-machine reconstruction boundary
 
