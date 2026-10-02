@@ -127,24 +127,6 @@ flowchart TD
     speed_2026_vaxen["speed-2026-vaxen"]
     speed_2026_to_2017 --> speed_2026_vaxen
     speed_2017_vaxen --> speed_2026_vaxen
-    spec_predictor_speed_only["spec-predictor-speed-only"]
-    rate92_unit --> spec_predictor_speed_only
-    rate_95_vaxen --> spec_predictor_speed_only
-    rate_2000_vaxen --> spec_predictor_speed_only
-    rate_2006_vaxen --> spec_predictor_speed_only
-    rate_2017_vaxen --> spec_predictor_speed_only
-    spec_predictor_rate_only["spec-predictor-rate-only"]
-    rate92_unit --> spec_predictor_rate_only
-    rate_95_vaxen --> spec_predictor_rate_only
-    rate_2000_vaxen --> spec_predictor_rate_only
-    rate_2006_vaxen --> spec_predictor_rate_only
-    rate_2017_vaxen --> spec_predictor_rate_only
-    spec_predictor_equal_geometric["spec-predictor-equal-geometric"]
-    rate92_unit --> spec_predictor_equal_geometric
-    rate_95_vaxen --> spec_predictor_equal_geometric
-    rate_2000_vaxen --> spec_predictor_equal_geometric
-    rate_2006_vaxen --> spec_predictor_equal_geometric
-    rate_2017_vaxen --> spec_predictor_equal_geometric
 ```
 
 | Model / owner | Inputs → target | Relationship; role; status | Dependencies |
@@ -182,9 +164,6 @@ flowchart TD
 | [speed-2017-vaxen](../research/spec-speed-chain.md) | speed-2017 → speed-vaxen | composition; primary; implemented-conditional | speed-2017-to-2006, speed-2006-vaxen |
 | [speed-2026-to-2017](../research/spec-speed-chain.md) | speed-2026 → speed-2017 | empirical-fit; primary; implemented-conditional | none |
 | [speed-2026-vaxen](../research/spec-speed-chain.md) | speed-2026 → speed-vaxen | composition; primary; implemented-conditional | speed-2026-to-2017, speed-2017-vaxen |
-| [spec-predictor-speed-only](../research/spec-speed-rate-predictors.md) | speed-95, speed-2000, speed-2006, speed-2017, speed-2026 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
-| [spec-predictor-rate-only](../research/spec-speed-rate-predictors.md) | rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
-| [spec-predictor-equal-geometric](../research/spec-speed-rate-predictors.md) | speed-95, speed-2000, speed-2006, speed-2017, speed-2026, rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
 
 ## Datasets
 
@@ -211,7 +190,6 @@ flowchart TD
 | result-records | [guide](../research/chronology.md) | `data/derived/schema/result-records.jsonl` | optional derived input |
 | instruction-mix-study | [guide](../research/instruction-mix-bridge.md) | `research/data/classic/mix-study` | required in checkout |
 | spec95-2000-overlap-audit | [guide](../research/spec95-spec2000-overlap-audit.md) | `research/data/spec/95-2000-audit` | required in checkout |
-| spec-speed-predictors | [guide](../research/spec-speed-rate-predictors.md) | `research/data/spec/speed-predictors` | required in checkout |
 | mix-network | [guide](../research/instruction-mix-network.md) | `research/data/classic/mix-network-coefficients.csv` | required in checkout |
 | modern-speed-chain | [guide](../research/spec-speed-chain.md) | `research/data/spec/fitting/integer-speed-chain-intervals.csv` | required in checkout |
 
@@ -291,7 +269,6 @@ analysis from evidence, diagnostics and retired work.
 | [Unified historical and SPEC rate timeline](../research/unified-vaxen-timeline.md) | primary | current |
 | [Gibson and ADP evidence and calibration experiments](../research/instruction-mix-bridge.md) | primary | current |
 | [Gibson/ADP ratings in the classical network](../research/instruction-mix-network.md) | primary | current |
-| [SPEC speed, rate and joint predictors of the older suite's rate](../research/spec-speed-rate-predictors.md) | primary | current |
 | [SPEC95/CPU2000 overlap-loss audit](../research/spec95-spec2000-overlap-audit.md) | primary | current |
 | [SPEC source fields and execution-resource audit](../research/spec-resource-field-audit.md) | primary | current |
 | [Shared benchmark input contract](../docs/input-catalog.md) | guide | current |

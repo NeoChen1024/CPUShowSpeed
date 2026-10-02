@@ -29,7 +29,7 @@ def list_browsing(suffix=""):
 
 
 def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
-    fields = "record_id resource_warning runtime_resources hardware_context resource_basis reported_cpu_count cores_per_chip input_configurations estimate_kind system_id speed_system mix_combination source_record_ids benchmark_sources configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit evidence_class source_locator generation reported_score benchmark_id calibration_scenario".split()
+    fields = "record_id quantity resource_warning runtime_resources hardware_context resource_basis reported_cpu_count cores_per_chip input_configurations estimate_kind system_id mix_combination source_record_ids benchmark_sources configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit evidence_class source_locator generation reported_score benchmark_id calibration_scenario".split()
     output.parent.mkdir(parents=True, exist_ok=True)
     worker = browser_worker_source()
     export = WebExport(output.parent)
@@ -102,21 +102,23 @@ __CALCULATOR_STYLE__
 <div id="timeline-app" hidden>
 __LINEAGE_MARKUP__
 <label>Search system, CPU, configuration or benchmark: <input id="q" placeholder="VAX, PDP, LINPACK…"></label>
+<fieldset id="quantities"><legend>Quantity</legend>
+<label><input type="checkbox" style="width:auto" data-quantity="rate" checked> ● Throughput · rate-VAXen</label>
+<label><input type="checkbox" style="width:auto" data-quantity="speed" checked> ▲ Single job · speed-VAXen</label></fieldset>
+<p class="hint">Both set the VAX-11/780 to 1. Rate-VAXen count every copy a system runs (SPEC92 rate × 25500 / 604800); speed-VAXen time one job (one SPECint92 point each). They are parallel quantities, never converted into each other. Classical, SPEC89 and mix estimates are speed-VAXen.</p>
 <fieldset id="scores"><legend>Scores</legend>
 <label><input type="checkbox" style="width:auto" data-mode="base" checked> SPEC Base</label>
 <label><input type="checkbox" style="width:auto" data-mode="peak" checked> SPEC Peak</label>
 <label><input type="checkbox" style="width:auto" data-mode="peak_proxy" checked> Historical estimates</label>
 </fieldset>
 <fieldset id="estimates"><legend>Estimates</legend>
-<label><input type="checkbox" style="width:auto" data-estimate="baseline" checked> ● Reported rate / historical baseline</label>
+<label><input type="checkbox" style="width:auto" data-estimate="baseline" checked> Reported SPEC / historical baseline</label>
 <label><input type="checkbox" style="width:auto" data-estimate="mix_combined" checked> ■ Combined Gibson + ADP mixes</label>
-<label><input type="checkbox" style="width:auto" data-estimate="mix"> ■ Single mix ratings</label>
-<label><input type="checkbox" style="width:auto" data-estimate="speed"> ▲ From speed</label>
-<label><input type="checkbox" style="width:auto" data-estimate="joint"> ◆ From speed + rate</label></fieldset>
-<p class="hint">All estimates target rate-VAXen. Speed estimates: SPEC95–2026 speed results. Joint estimates: hardware-near speed/rate pairs. Combined mixes merge a source row's available Gibson and ADP ratings; single ratings are optional comparisons. CI95 is calibration uncertainty, not a prediction interval.</p>
+<label><input type="checkbox" style="width:auto" data-estimate="mix"> ■ Single mix ratings</label></fieldset>
+<p class="hint">Combined mixes merge a source row's available Gibson and ADP ratings; single ratings are optional comparisons. CI95 is calibration uncertainty, not a prediction interval.</p>
 <p id="estimate-status" class="hint"></p>
 <fieldset id="routes"><legend>Benchmark routes</legend></fieldset>
-<p>System throughput · not per-core performance</p>
+<p>Single node/system · not per-core performance</p>
 <p id="count" aria-live="polite"></p>
 <p>Year: CPU release → system availability → eligible submission date. Undated records remain in the list.</p>
 <p class="hint">Hover to inspect · click to pin · scroll to zoom · drag to pan</p>
@@ -136,21 +138,25 @@ __BROWSING_BOTTOM__
 <script>
 for(const r of data)for(const key of ['source_record_ids','benchmark_sources','runtime_resources','hardware_context','input_configurations']){
  if(typeof r[key]==='string'&&r[key])r[key]=JSON.parse(r[key]);}
-const enabledEstimates=new Set(['baseline','mix_combined']);
+const enabledEstimates=new Set(['baseline','mix_combined']),enabledQuantities=new Set(['rate','speed']);
 const kind=r=>r.estimate_kind||'baseline';
-const estimateLabel=r=>({baseline:'Reported rate / historical baseline',mix:'Single mix rating',mix_combined:'Combined mixes',speed:'From speed',joint:'From speed + rate'}[kind(r)]||kind(r));
-// Rows derived from one source result (base/peak, speed↔pair↔rate, single↔combined mixes) and rows of one resolved system.
+const quantityOf=r=>r.quantity||'speed';
+const quantityLabel=r=>quantityOf(r)==='rate'?'Throughput · rate-VAXen':'Single job · speed-VAXen';
+const estimateLabel=r=>({baseline:r.generation&&r.generation.startsWith('cpu')&&r.generation!=='cpu89'?'Reported SPEC':'Historical estimate',mix:'Single mix rating',mix_combined:'Combined mixes'}[kind(r)]||kind(r));
+// Rows derived from one source result (base/peak, single↔combined mixes) and rows of one resolved system.
 const index=(key,r,map)=>{if(!key)return;const a=map.get(key)||[];a.push(r);map.set(key,a);};
 const sourceIndex=new Map(),systemIndex=new Map();
 for(const r of data){for(const id of r.source_record_ids||[])index(id,r,sourceIndex);index(r.system_id,r,systemIndex);}
 function relatives(r){const found=new Map();for(const id of r.source_record_ids||[])for(const q of sourceIndex.get(id)||[])if(q!==r)found.set(q.record_id,q);return [...found.values()];}
 function sameSystem(r){const direct=new Set(relatives(r));return (systemIndex.get(r.system_id)||[]).filter(q=>q!==r&&!direct.has(q));}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function fmt(value){const x=Number(value);if(!Number.isFinite(x))return '—';
+function fmt(value,quantity){const x=Number(value);if(!Number.isFinite(x))return '—';
  const prefixes=['p','n','µ','m','','k','M','G','T','P','E'];
  let e=x===0?0:Math.max(-12,Math.min(18,Math.floor(Math.log10(Math.abs(x))/3)*3));
  let scaled=x/10**e;if(Math.abs(Number(scaled.toFixed(3)))>=1000&&e<18){e+=3;scaled=x/10**e;}
- return `${scaled.toFixed(3)} ${prefixes[(e+12)/3]}VAXen`;}
+ const prefix=prefixes[(e+12)/3];
+ if(quantity!=='rate'&&quantity!=='speed')return `${scaled.toFixed(3)} ${prefix}VAXen`;
+ return `${scaled.toFixed(3)} ${prefix?prefix+' ':''}${quantity}-VAXen`;}
 const plot=document.querySelector('#plot'), tip=document.querySelector('#tip'), overviewPlot=document.querySelector('#overview');
 const dated=data.filter(r=>r.year);let ymin=Math.floor(Math.log10(data.reduce((m,r)=>Math.min(m,r.ci95_low),Infinity))),
  ymax=Math.ceil(Math.log10(data.reduce((m,r)=>Math.max(m,r.ci95_high),0))),
@@ -205,16 +211,17 @@ function scoreDetails(r){
   'InstructionMix:Gibson_KIPS':['Gibson Mix','KIPS'],
   'InstructionMix:ADP_KIPS':['ADP Mix','KIPS'],
   'SPECint89':['SPECint89',''],
+  'SPECint92':['SPECint92 speed',''],
+  'SPECbase_int92':['SPECint92 speed',''],
   'SPECrate_int92':['SPEC92 integer rate',''],
   'SPECrate_base_int92':['SPEC92 integer rate','']
  };
  return Object.entries(scores).map(([key,value])=>{
   let [label,unit]=labels[key]||[key,''];
   const rate=/^CINT(95|2000|2006|2017|2026)rate$/.exec(key);
-  const speed=/^CPU(95|2000|2006|2017|2026) integer speed (base|peak)$/.exec(key);
+  const speed=/^CINT(95|2000|2006|2017|2026)$/.exec(key);
   if(rate)label='SPEC'+rate[1]+' integer rate';
   if(speed)label='SPEC'+speed[1]+' integer speed';
-  if(key==='speed'||key==='rate')label=(r.generation||r.route||'SPEC').replace(/^cpu/i,'SPEC')+' integer '+key;
   const number=typeof value==='number'&&Number.isFinite(value)?value.toLocaleString('en-US',{maximumSignificantDigits:6}):String(value);
   return '<span class="score-input"><span>'+esc(label)+':</span> <strong>'+esc(number)+(unit?' '+esc(unit):'')+'</strong></span>';
  }).join('');
@@ -235,7 +242,6 @@ function resourceDescription(r){
   }
   return text;
  }
- if(kind(r)==='joint'&&r.input_configurations)return ['speed','rate'].map(role=>'<b>'+role+' input</b><br>'+one(r.input_configurations[role])).join('<br>');
  if(!r.generation)return 'Historical hardware; runtime concurrency not established';
  return one(r)+(r.hardware_context?'<details><summary>Hardware / software disclosure</summary>'+
  Object.entries(r.hardware_context).filter(([k,v])=>v).map(([k,v])=>'<p><b>'+esc(k)+'</b>: '+esc(v)+'</p>').join('')+'</details>':'');
@@ -252,9 +258,9 @@ function showSelection(){if(!candidates.length){clearSelection();return;}
  <p>${esc(r.cpu||'CPU unspecified')} · ${esc(r.route)}</p><p>${esc(configurationDetails(r))}</p>
  <p>${esc(modeOf(r))} · ${esc(r.measurement_scope||'historical proxy')}<br>
  ${resourceDescription(r)}</p>
- <p>${esc(estimateLabel(r))} · ${esc(r.calibration_scenario||'')}<br><b>${fmt(r.vaxen)}</b><br>CI95: ${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</p>
- ${related.length?'<details open><summary>From the same source results</summary>'+related.slice(0,8).map(q=>`<p>${esc(estimateLabel(q))} · ${esc(q.route)} · ${esc(modeOf(q))}: <b>${fmt(q.vaxen)}</b><br><small>${esc(q.system)} · CI95 ${fmt(q.ci95_low)}–${fmt(q.ci95_high)}</small></p>`).join('')+(related.length>8?`<small>${related.length} related rows; first 8 shown</small>`:'')+'</details>':''}
- ${others.length?'<details><summary>Same resolved system · '+others.length+' other row'+(others.length===1?'':'s')+'</summary>'+others.slice(0,8).map(q=>`<p>${esc(q.route)} · ${esc(estimateLabel(q))} · ${esc(modeOf(q))}: <b>${fmt(q.vaxen)}</b><br><small>${esc(q.year||'undated')} · CI95 ${fmt(q.ci95_low)}–${fmt(q.ci95_high)}</small></p>`).join('')+'</details>':''}
+ <p>${esc(quantityLabel(r))} · ${esc(estimateLabel(r))} · ${esc(r.calibration_scenario||'')}<br><b>${fmt(r.vaxen,quantityOf(r))}</b><br>CI95: ${fmt(r.ci95_low,quantityOf(r))}–${fmt(r.ci95_high,quantityOf(r))}</p>
+ ${related.length?'<details open><summary>From the same source results</summary>'+related.slice(0,8).map(q=>`<p>${esc(estimateLabel(q))} · ${esc(q.route)} · ${esc(modeOf(q))}: <b>${fmt(q.vaxen,quantityOf(q))}</b><br><small>${esc(q.system)} · CI95 ${fmt(q.ci95_low,quantityOf(q))}–${fmt(q.ci95_high,quantityOf(q))}</small></p>`).join('')+(related.length>8?`<small>${related.length} related rows; first 8 shown</small>`:'')+'</details>':''}
+ ${others.length?'<details><summary>Same resolved system · '+others.length+' other row'+(others.length===1?'':'s')+'</summary>'+others.slice(0,8).map(q=>`<p>${esc(q.route)} · ${esc(quantityOf(q))} · ${esc(estimateLabel(q))} · ${esc(modeOf(q))}: <b>${fmt(q.vaxen,quantityOf(q))}</b><br><small>${esc(q.year||'undated')} · CI95 ${fmt(q.ci95_low,quantityOf(q))}–${fmt(q.ci95_high,quantityOf(q))}</small></p>`).join('')+'</details>':''}
  <p>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">Source ${i+1}</a>`).join(' · ')}</p>
  <p>Year: ${esc(r.year)} (${esc(r.year_low)}–${esc(r.year_high)})<br><small>${esc(r.date_method)}</small></p>
  <p><small>${scoreDetails(r)}${r.mix_combination?'<br>'+esc(r.mix_combination)+' · '+esc(r.reported_unit):''}<br>${esc(r.calibration_route||r.route)}<br>${esc(r.uncertainty_scope||'conditional calibration CI95')}<br>${esc(r.limitation||'')}<br>${esc(r.date_notes||'')}</small></p><small>${pinned?'Pinned':'Click to pin'} · ${active+1} / ${candidates.length} nearby point${candidates.length===1?'':'s'}</small>`;
@@ -289,21 +295,21 @@ function renderTable(){const order=sortOrder;
  }
  document.querySelector('#body').innerHTML=rows.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE).map(r=>`<tr><td>${esc(r.year||'Unknown')}<br><small>${esc(r.date_method)} ${esc(r.year_low)}–${esc(r.year_high)}</small></td>
  <td>${esc(r.system)}${r.cpu?'<br>'+esc(r.cpu):''}<br><small>${esc(configurationDetails(r))}</small></td>
- <td>${esc(r.route)} · ${esc(modeOf(r))}<br>${esc(estimateLabel(r))}<br><small>${scoreDetails(r)}</small></td><td>${fmt(r.vaxen)}<br><small>${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</small></td>
- <td>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">${kind(r)==='joint'?(i===0?'Speed':'Rate'):'Benchmark'}</a>`).join(' · ')}<br>${r.date_sources.split(';').filter(Boolean).map(u=>`<a href="${esc(u)}">Year source</a>`).join(' ')}<br><small>${esc(r.date_notes)}</small></td></tr>`).join('');
+ <td>${esc(r.route)} · ${esc(modeOf(r))}<br>${esc(quantityLabel(r))} · ${esc(estimateLabel(r))}<br><small>${scoreDetails(r)}</small></td><td>${fmt(r.vaxen,quantityOf(r))}<br><small>${fmt(r.ci95_low,quantityOf(r))}–${fmt(r.ci95_high,quantityOf(r))}</small></td>
+ <td>${(r.benchmark_sources||[r.source_url]).map(u=>`<a href="${esc(u)}">Benchmark</a>`).join(' · ')}<br>${r.date_sources.split(';').filter(Boolean).map(u=>`<a href="${esc(u)}">Year source</a>`).join(' ')}<br><small>${esc(r.date_notes)}</small></td></tr>`).join('');
 }
-function marker(p,size){const x=p.x,y=p.y,s=size;if(kind(p.r)==='speed')return `M${x} ${y-s}l${s} ${s*2}h${-s*2}z`;
+function marker(p,size){const x=p.x,y=p.y,s=size;
  if(kind(p.r).startsWith('mix'))return `M${x-s} ${y-s}h${s*2}v${s*2}h${-s*2}z`;
- if(kind(p.r)==='joint')return `M${x} ${y-s}l${s} ${s}l${-s} ${s}l${-s} ${-s}z`;
+ if(quantityOf(p.r)==='speed')return `M${x} ${y-s}l${s} ${s*2}h${-s*2}z`;
  return `M${x-s},${y}a${s},${s} 0 1,0 ${s*2},0a${s},${s} 0 1,0 ${-s*2},0`;}
 function draw(){clearSelection();const query=document.querySelector('#q').value.toLowerCase();
- const selected=data.filter((r,i)=>searchable[i].includes(query)&&enabled.has(r.route)&&enabledModes.has(modeOf(r))&&enabledEstimates.has(kind(r)));
+ const selected=data.filter((r,i)=>searchable[i].includes(query)&&enabled.has(r.route)&&enabledModes.has(modeOf(r))&&enabledEstimates.has(kind(r))&&enabledQuantities.has(quantityOf(r)));
  const cohort=selected;
  const estimates=selected.filter(r=>kind(r)!=='baseline').length;
- document.querySelector('#estimate-status').textContent=`${estimates} model estimates shown alongside ${selected.length-estimates} baseline rows. Estimates are correlated with the baseline routes, not extra evidence.`;
+ document.querySelector('#estimate-status').textContent=`${estimates} mix estimates shown alongside ${selected.length-estimates} baseline rows. Mix estimates are correlated with the classical route, not extra evidence.`;
  filtered=cohort.filter(r=>!r.year||(r.year>=viewMin&&r.year<=viewMax));
  const sourceCount=new Set(filtered.flatMap(r=>(r.source_record_ids||[r.configuration_id]).map(id=>(r.generation||r.route)+':'+id))).size;
- document.querySelector('#count').textContent=`${sourceCount} source records · ${filtered.filter(r=>kind(r)==='joint').length} paired estimates · ${filtered.length} displayed points`;
+ document.querySelector('#count').textContent=`${sourceCount} source records · ${filtered.filter(r=>quantityOf(r)==='rate').length} rate · ${filtered.filter(r=>quantityOf(r)==='speed').length} speed · ${filtered.length} displayed points`;
  let s='<defs><clipPath id="plot-region"><rect x="90" y="40" width="1270" height="640"/></clipPath></defs>';for(let y=ymin;y<=ymax;y++){let p=Y(10**y);s+=`<path d="M90 ${p}H1360" stroke="#dde3e8"/><text x="8" y="${p+5}">10^${y} VAXen</text>`;}
  const step=viewMax-viewMin<12?1:5;for(let x=Math.ceil(viewMin/step)*step;x<=viewMax;x+=step)s+=`<path d="M${X(x)} 40V680" stroke="#eee"/><text x="${X(x)-17}" y="710">${x}</text>`;
  points=filtered.filter(r=>r.year).map(r=>({r,x:X(r.year),y:Y(r.vaxen)}));
@@ -359,6 +365,7 @@ for(const [id,side] of [['brush-left','left'],['brush-right','right']])document.
 document.querySelector('#routes').innerHTML='<legend>Benchmark routes</legend>'+routeNames.map((name,i)=>`<label style="margin-right:14px;color:${palette[i%palette.length]}"><input type="checkbox" style="width:auto" data-route="${esc(name)}" ${enabled.has(name)?'checked':''}> ${esc(name)}</label>`).join('');
 document.querySelector('#routes').addEventListener('change',e=>{const name=e.target.dataset.route;if(!name)return;e.target.checked?enabled.add(name):enabled.delete(name);page=0;draw();});
 document.querySelector('#scores').addEventListener('change',e=>{const mode=e.target.dataset.mode;if(!mode)return;e.target.checked?enabledModes.add(mode):enabledModes.delete(mode);page=0;draw();});
+document.querySelector('#quantities').addEventListener('change',e=>{const q=e.target.dataset.quantity;if(!q)return;e.target.checked?enabledQuantities.add(q):enabledQuantities.delete(q);page=0;draw();});
 document.querySelector('#estimates').addEventListener('change',e=>{const k=e.target.dataset.estimate;if(!k)return;e.target.checked?enabledEstimates.add(k):enabledEstimates.delete(k);page=0;draw();});
 function bindListBrowsing(suffix){
  for(const [id,delta] of [['table-prev',-1],['table-next',1]])document.querySelector('#'+id+suffix).addEventListener('click',()=>{page+=delta;renderTable();});

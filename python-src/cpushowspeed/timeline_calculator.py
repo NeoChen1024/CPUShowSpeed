@@ -1,16 +1,19 @@
-"""Offline predictor UI; export saved coefficients and aligned historical draws."""
+"""Offline predictor UI; export saved coefficients and aligned historical draws.
+
+Historical inputs and SPEC speed give speed-VAXen; SPEC rate gives rate-VAXen.
+Speed and rate are separate results and are never combined.
+"""
 
 import hashlib
 import json
 from pathlib import Path
 
 import numpy as np
-from cpushowspeed.calibration import ANCHOR
 from cpushowspeed.classic_predict import OPTIONS, predict_scores
 from cpushowspeed.mix_network import OUTPUT as MIX_OUTPUT
 from cpushowspeed.mix_network import TIMELINE_RUN
 from cpushowspeed.research_io import read_csv
-from cpushowspeed.spec_predictors import RESEARCH as PREDICTOR_RESEARCH
+from cpushowspeed.spec_speed_chain import INTERVALS as SPEED_CHAIN
 
 CLASSICAL_LABELS = {
     "dhrystone_1_1": "Dhrystone 1.1",
@@ -26,6 +29,7 @@ HISTORICAL_INPUTS = [(key, metric, CLASSICAL_LABELS[key], unit) for key, (metric
 ]
 RATE_CHAIN = Path("research/data/spec/fitting/integer-rate-chain-intervals.csv")
 RATE_SCENARIO = "same_os"
+SPEC89_AUDIT = Path("research/data/classic/spec89-audit.json")
 
 
 def _network(draws, metrics, rows, low_key, high_key, name):
@@ -69,16 +73,11 @@ def calculator_payload():
         networks["mixes"] = _network(
             archive[mix_run["draw_key"]], mix_run["metrics"], mix_rows, "ci95_vaxen_low", "ci95_vaxen_high", "mixes"
         )
-    bridge_path = Path("research/data/classic/spec89-rate-bridge-summary.csv")
-    summary_path = PREDICTOR_RESEARCH / "summary.csv"
-    for path in [*paths, *mix_paths, bridge_path, RATE_CHAIN, summary_path]:
+    for path in [*paths, *mix_paths, SPEC89_AUDIT, RATE_CHAIN, SPEED_CHAIN]:
         hashes[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
-    legacy = {}
-    for row in read_csv(bridge_path):
-        generation = {"int89_to_rate92_chained": "cpu89", "int92_to_rate92": "cpu92"}.get(row["edge"])
-        if generation:
-            # These saved factors already target VAXen, despite historical column labels.
-            legacy[generation] = [float(row[key]) for key in ("factor", "factor_ci95_low", "factor_ci95_high")]
+    # The timeline's SPEC89 rows use the bridge's joint-bootstrap interval, so the calculator does too.
+    bridge = json.loads(SPEC89_AUDIT.read_text())
+    spec89 = [bridge["bridge_factor"], *bridge["bridge_factor_ci95"]]
     rates = [
         dict(
             generation=r["generation"],
@@ -88,27 +87,15 @@ def calculator_payload():
         for r in read_csv(RATE_CHAIN)
         if r["scenario"] == RATE_SCENARIO
     ]
-    predictors = [
+    speeds = [
         dict(
-            generation=r["new_generation"],
+            generation=r["generation"],
             mode=r["mode"],
-            method=r["method"],
-            values=[float(r[k]) for k in ("coefficient_vaxen", "vaxen_ci95_low", "vaxen_ci95_high")],
+            values=[float(r[k]) for k in ("speed_vaxen_per_score", "bootstrap_95_low", "bootstrap_95_high")],
         )
-        for r in read_csv(summary_path)
-        if r["status"] == "conditional_fit"
+        for r in read_csv(SPEED_CHAIN)
     ]
-    return (
-        dict(
-            historical_inputs=HISTORICAL_INPUTS,
-            networks=networks,
-            anchor=ANCHOR,
-            legacy=legacy,
-            rates=rates,
-            predictors=predictors,
-        ),
-        hashes,
-    )
+    return dict(historical_inputs=HISTORICAL_INPUTS, networks=networks, spec89=spec89, rates=rates, speeds=speeds), hashes
 
 
 def calculator_markup():
@@ -133,16 +120,14 @@ STYLE = """
 @container (max-width:36rem){.calc-fields{grid-template-columns:minmax(0,1fr)}}
 @supports not (container-type:inline-size){@media(max-width:660px){.calc-fields{grid-template-columns:minmax(0,1fr)}}}
 #calc-result{margin-top:16px;padding:12px;background:white;border:1px solid #bdccd7}
-#calc-result:empty{display:none}#predictor-path{margin:12px 22px;padding:14px;background:white;border:1px solid #bdccd7;border-radius:10px}
-.predictor-flow{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:10px 0}
-.predictor-box{border:1px solid #9cb4c7;background:#edf3f7;padding:10px;border-radius:7px}
-.predictor-inputs{display:grid;gap:6px}.predictor-box.selected{border:2px solid #207ca3;background:#e3f1f7}
+#calc-result:empty{display:none}
 """
 
 MARKUP = """
 <section id="calculator" aria-labelledby="calc-title">
 <h2 id="calc-title">Predict VAXen</h2>
-<p>Enter scores for the same machine and configuration. Leave unavailable scores blank. No clock scaling.</p>
+<p>Enter scores for the same machine and configuration. Leave unavailable scores blank. No clock scaling.
+Historical scores and SPEC speed give speed-VAXen (one job); SPEC rate gives rate-VAXen (throughput).</p>
 <form id="calc-form">
 <fieldset id="calc-kind"><legend>Inputs</legend>
 <label><input type="radio" id="calc-kind-historical" name="calc-kind" value="historical" checked> Classical / Mixes</label>
@@ -158,7 +143,7 @@ Gibson and ADP mix ratings use CCTA KIPS; adding them selects the classical + mi
 <option value="cpu92">SPEC92</option><option value="cpu89">SPEC89</option><option value="cpu95">SPEC95</option>
 <option value="cpu2000">SPEC2000</option><option value="cpu2006">SPEC2006</option>
 <option value="cpu2017">SPEC2017</option><option value="cpu2026">SPEC2026</option></select></label>
-<label>Scores <select id="calc-mode"><option value="peak">Peak / legacy speed</option><option value="base">Base</option></select></label>
+<label>Scores <select id="calc-mode"><option value="peak">Peak</option><option value="base">Base</option></select></label>
 <label>Integer speed <input id="calc-speed" type="number" step="any" min="0" placeholder="Not supplied"></label>
 <label>Integer rate <input id="calc-rate" type="number" step="any" min="0" placeholder="Not supplied"></label>
 </div><p id="calc-policy" class="hint"></p></div>
@@ -168,6 +153,7 @@ Gibson and ADP mix ratings use CCTA KIPS; adding them selects the classical + mi
 </form>
 <div id="calc-result" role="status" aria-live="polite"></div>
 <p class="hint">CI95 describes shared calibration uncertainty, not the prediction range for an individual machine.
+Speed-VAXen and rate-VAXen both set the VAX-11/780 to 1 but measure different things: one job versus all copies.
 Historical inputs use equal family weights, then equal weights within each family. Gibson and ADP share one family.</p>
 </section>
 """
@@ -207,13 +193,13 @@ function predictionMarkup(){
   const x=X(r.year),y=Y(r.values[0]),right=x>725,tx=x+(right?-25:25);
   const ty=Math.max(62,Math.min(651,y-25+i*48)),anchor=right?'end':'start',c='#b34400';
   const label='You are here'+(userPredictions.length>1?' · '+r.label:'');
-  return `<g role="img" aria-label="${esc(label+' · '+r.year+' · '+fmt(r.values[0]))}">
+  return `<g role="img" aria-label="${esc(label+' · '+r.year+' · '+fmt(r.values[0],r.quantity))}">
   <path d="M${x} ${Y(r.values[1])}V${Y(r.values[2])}" stroke="${c}" stroke-width="9" opacity=".2"/>
   <circle cx="${x}" cy="${y}" r="17" fill="white" fill-opacity=".85" stroke="${c}" stroke-width="2"/>
   <circle cx="${x}" cy="${y}" r="9" fill="${c}" stroke="white" stroke-width="2"/>
   <path d="M${x+(right?-16:16)} ${y}L${tx} ${ty+5}" stroke="${c}" stroke-width="2"/>
   <text x="${tx}" y="${ty}" text-anchor="${anchor}" fill="${c}" font-size="18" font-weight="700" stroke="white" stroke-width="5" paint-order="stroke">${esc(label)}</text>
-  <text x="${tx}" y="${ty+21}" text-anchor="${anchor}" fill="${c}" font-size="15" stroke="white" stroke-width="4" paint-order="stroke">${r.year} · ${fmt(r.values[0])}</text></g>`;
+  <text x="${tx}" y="${ty+21}" text-anchor="${anchor}" fill="${c}" font-size="15" stroke="white" stroke-width="4" paint-order="stroke">${r.year} · ${fmt(r.values[0],r.quantity)}</text></g>`;
  }).join('')+'</g>';
 }
 function calcQuantile(values,p){
@@ -236,29 +222,25 @@ function historicalPrediction(scores){
  const values=[point,calcQuantile(draws,.025),calcQuantile(draws,.975)];
  if(!values.every(v=>Number.isFinite(v)&&v>0))throw Error('Result exceeds the supported numeric range.');
  return {label:'Historical estimate',values,details:metrics.map(m=>({metric:m,weight:weights[m],vaxen:scores[m]*network.coefficients[m]})),
-  path:metrics.some(m=>m.startsWith('InstructionMix:'))?'Mix + classical joint model → VAXen':'Classical joint model → VAXen'};
+  quantity:'speed',path:metrics.some(m=>m.startsWith('InstructionMix:'))?'Mix + classical joint model → speed-VAXen':'Classical joint model → speed-VAXen'};
 }
 function specPrediction(generation,mode,speed,rate){
  speed=positiveInput(speed,'Speed');rate=positiveInput(rate,'Rate');
  if(speed===null&&rate===null)throw Error('Enter a speed score, a rate score, or both.');
- if(generation==='cpu89'&&(rate!==null||mode!=='peak'))throw Error('SPEC89 supports native integer speed only.');
- const results=[];
- const product=(score,coefficients,label,path)=>({label,values:coefficients.map(k=>score*Number(k)),path});
- if(['cpu89','cpu92'].includes(generation)){
-  if(speed!==null){
-   if(mode!=='peak')throw Error('The legacy speed bridge is calibrated only for native / peak scores.');
-   results.push(product(speed,calibration.legacy[generation],'Legacy speed estimate','SPECint'+generation.slice(3)+' speed → historical bridge → VAXen'));
-  }
-  if(rate!==null)results.push(product(rate,[calibration.anchor,calibration.anchor,calibration.anchor],'Defined SPEC92 rate scale','SPEC92 rate × 25500 / 604800'));
-  if(results.length===2)for(const r of results)r.note='Separate estimates: no joint SPEC92 speed/rate coefficient is calibrated.';
+ const suite='SPEC'+generation.slice(3),results=[];
+ const product=(score,coefficients,label,quantity,path)=>({label,quantity,values:coefficients.map(k=>score*Number(k)),path});
+ if(generation==='cpu89'){
+  if(rate!==null||mode!=='peak')throw Error('SPEC89 supports native integer speed (SPECint89) only.');
+  results.push(product(speed,calibration.spec89,'Speed estimate','speed','SPECint89 → SPECint92 bridge → speed-VAXen'));
  }else{
-  const method=speed!==null&&rate!==null?'equal_geometric':speed!==null?'speed_only':'backbone';
-  const fit=method==='backbone'?calibration.rates.find(r=>r.generation===generation&&r.mode===mode):
-   calibration.predictors.find(r=>r.generation===generation&&r.mode===mode&&r.method===method);
-  if(!fit||fit.values.some(k=>!Number.isFinite(Number(k))||Number(k)<=0))throw Error('No supported coefficient for this selection: too few hardware-near tuples. Enter the rate score alone.');
-  const score=method==='equal_geometric'?Math.exp((Math.log(speed)+Math.log(rate))/2):speed??rate;
-  results.push(product(score,fit.values,method==='equal_geometric'?'Joint speed + rate estimate':method==='speed_only'?'Speed-derived estimate':'Rate estimate',
-   method==='backbone'?'Rate chain → SPEC92 rate → VAXen':(method==='equal_geometric'?'sqrt(speed × rate)':'speed')+' → local predictor → upstream rate chain → VAXen'));
+  const chain=(list,quantity)=>{const fit=list.find(r=>r.generation===generation&&r.mode===mode);
+   if(!fit||fit.values.some(k=>!Number.isFinite(Number(k))||Number(k)<=0))throw Error('No supported '+quantity+' coefficient for this selection.');return fit.values;};
+  if(speed!==null)results.push(product(speed,chain(calibration.speeds,'speed'),'Speed','speed',
+   generation==='cpu92'?'SPECint92 speed = speed-VAXen (VAX-11/780 = 1)':suite+' speed → integer-speed chain → SPECint92 speed'));
+  if(rate!==null)results.push(product(rate,chain(calibration.rates,'rate'),'Rate','rate',
+   generation==='cpu92'?'SPEC92 rate × 25500 / 604800':suite+' rate → integer-rate chain → SPEC92 rate → rate-VAXen'));
+  if(results.length===2)results[1].note='Rate ÷ speed = '+(results[1].values[0]/results[0].values[0]).toPrecision(3)+
+   ': a rough diagnostic of effective parallelism, not a combined estimate.';
  }
  if(results.some(r=>!r.values.every(v=>Number.isFinite(v)&&v>0)))throw Error('Result exceeds the supported numeric range.');
  return results;
@@ -269,7 +251,7 @@ function calculatorView(){
  for(const [key] of calibration.historical_inputs)document.querySelector('#calc-'+key).disabled=spec;
  for(const id of ['calc-speed','calc-rate'])document.querySelector('#'+id).disabled=!spec;
  document.querySelector('#calc-spec').hidden=!spec;document.querySelector('#calc-historical').hidden=spec;
- document.querySelector('#calc-policy').textContent='SPEC95–2026: rate alone uses the saved rate chain; speed alone or speed + rate use the hardware-near predictors. Speed-only estimates of multi-core machines are weak.';
+ document.querySelector('#calc-policy').textContent='Speed uses the integer-speed chain (speed-VAXen); rate uses the integer-rate chain (rate-VAXen). Entering both gives two separate results.';
  document.querySelector('#calc-result').innerHTML='';
 }
 function runCalculator(){
@@ -283,8 +265,8 @@ function runCalculator(){
    const scores={};for(const [key,metric,label] of calibration.historical_inputs){const score=positiveInput(document.querySelector('#calc-'+key).value,label);if(score!==null)scores[metric]=score;}
    results=[historicalPrediction(scores)];
   }
-  out.innerHTML=results.map(r=>'<h3>'+esc(r.label)+': '+fmt(r.values[0])+'</h3><p>Calibration CI95: '+fmt(r.values[1])+' – '+fmt(r.values[2])+
-   '</p><p>'+esc(r.path)+'</p>'+(r.note?'<p>'+esc(r.note)+'</p>':'')+(r.details?'<details><summary>Input weights and individual estimates</summary><ul>'+r.details.map(d=>'<li>'+esc(d.metric)+' · weight '+d.weight.toFixed(3)+' · '+fmt(d.vaxen)+'</li>').join('')+'</ul></details>':'')).join('');
+  out.innerHTML=results.map(r=>'<h3>'+esc(r.label)+': '+fmt(r.values[0],r.quantity)+'</h3><p>Calibration CI95: '+fmt(r.values[1],r.quantity)+' – '+fmt(r.values[2],r.quantity)+
+   '</p><p>'+esc(r.path)+'</p>'+(r.note?'<p>'+esc(r.note)+'</p>':'')+(r.details?'<details><summary>Input weights and individual estimates</summary><ul>'+r.details.map(d=>'<li>'+esc(d.metric)+' · weight '+d.weight.toFixed(3)+' · '+fmt(d.vaxen,r.quantity)+'</li>').join('')+'</ul></details>':'')).join('');
   if(year!==null){updatePredictionMarkers(results,year);plot.scrollIntoView?.({behavior:'smooth',block:'center'});}
  }catch(error){out.textContent=error.message;}
 }

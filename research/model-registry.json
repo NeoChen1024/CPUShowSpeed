@@ -581,14 +581,6 @@
       "lineage": "Hash-checked cached official exports and selected original disclosures; sensitivity scenarios are not promoted fits"
     },
     {
-      "id": "spec-speed-predictors",
-      "path": "research/data/spec/speed-predictors",
-      "kind": "derived",
-      "owner": "research/spec-speed-rate-predictors.md",
-      "optional": false,
-      "lineage": "Older rate / newer speed / newer rate results of one resolved hardware configuration from the schema database; saved same_os rate-chain draws"
-    },
-    {
       "id": "mix-network",
       "path": "research/data/classic/mix-network-coefficients.csv",
       "kind": "derived",
@@ -1828,167 +1820,6 @@
           "peak"
         ]
       }
-    },
-    {
-      "id": "spec-predictor-speed-only",
-      "title": "Older-rate predictor: speed_only",
-      "track": "spec-rate",
-      "input_metrics": [
-        "speed-95",
-        "speed-2000",
-        "speed-2006",
-        "speed-2017",
-        "speed-2026"
-      ],
-      "target_metric": "vaxen",
-      "additional_target_metrics": [
-        "rate-92",
-        "rate-95",
-        "rate-2000",
-        "rate-2006",
-        "rate-2017"
-      ],
-      "relationship": "empirical-fit",
-      "formula": "older rate = k*x; x=S, R or sqrt(S*R); VAXen multiplies the saved same_os rate chain of the older suite",
-      "variants": [
-        "base",
-        "peak",
-        "hardware_near"
-      ],
-      "role": "primary",
-      "status": "implemented-conditional",
-      "owner": "research/spec-speed-rate-predictors.md",
-      "dataset_ids": [
-        "spec-speed-predictors",
-        "schema-database"
-      ],
-      "depends_on": [
-        "rate92-unit",
-        "rate-95-vaxen",
-        "rate-2000-vaxen",
-        "rate-2006-vaxen",
-        "rate-2017-vaxen"
-      ],
-      "shared_evidence": "Identical complete tuples for all three predictors; processor-model holdouts; tuples disjoint from the rate-chain cohorts they rely on",
-      "command": "cpushowspeed bridge fit-speed-predictors",
-      "outputs": [
-        {
-          "path": "research/data/spec/speed-predictors/summary.csv",
-          "optional": false
-        }
-      ],
-      "output_row_selection": {
-        "method": "speed_only"
-      }
-    },
-    {
-      "id": "spec-predictor-rate-only",
-      "title": "Older-rate predictor: rate_only",
-      "track": "spec-rate",
-      "input_metrics": [
-        "rate-95",
-        "rate-2000",
-        "rate-2006",
-        "rate-2017",
-        "rate-2026"
-      ],
-      "target_metric": "vaxen",
-      "additional_target_metrics": [
-        "rate-92",
-        "rate-95",
-        "rate-2000",
-        "rate-2006",
-        "rate-2017"
-      ],
-      "relationship": "empirical-fit",
-      "formula": "older rate = k*x; x=S, R or sqrt(S*R); VAXen multiplies the saved same_os rate chain of the older suite",
-      "variants": [
-        "base",
-        "peak",
-        "hardware_near"
-      ],
-      "role": "primary",
-      "status": "implemented-conditional",
-      "owner": "research/spec-speed-rate-predictors.md",
-      "dataset_ids": [
-        "spec-speed-predictors",
-        "schema-database"
-      ],
-      "depends_on": [
-        "rate92-unit",
-        "rate-95-vaxen",
-        "rate-2000-vaxen",
-        "rate-2006-vaxen",
-        "rate-2017-vaxen"
-      ],
-      "shared_evidence": "Identical complete tuples for all three predictors; processor-model holdouts; tuples disjoint from the rate-chain cohorts they rely on",
-      "command": "cpushowspeed bridge fit-speed-predictors",
-      "outputs": [
-        {
-          "path": "research/data/spec/speed-predictors/summary.csv",
-          "optional": false
-        }
-      ],
-      "output_row_selection": {
-        "method": "rate_only"
-      }
-    },
-    {
-      "id": "spec-predictor-equal-geometric",
-      "title": "Older-rate predictor: equal_geometric",
-      "track": "spec-rate",
-      "input_metrics": [
-        "speed-95",
-        "speed-2000",
-        "speed-2006",
-        "speed-2017",
-        "speed-2026",
-        "rate-95",
-        "rate-2000",
-        "rate-2006",
-        "rate-2017",
-        "rate-2026"
-      ],
-      "target_metric": "vaxen",
-      "additional_target_metrics": [
-        "rate-92",
-        "rate-95",
-        "rate-2000",
-        "rate-2006",
-        "rate-2017"
-      ],
-      "relationship": "empirical-fit",
-      "formula": "older rate = k*x; x=S, R or sqrt(S*R); VAXen multiplies the saved same_os rate chain of the older suite",
-      "variants": [
-        "base",
-        "peak",
-        "hardware_near"
-      ],
-      "role": "primary",
-      "status": "implemented-conditional",
-      "owner": "research/spec-speed-rate-predictors.md",
-      "dataset_ids": [
-        "spec-speed-predictors",
-        "schema-database"
-      ],
-      "depends_on": [
-        "rate92-unit",
-        "rate-95-vaxen",
-        "rate-2000-vaxen",
-        "rate-2006-vaxen",
-        "rate-2017-vaxen"
-      ],
-      "shared_evidence": "Identical complete tuples for all three predictors; processor-model holdouts; tuples disjoint from the rate-chain cohorts they rely on",
-      "command": "cpushowspeed bridge fit-speed-predictors",
-      "outputs": [
-        {
-          "path": "research/data/spec/speed-predictors/summary.csv",
-          "optional": false
-        }
-      ],
-      "output_row_selection": {
-        "method": "equal_geometric"
-      }
     }
   ],
   "documents": [
@@ -2474,13 +2305,6 @@
       "role": "primary",
       "status": "current",
       "purpose": "Mix network over resolved systems: attachment, coefficients, proxy holdouts and timeline run"
-    },
-    {
-      "path": "research/spec-speed-rate-predictors.md",
-      "title": "SPEC speed, rate and joint predictors of the older suite's rate",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Speed/rate/joint predictors over hardware-near tuples: holdouts, VAXen coefficients and timeline estimates"
     },
     {
       "path": "research/spec95-spec2000-overlap-audit.md",

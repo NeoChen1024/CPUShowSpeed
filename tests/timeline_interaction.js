@@ -35,75 +35,86 @@ const context=vm.createContext({bundle,document,window,DOMPoint,innerWidth:1500,
  reference:process.argv[4]?JSON.parse(fs.readFileSync(process.argv[4],'utf8')):null,setScale:s=>scale=s});
 if(process.argv[3]==='full'){
  vm.runInContext(script+`
- const count=k=>data.filter(r=>kind(r)===k).length;
- assert.equal(data.length,115335);
- assert.deepEqual(['baseline','mix','mix_combined','speed','joint'].map(count),[60633,360,186,37117,17039]);
- assert(data.every(r=>!('variants' in r)));
+ const count=k=>data.filter(r=>kind(r)===k).length,quantity=q=>data.filter(r=>quantityOf(r)===q).length;
+ assert.equal(data.length,101427);
+ assert.deepEqual(['baseline','mix','mix_combined'].map(count),[100881,360,186]);
+ assert.deepEqual(['rate','speed'].map(quantity),[58813,42614]);
+ assert(data.every(r=>['rate','speed'].includes(r.quantity)));
+ assert(data.every(r=>quantityOf(r)==='speed'||(r.generation.startsWith('cpu')&&r.generation!=='cpu89')));
  assert.equal(filtered.length,count('baseline')+count('mix_combined'));
  assert.equal((elements['#body'].innerHTML.match(/<tr>/g)||[]).length,200);
  const baselineCount=filtered.length;
- elements['#estimates'].events.change({target:{dataset:{estimate:'speed'},checked:true}});
- assert.equal(filtered.length,baselineCount+count('speed'));
- elements['#estimates'].events.change({target:{dataset:{estimate:'joint'},checked:true}});
- const paired=points.find(p=>kind(p.r)==='joint'&&p.r.generation==='cpu2017');assert(paired);
- candidates=[paired];active=0;pinned=true;showSelection();
- assert(elements['#tip-content'].innerHTML.includes('From the same source results'));
- const rel=relatives(paired.r);assert(rel.some(r=>kind(r)==='speed'));assert(rel.some(r=>kind(r)==='baseline'));
- assert(rel.every(r=>r.source_record_ids.some(id=>paired.r.source_record_ids.includes(id))));
- assert(marker(paired,3).endsWith('z'));
- traceLineage(paired.r);assert(lineageActive.includes('predictor-2017'));assert(lineageActive.includes('rate-2006'));assert(!lineageActive.includes('rate-2017'));
- assert(elements['#fit-comparison'].open);assert.equal(elements['#fit-method'].value,'equal_geometric');
- const fit2017=predictorFit('cpu2017',modeOf(paired.r),'equal_geometric');
- assert(elements['#fit-stats'].textContent.includes(fit2017.tuples+' tuples'));
- const legacyCount=data.find(r=>r.generation==='cpu92'&&r.reported_cpu_count);
- assert(resourceDescription(legacyCount).includes('chip equivalence unverified'));
- const pairIDs=data.filter(r=>kind(r)==='joint').map(r=>r.record_id);assert.equal(new Set(pairIDs).size,pairIDs.length);
- elements['#estimates'].events.change({target:{dataset:{estimate:'speed'},checked:false}});
- elements['#estimates'].events.change({target:{dataset:{estimate:'joint'},checked:false}});
+ elements['#quantities'].events.change({target:{dataset:{quantity:'speed'},checked:false}});
+ assert.equal(filtered.length,quantity('rate'));assert(filtered.every(r=>r.quantity==='rate'));
+ elements['#quantities'].events.change({target:{dataset:{quantity:'speed'},checked:true}});
+ elements['#quantities'].events.change({target:{dataset:{quantity:'rate'},checked:false}});
+ assert.equal(filtered.length,baselineCount-quantity('rate'));
+ elements['#quantities'].events.change({target:{dataset:{quantity:'rate'},checked:true}});
  assert.equal(filtered.length,baselineCount);
- for(const generation of ['cpu95','cpu2006','cpu2017','cpu2026']){
-  for(const mode of ['base','peak'])for(const method of ['speed_only','rate_only','equal_geometric']){
-   openFit(generation,mode,method);
-   const expected=lineage.predictors.tuples.filter(r=>r.new_generation===generation&&r.mode===mode);
+ const speed=points.find(p=>p.r.quantity==='speed'&&p.r.generation==='cpu2017');assert(speed);
+ const rate=points.find(p=>p.r.quantity==='rate');
+ assert(marker(speed,3).endsWith('z'));assert(!marker(rate,3).endsWith('z'));
+ candidates=[speed];active=0;pinned=true;showSelection();
+ assert(elements['#tip-content'].innerHTML.includes('speed-VAXen'));
+ assert(relatives(speed.r).every(r=>r.source_record_ids.some(id=>speed.r.source_record_ids.includes(id))));
+ traceLineage(speed.r);
+ for(const id of ['speed-2017','speed-2006','speed-92','speed-vaxen'])assert(lineageActive.includes(id));
+ assert(!lineageActive.some(id=>id.startsWith('rate-')));
+ assert(elements['#fit-comparison'].open);assert.equal(elements['#fit-edge'].value,'cpu2017-cpu2006');
+ const fit2017=lineage.speed_fits.fits.find(f=>f.edge==='cpu2017-cpu2006'&&f.mode===modeOf(speed.r));
+ assert(elements['#fit-stats'].textContent.includes(fit2017.pairs+' pairs'));
+ traceLineage(rate.r);assert(lineageActive.includes('rate-vaxen'));assert(!lineageActive.includes('speed-vaxen'));
+ const legacyCount=data.find(r=>r.generation==='cpu92'&&r.quantity==='rate'&&r.reported_cpu_count);
+ assert(resourceDescription(legacyCount).includes('chip equivalence unverified'));
+ const speedThreads=data.find(r=>r.generation==='cpu2017'&&r.quantity==='speed'&&r.runtime_resources?.status==='reported');
+ assert(resourceDescription(speedThreads).includes('Speed benchmark threads'));
+ for(const edge of ['cpu95-cpu92','cpu2000-cpu95','cpu2006-cpu2000','cpu2017-cpu2006','cpu2026-cpu2017']){
+  for(const mode of ['base','peak']){
+   openFit(edge,mode);
+   const expected=lineage.speed_fits.points.filter(r=>r.edge===edge&&r.mode===mode);
    assert(expected.length>0);
    assert.equal((elements['#fit-scatter'].innerHTML.match(/<circle /g)||[]).length,expected.length);
    assert(!/NaN|Infinity/.test(elements['#fit-scatter'].innerHTML));
-   assert(elements['#fit-scatter']['aria-label'].includes('SPEC'+generation.slice(3)));
-   assert.equal(predictorFit(generation,mode,method).tuples,String(expected.length));
+   assert(elements['#fit-scatter']['aria-label'].includes('SPEC'+edge.split('-')[0].slice(3)));
+   assert(elements['#fit-stats'].textContent.includes(' k '));
   }
  }
- openFit('cpu2000','peak','speed_only');assert(elements['#fit-stats'].textContent.includes('no fitted coefficient'));
  inspectLineage('edge','int89-int92');
- assert.equal(elements['#fit-generation'].value,'cpu89');
- assert(elements['#fit-mode'].disabled&&elements['#fit-method'].disabled);
+ assert.equal(elements['#fit-edge'].value,'cpu89-cpu92');assert(elements['#fit-mode'].disabled);
  assert.equal((elements['#fit-scatter'].innerHTML.match(/<circle /g)||[]).length,17);
  assert(elements['#fit-scatter'].innerHTML.includes('SPECint92 speed'));
- openFit('cpu2006','peak','equal_geometric');assert(!elements['#fit-mode'].disabled);
- inspectLineage('node','predictor-2017');assert.equal(elements['#fit-generation'].value,'cpu2017');
- assert(elements['#predictor-path'].innerHTML.includes('SPEC2006 rate'));
- assert(elements['#predictor-path'].innerHTML.includes('sqrt(speed'));
- inspectLineage('edge','predictor-2017-to-2006');assert(elements['#lineage-card'].innerHTML.includes('Model-held-out P95'));
- inspectLineage('edge','instruction-mix-joint-network');assert(elements['#lineage-card'].innerHTML.includes('VAXen / KIPS'));
- assert(!lineage.nodes.some(n=>n.id==='predictor-2000'));
+ openFit('cpu2006-cpu2000','peak');assert(!elements['#fit-mode'].disabled);
+ inspectLineage('edge','speed-2017-to-2006');assert.equal(elements['#fit-edge'].value,'cpu2017-cpu2006');
+ assert(elements['#lineage-card'].innerHTML.includes('Held-out absolute P95'));
+ inspectLineage('edge','int92-rate-vaxen');assert(elements['#lineage-card'].innerHTML.includes('never chained'));
+ inspectLineage('edge','instruction-mix-joint-network');assert(elements['#lineage-card'].innerHTML.includes('speed-VAXen / KIPS'));
+ assert(!lineage.nodes.some(n=>n.id.startsWith('predictor-')));
  assert.throws(()=>historicalPrediction({}),/at least one/);
  assert.throws(()=>historicalPrediction({'Dhrystone:v1.1_DMIPS':0}),/greater than zero/);
- assert.throws(()=>specPrediction('cpu2000','peak',10,20),/No supported/);
- assert.throws(()=>specPrediction('cpu89','peak','',20),/speed only/);
- assert.throws(()=>specPrediction('cpu92','base',1,''),/legacy speed/);
+ assert.throws(()=>specPrediction('cpu89','peak','',20),/SPECint89/);
+ assert.throws(()=>specPrediction('cpu89','base',20,''),/SPECint89/);
  assert.throws(()=>specPrediction('cpu2017','peak','NaN',20),/finite/);
+ assert.throws(()=>specPrediction('cpu2017','peak','',''),/Enter a speed/);
  const defined=specPrediction('cpu92','base','',604800/25500)[0];
- for(const v of defined.values)assert(Math.abs(v-1)<1e-12);
- assert.equal(specPrediction('cpu92','peak',1,604800/25500).length,2);
- // A reported rate converts exactly like its timeline row; a speed/rate pair like its joint row.
- const rateRow=data.find(r=>kind(r)==='baseline'&&r.generation==='cpu2017'&&r.mode==='base');
- specPrediction('cpu2017','base','',rateRow.reported_score)[0].values.forEach((v,i)=>assert(Math.abs(v/[rateRow.vaxen,rateRow.ci95_low,rateRow.ci95_high][i]-1)<1e-9));
- const jointRow=data.find(r=>kind(r)==='joint'&&r.generation==='cpu2026');const js=JSON.parse(jointRow.scores);
- specPrediction('cpu2026',jointRow.mode,js.speed,js.rate)[0].values.forEach((v,i)=>assert(Math.abs(v/[jointRow.vaxen,jointRow.ci95_low,jointRow.ci95_high][i]-1)<1e-9));
- // Mix ratings reproduce the saved mix estimates through the aligned joint draws.
- const gib=data.find(r=>kind(r)==='mix'&&r.route==='Gibson mix');const gs=JSON.parse(gib.scores);
- historicalPrediction(gs).values.forEach((v,i)=>assert(Math.abs(v/[gib.vaxen,gib.ci95_low,gib.ci95_high][i]-1)<1e-6));
+ assert.equal(defined.quantity,'rate');for(const v of defined.values)assert(Math.abs(v-1)<1e-12);
+ const definedSpeed=specPrediction('cpu92','peak',1,'')[0];
+ assert.equal(definedSpeed.quantity,'speed');for(const v of definedSpeed.values)assert(Math.abs(v-1)<1e-12);
+ const pair=specPrediction('cpu2017','peak',10,200);
+ assert.deepEqual(pair.map(r=>r.quantity),['speed','rate']);assert(pair[1].note.includes('not a combined estimate'));
+ // Reported scores convert exactly like their timeline rows, in their own quantity.
+ const check=(result,row,tolerance)=>result.values.forEach((v,i)=>assert(Math.abs(v/[row.vaxen,row.ci95_low,row.ci95_high][i]-1)<tolerance));
+ for(const [generation,q] of [['cpu2017','rate'],['cpu2006','speed'],['cpu95','speed'],['cpu2026','speed'],['cpu92','speed']]){
+  const row=data.find(r=>r.quantity===q&&r.generation===generation&&r.mode==='base');
+  const results=specPrediction(generation,'base',q==='speed'?row.reported_score:'',q==='rate'?row.reported_score:'');
+  check(results[0],row,1e-9);assert.equal(results[0].quantity,q);
+ }
+ const s89row=data.find(r=>r.route==='SPEC89');check(specPrediction('cpu89','peak',s89row.reported_score,'')[0],s89row,1e-9);
+ // Historical scores reproduce the saved classical and mix estimates through the aligned joint draws.
+ const classicRow=data.find(r=>r.route==='classical'&&Object.keys(JSON.parse(r.scores)).length>1);
+ check(historicalPrediction(JSON.parse(classicRow.scores)),classicRow,1e-6);
+ const gib=data.find(r=>kind(r)==='mix'&&r.route==='Gibson mix');check(historicalPrediction(JSON.parse(gib.scores)),gib,1e-6);
  const both=data.find(r=>kind(r)==='mix_combined'&&Object.keys(JSON.parse(r.scores)).length===2);
- historicalPrediction(JSON.parse(both.scores)).values.forEach((v,i)=>assert(Math.abs(v/[both.vaxen,both.ci95_low,both.ci95_high][i]-1)<1e-6));
+ check(historicalPrediction(JSON.parse(both.scores)),both,1e-6);
  if(reference){
   for(const c of reference.historical){
    const r=historicalPrediction(c.scores);
@@ -113,7 +124,7 @@ if(process.argv[3]==='full'){
  elements['#calc-kind-spec'].checked=true;elements['#calc-kind-historical'].checked=false;calculatorView();
  assert(elements['#calc-historical'].hidden&&!elements['#calc-spec'].hidden);
  elements['#calc-generation'].value='cpu92';elements['#calc-rate'].value=604800/25500;runCalculator();
- assert(elements['#calc-result'].innerHTML.includes('1.000 VAX'));
+ assert(elements['#calc-result'].innerHTML.includes('1.000 rate-VAXen'));
 
  const sourceLength=data.length,sourceCount=filtered.length;
  elements['#calc-year'].value='1985';runCalculator();
@@ -137,8 +148,9 @@ if(process.argv[3]==='full'){
  assert(elements['#calc-result'].textContent.includes('whole number'));
  elements['#calc-year'].value='1800';elements['#calc-speed'].value='1';runCalculator();
  assert.equal(userPredictions.length,2);assert(xmin<=1799);
- assert(predictionMarkup().includes('Legacy speed estimate'));
- assert(predictionMarkup().includes('Defined SPEC92 rate scale'));
+ assert(predictionMarkup().includes('You are here · Speed'));
+ assert(predictionMarkup().includes('You are here · Rate'));
+ assert(predictionMarkup().includes('speed-VAXen'));
  elements['#calc-clear'].events.click();assert.equal(elements['#calc-rate'].value,'');
  elements['#calc-kind-spec'].checked=false;elements['#calc-kind-historical'].checked=true;calculatorView();
  const peakless=data.filter(r=>enabledEstimates.has(kind(r))&&modeOf(r)==='base').length;
@@ -153,17 +165,17 @@ if(process.argv[3]==='full'){
  assert(relatives(single.r).some(r=>kind(r)==='mix_combined'));
  elements['#estimates'].events.change({target:{dataset:{estimate:'mix'},checked:false}});enabled.add('Combined mixes');draw();
  assert.equal(filtered.length,baselineCount);
- const modern=data.find(r=>r.generation==='cpu2026'&&r.mode==='base');
- traceLineage(modern);assert(lineageActive.includes('rate-2026')&&lineageActive.includes('rate-92'));
+ const modern=data.find(r=>r.generation==='cpu2026'&&r.mode==='base'&&r.quantity==='rate');
+ traceLineage(modern);assert(lineageActive.includes('rate-2026')&&lineageActive.includes('rate-92')&&lineageActive.includes('rate-vaxen'));
  assert(!lineageActive.includes('mix-model'));assert(elements['#lineage'].open);
  inspectLineage('edge','rate-2026-to-2017');assert(elements['#lineage-card'].innerHTML.includes('base'));
  const mixed=data.find(r=>r.route==='Combined mixes');traceLineage(mixed);
- assert.deepEqual(pathway(mixed),['mixes','mix-model','vaxen']);
+ assert.deepEqual(pathway(mixed),['mixes','mix-model','speed-vaxen']);
  assert(elements['#lineage-card'].innerHTML.includes('Actual inputs'));
  const classic=data.find(r=>r.route==='classical');traceLineage(classic);assert(lineageActive.includes('classic-model'));
  candidates=[{r:classic,x:0,y:0}];active=0;showSelection();
  if(sameSystem(classic).length)assert(elements['#tip-content'].innerHTML.includes('Same resolved system'));
- const s89=data.find(r=>r.route==='SPEC89');traceLineage(s89);assert.deepEqual(pathway(s89),['int89','int92','vaxen']);
+ const s89=data.find(r=>r.route==='SPEC89');traceLineage(s89);assert.deepEqual(pathway(s89),['int89','speed-92','speed-vaxen']);
  const beforePathReset={count:filtered.length,lo:viewMin,hi:viewMax,page};
  elements['#lineage-graph'].events.click({target:{dataset:{key:'int89',type:'node'}}});assert.notEqual(lineageActive,null);
  elements['#lineage-graph'].events.click({target:elements['#lineage-graph']});assert.equal(lineageActive,null);assert.equal(lineageRecord,null);
@@ -189,7 +201,7 @@ if(process.argv[3]==='full'){
  for(const mode of ['base','peak','peak_proxy'])elements['#scores'].events.change({target:{dataset:{mode},checked:true}});
  elements['#q'].value='VAX';elements['#q'].events.input();assert.equal(page,0);assert(filtered.length>0&&filtered.length<countBefore);
  `,context);
- console.log('PASS: full generated page; estimate kinds, related rows, predictor fits, lineage, calculator parity with timeline rows, pagination, zoom and search');
+ console.log('PASS: full generated page; quantities, estimate kinds, related rows, speed-chain fits, lineage, calculator parity with timeline rows, pagination, zoom and search');
  process.exit(0);
 }
 vm.runInContext(script+`

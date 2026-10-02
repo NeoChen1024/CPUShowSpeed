@@ -1,11 +1,12 @@
-"""One single-node/system VAXen timeline from the built database.
+"""One single-node/system VAXen timeline from the built database, in two parallel quantities.
 
-Baseline rows are SPEC92–2026 integer-rate results (reported scores through the
-saved rate chain), classical results (predicted through the saved classical
-network) and SPEC89 results (the saved two-edge bridge estimates). Estimate rows
-add instruction-mix ratings (saved mix network), SPEC speed results and
-hardware-near speed/rate pairs (saved speed/rate predictors). Every row takes its year
-from `result_chronology`; nothing here selects or overrides a date.
+Rate rows (`quantity="rate"`, rate-VAXen) are SPEC92–2026 integer-rate results
+through the saved rate chain. Speed rows (`quantity="speed"`, speed-VAXen, one
+SPECint92 point each) are SPEC92–2026 integer-speed results through the saved
+speed chain, classical results (saved classical network), SPEC89 results (saved
+bridge estimates) and instruction-mix ratings (saved mix network). The two
+quantities are never combined. Every row takes its year from
+`result_chronology`; nothing here selects or overrides a date.
 """
 
 import hashlib
@@ -23,21 +24,18 @@ from cpushowspeed.observation_store import connect, inputs_digest, spec_results
 from cpushowspeed.rate_convert import convert_rate
 from cpushowspeed.research_io import code_hashes, read_csv
 from cpushowspeed.spec_rate_fit import GENERATIONS
+from cpushowspeed.spec_speed_chain import DERIVED as SPEED_DERIVED
+from cpushowspeed.spec_speed_chain import INTERVALS as SPEED_INTERVALS
+from cpushowspeed.spec_speed_chain import convert_speed
 from cpushowspeed.timeline_calculator import calculator_payload
-from cpushowspeed.timeline_estimates import (
-    MIX_OUTPUT,
-    PREDICTOR_OUTPUT,
-    PREDICTOR_RESEARCH,
-    mix_rows,
-    predictor_rows,
-)
+from cpushowspeed.timeline_estimates import MIX_OUTPUT, _fresh, mix_rows
 from cpushowspeed.timeline_html import render_html
 from cpushowspeed.timeline_lineage import build_lineage
 
-SCHEMA = "vaxen-timeline-v3"
+SCHEMA = "vaxen-timeline-v4"
 CALIBRATION = Path("research/data/spec/fitting")
 NETWORK = Path("data/derived/classic/network-fit")
-SPEC89_ESTIMATES = Path("research/data/classic/spec89-rate-estimates.csv")
+SPEC89_ESTIMATES = Path("research/data/classic/spec89-estimates.csv")
 CLASSICAL_SCOPES = ("classical:%", "reviewed-vector:%")
 CONTEXT_KEYS = (
     "Memory",
@@ -82,20 +80,24 @@ def chronology(db):
     return out
 
 
-def runtime(result, mode, raw):
-    """Declared rate copies and hardware context; topology is never inferred."""
-    detail = dict(track="rate", quantity="copies", status="not_collected")
+def runtime(result, mode, raw, track):
+    """Declared rate copies or speed threads and hardware context; topology is never inferred."""
+    detail = dict(track=track, quantity="copies" if track == "rate" else "threads", status="not_collected")
     fields = dict(
         cores_per_chip=raw.get("# Cores Per Chip") or raw.get("# cores per chip") or "",
         resource_basis="reported enabled hardware; not benchmark concurrency",
         hardware_context={k: v for k, v in raw.items() if v and ("Cache" in k or k in CONTEXT_KEYS)},
     )
-    if result.generation == "cpu92":
+    if result.generation == "cpu92" and track == "rate":
         lo, hi = raw.get(mode + "_copies_min"), raw.get(mode + "_copies_max")
         fields.update(
             resource_basis="legacy reported CPU count; chip equivalence unverified", reported_cpu_count=raw.get("cpu_count")
         )
         detail.update(status="reported" if lo else "not_reported_in_parsed_table", minimum=lo, maximum=hi)
+    elif result.generation == "cpu92":
+        fields.update(
+            resource_basis="legacy reported CPU count; chip equivalence unverified", reported_cpu_count=raw.get("cpu_count")
+        )
     elif mode in result.execution.get("modes", {}):
         detail.update(
             result.execution["modes"][mode],
@@ -114,66 +116,84 @@ def runtime(result, mode, raw):
     return fields
 
 
-def spec_rows(db, dates):
+def spec_rows(db, dates, digest):
+    """Every SPEC92–2026 integer result: rate through the rate chain, speed through the speed chain."""
+    _fresh(
+        SPEED_DERIVED / "integer-speed-chain.json", digest, "database_inputs_sha256", {str(SPEED_INTERVALS): sha(SPEED_INTERVALS)}
+    )
+
     @lru_cache(None)
-    def unit(generation, mode):
+    def unit(track, generation, mode):
+        if track == "speed":
+            u = convert_speed(generation, mode, 1)
+            return dict(vaxen=u["vaxen"], ci95=u["ci95"], uncertainty_scope=u["scope"])
         return convert_rate(generation, mode, 1, "same_os", CALIBRATION)
 
     rows = []
-    for generation in ("cpu92", *GENERATIONS):
-        for result in spec_results(db, generation, "rate"):
-            raw = result.raw_fields
-            rid = f"spec:{generation}:rate:{result.result_id}"
-            for mode in ("base", "peak"):
-                score = result.base if mode == "base" else result.peak
-                if score is None:
-                    continue
-                u = unit(generation, mode)
-                benchmark = raw.get(f"{mode}_metric") or raw.get("Benchmark", "")
-                cid = f"spec:{generation}:{result.result_id}:{mode}"
-                row = dict(
-                    record_id=cid,
-                    configuration_id=cid,
-                    result_id=rid,
-                    route=generation.upper(),
-                    generation=generation,
-                    mode=mode,
-                    system=result.system,
-                    system_id=result.system_key,
-                    cpu=result.processor,
-                    clock_mhz=result.clock_mhz or "",
-                    os=result.os,
-                    configuration="",
-                    scores={benchmark: score},
-                    reported_score=score,
-                    benchmark_id=benchmark,
-                    observation_count=1,
-                    source_record_ids=[rid],
-                    source_url=result.source_url,
-                    benchmark_sources=[result.source_url],
-                    source_container_sha256=result.source_container_sha256,
-                    vaxen=score * u["vaxen"],
-                    ci95_low=score * u["ci95"]["low"],
-                    ci95_high=score * u["ci95"]["high"],
-                    evidence_class="reported_rate_normalized_estimate",
-                    uncertainty_scope=u["uncertainty_scope"],
-                    calibration_route=generation.upper() + " integer-rate chain → CPU92 rate",
-                    calibration_scenario="same_os",
-                    measurement_scope="reported_system_rate",
-                    chips=result.chips or "",
-                    cores=result.cores or "",
-                    threads_per_core=result.enabled_threads_per_core or "",
-                    copies_min="",
-                    copies_max="",
-                    nodes="",
-                    limitation="Experimental CPU2026 calibration; sparse overlap." if generation == "cpu2026" else "",
-                    hardware_date=_month(raw.get("HW Avail") or raw.get("hardware_availability_month") or ""),
-                    submission_date=_month(raw.get("Published") or raw.get("publication_month") or ""),
-                    test_date=_month(raw.get("Test Date") or raw.get("test_month") or ""),
-                )
-                row.update(runtime(result, mode, raw))
-                row.update(dates[rid])
-                rows.append(row)
+    for track in ("rate", "speed"):
+        chain = "integer-rate chain → CPU92 rate" if track == "rate" else "integer-speed chain → SPECint92 speed"
+        for generation in ("cpu92", *GENERATIONS):
+            for result in spec_results(db, generation, track):
+                raw = result.raw_fields
+                rid = f"spec:{generation}:{track}:{result.result_id}"
+                for mode in ("base", "peak"):
+                    score = result.base if mode == "base" else result.peak
+                    if score is None:
+                        continue
+                    u = unit(track, generation, mode)
+                    benchmark = raw.get(f"{mode}_metric") or raw.get("Benchmark", "")
+                    if generation == "cpu92" and track == "speed":
+                        benchmark = "SPECint92" if mode == "peak" else "SPECbase_int92"
+                    cid = (
+                        f"spec:{generation}:{result.result_id}:{mode}"
+                        if track == "rate"
+                        else f"spec:{generation}:speed:{result.result_id}:{mode}"
+                    )
+                    defined = generation == "cpu92" and track == "speed"
+                    row = dict(
+                        record_id=cid,
+                        configuration_id=cid,
+                        result_id=rid,
+                        route=generation.upper(),
+                        generation=generation,
+                        mode=mode,
+                        quantity=track,
+                        system=result.system,
+                        system_id=result.system_key,
+                        cpu=result.processor,
+                        clock_mhz=result.clock_mhz or "",
+                        os=result.os,
+                        configuration="",
+                        scores={benchmark: score},
+                        reported_score=score,
+                        benchmark_id=benchmark,
+                        observation_count=1,
+                        source_record_ids=[rid],
+                        source_url=result.source_url,
+                        benchmark_sources=[result.source_url],
+                        source_container_sha256=result.source_container_sha256,
+                        vaxen=score * u["vaxen"],
+                        ci95_low=score * u["ci95"]["low"],
+                        ci95_high=score * u["ci95"]["high"],
+                        evidence_class=("reported_speed_defined_scale" if defined else f"reported_{track}_normalized_estimate"),
+                        uncertainty_scope=u["uncertainty_scope"],
+                        calibration_route="SPECint92 speed = speed-VAXen" if defined else generation.upper() + " " + chain,
+                        calibration_scenario="same_os" if track == "rate" else "hardware_near",
+                        measurement_scope="reported_system_rate" if track == "rate" else "reported_single_job_speed",
+                        chips=result.chips or "",
+                        cores=result.cores or "",
+                        threads_per_core=result.enabled_threads_per_core or "",
+                        copies_min="",
+                        copies_max="",
+                        nodes="",
+                        limitation="Experimental CPU2026 calibration; sparse overlap." if generation == "cpu2026" else "",
+                        hardware_date=_month(raw.get("HW Avail") or raw.get("hardware_availability_month") or ""),
+                        submission_date=_month(raw.get("Published") or raw.get("publication_month") or ""),
+                        test_date=_month(raw.get("Test Date") or raw.get("test_month") or ""),
+                    )
+                    row.update(runtime(result, mode, raw, track))
+                    row.update(dates[rid])
+                    rows.append(row)
     return rows
 
 
@@ -193,6 +213,7 @@ def classical_rows(db, dates):
                 route="classical",
                 generation="classical",
                 mode="peak_proxy",
+                quantity="speed",
                 system=r.system,
                 system_id=r.system_id,
                 cpu=str(raw.get("processor_raw") or ""),
@@ -211,7 +232,7 @@ def classical_rows(db, dates):
                 ci95_high=p["vaxen_ci95"]["high"],
                 evidence_class="model_prediction_not_reported_SPEC_result",
                 uncertainty_scope="conditional_calibration_CI95_not_machine_prediction_interval",
-                calibration_route="classical network → CPU92 rate",
+                calibration_route="classical network → SPECint92 speed",
                 calibration_scenario="linear_clock / with_spec89",
                 measurement_scope="historical_one_processor_proxy",
                 chips=r.cpu_count or "",
@@ -233,6 +254,7 @@ def spec89_rows(dates):
                 route="SPEC89",
                 generation="cpu89",
                 mode="peak_proxy",
+                quantity="speed",
                 system=r["system"],
                 system_id=r["system_id"],
                 cpu="",
@@ -246,15 +268,15 @@ def spec89_rows(dates):
                 source_record_ids=[r["spec_id"]],
                 source_url=r["source_url"],
                 benchmark_sources=[r["source_url"]],
-                vaxen=float(r["estimated_rate_vaxen"]),
+                vaxen=float(r["estimated_speed_vaxen"]),
                 ci95_low=float(r["factor_ci95_target_low"]),
                 ci95_high=float(r["factor_ci95_target_high"]),
                 evidence_class=r["evidence_class"],
                 uncertainty_scope="conditional_bridge_factor_CI95_not_machine_prediction_interval",
-                calibration_route="SPEC89 → SPEC92 speed → SPEC92 rate",
-                calibration_scenario="two_edge_bridge",
+                calibration_route="SPECint89 → SPECint92 speed",
+                calibration_scenario="int89_to_int92 bridge",
                 measurement_scope="historical_one_processor_proxy",
-                limitation="Two-edge bridge estimate, not a rate measurement.",
+                limitation="Bridge estimate, not a SPECint92 measurement.",
                 **dates[r["spec_id"]],
             )
         )
@@ -265,17 +287,16 @@ def spec89_rows(dates):
 @click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/figures/timeline"), show_default=True)
 def timeline_command(database, output_dir):
-    """Combine every SPEC92–2026 rate result, classical result and SPEC89 estimate, dated by result_chronology."""
+    """Combine SPEC92–2026 rate and speed results, classical, SPEC89 and mix estimates, dated by result_chronology."""
     try:
         with connect(database) as db:
             digest = inputs_digest(db)
             dates = chronology(db)
-            modern = spec_rows(db, dates)
+            modern = spec_rows(db, dates, digest)
             classical = classical_rows(db, dates)
-            predicted, predictor_audit = predictor_rows(db, dates, digest)
         historical = spec89_rows(dates)
         mixes, mix_audit = mix_rows(dates, digest)
-        rows = modern + classical + historical + mixes + predicted
+        rows = modern + classical + historical + mixes
         for row in rows:
             row["schema_version"] = SCHEMA
             row.setdefault("estimate_kind", "baseline")
@@ -293,31 +314,37 @@ def timeline_command(database, output_dir):
             web_manifest_sha256=sha(output_dir / "manifest.json"),
             lineage_inputs_sha256=lineage["input_sha256"],
             records=len(rows),
-            spec_rate=len(modern),
+            spec_rate=sum(r["quantity"] == "rate" for r in modern),
+            spec_speed=sum(r["quantity"] == "speed" for r in modern),
             classical=len(classical),
             spec89=len(historical),
             estimates=dict(Counter(r["estimate_kind"] for r in rows)),
             dates=dict(Counter(r["date_kind"] for r in rows)),
             routes=dict(Counter(r["route"] for r in rows)),
+            quantities=dict(Counter(r["quantity"] for r in rows)),
             modes=dict(Counter(r["mode"] for r in rows)),
             chronology="result_chronology: CPU release → hardware → reviewed fallback → publication",
             cpu92_anchor_software_policy="same_os",
-            scope="single-node/system throughput; no per-core normalization",
+            scope="single node/system; rate-VAXen is throughput (all copies), speed-VAXen is one job; no per-core normalization",
+            units=dict(
+                rate="rate-VAXen: SPECrate_int92 x 25500/604800 (VAX-11/780 = 1)",
+                speed="speed-VAXen: SPECint92 speed (VAX-11/780 = 1, SPEC92 reference machine)",
+            ),
             limitations=[
-                "Classical and SPEC89 rows are one-processor-conditioned estimates, not rate measurements.",
+                "Rate and speed are parallel quantities; neither is converted into the other.",
+                "Classical, SPEC89 and mix rows are speed estimates, not SPECint92 measurements.",
                 "Reported cluster submissions retained; node count is not inferred from system name or chip count.",
                 "Copies missing from bulk exports remain blank.",
-                "Mix, speed and joint rows are model predictions correlated with the baseline routes, not extra evidence.",
+                "Mix rows are model predictions correlated with the classical route, not extra evidence.",
             ],
-            estimate_bundles=dict(mix_network=mix_audit["method"], speed_predictors=predictor_audit["method_version"]),
+            estimate_bundles=dict(mix_network=mix_audit["method"]),
             inputs_file_sha256={
                 str(p): sha(p)
                 for p in [
                     SPEC89_ESTIMATES,
                     NETWORK / "prediction-calibration.json",
                     MIX_OUTPUT / "mix-estimates.csv",
-                    PREDICTOR_RESEARCH / "summary.csv",
-                    PREDICTOR_OUTPUT / "speed-rate-pairs.csv",
+                    SPEED_INTERVALS,
                     CALIBRATION / "integer-rate-chain-intervals.csv",
                     CALIBRATION / "integer-rate-cpu92-vaxen-chain.csv",
                 ]
@@ -325,6 +352,8 @@ def timeline_command(database, output_dir):
             code_sha256=code_hashes(Path(__file__)),
         )
         (output_dir / "audit.json").write_text(json.dumps(audit, indent=2, ensure_ascii=False) + "\n")
-        click.echo(json.dumps({k: audit[k] for k in ["records", "spec_rate", "classical", "spec89", "estimates", "dates"]}))
+        click.echo(
+            json.dumps({k: audit[k] for k in ["records", "spec_rate", "spec_speed", "classical", "spec89", "estimates", "dates"]})
+        )
     except (OSError, ValueError, KeyError) as exc:
         raise click.ClickException(str(exc)) from exc
