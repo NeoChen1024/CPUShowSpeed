@@ -2,8 +2,7 @@
 
 Review date: 2026-09-26. This source/method review led to the completed
 [three-source table extraction](classic-pdf-extraction.md). The source tables are preserved separately; reviewed DEC values now feed the
-[source-column and rate experiments](classic-source-pair-fitting.md). SSCL ambiguity
-and Tomari's separate diagnostic are documented there. A machine-readable source register is
+[direct rate experiment](classic-rate-composite-fitting.md). A machine-readable source register is
 [data/classic/literature-sources.jsonl](data/classic/literature-sources.jsonl).
 
 ## Direct modern comparison: Tomari and Hiraki (2011)

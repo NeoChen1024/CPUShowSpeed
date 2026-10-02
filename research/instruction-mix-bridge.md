@@ -1,8 +1,8 @@
 # Gibson / ADP bridge preparation
 
 Reviewed: 2026-09-28. Status: implemented source inventory, candidate discovery
-and conditional joint classical-to-rate fits with SPEC89/SPEC92 feasibility audits;
-**production converter unchanged; conditional mix predictions now appear in the shared timeline**.
+and SPEC89/SPEC92 feasibility audits. The joint network fit was removed on
+2026-10-02; no mix value is calibrated to VAXen.
 
 ## Reproduce and inspect
 
@@ -531,115 +531,5 @@ by bare model number or manufacturer would manufacture spurious overlap.
 Thus both SPEC89 and SPEC92 direct edges remain **unidentified from the current
 inventory**, while the classical route has data for conditional exploration.
 
-## Joint mix → classical → SPEC92 rate experiment, 2026-09-28
-
-Implemented as a separate experiment using the existing
-[classical sparse network model](classic-network-fitting.md):
-
-```sh
-uv run cpushowspeed classic mix-network-fit --bootstrap 10000 --seed 20260928
-```
-
-This is a joint refit of original score observations, not regression against
-historical predicted VAXen. Existing SPEC92 rate targets anchor the log-space
-latent node model. SPEC89-enabled runs use the existing two-edge bridge with
-its uncertainty. The model remains `VAXen = k_b * score_b` per benchmark,
-using the established family/node/model-balanced log least-squares objective.
-
-### Integration and evidence boundaries
-
-- All **131 candidate metric links** attach through original classical
-  observation IDs to **18 existing configuration nodes / 16 model groups**.
-  The existing network grouping is coarser than the historical display's 37
-  source/configuration groups. The full attachment audit preserves this mapping;
-  it does not silently create 131 independent training machines.
-- Repeated enumeration of a mix source ID within one node contributes once.
-  Different source rows remain distinct, with per-metric median log scores as
-  in the original model. No residual-based filtering is performed.
-- Gibson and ADP are variants of one `InstructionMix` family and share its
-  weight. They are not two independent family votes. Original classical metrics
-  retain their existing family/precision divisions.
-- Reusing a mix source across nodes closes those nodes into the same model
-  holdout group; baseline comparisons use that same closure. No mix-bearing
-  node currently has a measured SPEC92 or estimated SPEC89 target.
-- No mix score receives frequency scaling. Reported/linear-clock scenarios
-  alter only the previously authorized classical target associations.
-- Only the CCTA/TSU variant is calibrated. SC-3 qualified Gibson, TR 440
-  Gibson-Mix I, relative Sigma ratings and simulated DINKIAC durations retain
-  their distinct semantics and are not pooled into this coefficient.
-
-Four runs combine reported/linear clocks with rate-only/SPEC89-enabled cohorts.
-Each retained **10,000 valid joint model-bootstrap draws**. The draw contains
-classical coefficients, mix coefficients and (where enabled) the shared SPEC89
-bridge uncertainty together; separate coefficient CI endpoints are not multiplied.
-The production classical bundle and prediction CLI are unchanged. A separate
-shared-timeline adapter now displays the default mix scenario as conditional estimates.
-
-### Coefficients in the existing default scenario
-
-For `linear_clock / with_spec89`:
-
-| Input | VAXen per KIPS | Coefficient CI95 | Raw SPECrate_int92 per KIPS |
-| --- | ---: | ---: | ---: |
-| CCTA Gibson | 0.000368474 | 0.000239884–0.000533636 | 0.00873934 |
-| CCTA ADP | 0.000182731 | 0.000109638–0.000290427 | 0.00433395 |
-
-Thus 1,000 Gibson KIPS conditionally predicts **0.368 VAXen**, with calibration
-CI95 **0.240–0.534**; 1,000 ADP KIPS predicts **0.183 VAXen**, CI95
-**0.110–0.290**. These are fitted integer-rate equivalents, not measured SPEC
-scores or claims that any generic MIPS rating has the same conversion.
-
-Full-precision coefficients for all eight metrics and four scenarios are in
-[network-coefficients.csv](data/classic/mix-study/network-coefficients.csv).
-The generated `mix-estimates.csv` retains all 360 positive CCTA metric cells
-across all four scenarios (1,440 prediction rows), with original IDs, locators,
-rate equivalents and conditional intervals. The shared timeline now imports only the default scenario (360 source cells),
-with separate Gibson/ADP routes and explicit estimate labels.
-
-### Validation: two different questions
-
-1. **Can held-out old machines agree across mix and classical observations?**
-   Remove the entire model group, retrain, then compare its mix prediction with
-   a family-balanced prediction from its classical observations using the same
-   held-out coefficients. The reference is explicitly a **classical proxy**,
-   not observed SPEC. In the default scenario primary model-center P95 is **217.2% for Gibson**
-   (18 nodes, 16 groups) and **493.6% for ADP** (15 nodes, 14 groups). Secondary
-   model-balanced observation P95 is **342.5%** and **651.4%**, respectively.
-2. **Does adding mix constraints disrupt the existing measured rate validation?**
-   On the same 75 observed-rate nodes / 32 held-out model groups, the original
-   all-available primary model-center P95 changes from **56.21% to 55.97%**;
-   secondary observation P95 changes from **68.19% to 67.38%**. On the narrower
-   complete-classical-family population (51 nodes / 19 groups), it changes from
-   **49.13% to 49.16%**. These small differences do not establish improved
-   predictive accuracy for ancient hardware, for which direct rate labels are
-   still absent.
-
-The original classical coefficients change little in the default scenario:
-Whetstone native **+3.53%**, DP **+2.02%**, LINPACK **−0.95%**, with Dhrystone
-and Whetstone SP each changing by less than 0.02%. The network now identifies
-mix coefficients without materially moving the existing calibration, but the
-old-system cross-metric spread remains substantial.
-
-The large proxy residuals are evidence about variability under the chosen
-configuration assumptions, not grounds to discard records or declare the
-extension a failure. Coefficient CI95 describes calibration sampling uncertainty;
-it is not a prediction interval covering those residuals. Native/DP software,
-floating-point facilities and candidate identity remain review dimensions.
-
-See [proxy holdout scatterplots](../data/derived/classic/mix-network-fit/mix-proxy-holdouts.png),
-[proxy error summary](data/classic/mix-study/network-proxy-holdout-summary.csv),
-[anchor comparison](data/classic/mix-study/network-anchor-comparison.csv), and
-[audit](data/classic/mix-study/network-audit.json). Validation includes a synthetic
-known-factor network, shared-family weighting, reused-source holdout closure,
-and actual-run counts. No direct SPEC accuracy claim is made for the mix-only
-historical machines.
-
-
-### Joint display of both mixes
-
-The shared timeline now defaults to one estimate per available CCTA source row:
-174 rows combine Gibson/ADP predictions with equal log weights, and 12 rows use
-one available rating. Coefficient draws stay aligned when computing CI95. No
-new calibration is fitted and the two mix ratings remain correlated inputs.
-Original individual estimates are optional comparison routes. See the
-[shared display contract](../docs/timeline.md#combined-mix-display-2026-09-28).
+The joint mix → classical → SPEC92 rate network experiment (`classic mix-network-fit`)
+was removed on 2026-10-02 with the other diagnostic experiments; it remains in Git history.

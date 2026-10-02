@@ -22,12 +22,6 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 
 [Field and runtime-resource audit](spec-resource-field-audit.md) records full integer disclosure coverage, resource anomalies and the count-aware refit, with the initial audit retained as history.
 
-## Independent speed/rate experiment
-
-[Dual-track calibration](spec-dual-track.md) adds a separate CPU92–2026 speed
-chain, resource-field audit and classical/mix target comparison. The old speed
-implementation stays archived; this experiment uses the current shared methods.
-
 ## Source evidence
 
 - SPEC: [early archives](spec-early-archives.md), [CPU92 rate expansion](spec92-archive-expansion.md),
@@ -45,19 +39,6 @@ implementation stays archived; this experiment uses the current shared methods.
 [Per-benchmark network fitting](classic-network-fitting.md) jointly estimates
 individual coefficients from incomplete observations, with explicit clock
 scaling and single/two-family/full-availability holdouts.
-
-## Controls and diagnostics
-
-- [Source-column experiments](classic-source-pair-fitting.md) and
-  [source/OS diagnostics](classic-source-diagnostics.md) document matching,
-  unit interpretation and environment differences.
-- [Environment-model closeout](classic-environment-models.md): grouped/shrinkage
-  methods remain diagnostics; primary composites do not apply these corrections.
-- [Native SPEC89/92 pooling](classic-pooled-fitting.md): auxiliary comparison
-  on a speed-score scale, not a substitute for rate calibration.
-- Earlier [single-score](classic-spec92-fitting.md), [pair](classic-pair-fitting.md),
-  [triple-fit](classic-composite-fitting.md), and [triple-coverage](classic-composite-overlap.md)
-  studies remain available for their narrower cohorts and methodological checks.
 
 ## Historical analyses and storage
 
@@ -82,17 +63,10 @@ shared statistics policy, preparation-only commands and parity checks.
 [Schema cleanup inventory](schema-cleanup-inventory.md) maps designs made obsolete
 by the [data schema](../docs/data-schema.md) to migration steps; nothing is removed by it.
 
-- [Unified historical and SPEC rate timeline](unified-vaxen-timeline.md): shared data and CPU-first interactive chronology.
-
 - [Gibson / ADP bridge preparation](instruction-mix-bridge.md): source definitions and classical-overlap review queue; no fitting yet.
 
-[Joint speed/rate predictors](spec-joint-tracks.md) compare fixed single-input and
-equal-geometric models on independent older-rate targets, with common-case
-masking and whole-processor holdouts.
-
 The [SPEC95/CPU2000 overlap audit](spec95-spec2000-overlap-audit.md) explains
-the joint cohort shortage using field-level blockers and original disclosures.
+cross-generation cohort losses using field-level blockers and original disclosures.
 
-[Relaxed SPEC95/CPU2000 refits](spec95-spec2000-relaxed-fitting.md) now report
-RAM/alias and broader CPU-clock policies, including the previously unsupported
-joint edge and independent speed/rate sensitivity fits.
+- [Unified historical and SPEC rate timeline](unified-vaxen-timeline.md) describes the last working
+  timeline; it is not reproducible after the 2026-10-02 removal of diagnostic experiments.

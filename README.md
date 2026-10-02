@@ -46,10 +46,8 @@ combination. Factor CI95, held-out P95 error and prediction uncertainty are
 reported separately. Broader historical coverage is a research objective;
 increased error after adding valid evidence is not by itself a failed experiment.
 
-See the [speed/rate comparison](research/spec-dual-track.md) for separate speed
-coefficients, conditional chain CI95, and classical/mix target comparisons.
-Speed is not necessarily single-threaded; speed outputs currently use
-SPECint92-equivalent points and do not change the rate-VAXen definition.
+Integer speed is a separate target with no current calibration; it does not
+change the rate-VAXen definition.
 
 ## Four research tracks
 

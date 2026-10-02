@@ -34,19 +34,12 @@ Start with the [four-track overview](overview.md).
 | linpack-300 | LINPACK n=300 | classical / MFLOPS | recorded |
 | linpack-unknown | LINPACK n=unknown | classical / MFLOPS | recorded |
 | composite | Fixed equal-weight classical pair/triple index | derived-index / dimensionless geometric index | defined |
-| cint2006 | Tomari/Hiraki reported CINT2006 | speed / reported CINT2006 score | recorded |
 | gibson | Gibson instruction mix | historical-lead / source/workload dependent | recorded |
 | adp | ADP instruction mix | historical-lead / source/workload dependent | recorded |
 | process-control | Process Control mix | historical-lead / source/workload dependent | planned |
 | coprxx | COPRXX leads | historical-lead / source/workload dependent | planned |
 | coremark | CoreMark | historical-lead / source/workload dependent | planned |
 | trace-timing | Assembly trace plus documented timing | historical-lead / source/workload dependent | planned |
-| speed-95 | SPEC CPU95 integer speed | speed / CPU95 raw integer-speed points | recorded |
-| speed-2000 | SPEC CPU2000 integer speed | speed / CPU2000 raw integer-speed points | recorded |
-| speed-2006 | SPEC CPU2006 integer speed | speed / CPU2006 raw integer-speed points | recorded |
-| speed-2017 | SPEC CPU2017 integer speed | speed / CPU2017 raw integer-speed points | recorded |
-| speed-2026 | SPEC CPU2026 integer speed | speed / CPU2026 raw integer-speed points | recorded |
-| speed92-equivalent | Estimated SPEC92 integer speed | speed / SPECint92-equivalent points | estimated |
 
 ## Model relationships
 
@@ -100,56 +93,10 @@ flowchart TD
     classical_composite --> classical_joint
     rate92_unit --> classical_joint
     int89_rate_vaxen --> classical_joint
-    classical_single["classical-single"]
-    classical_pair["classical-pair"]
-    classical_triple["classical-triple"]
-    classical_source["classical-source"]
-    classical_environment["classical-environment"]
-    classical_native_pool["classical-native-pool"]
-    tomari_dhry_cint["tomari-dhry-cint"]
     timing_reconstruction["timing-reconstruction"]
     classical_sparse_network["classical-sparse-network"]
     rate92_unit --> classical_sparse_network
     int89_rate_vaxen --> classical_sparse_network
-    instruction_mix_joint_network["instruction-mix-joint-network"]
-    classical_sparse_network --> instruction_mix_joint_network
-    rate92_unit --> instruction_mix_joint_network
-    int89_rate_vaxen --> instruction_mix_joint_network
-    speed_95_to_92["speed-95-to-92"]
-    speed_2000_to_95["speed-2000-to-95"]
-    speed_2006_to_2000["speed-2006-to-2000"]
-    speed_2017_to_2006["speed-2017-to-2006"]
-    speed_2026_to_2017["speed-2026-to-2017"]
-    speed_chain["speed-chain"]
-    speed_95_to_92 --> speed_chain
-    speed_2000_to_95 --> speed_chain
-    speed_2006_to_2000 --> speed_chain
-    speed_2017_to_2006 --> speed_chain
-    speed_2026_to_2017 --> speed_chain
-    classical_mix_dual_speed["classical-mix-dual-speed"]
-    int89_int92 --> classical_mix_dual_speed
-    classical_mix_dual_rate["classical-mix-dual-rate"]
-    int89_rate_vaxen --> classical_mix_dual_rate
-    rate92_unit --> classical_mix_dual_rate
-    joint_spec_speed_only["joint-spec-speed_only"]
-    rate92_unit --> joint_spec_speed_only
-    rate_95_vaxen --> joint_spec_speed_only
-    rate_2000_vaxen --> joint_spec_speed_only
-    rate_2006_vaxen --> joint_spec_speed_only
-    rate_2017_vaxen --> joint_spec_speed_only
-    joint_spec_rate_only["joint-spec-rate_only"]
-    rate92_unit --> joint_spec_rate_only
-    rate_95_vaxen --> joint_spec_rate_only
-    rate_2000_vaxen --> joint_spec_rate_only
-    rate_2006_vaxen --> joint_spec_rate_only
-    rate_2017_vaxen --> joint_spec_rate_only
-    joint_spec_equal_geometric["joint-spec-equal_geometric"]
-    rate92_unit --> joint_spec_equal_geometric
-    rate_95_vaxen --> joint_spec_equal_geometric
-    rate_2000_vaxen --> joint_spec_equal_geometric
-    rate_2006_vaxen --> joint_spec_equal_geometric
-    rate_2017_vaxen --> joint_spec_equal_geometric
-    spec95_2000_relaxed_single_tracks["spec95-2000-relaxed-single-tracks"]
 ```
 
 | Model / owner | Inputs → target | Relationship; role; status | Dependencies |
@@ -173,28 +120,8 @@ flowchart TD
 | [classical-direct-rate](../research/classic-rate-composite-fitting.md) | composite → vaxen | empirical-fit; primary; implemented-conditional | classical-composite, rate92-unit |
 | [classical-via89](../research/spec89-rate-bridge.md) | composite → vaxen | composition; primary; implemented-conditional | classical-composite, int89-rate-vaxen |
 | [classical-joint](../research/spec89-rate-bridge.md) | composite → vaxen | joint-fit; primary; implemented-conditional | classical-composite, rate92-unit, int89-rate-vaxen |
-| [classical-single](../research/classic-spec92-fitting.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | diagnostic; diagnostic; implemented-conditional | none |
-| [classical-pair](../research/classic-pair-fitting.md) | composite → vaxen | diagnostic; diagnostic; implemented-conditional | none |
-| [classical-triple](../research/classic-composite-fitting.md) | composite → vaxen | diagnostic; diagnostic; implemented-conditional | none |
-| [classical-source](../research/classic-source-pair-fitting.md) | composite → vaxen | diagnostic; diagnostic; implemented-conditional | none |
-| [classical-environment](../research/calibration-cleanup.md) | composite → vaxen | diagnostic; diagnostic; implemented-conditional | none |
-| [classical-native-pool](../research/classic-pooled-fitting.md) | composite → int92 | diagnostic; diagnostic; implemented-conditional | none |
-| [tomari-dhry-cint](../research/classic-source-pair-fitting.md) | dhry-21 → cint2006 | diagnostic; diagnostic; implemented-conditional | none |
 | [timing-reconstruction](../docs/methods.md) | gibson, adp, process-control, trace-timing → vaxen | planned; planned; planned | none |
 | [classical-sparse-network](../research/classic-network-fitting.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; primary; implemented-conditional | rate92-unit, int89-rate-vaxen |
-| [instruction-mix-joint-network](../research/instruction-mix-bridge.md) | gibson, adp, dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; diagnostic; implemented-conditional | classical-sparse-network, rate92-unit, int89-rate-vaxen |
-| [speed-95-to-92](../research/spec-dual-track.md) | speed-95 → int92 | empirical-fit; diagnostic; implemented-conditional | none |
-| [speed-2000-to-95](../research/spec-dual-track.md) | speed-2000 → speed-95 | empirical-fit; diagnostic; implemented-conditional | none |
-| [speed-2006-to-2000](../research/spec-dual-track.md) | speed-2006 → speed-2000 | empirical-fit; diagnostic; implemented-conditional | none |
-| [speed-2017-to-2006](../research/spec-dual-track.md) | speed-2017 → speed-2006 | empirical-fit; diagnostic; implemented-conditional | none |
-| [speed-2026-to-2017](../research/spec-dual-track.md) | speed-2026 → speed-2017 | empirical-fit; diagnostic; implemented-conditional | none |
-| [speed-chain](../research/spec-dual-track.md) | speed-95, speed-2000, speed-2006, speed-2017, speed-2026 → speed92-equivalent | composition; diagnostic; implemented-conditional | speed-95-to-92, speed-2000-to-95, speed-2006-to-2000, speed-2017-to-2006, speed-2026-to-2017 |
-| [classical-mix-dual-speed](../research/spec-dual-track.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100, gibson, adp → speed92-equivalent | joint-fit; diagnostic; implemented-conditional | int89-int92 |
-| [classical-mix-dual-rate](../research/spec-dual-track.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100, gibson, adp → vaxen | joint-fit; diagnostic; implemented-conditional | int89-rate-vaxen, rate92-unit |
-| [joint-spec-speed_only](../research/spec-joint-tracks.md) | speed-95, speed-2000, speed-2006, speed-2017, speed-2026 → vaxen | empirical-fit; diagnostic; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
-| [joint-spec-rate_only](../research/spec-joint-tracks.md) | rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | empirical-fit; diagnostic; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
-| [joint-spec-equal_geometric](../research/spec-joint-tracks.md) | speed-95, speed-2000, speed-2006, speed-2017, speed-2026, rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | empirical-fit; diagnostic; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen |
-| [spec95-2000-relaxed-single-tracks](../research/spec95-spec2000-relaxed-fitting.md) | speed-2000, rate-2000 → rate-95 | empirical-fit; diagnostic; implemented-conditional | none |
 
 ## Datasets
 
@@ -208,21 +135,17 @@ flowchart TD
 | spec89-years | [guide](../research/spec89-hardware-years.md) | `research/data/spec89/hardware-introductions.csv` | required in checkout |
 | classic-acquisition | [guide](../research/classic-benchmark-collection.md) | `research/data/classic/acquisition.csv` | required in checkout |
 | classic-pdf-tables | [guide](../research/classic-pdf-extraction.md) | `research/data/classic/pdf-extraction/tables.jsonl` | required in checkout |
-| classic-unit-policy | [guide](../research/classic-source-pair-fitting.md) | `research/data/classic/pdf-extraction/interpretation-policy.json` | required in checkout |
+| classic-unit-policy | [guide](../docs/classic-collection.md) | `research/data/classic/pdf-extraction/interpretation-policy.json` | required in checkout |
 | classic-overlap | [guide](../research/classic-spec-overlap.md) | `data/derived/classic/overlap-spec` | optional derived input |
-| classic-source-pairs | [guide](../research/classic-source-pair-fitting.md) | `data/derived/classic/source-pair-fit/pairs.csv` | optional derived input |
-| classic-source-vectors | [guide](../research/classic-source-pair-fitting.md) | `data/derived/classic/source-pair-fit/vectors.jsonl` | optional derived input |
+| classic-source-pairs | [guide](../docs/classic-collection.md) | `data/derived/classic/source-pair-fit/pairs.csv` | optional derived input |
+| classic-source-vectors | [guide](../docs/classic-collection.md) | `data/derived/classic/source-pair-fit/vectors.jsonl` | optional derived input |
 | historical-observations | [guide](../research/early-benchmark-evidence.md) | `research/data/historical` | required in checkout |
 | maintenance-inventory | [guide](../research/cleanup-inventory.md) | `research/data/maintenance` | required in checkout |
 | historical-timeline-years | [guide](../research/historical-vaxen-timeline.md) | `research/data/historical/timeline-year-overrides.csv` | required in checkout |
 | hardware-date-events | [guide](../research/hardware-year-evidence.md) | `research/data/historical/hardware-date-evidence.csv` | required in checkout |
 | cpu-sku-chronology | [guide](../research/cpu-sku-chronology.md) | `research/data/historical/cpu-sku-chronology.csv` | required in checkout |
 | instruction-mix-study | [guide](../research/instruction-mix-bridge.md) | `research/data/classic/mix-study` | required in checkout |
-| dual-spec | [guide](../research/spec-dual-track.md) | `research/data/spec/dual-track` | required in checkout |
-| dual-classic | [guide](../research/spec-dual-track.md) | `research/data/classic/dual-track` | required in checkout |
-| joint-spec-predictors | [guide](../research/spec-joint-tracks.md) | `research/data/spec/joint-tracks` | required in checkout |
 | spec95-2000-overlap-audit | [guide](../research/spec95-spec2000-overlap-audit.md) | `research/data/spec/95-2000-audit` | required in checkout |
-| spec95-2000-relaxed-fits | [guide](../research/spec95-spec2000-relaxed-fitting.md) | `research/data/spec/95-2000-refit` | required in checkout |
 
 ## Document inventory
 
@@ -254,18 +177,10 @@ analysis from evidence, diagnostics and retired work.
 | [Research catalog](../research/catalog.md) | guide | current |
 | [Chandra sample: *A General-Purpose Time-Sharing System*](../research/chandra-timesharing-sample.md) | evidence | current |
 | [Classic benchmark source acquisition](../research/classic-benchmark-collection.md) | evidence | current |
-| [Equal-weight classical composite: held-out comparison](../research/classic-composite-fitting.md) | diagnostic | current |
-| [Three-benchmark intersection and clock normalization](../research/classic-composite-overlap.md) | diagnostic | current |
-| [Early-benchmark closeout: environment model comparison](../research/classic-environment-models.md) | diagnostic | current |
-| [Two-of-three classical benchmark validation](../research/classic-pair-fitting.md) | diagnostic | current |
 | [Three-source PDF extraction completed](../research/classic-pdf-extraction.md) | evidence | current |
-| [Pooled SPECint89/92 classical fitting](../research/classic-pooled-fitting.md) | diagnostic | current |
 | [Direct classical composites to SPEC92 integer-rate VAXen](../research/classic-rate-composite-fitting.md) | primary | current |
-| [Diagnosing classical/SPEC92 source differences](../research/classic-source-diagnostics.md) | diagnostic | current |
-| [Source-column classical pair experiments](../research/classic-source-pair-fitting.md) | diagnostic | current |
 | [Additional classical/SPEC sources and prior work](../research/classic-spec-literature.md) | evidence | current |
 | [Classical benchmark / SPEC89-92 hardware overlap: first pass](../research/classic-spec-overlap.md) | diagnostic | current |
-| [Classical benchmarks / SPEC92 rate: first exploratory fits](../research/classic-spec92-fitting.md) | diagnostic | current |
 | [CPU92–CPU95 integer-speed overlap audit](../research/cpu92-cpu95-bridge.md) | archive | retired |
 | [Classic collection and overlap snapshots](../research/data/classic/README.md) | guide | current |
 | [DEC, SSCL and Tomari/Hiraki table extraction](../research/data/classic/pdf-extraction/README.md) | guide | current |
@@ -301,10 +216,7 @@ analysis from evidence, diagnostics and retired work.
 | [Shared VAXen timeline](../docs/timeline.md) | guide | current |
 | [Unified historical and SPEC rate timeline](../research/unified-vaxen-timeline.md) | primary | current |
 | [Gibson and ADP evidence and calibration experiments](../research/instruction-mix-bridge.md) | primary | current |
-| [Independent SPEC speed/rate experiments](../research/spec-dual-track.md) | primary | current |
-| [Joint speed/rate predictors](../research/spec-joint-tracks.md) | primary | current |
 | [SPEC95/CPU2000 overlap-loss audit](../research/spec95-spec2000-overlap-audit.md) | primary | current |
-| [SPEC95/CPU2000 relaxed matching and refits](../research/spec95-spec2000-relaxed-fitting.md) | primary | current |
 | [SPEC source fields and execution-resource audit](../research/spec-resource-field-audit.md) | primary | current |
 | [Shared benchmark input contract](../docs/input-catalog.md) | guide | current |
 | [Shared input migration and fitting review](../research/input-unification-fitting-review.md) | primary | current |

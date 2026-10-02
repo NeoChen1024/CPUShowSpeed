@@ -15,7 +15,7 @@ from cpushowspeed.spec_disclosure import (
     load_disclosure,
     parse_disclosure,
 )
-from cpushowspeed.spec_dual_track import collect_speed92
+from cpushowspeed.spec_inputs import collect_speed92
 from cpushowspeed.spec_overlap import _checked_bulk, _positive, _source_url
 
 

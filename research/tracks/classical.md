@@ -31,14 +31,9 @@ model, distinct from the earlier fixed-composite coefficient estimator.
 
 - [Acquisition](../classic-benchmark-collection.md), [literature](../classic-spec-literature.md),
   and [PDF tables](../classic-pdf-extraction.md) establish source evidence.
-- [Source-column experiments](../classic-source-pair-fitting.md) own units and
-  extended matching cohorts; [source diagnostics](../classic-source-diagnostics.md)
-  and [environment models](../classic-environment-models.md) examine heterogeneity.
-  Environment corrections are not applied to the primary composite estimates.
-- [Earlier native-score pooling](../classic-pooled-fitting.md) is auxiliary;
-  its factors are not rate conversion factors.
-- Earlier single/pair/triple feasibility studies remain accessible in the
-  [catalog](../catalog.md), with their roles distinguished from current results.
+- Earlier single/pair/triple, source-column, environment, pooled-native and
+  instruction-mix network experiments were removed on 2026-10-02; they remain in
+  Git history and are listed in the [schema cleanup inventory](../schema-cleanup-inventory.md).
 
 ## Earlier-machine reconstruction boundary
 

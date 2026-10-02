@@ -47,13 +47,10 @@ stay separate. Reviewed PDF vectors and Gibson/ADP records use source-specific
 adapters into the common envelope. Unit conversion and frequency assumptions are
 not part of the generic JSONL reader.
 
-The SPEC fit readers and classical network, mix-network and target-comparison
-readers accept a shared frozen snapshot:
+The SPEC fit readers and the classical network reader accept a shared frozen
+snapshot:
 
-    uv run cpushowspeed --input-catalog data/derived/inputs bridge fit-joint-tracks --matching-policy ram-aliases
     uv run cpushowspeed --input-catalog data/derived/inputs classic network-fit
-    uv run cpushowspeed --input-catalog data/derived/inputs classic mix-network-fit
-    uv run cpushowspeed --input-catalog data/derived/inputs plot timeline
 
 Without --input-catalog, the same adapters read their original cached sources.
 The snapshot is hash checked before use. Matching/review tables remain separate

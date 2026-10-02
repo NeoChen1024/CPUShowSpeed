@@ -1,5 +1,11 @@
 # Shared VAXen timeline
 
+**Status 2026-10-02: not reproducible.** `plot timeline` depends on the joint
+predictor, relaxed refit and instruction-mix network outputs, which were removed
+with the other diagnostic experiments. The timeline will be rebuilt on the
+[data schema](data-schema.md); until then this document describes the last
+working implementation, not current behavior.
+
 Implemented on 2026-09-27. This document owns the combined view's data contract,
 date selection and interaction. It consumes saved calibration; it does not fit
 a new model. [Research results](../research/unified-vaxen-timeline.md) own the
@@ -443,8 +449,7 @@ Saved joint bundles must match their code, input and CSV hashes. `fit-joint-trac
 now exports `backbone-summary.csv` and coherent backbone draws for timeline use.
 Regenerate strict, RAM/alias and CPU-clock joint bundles before
 `plot timeline` when model code changes. Research scope and limits remain owned
-by [joint fitting](../research/spec-joint-tracks.md) and
-[relaxed fitting](../research/spec95-spec2000-relaxed-fitting.md).
+by the joint and relaxed fitting reports (removed 2026-10-02; see Git history).
 
 ## Offline VAXen calculator (2026-09-29)
 

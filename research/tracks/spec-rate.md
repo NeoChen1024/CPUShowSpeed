@@ -21,5 +21,5 @@ Supporting numerical snapshots live under `research/data/spec/`; full generated
 submissions and plots live under `data/derived/spec/`. Registry model and dataset
 IDs connect these artifacts to the classical/historical extensions.
 
-The [independent speed experiment](../spec-dual-track.md) is implemented alongside
-this rate series. It exports SPECint92-equivalent points, separate from rate-VAXen.
+No independent speed calibration is currently implemented; the earlier
+dual-track experiment was removed on 2026-10-02.

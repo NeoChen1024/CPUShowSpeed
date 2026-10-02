@@ -9,11 +9,10 @@ remain distinguishable.
 
 ## Independent speed research
 
-The project now retains integer speed and rate as distinct research targets.
-The [dual-track experiment](../research/spec-dual-track.md) implements a speed
-chain and classical/mix re-anchoring. Speed denotes task completion, not a
-single-core guarantee. Its output is SPECint92-equivalent points; the existing
-rate-VAXen unit and public timeline remain throughput-only. Base/peak is an
+Integer speed and rate are distinct research targets. Speed denotes task
+completion, not a single-core guarantee; no speed calibration is currently
+implemented (the earlier dual-track and joint experiments were removed on
+2026-10-02). The rate-VAXen unit remains throughput-only. Base/peak is an
 independent dimension. Never combine speed and rate observations into one fit.
 
 ## Active SPEC rate series

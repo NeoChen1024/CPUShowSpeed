@@ -11,8 +11,6 @@ to its three-family DP/SP combinations, and did not establish a rate bridge.
 A subsequent [two-edge SPEC89 bridge experiment](spec89-rate-bridge.md) now
 examines inferred SPEC89 targets jointly with this direct cohort; it retains
 this rate-only model as the control and distinguishes estimates from observations.
-The [native integer experiment](classic-pooled-fitting.md) remains auxiliary
-research; its coefficients are not substituted into the rate chain.
 
 For a reported CPU92 integer-rate score R, the target is
 `y_VAXen = R × 25500 / 604800`. This defined normalization is already present in
@@ -33,7 +31,7 @@ learned component weights, residual-based exclusion or clock scaling is used.
 ## Inputs and observation handling
 
 The main cohort is `plus_cross_source_unscaled` from
-[source-column experiments](classic-source-pair-fitting.md). `within_source`
+`classic prepare-sources`. `within_source`
 is also recomputed as a source-composition comparison. All existing repeat
 observations and eligibility rules are preserved. In particular, archive rate
 matches require one reported CPU, while same-column DEC configurations retain
@@ -119,7 +117,7 @@ UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/cpushowspeed-mpl \
 ```
 
 `--pairs`, `--output`, `--bootstrap` and `--seed` select the source-pair input,
-output location and bootstrap settings. Rebuild `classic source-pair-fit` first
+output location and bootstrap settings. Rebuild `classic prepare-sources` first
 if its derived input is missing.
 
 Outputs under `data/derived/classic/rate-composite-fit/`:

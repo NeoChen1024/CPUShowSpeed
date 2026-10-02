@@ -82,36 +82,6 @@ When an estimated VAXen value is exported, preserve its original reported
 score, benchmark mode, factor source, evidence class, and the scope of any
 interval. Mark unquantified upstream uncertainty explicitly.
 
-## Experimental speed outputs
-
-The dual-track experiments identify `track` (`speed` or `rate`) independently
-of base/peak. Classical speed outputs use `target_unit=SPECint92_equivalent`;
-rate outputs use `rate_VAXen`. Shared network nodes distinguish `observed_speed`,
-`observed_rate`, `estimated_89` and `unanchored`. Mixed observed speed/rate anchors
-are rejected by the shared fitter. Existing rate schemas retain their meaning.
-
-Generation-chain speed coefficients are older-speed/newer-speed, with separate
-base and peak fits (base terminates at SPECbase_int92). Cross-track diagnostic
-ratios are native rate/native speed, never implicit VAXen or processor counts.
-See the [experiment](../research/spec-dual-track.md) for output paths and limits.
-
-## Joint-predictor experiment
-
-Joint tables retain `method`, fixed `speed_weight`, `old_generation`,
-`new_generation`, and `mode`. `coefficient_older_rate` maps the declared native
-predictor to the older suite; `coefficient_vaxen` includes an explicit upstream
-rate prefix. Held-out `observed_target_vaxen` is populated only for actual CPU92
-rate targets. Other observed targets remain native older-suite rate values.
-Masked-input predictions use independently fitted single-input coefficients.
-See the [joint experiment](../research/spec-joint-tracks.md) for uncertainty and
-insufficient-model policy.
-
-Joint-refit rows now include `matching_scenario` and `local_matching_policy`.
-Relaxed pair tiers (`platform_alias_ram_relaxed`, `cpu_clock_resources`) are
-distinct from `hardware_near`; source values and `matching_blockers` /
-`relaxed_fields` remain visible. Scenario-specific coefficients must not be
-combined with another scenario's uncertainty arrays.
-
 ## Enabled hardware and benchmark concurrency
 
 Enabled cores/chips, chip capacity, hardware threads/core, rate copies and speed

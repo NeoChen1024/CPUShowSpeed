@@ -108,20 +108,25 @@ readers to the built database, not only the modules that already accept
 - **Ad hoc coverage audit**: `cpu_chronology.spec_coverage` reimplements record
   loading to test matches; it becomes a `resolution` query in step 2.
 
-### 7. Diagnostic experiments (decision needed before step 5)
+### 7. Diagnostic experiments (removed 2026-10-02)
 
-The registry lists 20 diagnostic models (single/pair/triple classical fits,
-source-pair, environment, native pooling, Tomari, mix network, six speed-chain
-edges, two classical dual-track comparisons, three joint predictors, relaxed
-95/2000 refit). They are not obsolete, but each would need porting to read
-`benchmark-observation-v2`. For each, step 5 should choose one disposition:
+The user chose neither porting nor freezing: all 20 registered diagnostic
+models were removed so that a better-suited set can be designed on the new
+schema. Removed together:
 
-- **Port**: keep the command; read the new inputs; verify parity.
-- **Freeze**: keep its report and versioned outputs as recorded results, retire
-  the command and module, and mark the registry model `recorded`.
+- Commands and modules: `classic fit-spec92`, `pair-fit`, `composite-overlap`,
+  `composite-fit`, `source-pair-fit`, `source-diagnostics`, `environment-fit`,
+  `pooled-fit`, `mix-network-fit`, `compare-targets`; `bridge compare-tracks`,
+  `fit-joint-tracks`, `refit-95-2000` (13 modules).
+- Their 74 tracked output files, 11 reports, registry models/datasets and
+  speed-only metrics.
 
-Freezing loses reproducibility from current inputs, so it should be a per-model
-user decision, not a residual or role-based rule.
+`classic source-diagnostics` was not a registered model but belonged to the same
+diagnostic group and was removed with it. Preparation (`prepare-pairs`,
+`prepare-sources`) and the primary rate, SPEC89 bridge and network fits are
+unchanged. `plot timeline` is knowingly left broken: it consumed the joint,
+relaxed and mix-network outputs and will be rebuilt on the schema. Everything
+removed remains recoverable from Git history.
 
 ## Retirement procedure
 
@@ -143,5 +148,4 @@ For every item:
 | Step 1 | Source registries |
 | Step 2 | Identity functions and alias tables; `spec_coverage` |
 | Steps 3–4 | Date tables and the four date-selection paths |
-| Before step 5 | Port-or-freeze decision for the 20 diagnostics |
 | Step 5 | Observation formats, historical aggregation, `--text-exports` |

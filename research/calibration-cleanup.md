@@ -113,8 +113,8 @@ the primary direct fit's **21.0126% model-center P95**. Grouped and shrinkage
 center P95 are 14.0528% and 12.3693%. Their equal-model observation P95 values
 are 37.6589%, 22.6272% and 21.3451%, respectively. Do not compare the center P95
 to the old environment-balanced observation P95 as though they were the same
-quantity. The current snapshot is [environment-v2-summary.csv](data/classic/environment-v2-summary.csv);
-the original environment snapshots remain v1 historical diagnostics.
+quantity. The environment snapshots and command were removed on 2026-10-02 with the other
+diagnostic experiments; they remain in Git history.
 
 ## Cleanup of artifacts
 

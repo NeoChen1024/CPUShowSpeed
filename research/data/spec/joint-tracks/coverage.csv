@@ -1,6 +1,0 @@
-old_generation,new_generation,matching_policy,target_rate_candidates,target_speed_candidates,target_rate_hardware_near,target_speed_hardware_near,target_rate_eligible,target_speed_eligible,complete_mode_triples,rejected_triples_or_modes,target_reuse_policy
-cpu92,cpu95,strict,60,50,28,24,28,24,62,0,three_distinct_submission_urls_required
-cpu95,cpu2000,strict,25,15,16,7,16,7,4,0,three_distinct_submission_urls_required
-cpu2000,cpu2006,strict,136,29,74,24,74,24,62,0,three_distinct_submission_urls_required
-cpu2006,cpu2017,strict,1097,917,861,83,861,83,118,62,three_distinct_submission_urls_required
-cpu2017,cpu2026,strict,185,88,158,48,158,48,63,19,three_distinct_submission_urls_required

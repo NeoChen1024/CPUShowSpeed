@@ -169,8 +169,8 @@ under ignored `data/derived/spec/95-2000-audit/`. It does not modify source scor
 
 ## Follow-up implementation
 
-The user authorized broader matching. The [relaxed fitting study](spec95-spec2000-relaxed-fitting.md)
-now runs RAM/alias and CPU-clock scenarios, preserving this original admission
-audit and strict baseline. Resource/count conflicts and NC exclusions remain.
+The user authorized broader matching. A relaxed RAM/alias and CPU-clock fitting
+study followed; it was removed with the other diagnostic experiments on
+2026-10-02. This original admission audit and strict baseline remain. Resource/count conflicts and NC exclusions remain.
 The expanded Alpha/Sun cohort is still small and conditional; broader CPU
 coverage requires additional measured overlaps.

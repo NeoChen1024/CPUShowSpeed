@@ -83,73 +83,38 @@ error or shared systematic bias. `plot annual-rate-ci` propagates those shared v
 representative scores; its pale box envelopes and fixed-leader intervals
 retain that conditional, pointwise interpretation.
 
-## Classical workload association diagnostics
+## Classical model-median ratio estimator
 
-`classic fit-spec92` implements exploratory candidate-cohort associations with
-SPEC92 integer rate. These are not validated historical conversion factors.
-It separates Dhrystone versions, Whetstone Fortran native-precision and DP
-columns, LINPACK n=100, and SPEC base/peak. Whetstone's main MWIPS column must
-not be labelled universally single precision. FP-heavy workloads versus
-integer rate are cross-workload diagnostics.
+Classical fits pair an original classical score or composite `x` with a target
+`y` (for the primary route, `SPECrate_int92 × 25500 / 604800` or its base
+counterpart). Dhrystone versions, Whetstone native/SP/DP columns and LINPACK
+problem sizes stay separate; Whetstone's main MWIPS column must not be labelled
+universally single precision. All source rows and pair exclusions are retained;
+no score/residual threshold selects measurements. Repeated submissions remain
+observations.
 
-Both scenarios require SPEC's reported CPU count to be one and reject known
-classical processor counts other than one. This does not prove classical
-concurrency, copies, OS/compiler or full configuration equivalence. The first
-scenario requires known clocks compatible within 1%; the second additionally
-allows missing clocks. Both reject known clock conflicts. RAM is not a filter.
-All source rows and pair exclusions are retained; no score/residual threshold
-selects measurements. Repeated submissions remain observations.
+Within each normalized model group, take the median of `ln(y/x)`. The overall
+factor is `exp(mean(model medians))`, so each model has equal total weight. This
+is a unit-slope log-space ratio fit, not a freely estimated power-law conversion.
 
-For each included pair, let `x` be the original classical score and
-`y = SPECrate_int92 × 25500 / 604800` (or its base counterpart). Within each
-normalized model group, take the median of `ln(y/x)`. The overall factor is
-`exp(mean(model medians))`, so each model has equal total weight. This is a
-unit-slope log-space ratio fit, not a freely estimated power-law conversion.
-A separate free log-log slope diagnostic uses model median log x/y values
-when at least three groups with x variation exist.
+Resample model medians with replacement 10,000 times (default seed 20260926) and
+report the 2.5/97.5 percentiles of the factor as conditional CI95. At least two
+model groups are required; small-cohort intervals are fragile. The CI excludes
+mismatching configurations, source bias, unknown concurrency and workload
+transfer uncertainty; it is not a prediction interval.
 
-Resample model medians with replacement 10,000 times (default seed 20260926).
-Report the 2.5/97.5 percentiles of the factor as conditional CI95. At least two
-model groups are required; even then small-cohort intervals are fragile. The
-CI excludes mismatching configurations, source bias, unknown concurrency and
-workload transfer uncertainty; it is not a prediction interval.
-
-For leave-one-model-out validation, refit using all other model centers and
-measure `100 × abs(predicted/observed - 1)` on the held-out center. Report the
-P95 across held-out models. Also calculate each held-out model's pair-level
-P95 and report the maximum of these, retaining visibility of compiler and
-submission spread. This latter statistic is **not** an overall pair P95.
-Cartesian candidate pairs are not independent experiments; clustering mitigates
-repeated-model weighting but cannot establish independence among related
-models or shared source compilations.
-
-### Fixed equal-weight composite validation
-
-`classic composite-fit` consumes the complete-vector audit and fixes
-`C = ((D / 1 DMIPS) × (W / 1 MWIPS) × (L / 1 MFLOPS))^(1/3)`.
-Native and DP Whetstone are separate experiments. Only the multiplicative
-coefficient `k` in `y = k C` is fitted. Each single-benchmark baseline fits its
-own coefficient on **exactly the same tuple multiset and model groups**.
-SPEC92 targets use rate-VAXen; SPEC89 targets remain separate native metrics.
-The unit normalizers define an index, not a measured VAX reference machine.
-
-Reuse the model-median log-ratio estimator and conditional model bootstrap
-above. For each validation fold, remove every tuple of the held-out model
-before fitting k. Keep fold coefficients, signed model-center errors, and
-individual held-out tuple predictions. Repeated source measurements remain;
-Cartesian combinations do not increase the number of independent model groups.
-The fitted weights never change from one third each. Full-cohort coefficient
-CI95 is not a held-out prediction interval or a significance test between
-predictors. Comparisons across clock scenarios also change the model cohort,
-so their error differences cannot isolate the causal effect of scaling.
+For leave-one-model-out validation, remove every tuple of the held-out model,
+refit on the other model centers and measure `100 × abs(predicted/observed - 1)`
+on the held-out center. Cartesian candidate pairs are not independent
+experiments; clustering mitigates repeated-model weighting but cannot establish
+independence among related models or shared source compilations.
 
 ## Selected classical bridge method
 
-Decision date: 2026-09-26. Following the environment-model experiments, the
-user selects **pooled, fixed equal-weight geometric composites with one fitted
-multiplier per benchmark combination and SPEC target** as the primary classical
-bridge research method. Environment grouping and shrinkage remain diagnostic
-experiments, not corrections applied to the primary estimates.
+Decision date: 2026-09-26. The user selects **pooled, fixed equal-weight
+geometric composites with one fitted multiplier per benchmark combination and
+SPEC target** as the primary classical bridge research method. No environment
+correction is applied to the primary estimates.
 
 For a declared set B of two or three distinct benchmark families, calculate
 `C_B = exp(mean(log(score_b / unit_b)))` and fit `y = k_B,target × C_B` using
@@ -175,8 +140,6 @@ adds explicitly estimated SPEC89 targets through two observed edges, native
 SPECint89→SPECint92 and same-column SPECint92→integer-rate VAXen. It propagates
 shared bridge uncertainty and separates holdout errors on observed rate from
 agreement with inferred targets. These estimates are not observed rate scores.
-The [pooled native integer experiment](../research/classic-pooled-fitting.md)
-remains auxiliary; its target is a different scale.
 The direct experiment shares the modern chain's rate unit; promoting its
 classical coefficients into a general historical converter remains separate.
 
@@ -215,9 +178,7 @@ Selected 2026-09-27; implementation/parity evidence is in the
 model/configuration has equal total fitting weight, using its median log ratio.
 Modern system/configuration grouping and classical normalized model identity
 remain declared grouping contracts, not extra submission-count weights.
-Environment diagnostics use this same pooled coefficient; within-model
-environment support follows observed row shares, not a second equal-environment
-weight. No environment adjustment enters the primary historical estimates.
+No environment adjustment enters the primary historical estimates.
 
 Primary P95 is the linearly interpolated 95th percentile of absolute relative
 errors at independent model/configuration centers: `100 * abs(predicted/observed - 1)`.
@@ -253,24 +214,3 @@ the actual reported clock unless explicitly normalizing to a paired target.
 Whole-model holdouts remove all accepted aliases and shared bridge evidence;
 coefficient bootstrap samples retain shared calibration dependence.
 
-## Independent speed calibration
-
-The [dual-track experiment](../research/spec-dual-track.md) reuses the current
-rate matcher and grouped log-ratio estimator for speed-only generation edges.
-Full-chain speed CI95 uses shared processor-configuration bootstrap weights
-across edges. The sparse historical network accepts separate observed-speed
-anchors, with only the SPEC89-to-SPEC92 edge for estimated SPEC89 labels.
-No rate normalization is applied to speed observations. Neither conditional
-CI95 nor a small held-out error proves architecture-independent transport.
-
-## Joint speed/rate predictors
-
-The [joint experiment](../research/spec-joint-tracks.md) fits an older measured
-rate target from newer speed, rate or their fixed equal geometric mean. The
-three alternatives use identical complete-case cohorts, separate mask-specific
-coefficients and whole-processor-model holdouts. Later-generation VAXen values
-compose a local predictor with a rate-only prefix; joint coefficients are never
-multiplied into a purported joint chain. Only CPU92 observed targets provide
-direct rate-VAXen validation. The shared sparse historical fitter continues to
-reject mixed speed/rate *targets*; this experiment has multiple predictor types
-and a single rate target.
