@@ -29,7 +29,7 @@ def list_browsing(suffix=""):
 
 
 def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
-    fields = "record_id resource_warning runtime_resources hardware_context resource_basis reported_cpu_count cores_per_chip input_configurations estimate_kind variants matched_rate_variants comparison_keys source_record_ids benchmark_sources configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit mix_variant evidence_class source_locator generation reported_score benchmark_id calibration_scenario".split()
+    fields = "record_id resource_warning runtime_resources hardware_context resource_basis reported_cpu_count cores_per_chip input_configurations estimate_kind system_id speed_system mix_combination source_record_ids benchmark_sources configuration_id route system cpu clock_mhz os configuration scores year year_low year_high date_method date_notes date_sources vaxen ci95_low ci95_high mode measurement_scope chips cores threads_per_core copies_min copies_max calibration_route uncertainty_scope limitation source_url reported_unit evidence_class source_locator generation reported_score benchmark_id calibration_scenario".split()
     output.parent.mkdir(parents=True, exist_ok=True)
     worker = browser_worker_source()
     export = WebExport(output.parent)
@@ -108,17 +108,14 @@ __LINEAGE_MARKUP__
 <label><input type="checkbox" style="width:auto" data-mode="peak_proxy" checked> Historical estimates</label>
 </fieldset>
 <fieldset id="estimates"><legend>Estimates</legend>
-<label><input type="checkbox" style="width:auto" data-estimate="baseline" checked> ● Rate baseline / historical</label>
+<label><input type="checkbox" style="width:auto" data-estimate="baseline" checked> ● Reported rate / historical baseline</label>
+<label><input type="checkbox" style="width:auto" data-estimate="mix_combined" checked> ■ Combined Gibson + ADP mixes</label>
+<label><input type="checkbox" style="width:auto" data-estimate="mix"> ■ Single mix ratings</label>
 <label><input type="checkbox" style="width:auto" data-estimate="speed"> ▲ From speed</label>
 <label><input type="checkbox" style="width:auto" data-estimate="joint"> ◆ From speed + rate</label></fieldset>
-<fieldset id="matching"><legend>Matching across SPEC generations</legend>
-<label><input type="radio" style="width:auto" id="match-strict" name="matching" value="strict"> Strict</label>
-<label><input type="radio" style="width:auto" id="match-ram-aliases" name="matching" value="ram-aliases" checked> RAM + aliases</label>
-<label><input type="radio" style="width:auto" id="match-cpu-clock" name="matching" value="cpu-clock"> CPU + clock (cross-platform)</label></fieldset>
-<p class="hint">All estimates target rate-VAXen. Speed estimates: SPEC95–2026 submissions. Joint estimates: matched overlap pairs. CI95 is calibration uncertainty, not a prediction interval.</p>
+<p class="hint">All estimates target rate-VAXen. Speed estimates: SPEC95–2026 speed results. Joint estimates: hardware-near speed/rate pairs. Combined mixes merge a source row's available Gibson and ADP ratings; single ratings are optional comparisons. CI95 is calibration uncertainty, not a prediction interval.</p>
 <p id="estimate-status" class="hint"></p>
 <fieldset id="routes"><legend>Benchmark routes</legend></fieldset>
-<p class="hint">Combined mixes merges available Gibson and ADP estimates. Individual mix views are optional comparisons.</p>
 <p>System throughput · not per-core performance</p>
 <p id="count" aria-live="polite"></p>
 <p>Year: CPU release → system availability → eligible submission date. Undated records remain in the list.</p>
@@ -137,16 +134,17 @@ __BROWSING_TOP__
 __BROWSING_BOTTOM__
 </div>
 <script>
-for(const r of data)for(const key of ['variants','matched_rate_variants','comparison_keys','source_record_ids','benchmark_sources','runtime_resources','hardware_context','input_configurations']){
+for(const r of data)for(const key of ['source_record_ids','benchmark_sources','runtime_resources','hardware_context','input_configurations']){
  if(typeof r[key]==='string'&&r[key])r[key]=JSON.parse(r[key]);}
-let matching='ram-aliases';const enabledEstimates=new Set(['baseline']);
+const enabledEstimates=new Set(['baseline','mix_combined']);
 const kind=r=>r.estimate_kind||'baseline';
-const estimateLabel=r=>({baseline:'Rate baseline / historical',speed:'From speed',joint:'From speed + rate'}[kind(r)]);
-function variant(r){const v=r.variants?.[matching];if(r.variants&&Object.keys(r.variants).length&&!v)return null;
- return v?{...r,vaxen:v[0],ci95_low:v[1],ci95_high:v[2],calibration_scenario:matching,uncertainty_scope:kind(r)==='baseline'&&r.generation!=='cpu92'?'conditional whole-CPU-model rate-chain coefficient CI95':r.uncertainty_scope}:r;}
-const relationIndex=new Map();for(const r of data)for(const key of r.comparison_keys||[]){const a=relationIndex.get(key)||[];a.push(r);relationIndex.set(key,a);}
-function relatives(r){const keys=new Set(r.comparison_keys||[]);for(const k of [...keys])for(const q of relationIndex.get(k)||[])if(kind(q)==='joint')for(const k2 of q.comparison_keys||[])keys.add(k2);
- const found=new Map();for(const k of keys)for(const q of relationIndex.get(k)||[]){const v=variant(q);if(v)found.set(q.record_id,v);}return [...found.values()];}
+const estimateLabel=r=>({baseline:'Reported rate / historical baseline',mix:'Single mix rating',mix_combined:'Combined mixes',speed:'From speed',joint:'From speed + rate'}[kind(r)]||kind(r));
+// Rows derived from one source result (base/peak, speed↔pair↔rate, single↔combined mixes) and rows of one resolved system.
+const index=(key,r,map)=>{if(!key)return;const a=map.get(key)||[];a.push(r);map.set(key,a);};
+const sourceIndex=new Map(),systemIndex=new Map();
+for(const r of data){for(const id of r.source_record_ids||[])index(id,r,sourceIndex);index(r.system_id,r,systemIndex);}
+function relatives(r){const found=new Map();for(const id of r.source_record_ids||[])for(const q of sourceIndex.get(id)||[])if(q!==r)found.set(q.record_id,q);return [...found.values()];}
+function sameSystem(r){const direct=new Set(relatives(r));return (systemIndex.get(r.system_id)||[]).filter(q=>q!==r&&!direct.has(q));}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function fmt(value){const x=Number(value);if(!Number.isFinite(x))return '—';
  const prefixes=['p','n','µ','m','','k','M','G','T','P','E'];
@@ -154,14 +152,14 @@ function fmt(value){const x=Number(value);if(!Number.isFinite(x))return '—';
  let scaled=x/10**e;if(Math.abs(Number(scaled.toFixed(3)))>=1000&&e<18){e+=3;scaled=x/10**e;}
  return `${scaled.toFixed(3)} ${prefixes[(e+12)/3]}VAXen`;}
 const plot=document.querySelector('#plot'), tip=document.querySelector('#tip'), overviewPlot=document.querySelector('#overview');
-const dated=data.filter(r=>r.year);let ymin=Math.floor(Math.log10(data.reduce((m,r)=>Math.min(m,r.ci95_low,...Object.values(r.variants||{}).map(v=>v[1])),Infinity))),
- ymax=Math.ceil(Math.log10(data.reduce((m,r)=>Math.max(m,r.ci95_high,...Object.values(r.variants||{}).map(v=>v[2])),0))),
+const dated=data.filter(r=>r.year);let ymin=Math.floor(Math.log10(data.reduce((m,r)=>Math.min(m,r.ci95_low),Infinity))),
+ ymax=Math.ceil(Math.log10(data.reduce((m,r)=>Math.max(m,r.ci95_high),0))),
  xmin=dated.reduce((m,r)=>Math.min(m,r.year),Infinity)-1,xmax=dated.reduce((m,r)=>Math.max(m,r.year),-Infinity)+1;
 const originalBounds={xmin,xmax,ymin,ymax};let userPredictions=[];
 let viewMin=xmin,viewMax=xmax,page=0;const PAGE_SIZE=200;
 const X=x=>90+(x-viewMin)/(viewMax-viewMin)*1270,Y=y=>680-(Math.log10(y)-ymin)/(ymax-ymin)*640;
 const palette=['#207ca3','#bd5934','#397947','#7c57a2','#ad7130','#ca4779','#4064ac','#537b79'];
-const routeNames=[...new Set(data.map(r=>r.route))],enabled=new Set(routeNames.filter(n=>!routeNames.includes('Combined mixes')||!['Gibson mix','ADP mix'].includes(n)));
+const routeNames=[...new Set(data.map(r=>r.route))],enabled=new Set(routeNames);
 const color=r=>palette[routeNames.indexOf(r.route)%palette.length];
 const modeOf=r=>r.mode||'peak_proxy';
 const configurationDetails=r=>[Number(r.clock_mhz)>0?`clock: ${r.clock_mhz} MHz`:'',r.os,r.configuration].filter(Boolean).join('; ');
@@ -244,7 +242,7 @@ function resourceDescription(r){
 }
 function showSelection(){if(!candidates.length){clearSelection();return;}
  const p=candidates[active],r=p.r,c=color(r),m=plot.getScreenCTM(),scale=Math.hypot(m.a,m.b)||1;
- const related=relatives(r),visible=related.map(q=>visiblePoints.get(q.record_id)).filter(Boolean);
+ const related=relatives(r),others=[...sameSystem(r)].sort((a,b)=>(a.route===r.route)-(b.route===r.route)),visible=[r,...related].map(q=>visiblePoints.get(q.record_id)).filter(Boolean);
  const connections=visible.length>1?`<path d="${visible.map((q,i)=>(i?'L':'M')+q.x+' '+q.y).join(' ')}" stroke="${c}" fill="none" opacity=".7"/>`:'';
  document.querySelector('#highlight').innerHTML=connections+visible.map(q=>`<path d="${spans(q.r)}" stroke="${c}" opacity=".35"/><path d="${marker(q,5)}" fill="${c}"/>`).join('')+`<path d="${spans(r)}" stroke="${c}" opacity=".75" stroke-width="3" vector-effect="non-scaling-stroke"/>
  <circle cx="${p.x}" cy="${p.y}" r="${10/scale}" fill="white" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke"/>
@@ -254,11 +252,12 @@ function showSelection(){if(!candidates.length){clearSelection();return;}
  <p>${esc(r.cpu||'CPU unspecified')} · ${esc(r.route)}</p><p>${esc(configurationDetails(r))}</p>
  <p>${esc(modeOf(r))} · ${esc(r.measurement_scope||'historical proxy')}<br>
  ${resourceDescription(r)}</p>
- <p>${esc(estimateLabel(r))} · ${esc(matching)}<br><b>${fmt(r.vaxen)}</b><br>CI95: ${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</p>
- ${related.length?'<details open><summary>Related estimates</summary>'+related.slice(0,8).map(q=>`<p>${esc(estimateLabel(q))}: <b>${fmt(q.vaxen)}</b><br><small>${esc(q.system)} · CI95 ${fmt(q.ci95_low)}–${fmt(q.ci95_high)}</small></p>${q.matched_rate_variants?.[matching]?`<p>Rate-only — matched cohort: ${fmt(q.matched_rate_variants[matching][0])}<br><small>CI95 ${fmt(q.matched_rate_variants[matching][1])}–${fmt(q.matched_rate_variants[matching][2])}</small></p>`:''}`).join('')+(related.length>8?`<small>${related.length} related rows; first 8 shown</small>`:'')+'</details>':''}
+ <p>${esc(estimateLabel(r))} · ${esc(r.calibration_scenario||'')}<br><b>${fmt(r.vaxen)}</b><br>CI95: ${fmt(r.ci95_low)}–${fmt(r.ci95_high)}</p>
+ ${related.length?'<details open><summary>From the same source results</summary>'+related.slice(0,8).map(q=>`<p>${esc(estimateLabel(q))} · ${esc(q.route)} · ${esc(modeOf(q))}: <b>${fmt(q.vaxen)}</b><br><small>${esc(q.system)} · CI95 ${fmt(q.ci95_low)}–${fmt(q.ci95_high)}</small></p>`).join('')+(related.length>8?`<small>${related.length} related rows; first 8 shown</small>`:'')+'</details>':''}
+ ${others.length?'<details><summary>Same resolved system · '+others.length+' other row'+(others.length===1?'':'s')+'</summary>'+others.slice(0,8).map(q=>`<p>${esc(q.route)} · ${esc(estimateLabel(q))} · ${esc(modeOf(q))}: <b>${fmt(q.vaxen)}</b><br><small>${esc(q.year||'undated')} · CI95 ${fmt(q.ci95_low)}–${fmt(q.ci95_high)}</small></p>`).join('')+'</details>':''}
  <p>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">Source ${i+1}</a>`).join(' · ')}</p>
  <p>Year: ${esc(r.year)} (${esc(r.year_low)}–${esc(r.year_high)})<br><small>${esc(r.date_method)}</small></p>
- <p><small>${scoreDetails(r)}${r.mix_variant?'<br>'+esc(r.mix_variant)+' · '+esc(r.reported_unit):''}<br>${esc(r.calibration_route||r.route)}<br>${esc(r.uncertainty_scope||'conditional calibration CI95')}<br>${esc(r.limitation||'')}<br>${esc(r.date_notes||'')}</small></p><small>${pinned?'Pinned':'Click to pin'} · ${active+1} / ${candidates.length} nearby point${candidates.length===1?'':'s'}</small>`;
+ <p><small>${scoreDetails(r)}${r.mix_combination?'<br>'+esc(r.mix_combination)+' · '+esc(r.reported_unit):''}<br>${esc(r.calibration_route||r.route)}<br>${esc(r.uncertainty_scope||'conditional calibration CI95')}<br>${esc(r.limitation||'')}<br>${esc(r.date_notes||'')}</small></p><small>${pinned?'Pinned':'Click to pin'} · ${active+1} / ${candidates.length} nearby point${candidates.length===1?'':'s'}</small>`;
  document.querySelector('#prev').disabled=document.querySelector('#next').disabled=candidates.length<2;
  positionTip();
 }
@@ -294,12 +293,14 @@ function renderTable(){const order=sortOrder;
  <td>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">${kind(r)==='joint'?(i===0?'Speed':'Rate'):'Benchmark'}</a>`).join(' · ')}<br>${r.date_sources.split(';').filter(Boolean).map(u=>`<a href="${esc(u)}">Year source</a>`).join(' ')}<br><small>${esc(r.date_notes)}</small></td></tr>`).join('');
 }
 function marker(p,size){const x=p.x,y=p.y,s=size;if(kind(p.r)==='speed')return `M${x} ${y-s}l${s} ${s*2}h${-s*2}z`;
+ if(kind(p.r).startsWith('mix'))return `M${x-s} ${y-s}h${s*2}v${s*2}h${-s*2}z`;
  if(kind(p.r)==='joint')return `M${x} ${y-s}l${s} ${s}l${-s} ${s}l${-s} ${-s}z`;
  return `M${x-s},${y}a${s},${s} 0 1,0 ${s*2},0a${s},${s} 0 1,0 ${-s*2},0`;}
 function draw(){clearSelection();const query=document.querySelector('#q').value.toLowerCase();
  const selected=data.filter((r,i)=>searchable[i].includes(query)&&enabled.has(r.route)&&enabledModes.has(modeOf(r))&&enabledEstimates.has(kind(r)));
- const cohort=selected.map(variant).filter(Boolean);
- document.querySelector('#estimate-status').textContent=`${matching}: ${selected.length-cohort.length} estimates unavailable (no fitted coefficient or admitted pair). Historical routes retain their saved calibration.`;
+ const cohort=selected;
+ const estimates=selected.filter(r=>kind(r)!=='baseline').length;
+ document.querySelector('#estimate-status').textContent=`${estimates} model estimates shown alongside ${selected.length-estimates} baseline rows. Estimates are correlated with the baseline routes, not extra evidence.`;
  filtered=cohort.filter(r=>!r.year||(r.year>=viewMin&&r.year<=viewMax));
  const sourceCount=new Set(filtered.flatMap(r=>(r.source_record_ids||[r.configuration_id]).map(id=>(r.generation||r.route)+':'+id))).size;
  document.querySelector('#count').textContent=`${sourceCount} source records · ${filtered.filter(r=>kind(r)==='joint').length} paired estimates · ${filtered.length} displayed points`;
@@ -359,8 +360,6 @@ document.querySelector('#routes').innerHTML='<legend>Benchmark routes</legend>'+
 document.querySelector('#routes').addEventListener('change',e=>{const name=e.target.dataset.route;if(!name)return;e.target.checked?enabled.add(name):enabled.delete(name);page=0;draw();});
 document.querySelector('#scores').addEventListener('change',e=>{const mode=e.target.dataset.mode;if(!mode)return;e.target.checked?enabledModes.add(mode):enabledModes.delete(mode);page=0;draw();});
 document.querySelector('#estimates').addEventListener('change',e=>{const k=e.target.dataset.estimate;if(!k)return;e.target.checked?enabledEstimates.add(k):enabledEstimates.delete(k);page=0;draw();});
-function setMatching(value){matching=value;for(const p of ['strict','ram-aliases','cpu-clock'])document.querySelector('#match-'+p).checked=p===value;document.querySelector('#fit-policy').value=value;page=0;draw();resetLineage();drawFit();calculatorView();}
-document.querySelector('#matching').addEventListener('change',e=>setMatching(e.target.value));
 function bindListBrowsing(suffix){
  for(const [id,delta] of [['table-prev',-1],['table-next',1]])document.querySelector('#'+id+suffix).addEventListener('click',()=>{page+=delta;renderTable();});
  document.querySelector('#page-jump'+suffix).addEventListener('submit',e=>{e.preventDefault();const n=Number(document.querySelector('#goto-page'+suffix).value);const max=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));if(!Number.isInteger(n)||n<1||n>max)return;page=n-1;renderTable();});

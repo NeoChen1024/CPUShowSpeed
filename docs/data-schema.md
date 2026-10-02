@@ -410,7 +410,8 @@ changed.
 
    By user decision (2026-10-02) step 5 is compared with the former products, not
    held to parity: identity and dates were redesigned in steps 2–4, so coefficients
-   change and each change is reported. The frontend may stay broken meanwhile.
+   change and each change is reported. The timeline page was reworked for the
+   new rows on 2026-10-03.
 
 `data validate` and `data build` were implemented in step 1 and are extended per step.
 

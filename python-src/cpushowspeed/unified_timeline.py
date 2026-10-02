@@ -283,8 +283,7 @@ def timeline_command(database, output_dir):
             raise ValueError("duplicate timeline record")
         output_dir.mkdir(parents=True, exist_ok=True)
         lineage = build_lineage(output_dir / "vaxen-timeline.html")
-        lineage["rate_edges"], lineage["experiments"] = {}, {}
-        calculator, calculator_hashes = calculator_payload({})
+        calculator, calculator_hashes = calculator_payload()
         lineage["input_sha256"].update(calculator_hashes)
         render_html(rows, output_dir / "vaxen-timeline.html", lineage=lineage, calculator=calculator)
         audit = dict(

@@ -1,83 +1,111 @@
-"""Offline predictor UI; export existing coefficients and aligned historical draws."""
+"""Offline predictor UI; export saved coefficients and aligned historical draws."""
 
 import hashlib
 import json
-import math
 from pathlib import Path
 
 import numpy as np
 from cpushowspeed.calibration import ANCHOR
 from cpushowspeed.classic_predict import OPTIONS, predict_scores
+from cpushowspeed.mix_network import OUTPUT as MIX_OUTPUT
+from cpushowspeed.mix_network import TIMELINE_RUN
 from cpushowspeed.research_io import read_csv
+from cpushowspeed.spec_predictors import RESEARCH as PREDICTOR_RESEARCH
 
-HISTORICAL_INPUTS = [
-    *[
-        (
-            key,
-            metric,
-            {
-                "dhrystone_1_1": "Dhrystone 1.1",
-                "dhrystone_2_1": "Dhrystone 2.1",
-                "whetstone_sp": "Whetstone SP",
-                "whetstone_dp": "Whetstone DP",
-                "whetstone_native": "Whetstone Native",
-                "linpack_100": "LINPACK N=100",
-            }[key],
-            unit,
-        )
-        for key, (metric, unit) in OPTIONS.items()
-    ],
+CLASSICAL_LABELS = {
+    "dhrystone_1_1": "Dhrystone 1.1",
+    "dhrystone_2_1": "Dhrystone 2.1",
+    "whetstone_sp": "Whetstone SP",
+    "whetstone_dp": "Whetstone DP",
+    "whetstone_native": "Whetstone Native",
+    "linpack_100": "LINPACK N=100",
+}
+HISTORICAL_INPUTS = [(key, metric, CLASSICAL_LABELS[key], unit) for key, (metric, unit) in OPTIONS.items()] + [
+    ("gibson", "InstructionMix:Gibson_KIPS", "Gibson mix", "KIPS"),
+    ("adp", "InstructionMix:ADP_KIPS", "ADP mix", "KIPS"),
 ]
+RATE_CHAIN = Path("research/data/spec/fitting/integer-rate-chain-intervals.csv")
+RATE_SCENARIO = "same_os"
 
 
-def calculator_payload(bundles):
+def _network(draws, metrics, rows, low_key, high_key, name):
+    """Coefficients and aligned log draws of one saved network, after checking draws reproduce its intervals."""
+    coefficients = {r["metric"]: float(r["coefficient_vaxen_per_score"]) for r in rows}
+    if (
+        set(metrics) != set(coefficients)
+        or (draws.ndim != 2 or draws.shape[1] != len(metrics) or len(draws) < 100)
+        or not np.isfinite(draws).all()
+    ):
+        raise ValueError("inconsistent historical predictor bundle: " + name)
+    by_metric = {r["metric"]: r for r in rows}
+    for i, metric in enumerate(metrics):
+        low, high = np.quantile(np.exp(draws[:, i]), [0.025, 0.975])
+        if not np.allclose(
+            [low, high], [float(by_metric[metric][low_key]), float(by_metric[metric][high_key])], rtol=1e-12, atol=0
+        ):
+            raise ValueError(f"{name} draw column / interval mismatch: {metric}")
+    return dict(coefficients=coefficients, draws={m: draws[:, i].tolist() for i, m in enumerate(metrics)})
+
+
+def calculator_payload():
     """Keep exact draw alignment. Never combine marginal interval endpoints."""
     networks, hashes = {}, {}
-    for name, root in (("classical", Path("data/derived/classic/network-fit")),):
-        paths = [root / "coefficients.csv", root / "coefficient-log-draws.npz"]
-        metadata = root / "prediction-calibration.json"
-        paths.append(metadata)
-        info = json.loads(metadata.read_text())
-        run = next(r for r in info["runs"] if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89")
-        metrics = run["metrics"]
-        # Validate the existing CLI bundle contract before embedding its bytes.
-        predict_scores({metrics[0]: 1}, root)
-        rows = [r for r in read_csv(paths[0]) if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89"]
-        coefficients = {r["metric"]: float(r["coefficient_vaxen_per_score"]) for r in rows}
-        with np.load(paths[1], allow_pickle=False) as archive:
-            draws = archive["linear_clock__with_spec89"]
-        if (
-            set(metrics) != set(coefficients)
-            or (draws.ndim != 2 or draws.shape[1] != len(metrics) or len(draws) < 100)
-            or not np.isfinite(draws).all()
-        ):
-            raise ValueError("inconsistent historical predictor bundle: " + name)
-        low_key, high_key = "factor_ci95_low", "factor_ci95_high"
-        by_metric = {r["metric"]: r for r in rows}
-        for i, metric in enumerate(metrics):
-            low, high = np.quantile(np.exp(draws[:, i]), [0.025, 0.975])
-            if not np.allclose(
-                [low, high], [float(by_metric[metric][low_key]), float(by_metric[metric][high_key])], rtol=1e-12, atol=0
-            ):
-                raise ValueError("historical draw column / interval mismatch: " + metric)
-        networks[name] = dict(coefficients=coefficients, draws={m: draws[:, i].tolist() for i, m in enumerate(metrics)})
-        for path in paths:
-            hashes[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
+    root = Path("data/derived/classic/network-fit")
+    paths = [root / "coefficients.csv", root / "coefficient-log-draws.npz", root / "prediction-calibration.json"]
+    run = next(
+        r for r in json.loads(paths[2].read_text())["runs"] if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89"
+    )
+    # Validate the existing CLI bundle contract before embedding its bytes.
+    predict_scores({run["metrics"][0]: 1}, root)
+    rows = [r for r in read_csv(paths[0]) if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89"]
+    with np.load(paths[1], allow_pickle=False) as archive:
+        networks["classical"] = _network(
+            archive["linear_clock__with_spec89"], run["metrics"], rows, "factor_ci95_low", "factor_ci95_high", "classical"
+        )
+    mix_paths = [MIX_OUTPUT / "coefficients.csv", MIX_OUTPUT / "coefficient-log-draws.npz", MIX_OUTPUT / "audit.json"]
+    mix_run = next(r for r in json.loads(mix_paths[2].read_text())["runs"] if all(r[k] == v for k, v in TIMELINE_RUN.items()))
+    mix_rows = [r for r in read_csv(mix_paths[0]) if all(r[k] == v for k, v in TIMELINE_RUN.items())]
+    with np.load(mix_paths[1], allow_pickle=False) as archive:
+        networks["mixes"] = _network(
+            archive[mix_run["draw_key"]], mix_run["metrics"], mix_rows, "ci95_vaxen_low", "ci95_vaxen_high", "mixes"
+        )
     bridge_path = Path("research/data/classic/spec89-rate-bridge-summary.csv")
-    hashes[str(bridge_path)] = hashlib.sha256(bridge_path.read_bytes()).hexdigest()
+    summary_path = PREDICTOR_RESEARCH / "summary.csv"
+    for path in [*paths, *mix_paths, bridge_path, RATE_CHAIN, summary_path]:
+        hashes[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
     legacy = {}
     for row in read_csv(bridge_path):
         generation = {"int89_to_rate92_chained": "cpu89", "int92_to_rate92": "cpu92"}.get(row["edge"])
         if generation:
             # These saved factors already target VAXen, despite historical column labels.
             legacy[generation] = [float(row[key]) for key in ("factor", "factor_ci95_low", "factor_ci95_high")]
+    rates = [
+        dict(
+            generation=r["generation"],
+            mode=r["mode"],
+            values=[float(r[k]) for k in ("vaxen_per_rate_score", "bootstrap_95_low", "bootstrap_95_high")],
+        )
+        for r in read_csv(RATE_CHAIN)
+        if r["scenario"] == RATE_SCENARIO
+    ]
+    predictors = [
+        dict(
+            generation=r["new_generation"],
+            mode=r["mode"],
+            method=r["method"],
+            values=[float(r[k]) for k in ("coefficient_vaxen", "vaxen_ci95_low", "vaxen_ci95_high")],
+        )
+        for r in read_csv(summary_path)
+        if r["status"] == "conditional_fit"
+    ]
     return (
         dict(
             historical_inputs=HISTORICAL_INPUTS,
             networks=networks,
             anchor=ANCHOR,
             legacy=legacy,
-            rates={policy: list(bundle[1].values()) for policy, bundle in bundles.items()},
+            rates=rates,
+            predictors=predictors,
         ),
         hashes,
     )
@@ -123,7 +151,7 @@ MARKUP = """
 <div id="calc-historical">
 <div class="calc-fields">__HISTORICAL_FIELDS__</div>
 <p class="hint">Dhrystone 1.1 / 2.1 use DMIPS; divide Dhrystones/s by 1757 first. Whetstone Native is distinct from SP and DP.
-Mix inputs use the calibrated CCTA/TSU Gibson / ADP definitions.</p></div>
+Gibson and ADP mix ratings use CCTA KIPS; adding them selects the classical + mix joint model.</p></div>
 <div id="calc-spec" hidden>
 <div class="calc-fields">
 <label>Generation <select id="calc-generation">
@@ -210,7 +238,7 @@ function historicalPrediction(scores){
  return {label:'Historical estimate',values,details:metrics.map(m=>({metric:m,weight:weights[m],vaxen:scores[m]*network.coefficients[m]})),
   path:metrics.some(m=>m.startsWith('InstructionMix:'))?'Mix + classical joint model → VAXen':'Classical joint model → VAXen'};
 }
-function specPrediction(generation,mode,speed,rate,policy){
+function specPrediction(generation,mode,speed,rate){
  speed=positiveInput(speed,'Speed');rate=positiveInput(rate,'Rate');
  if(speed===null&&rate===null)throw Error('Enter a speed score, a rate score, or both.');
  if(generation==='cpu89'&&(rate!==null||mode!=='peak'))throw Error('SPEC89 supports native integer speed only.');
@@ -225,13 +253,12 @@ function specPrediction(generation,mode,speed,rate,policy){
   if(results.length===2)for(const r of results)r.note='Separate estimates: no joint SPEC92 speed/rate coefficient is calibrated.';
  }else{
   const method=speed!==null&&rate!==null?'equal_geometric':speed!==null?'speed_only':'backbone';
-  const fit=method==='backbone'?calibration.rates[policy]?.find(r=>r.generation===generation&&r.mode===mode):
-   lineage.experiments?.[policy]?.fits.find(r=>r.new_generation===generation&&r.mode===mode&&r.method===method);
-  const keys=method==='backbone'?['coefficient','ci95_low','ci95_high']:['coefficient_vaxen','vaxen_ci95_low','vaxen_ci95_high'];
-  if(!fit||keys.some(k=>!Number.isFinite(Number(fit[k]))||Number(fit[k])<=0))throw Error('No supported coefficient for this selection. Choose another matching policy or input combination.');
+  const fit=method==='backbone'?calibration.rates.find(r=>r.generation===generation&&r.mode===mode):
+   calibration.predictors.find(r=>r.generation===generation&&r.mode===mode&&r.method===method);
+  if(!fit||fit.values.some(k=>!Number.isFinite(Number(k))||Number(k)<=0))throw Error('No supported coefficient for this selection: too few hardware-near tuples. Enter the rate score alone.');
   const score=method==='equal_geometric'?Math.exp((Math.log(speed)+Math.log(rate))/2):speed??rate;
-  results.push(product(score,keys.map(k=>fit[k]),method==='equal_geometric'?'Joint speed + rate estimate':method==='speed_only'?'Speed-derived estimate':'Rate estimate',
-   method==='backbone'?'Rate backbone → SPEC92 rate → VAXen':(method==='equal_geometric'?'sqrt(speed × rate)':'speed')+' → local predictor → upstream rate chain → VAXen'));
+  results.push(product(score,fit.values,method==='equal_geometric'?'Joint speed + rate estimate':method==='speed_only'?'Speed-derived estimate':'Rate estimate',
+   method==='backbone'?'Rate chain → SPEC92 rate → VAXen':(method==='equal_geometric'?'sqrt(speed × rate)':'speed')+' → local predictor → upstream rate chain → VAXen'));
  }
  if(results.some(r=>!r.values.every(v=>Number.isFinite(v)&&v>0)))throw Error('Result exceeds the supported numeric range.');
  return results;
@@ -242,7 +269,7 @@ function calculatorView(){
  for(const [key] of calibration.historical_inputs)document.querySelector('#calc-'+key).disabled=spec;
  for(const id of ['calc-speed','calc-rate'])document.querySelector('#'+id).disabled=!spec;
  document.querySelector('#calc-spec').hidden=!spec;document.querySelector('#calc-historical').hidden=spec;
- document.querySelector('#calc-policy').textContent='Matching: '+matching+' · shared with the timeline. SPEC fits are provisional pending execution-resource review. SPEC95–2026: both scores use the joint predictor; rate alone uses the full rate backbone.';
+ document.querySelector('#calc-policy').textContent='SPEC95–2026: rate alone uses the saved rate chain; speed alone or speed + rate use the hardware-near predictors. Speed-only estimates of multi-core machines are weak.';
  document.querySelector('#calc-result').innerHTML='';
 }
 function runCalculator(){
@@ -251,7 +278,7 @@ function runCalculator(){
   let results;
   if(document.querySelector('#calc-kind-spec').checked){
    results=specPrediction(document.querySelector('#calc-generation').value||'cpu92',document.querySelector('#calc-mode').value||'peak',
-    document.querySelector('#calc-speed').value,document.querySelector('#calc-rate').value,matching);
+    document.querySelector('#calc-speed').value,document.querySelector('#calc-rate').value);
   }else{
    const scores={};for(const [key,metric,label] of calibration.historical_inputs){const score=positiveInput(document.querySelector('#calc-'+key).value,label);if(score!==null)scores[metric]=score;}
    results=[historicalPrediction(scores)];
@@ -271,43 +298,3 @@ document.querySelector('#calc-clear').addEventListener('click',()=>{
 });
 calculatorView();
 """
-
-
-def rate_edge_metadata(bundles):
-    """Read local edge intervals from coherent saved prefix draws, without refitting."""
-    result, hashes = {}, {}
-    generations = ["cpu95", "cpu2000", "cpu2006", "cpu2017", "cpu2026"]
-    for policy, bundle in bundles.items():
-        root = Path("data/derived/spec/joint-tracks") / (policy if policy != "strict" else "")
-        path = root / "coefficient-draws.npz"
-        hashes[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
-        pairs_path = root / "rate-backbone-pairs.csv"
-        hashes[str(pairs_path)] = hashlib.sha256(pairs_path.read_bytes()).hexdigest()
-        pairs = read_csv(pairs_path)
-        result[policy] = []
-        with np.load(path, allow_pickle=False) as draws:
-            for i, generation in enumerate(generations):
-                older = generations[i - 1] if i else "cpu92"
-                for mode in ("base", "peak"):
-                    newer = bundle[1][generation, mode]
-                    prior = bundle[1][older, mode] if i else {"coefficient": ANCHOR}
-                    samples = draws[f"backbone__{generation}__{mode}__log_vaxen"] - (
-                        draws[f"backbone__{older}__{mode}__log_vaxen"] if i else math.log(ANCHOR)
-                    )
-                    low, high = np.quantile(np.exp(samples[np.isfinite(samples)]), [0.025, 0.975])
-                    cohort = [r for r in pairs if r["new_generation"] == generation and r[mode + "_ratio"]]
-                    result[policy].append(
-                        dict(
-                            generation=generation,
-                            mode=mode,
-                            factor=float(newer["coefficient"]) / float(prior["coefficient"]),
-                            low=float(low),
-                            high=float(high),
-                            pairs=len(cohort),
-                            groups=len(
-                                {(r["processor_key"], int(r["chips"]), round(float(r["old_clock_mhz"]), 1)) for r in cohort}
-                            ),
-                            unit=f"{older.upper()} rate / {generation.upper()} rate",
-                        )
-                    )
-    return result, hashes

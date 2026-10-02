@@ -1,9 +1,9 @@
 # Unified historical and SPEC rate timeline
 
-Reviewed: 2026-10-02. Status: rebuilt on the schema database (step 5d,
-`vaxen-timeline-v3`), with mix, speed and joint estimate rows restored the same
-day; the page frontend was not updated and parts of it are broken (see below).
-Sections after the first two describe earlier exports.
+Reviewed: 2026-10-03. Status: rebuilt on the schema database (step 5d,
+`vaxen-timeline-v3`), with mix, speed and joint estimate rows restored on
+2026-10-02 and the page reworked for them on 2026-10-03. Sections from
+"Checked population (2026-09-28)" on describe earlier exports.
 
 The [shared contract and commands](../docs/timeline.md) combine saved calibration
 with the database results. No fitting, score scaling by processor count, or
@@ -73,9 +73,7 @@ the spelling merges below), from the refitted coefficients.
   were the union of three policies' calibration pairs, so the rows are not
   compared one to one.
 
-The page still expects per-policy `variants`. The offline JavaScript
-full-population test fails on its hard-coded counts, and the calculator does not
-yet receive the mix or predictor bundles.
+The page was reworked for these rows on 2026-10-03 (next sections but one).
 
 ## Spelling merges, pair reviews and EPYC review — 2026-10-02
 
@@ -90,6 +88,32 @@ Dhrystone −4.1% to −4.2%, Whetstone −4.2% to −5.6%, LINPACK −19.6%; se
 and mix rows the refitted mix coefficients (Gibson −7.7%, ADP −6.3% against the
 step-5 refit). SPEC89 values are unchanged; 2 of their rows carry a merged
 system ID. SPEC rate, speed and joint rows are unchanged.
+
+## Page rework — 2026-10-03
+
+Same 115,335 records and values; only the page, lineage and calculator payloads
+changed ([contract](../docs/timeline.md#estimate-filters-and-related-rows)).
+
+- **Default view.** Baseline plus combined mixes (60,819 points); the former
+  page's default likewise hid single Gibson/ADP ratings. Single mixes, speed
+  and joint rows are now selected by estimate kind instead of route.
+- **Removed.** The matching selector and per-policy variants; the joint tooltip's
+  "rate-only — matched cohort" value, which belonged to a removed experiment.
+- **Related rows** come from shared source result IDs and the resolved
+  `system_id`, replacing name-derived comparison keys.
+- **Lineage.** Gibson/ADP → classical + mix model → VAXen, and speed predictor
+  nodes for CPU95, 2006, 2017 and 2026 into the older rate. The fit panel plots
+  the 420 hardware-near tuples with the saved local factors.
+- **Calculator.** Mix inputs use the mix network's timeline run; SPEC rate alone
+  uses the `same_os` chain the timeline uses (formerly the RAM + aliases
+  backbone); speed and speed + rate use the hardware-near predictors.
+
+Checked: the full-population Node test reproduces a CPU2017 rate row, a CPU2026
+joint row, a Gibson row and a two-rating combined mix through the calculator
+(relative error below 1e-6), and each scatterplot draws exactly the boundary's
+tuple count, which equals the saved summary's. In Chromium (2026-10-03) the page
+loaded with no console errors; the lineage graph, the all-kinds scatterplot and a
+pinned CPU2006 tooltip were inspected.
 
 ## Checked population (2026-09-28)
 

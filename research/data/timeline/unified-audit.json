@@ -2,16 +2,23 @@
   "schema_version": "vaxen-timeline-v3",
   "database": "data/derived/schema/cpushowspeed.sqlite",
   "inputs_sha256": "1fa01ab58edaf27225d6102ac2790ecd99ecdcbba43c3ef81008e1aa9cf473c0",
-  "web_manifest_sha256": "ff96e47e997cb72cf8e8f35a9370c83893dd7b415517008505cbf46503520b63",
+  "web_manifest_sha256": "ff2fc2093e8864e978d0a04367c96a68e725b498d7f19b9c481f88e40d65ba90",
   "lineage_inputs_sha256": {
     "research/model-registry.json": "ce49e5e286ac77e3edcb32e06b82b68f25051068343fb4418f92cc2dba9761ac",
     "research/data/spec/fitting/integer-rate-edge-intervals.csv": "da9bc031a120ff9f55fe945f012676310bd3b59a639f648c524b983ca6e01d51",
     "research/data/classic/spec89-rate-bridge-summary.csv": "47944744b8b75370e9f096d221202f7cc6a0477b9f581407f7e24400098062bf",
     "research/data/classic/spec89-rate-bridge-evidence.csv": "f3e19880479b4091041ae9be40729e202d15e5491993999bf5dec92de7a035de",
     "research/data/classic/network-coefficients.csv": "9826a774359c639aed6e922b1ad5f38ce966a965d78227a0a0354bf6e9fee4c4",
+    "research/data/classic/mix-network-coefficients.csv": "84fe6caba7b0e43d6f609c279bc3f7ca86e608a170936eaf6f2f6d6c530ae346",
+    "research/data/spec/speed-predictors/summary.csv": "de52fe2171548c24e0c6337d8ebfbfd8725818d2fd2d911d6e47db980a13ca47",
+    "data/derived/spec/speed-predictors/tuples.csv": "fc5428b75a876a6ef8e5dcb73f1419f6a35eb62a5a2cbfc395c4f1f82c780099",
     "data/derived/classic/network-fit/coefficients.csv": "9826a774359c639aed6e922b1ad5f38ce966a965d78227a0a0354bf6e9fee4c4",
     "data/derived/classic/network-fit/coefficient-log-draws.npz": "ca5771820f93685eb5c7e789cc525f91008594b7538a70113682cedb550e6ba4",
-    "data/derived/classic/network-fit/prediction-calibration.json": "5d09c32e2b0145ca6091e5974affc7f9d7188f880847c04ebe00ddcd3e353c42"
+    "data/derived/classic/network-fit/prediction-calibration.json": "5d09c32e2b0145ca6091e5974affc7f9d7188f880847c04ebe00ddcd3e353c42",
+    "data/derived/classic/mix-network-fit/coefficients.csv": "84fe6caba7b0e43d6f609c279bc3f7ca86e608a170936eaf6f2f6d6c530ae346",
+    "data/derived/classic/mix-network-fit/coefficient-log-draws.npz": "79000fff8a1af380d1c2cc6fa4eedc5a605e6fd2d31ec743e0211296bfec1e1d",
+    "data/derived/classic/mix-network-fit/audit.json": "482657cec38ff349e35ad5c4dd7b5efd633b776c276ccf2a79e186fa9a1463b7",
+    "research/data/spec/fitting/integer-rate-chain-intervals.csv": "9223a0b85bb0e2f54bf87c2248ac96db03f214db8cc12ebfb868c6e2bdfb6723"
   },
   "records": 115335,
   "spec_rate": 58813,
@@ -109,11 +116,11 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_chain.py": "395583d5e73813e7b0a5cde94058cfc3e47421187f9d4231ce8a11f17916e780",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_fit.py": "6442ae290031fb6f4b271936671c5a539ebd413aeddae655ab3c8ec3ae422ff8",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_inputs.py": "59bacffa8dc665fffc8683efe96f300e9c541cbaf869ec1a1111efeebfbcc56e",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_calculator.py": "844dd5f0dbad74e6225b4170628f527aff5899905e075692751bd6bc59f0d05b",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_calculator.py": "5854af87956f734bc1eecc8f5ae2efd58914e9fe414003f0403ef6c7e46a8b60",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_estimates.py": "6bdba608a88647e327cffc1b740140914446dfed48edc80c9e85c61478e06997",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_html.py": "b64175ac7e0fc8ed7a826e3e480837b3e680d296919b107d489dcceb3a56a56d",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_lineage.py": "74a731f0ac1bbe1536d66eafabb437e5f0508480fd09c322f6520dfa1eb438ea",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_html.py": "bf4f572e04cf05550b013cd81c3b475bc59eafc2f1a480f824bbf14b27e548ad",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_lineage.py": "50bc1876bc86072ffd3811f050db045404e64f387261ac785dedc3c97e0a86dc",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_storage.py": "7cce75ad1d0096cdb2efc3d6dd1653b36189716920e0d449a0629324fe6d9dcf",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/unified_timeline.py": "97859cdd7091e1390f952ca63516e9e2c76f4caff2ef216e21e0bb1c50da1243"
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/unified_timeline.py": "1fd277f7eca551deae9c18520a6ae8f6fda0f87f9715a36fc8f6f65ab2928578"
   }
 }
