@@ -11,7 +11,8 @@ row schema; tables are JSONL, one row per line, sorted by primary key.
 | `processor_sku.jsonl` | `processor_sku`: sold processor models | 2026-10-02 |
 | `alias.jsonl` | `alias`: exact-text, pattern and rule links from text to entities | 2026-10-02 |
 | `vendor.jsonl` | `vendor`: hardware vendors and their model prefixes | 2026-10-02 |
-| `system_model.jsonl` | `system_model`: hand-curated machines (empty; SPEC models are derived) | 2026-10-02 |
+| `system_model.jsonl` | `system_model`: curated machines and canonical names; other models are rule-derived | 2026-10-02 |
+| `date_event.jsonl` | `date_event`: dated events of processors and system models | 2026-10-02 |
 
 Edit rows directly, then run:
 

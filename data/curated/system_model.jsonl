@@ -1,10 +1,160 @@
+{"system_id": "sys:1000e", "name": "HP 1000E", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:1000f", "name": "HP 1000F", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:1106ii", "name": "UNIVAC 1106 II", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:1106multiprocessor", "name": "UNIVAC 1106 multiprocessor", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:1106unitizedstorage", "name": "UNIVAC 1106 Unitized Storage", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:1108multiprocessor", "name": "UNIVAC 1108 multiprocessor", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:3000cx", "name": "HP 3000CX", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:3000series33", "name": "HP 3000 Series 33", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:3000seriesi", "name": "HP 3000 Series I", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:3000seriesii", "name": "HP 3000 Series II", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:3000seriesii/6", "name": "HP 3000 Series II Model 6", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:3000seriesii/8", "name": "HP 3000 Series II Model 8", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:3000seriesiii", "name": "HP 3000 Series III", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:370/115125135memoryexpansions", "name": "IBM 370/115 125 135 memory expansions", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:386i/250", "name": "Sun 386i/250", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:4/50ipx", "name": "Sun 4/50 IPX", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:4331mg2", "name": "IBM 4331 MG2", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:4341mg10", "name": "IBM 4341 MG10", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:4361mg5", "name": "IBM 4361 MG5", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:4381mg1/2", "name": "IBM 4381 MG1/2", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:470/v7", "name": "Amdahl 470/V7", "vendor_ids": ["org:amdahl"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:470v/8", "name": "Amdahl 470V/8", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:4d/35", "name": "SGI IRIS 4D/35", "vendor_ids": ["org:sgi"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:5890190e", "name": "Amdahl 5890-190E", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:5890200e", "name": "Amdahl 5890-200E", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:5890300e", "name": "Amdahl 5890-300E", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:5890390e", "name": "Amdahl 5890-390E", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:5890400e", "name": "Amdahl 5890-400E", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:5890600e", "name": "Amdahl 5890-600E", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:670mp", "name": "Sun 670MP", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:690mp", "name": "Sun 690MP", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:7007n40", "name": "IBM 7007-N40", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:7008m20", "name": "IBM 7008-M20", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:7008m2a", "name": "IBM 7008-M2A", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:701232h", "name": "IBM 7012-32H", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:701234h", "name": "IBM 7012-34H", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:701352h", "name": "IBM 7013-52H", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:701353h", "name": "IBM 7013-53H", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:701355l", "name": "IBM 7013-55L", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:701358h", "name": "IBM 7013-58H", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:acorna5000", "name": "Acorn A5000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:acornriscpc", "name": "Acorn RiscPC", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alliantfx/2800", "name": "Alliant FX/2800", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alliantfx/40andfx/80", "name": "Alliant FX/40 and FX/80", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:alliantfx/80", "name": "Alliant FX/80", "vendor_ids": ["org:alliant"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:alphaserver21004/200", "name": "AlphaServer 2100 4/200", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver21004/233", "name": "AlphaServer 2100 4/233", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver21004/275", "name": "AlphaServer 2100 4/275", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver21005/250", "name": "AlphaServer 2100 5/250", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver21005/300", "name": "AlphaServer 2100 5/300", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver8400", "name": "AlphaServer 8400", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alphaserver84005/300", "name": "AlphaServer 8400 5/300", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver84005/350", "name": "AlphaServer 8400 5/350", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver84005/440", "name": "AlphaServer 8400 5/440", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver84005/625", "name": "AlphaServer 8400 5/625", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver84005/625cluster", "name": "AlphaServer 8400 5/625 Cluster", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserver84006/575", "name": "Digital AlphaServer 8400 6/575", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:alphaserverds20", "name": "AlphaServer DS20", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alphaserveres4568/1250", "name": "hp AlphaServer ES45 68/1250(1 proc)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alphaserveres47", "name": "AlphaServer ES47", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alphaserveres80", "name": "AlphaServer ES80", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alphaservergs1280", "name": "AlphaServer GS1280", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alphastation2004/166", "name": "DEC AlphaStation 200 4/166", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alphastation2504/266", "name": "DEC AlphaStation 250 4/266", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alphastation500/500", "name": "DEC AlphaStation 500/500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:alphastation6005/266", "name": "DEC AlphaStation 600 5/266", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5840", "name": "Amdahl 5840", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5850", "name": "Amdahl 5850", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5860", "name": "Amdahl 5860", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5867", "name": "Amdahl 5867", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5868", "name": "Amdahl 5868", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5870", "name": "Amdahl 5870", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5880", "name": "Amdahl 5880", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5890200", "name": "Amdahl 5890-200", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5890300", "name": "Amdahl 5890-300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5890600", "name": "Amdahl 5890-600", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl59901400", "name": "Amdahl 5990-1400", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amdahl5990700", "name": "Amdahl 5990-700", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amiga1000", "name": "Amiga 1000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:amiga4000/040", "name": "Amiga 4000/040", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn100", "name": "Apollo DN100", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn10000", "name": "Apollo DN10000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn300", "name": "Apollo DN300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn3000", "name": "Apollo DN3000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn320", "name": "Apollo DN320", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn330", "name": "Apollo DN330", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn370", "name": "Apollo DN370", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn420", "name": "Apollo DN420", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn460", "name": "Apollo DN460", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn550", "name": "Apollo DN550", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn560", "name": "Apollo DN560", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn570", "name": "Apollo DN570", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn570a", "name": "Apollo DN570A", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn580", "name": "Apollo DN580", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn600", "name": "Apollo DN600", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn660", "name": "Apollo DN660", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:apollodn660a", "name": "Apollo DN660A", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:att3b2/300", "name": "AT&T 3B2/300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:att3b2/400", "name": "AT&T 3B2/400", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:attpc6300", "name": "AT&T PC6300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:attpc6300plus", "name": "AT&T PC6300 Plus", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:attpc7300", "name": "AT&T PC7300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:c160", "name": "HP C160", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:c200", "name": "HP C200", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:c240", "name": "HP C240", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:c90", "name": "Cray C90", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc1700", "name": "CDC 1700", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc3100", "name": "CDC 3100", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc3150", "name": "CDC 3150", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc3170", "name": "CDC 3170", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc3200", "name": "CDC 3200", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc3300", "name": "CDC 3300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc3500", "name": "CDC 3500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc4340", "name": "CDC 4340", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc4360", "name": "CDC 4360", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc4680", "name": "CDC 4680", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc6200", "name": "CDC 6200", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc6400", "name": "CDC 6400", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cdc6500", "name": "CDC 6500", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cdc6600", "name": "CDC 6600", "vendor_ids": ["org:control-data"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:cdc6700", "name": "CDC 6700", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cdc7600", "name": "CDC 7600", "vendor_ids": ["org:control-data"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:commodore64", "name": "Commodore 64", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cray2s", "name": "CRAY-2S", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cray3", "name": "Cray-3", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:crimson", "name": "SGI Crimson", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cromemcoz2", "name": "Cromemco Z2", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber172", "name": "CDC Cyber 172", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cyber173", "name": "CDC Cyber 173", "vendor_ids": ["org:control-data"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:cyber174", "name": "CDC Cyber 174", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber175", "name": "CDC Cyber 175", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber1810", "name": "CDC Cyber 18-10", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber1820", "name": "CDC Cyber 18-20", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber1830", "name": "CDC Cyber 18-30", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber18family", "name": "CDC Cyber 18 family", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber72", "name": "CDC Cyber 72", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber73", "name": "CDC Cyber 73", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber74", "name": "CDC Cyber 74", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber76", "name": "CDC Cyber 76", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber810a", "name": "CDC Cyber 810A", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber830a", "name": "CDC Cyber 830A", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber830adualcp", "name": "CDC Cyber 830A Dual-CP", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystem520", "name": "DEC Datasystem 520", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystem530", "name": "DEC Datasystem 530", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystem540", "name": "DEC Datasystem 540", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystem550", "name": "DEC Datasystem 550", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystem560", "name": "DEC Datasystem 560", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystem700", "name": "DEC Datasystem 700", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystem800", "name": "DEC Datasystem 800", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystemd530", "name": "DEC Datasystem D530", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystemd570", "name": "DEC Datasystem D570", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystemst30", "name": "DEC Datasystem ST30", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:datasystemst70", "name": "DEC Datasystem ST70", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:dec10000", "name": "DEC 10000", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:dec10000/610", "name": "DEC 10000 Model 610 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:dec10000/640", "name": "DEC 10000/640 AXP", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:dec2000300", "name": "DEC 2000-300", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:dec3000/300", "name": "DEC 3000 Model 300 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec3000/400", "name": "DEC 3000 Model 400 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec3000/500", "name": "DEC 3000 Model 500 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
@@ -12,10 +162,20 @@
 {"system_id": "sys:dec3000/700", "name": "DEC 3000 Model 700 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec3000/800", "name": "DEC 3000 Model 800 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:dec3000/900", "name": "DEC 3000 Model 900 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:dec3000600", "name": "DEC 3000-600", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:dec3000800", "name": "DEC 3000-800", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:dec4000", "name": "DEC 4000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:dec4000/5/400", "name": "DEC 4000/5/400", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:dec4000/610", "name": "DEC 4000 Model 610 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:dec4000/620", "name": "DEC 4000/620 AXP", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:dec4000/710", "name": "DEC 4000 Model 710 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:dec7000/600", "name": "DEC 7000/600 AXP", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:dec7000/610", "name": "DEC 7000 Model 610 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:dec7000/620", "name": "DEC 7000 Model 620", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:dec7000/630", "name": "DEC 7000/630 AXP", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:dec7000/640", "name": "DEC 7000 Model 640", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:dec7000/700", "name": "DEC 7000 Model 700 AXP", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:dec7000/710", "name": "DEC 7000 Model 710", "note": "Model with a reviewed year proxy; added 2026-10-02."}
 {"system_id": "sys:decstation2100", "name": "DECstation 2100", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation3100", "name": "DECstation 3100", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation5000/125", "name": "DECstation 5000 Model 125", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
@@ -24,27 +184,224 @@
 {"system_id": "sys:decstation5000/200", "name": "DECstation 5000 Model 200", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation5000/240", "name": "DECstation 5000 Model 240", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:decstation5000/25", "name": "Personal DECstation 5000 Model 25", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:decstation5000/33", "name": "DECstation 5000/33", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:decsystem10", "name": "DECsystem-10", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:decsystem5000/200", "name": "DECsystem 5000/200", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:decsystem5100", "name": "DECsystem 5100", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:decsystem5500", "name": "DECsystem 5500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:decsystem5810", "name": "DECsystem 5810", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:decsystem5820", "name": "DECsystem 5820", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:decsystem5830", "name": "DECsystem 5830", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:decsystem5840", "name": "DECsystem 5840", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:e", "name": "Apple ][e", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:eserverbladecenterjs20", "name": "IBM eServer BladeCenter JS20 (1 proc, 2.2 GHz PowerPC 970)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:eserverpseries640", "name": "IBM eServer pSeries 640 (1 proc,375MHz,4MB L2)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:eserverpseries660/6h11cpu", "name": "IBM eServer pSeries 660/6H1 1 CPU (600 MHz 2 xlf 7.1 -O -Q -qfloat=hsflt -qarch=pwr3 MB L2)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:eserverpseries670", "name": "IBM eServer pSeries 670 (1 proc 1.5GHz)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ferrantiargus700gswf", "name": "Ferranti Argus 700G swf", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:gecelliott903c", "name": "GEC Elliott 903C", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:hp3000", "name": "HP 3000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:hp755", "name": "HP 755", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:hp825", "name": "HP 825", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:hp835", "name": "HP 835", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:hp840", "name": "HP 840", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:hp850", "name": "HP 850", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:hp9000/320", "name": "HP 9000/320", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:hp9000/330", "name": "HP 9000/330", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:hp9000/340", "name": "HP 9000/340", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:hp9000/350", "name": "HP 9000/350", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:hp9000/710", "name": "HP 9000 Model 710", "vendor_ids": ["org:hewlett-packard"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:hp9000/715", "name": "HP 9000 Model 715", "vendor_ids": ["org:hewlett-packard"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:hp9000/720", "name": "HP 9000 Model 720", "vendor_ids": ["org:hewlett-packard"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:hp9000/730", "name": "HP 9000 Model 730", "vendor_ids": ["org:hewlett-packard"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:hp9000/735", "name": "HP 9000 Model 735", "vendor_ids": ["org:hewlett-packard"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:hp9000/750", "name": "HP 9000 Model 750", "vendor_ids": ["org:hewlett-packard"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:i2000", "name": "HP i2000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:i486", "name": "Intel i486", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:i486dx", "name": "i486DX", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:i486dx2", "name": "Intel i486DX2", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:i486dx250", "name": "Intel i486DX2-50", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:i486dx266", "name": "Intel i486DX2-66", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:ibm3033", "name": "IBM 3033", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:ibm360/65", "name": "IBM System/360 Model 65", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:ibm370/115", "name": "IBM 370/115", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/125", "name": "IBM 370/125", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/135", "name": "IBM 370/135", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/138", "name": "IBM 370/138", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/145", "name": "IBM 370/145", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/148", "name": "IBM 370/148", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/155", "name": "IBM 370/155", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/158", "name": "IBM 370/158", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/165", "name": "IBM 370/165", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/168", "name": "IBM 370/168", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm370/195", "name": "IBM 370/195", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm43311", "name": "IBM 4331-1", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7011220", "name": "IBM 7011-220", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7011230", "name": "IBM 7011-230", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7011250", "name": "IBM 7011-250", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7012320", "name": "IBM 7012-320", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7012340", "name": "IBM 7012-340", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7012350", "name": "IBM 7012-350", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7012355", "name": "IBM 7012-355", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7012360", "name": "IBM 7012-360", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7012365", "name": "IBM 7012-365", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7012370", "name": "IBM 7012-370", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7012375", "name": "IBM 7012-375", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7013520", "name": "IBM 7013-520", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7013530", "name": "IBM 7013-530", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7013540", "name": "IBM 7013-540", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7013550", "name": "IBM 7013-550", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7013560", "name": "IBM 7013-560", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7013570", "name": "IBM 7013-570", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7013580", "name": "IBM 7013-580", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7013590", "name": "IBM 7013-590", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7015930", "name": "IBM 7015-930", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7015950", "name": "IBM 7015-950", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7015970", "name": "IBM 7015-970", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7015980", "name": "IBM 7015-980", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm7015990", "name": "IBM 7015-990", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm937020", "name": "IBM 9370-20", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm937040", "name": "IBM 9370-40", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm937060", "name": "IBM 9370-60", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ibm937090", "name": "IBM 9370-90", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl1901a", "name": "ICL 1901A", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl1902a", "name": "ICL 1902A", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl1902s", "name": "ICL 1902S", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl1903a", "name": "ICL 1903A", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl1903s", "name": "ICL 1903S", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl1904a", "name": "ICL 1904A", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl1904s", "name": "ICL 1904S", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:icl1906a", "name": "ICL 1906A", "vendor_ids": ["org:icl"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:icl1906s", "name": "ICL 1906S", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2903/20", "name": "ICL 2903/20", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2903/25", "name": "ICL 2903/25", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2903/30", "name": "ICL 2903/30", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2903/40", "name": "ICL 2903/40", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2904", "name": "ICL 2904", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2904/50", "name": "ICL 2904/50", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2946", "name": "ICL 2946", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2953", "name": "ICL 2953", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2955", "name": "ICL 2955", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2957", "name": "ICL 2957", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2958", "name": "ICL 2958", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2966", "name": "ICL 2966", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2977", "name": "ICL 2977", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2982", "name": "ICL 2982", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl2988", "name": "ICL 2988", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:icl3980", "name": "ICL 3980", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:indigo", "name": "SGI IRIS Indigo", "vendor_ids": ["org:sgi"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:indigo2", "name": "SGI Indigo2", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:indigor3000", "name": "SGI Indigo R3000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:indigor4000", "name": "SGI Indigo R4000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:integrityrx16202", "name": "HP Integrity rx1620-2 (1 proc, 1.6GHz/3MB Itanium 2)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:integrityrx26202", "name": "HP Integrity rx2620-2 (1 proc, 1.6GHz/3MB Itanium 2)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:integrityrx46408", "name": "HP Integrity rx4640-8 (1 proc, 1.6GHz/9MB Itanium 2)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ipc", "name": "Sun IPC", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ipsc/860", "name": "Intel iPSC/860", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:iris1400", "name": "SGI IRIS 1400", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:j90", "name": "Cray J90", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:k460", "name": "HP K460", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:m/1205", "name": "MIPS M/120-5", "vendor_ids": ["org:mips-computer-systems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:m/2000", "name": "MIPS M/2000", "vendor_ids": ["org:mips-computer-systems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:macintoshclassicii", "name": "Macintosh Classic II", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:macintoshii", "name": "Macintosh II", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:macintoshpowerbook1400cs133", "name": "Macintosh PowerBook 1400cs-133", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:macintoshquadra700", "name": "Macintosh Quadra 700", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:macintoshquadra950", "name": "Macintosh Quadra 950", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:macintoshse/30", "name": "Macintosh SE/30", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:maciutcshquadra840av", "name": "Maciutcsh Quadra 840AV", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:magnumr4000", "name": "MIPS Magnum R4000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:magnumrc3230", "name": "MIPS Magnum RC3230", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:meikocomputingsurface", "name": "Meiko Computing Surface", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:meikocs2", "name": "Meiko CS2", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:micropdp11/53", "name": "MicroPDP-11/53", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:micropdp11/53plus", "name": "MicroPDP-11/53 Plus", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:micropdp11/73", "name": "MicroPDP-11/73", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:micropdp11/73plus", "name": "MicroPDP-11/73 Plus", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:micropdp11/83", "name": "MicroPDP-11/83", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:micropdp11/83plus", "name": "MicroPDP-11/83 Plus", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:micropdp11/93", "name": "MicroPDP-11/93", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:microvaxii", "name": "DEC MicroVAX II", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:multiflowtrace14/200", "name": "Multiflow TRACE 14/200", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:n4000", "name": "HP N4000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:nextstation", "name": "NeXTstation", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:nextstationcolor", "name": "NeXTstation Color", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:nextstationturbo", "name": "NeXTstation Turbo", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:norskdatand500", "name": "Norsk Data ND-500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:originseries", "name": "SGI Origin series", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pc", "name": "IBM PC", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pc/at", "name": "IBM PC/AT", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pdp10", "name": "DEC PDP-10", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pdp11/10", "name": "DEC PDP 11/10", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:pdp11/34", "name": "PDP-11/34", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pdp11/70", "name": "PDP-11/70", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pdp11/84", "name": "PDP-11/84", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pdp11/84plus", "name": "PDP-11/84 Plus", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pdp11/94", "name": "PDP-11/94", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pdp15", "name": "DEC PDP-15", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pdp6", "name": "DEC PDP-6", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pdp8e", "name": "DEC PDP 8E", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:pdp8i", "name": "DEC PDP 8I", "note": "Model with a reviewed year proxy; added 2026-10-02."}
+{"system_id": "sys:performa6230cd", "name": "Performa 6230CD", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:personaliris4d/25", "name": "SGI Personal IRIS 4D/25", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powerbook170", "name": "PowerBook 170", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powerbookg4", "name": "PowerBook G4", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh5500", "name": "Power Macintosh 5500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh6100", "name": "Power Macintosh 6100", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh6500", "name": "Power Macintosh 6500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh7100", "name": "Power Macintosh 7100", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh7100/66", "name": "Power Macintosh 7100/66", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh7300", "name": "Power Macintosh 7300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh7500", "name": "Power Macintosh 7500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh8100", "name": "Power Macintosh 8100", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh8100/80", "name": "Power Macintosh 8100/80", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh8500", "name": "Power Macintosh 8500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh9500", "name": "Power Macintosh 9500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:powermacintosh9500/120", "name": "Power Macintosh 9500/120", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime100", "name": "Prime 100", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime200", "name": "Prime 200", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime300", "name": "Prime 300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime350", "name": "Prime 350", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime400", "name": "Prime 400", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime450", "name": "Prime 450", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime500", "name": "Prime 500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime550", "name": "Prime 550", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:prime650", "name": "Prime 650", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:prime750", "name": "Prime 750", "vendor_ids": ["org:prime-computer"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:proliantbl20pg3", "name": "HP ProLiant BL20p G3 (1 proc (1 cpu core per single chip), 3.6GHz Intel Xeon)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantbl25p", "name": "HP ProLiant BL25p (1 proc (1 cpu core per single chip), 2.8GHz AMD 254 Opteron)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantbl30p", "name": "HP ProLiant BL30p (1 proc. 3.20 GHz, Xeon)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantbl35p", "name": "HP ProLiant BL35p (1 proc, 2.4GHz, Opteron)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantbl45p", "name": "HP ProLiant BL45p (1 proc (1 cpu core per single chip), 2.6GHz 852 Opteron)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantdl140g2", "name": "HP ProLiant DL140 G2 (1 proc (1 cpu core per single chip), 3.6GHz Intel Xeon)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantdl360g4p", "name": "HP ProLiant DL360 G4p (1 proc (1 cpu core per single chip), 3.8GHz Intel Xeon)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantdl380g4", "name": "HP ProLiant DL380 G4 (1 proc (1 cpu core per single chip), 3.8GHz Intel Xeon)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantdl385", "name": "HP ProLiant DL385 (1 proc (1 cpu core per single chip), 2.8GHz AMD 254 Opteron)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantdl585", "name": "HP ProLiant DL585 (1 proc (1 cpu core per single chip), 2.6GHz 852 Opteron)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantml350g4p", "name": "HP ProLiant ML350 G4p (1 proc (1 cpu core per single chip), 3.6GHz Intel Xeon)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:proliantml370g4", "name": "HP ProLiant ML370 G4 (1 proc (1 cpu core per single chip), 3.8GHz Intel Xeon)", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:pyramid90x", "name": "Pyramid 90x", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:rc2030", "name": "MIPS RC2030", "vendor_ids": ["org:mips-computer-systems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:rc3260", "name": "MIPS RC3260", "vendor_ids": ["org:mips-computer-systems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:rs/6000220", "name": "IBM RS/6000 220", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
 {"system_id": "sys:rs/6000320", "name": "IBM RS/6000 Model 320", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:rs/6000320h", "name": "IBM RS/6000 Model 320H", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:rs/6000340", "name": "IBM RS/6000 340", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
 {"system_id": "sys:rs/6000350", "name": "IBM RS/6000 Model 350", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:rs/6000530", "name": "IBM RS/6000 Model 530", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:rs/6000550", "name": "IBM RS/6000 Model 550", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:rs/6000560", "name": "IBM RS/6000 Model 560", "vendor_ids": ["org:ibm"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:rs/6000580", "name": "IBM RS/6000 580", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:rx1620", "name": "HP rx1620", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:rx2620", "name": "HP rx2620", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:rx4640", "name": "HP rx4640", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:s3800", "name": "Hitachi S-3800", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:s810/10", "name": "Hitachi S-810/10", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:s810/20", "name": "Hitachi S-810/20", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:s820", "name": "Hitachi S-820", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sequentbalance8000", "name": "Sequent Balance 8000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sequentsymmetry", "name": "Sequent Symmetry", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sonyplaystation2", "name": "Sony PlayStation 2", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:sparcstation1", "name": "Sun SPARCstation 1", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:sparcstation1+", "name": "Sun SPARCstation 1+", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:sparcstation10/30", "name": "Sun SPARCstation 10 Model 30", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
@@ -54,17 +411,87 @@
 {"system_id": "sys:sparcstationelc", "name": "Sun SPARCstation ELC", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:sparcstationipc", "name": "Sun SPARCstation IPC", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:sparcstationipx", "name": "Sun SPARCstation IPX", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:sparcstationlx", "name": "SPARCstation LX", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sparcstationslc", "name": "Sun SPARCstation SLC", "note": "SPEC89 machine with a dated introduction; added 2026-10-02."}
+{"system_id": "sys:sparcstationvoyager", "name": "SPARCstation Voyager", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sperry1100/60", "name": "Sperry 1100/60", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sperry1100/80", "name": "Sperry 1100/80", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sperry1100/90", "name": "Sperry 1100/90", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sperry1100/91", "name": "Sperry 1100/91", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sperry1100/92", "name": "Sperry 1100/92", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sperry1100/93", "name": "Sperry 1100/93", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sperry1100/94", "name": "Sperry 1100/94", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:spp1000", "name": "Convex SPP-1000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:spp1200", "name": "Convex SPP-1200", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:spp1600", "name": "Convex SPP-1600", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sr2201", "name": "Hitachi SR2201", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sun10", "name": "Sun 10", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sun20", "name": "Sun 20", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:sun4/260", "name": "Sun-4/260", "vendor_ids": ["org:sun-microsystems"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:sun5", "name": "Sun 5", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:superdome", "name": "HP SuperDome", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sv1", "name": "Cray SV1", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sx1", "name": "NEC SX-1", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sx2", "name": "NEC SX-2", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sx4", "name": "NEC SX-4", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sx5", "name": "NEC SX-5", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sx6", "name": "NEC SX-6", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:sx8", "name": "NEC SX-8", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:system17", "name": "CDC System 17", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:system17floatingpointhardware", "name": "CDC System 17 floating-point hardware", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:t94", "name": "Cray T94", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ultra1", "name": "Sun Ultra 1", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ultra80", "name": "Sun Ultra 80", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ultraenterprise4000", "name": "Sun Ultra Enterprise 4000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:univac1106", "name": "UNIVAC 1106", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:univac1108", "name": "UNIVAC 1108", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:univac1110", "name": "UNIVAC 1110", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:v2600", "name": "HP V2600", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:vax11/750", "name": "DEC VAX-11/750", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vax11/780", "name": "DEC VAX-11/780", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vax11/785", "name": "DEC VAX-11/785", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:vax4000/200", "name": "VAX 4000/200", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:vax4000/300", "name": "DEC VAX 4000 Model 300", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vax4000/400", "name": "DEC VAX 4000 Model 400", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:vax6000/210", "name": "VAX 6000/210", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/310", "name": "VAX 6000/310", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/410", "name": "VAX 6000/410", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/420", "name": "VAX 6000/420", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/430", "name": "VAX 6000/430", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/440", "name": "VAX 6000/440", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/450", "name": "VAX 6000/450", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/460", "name": "VAX 6000/460", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/510", "name": "VAX 6000/510", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/520", "name": "VAX 6000/520", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/530", "name": "VAX 6000/530", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/540", "name": "VAX 6000/540", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/550", "name": "VAX 6000/550", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/560", "name": "VAX 6000/560", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax6000/600", "name": "VAX 6000 Model 600", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:vax6000/610", "name": "DEC VAX 6000 Model 610", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:vax6000600series", "name": "VAX 6000 600 series", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax8200/8300", "name": "VAX 8200/8300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax8250", "name": "VAX 8250", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax8350", "name": "VAX 8350", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax8530", "name": "VAX 8530", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vax8550/8700/8800", "name": "VAX 8550/8700/8800", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:vax8600", "name": "DEC VAX 8600", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vax8650", "name": "DEC VAX 8650", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vax8700", "name": "DEC VAX 8700", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vaxstation3100/38", "name": "DEC VAXstation 3100 Model 38", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vaxstation3100/76", "name": "DEC VAXstation 3100 Model 76", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:vaxstation4000/60", "name": "DEC VAXstation 4000 Model 60", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:vaxstation4000/90", "name": "VAXstation 4000 Model 90", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:vaxstation4000vlc", "name": "DEC VAXstation 4000 VLC", "vendor_ids": ["org:digital-equipment"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:vp100", "name": "Fujitsu VP-100", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vp200", "name": "Fujitsu VP-200", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vp400", "name": "Fujitsu VP-400", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vp50", "name": "Fujitsu VP-50", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vpp300", "name": "Fujitsu VPP300", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vpp500", "name": "Fujitsu VPP500", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vpp5000", "name": "Fujitsu VPP5000", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vpp700", "name": "Fujitsu VPP700", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:vx", "name": "Fujitsu VX", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ymp", "name": "Cray Y-MP", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ympel", "name": "Cray Y-MP EL", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:ympm90", "name": "Cray Y-MP M90", "note": "Machine with curated date evidence; added 2026-10-02."}

@@ -32,6 +32,7 @@ Reports distinguish measured evidence, derived estimates and proposed work.
   [initial hardware overlaps](classic-spec-overlap.md).
 - Chronology: [CPU SKU release catalog](cpu-sku-chronology.md) (built, not yet used by the timeline).
 - Identity: [processor](processor-identity.md) and [system](system-identity.md) resolution (schema steps 2 and 2b).
+- Dates: [date events and chronology selection](chronology.md) (schema step 3).
 - Earlier reconstruction: [mix/timing observations](early-benchmark-evidence.md),
   [OCR sample checks](chandra-timesharing-sample.md), [historical data contract](data/historical/README.md).
 

@@ -166,11 +166,19 @@ def extract_mentions_command(inputs, output):
 
     records = extract_records(inputs)
     write_jsonl(RECORDS, records)
+    from cpushowspeed.curated_dates import RESULTS, extract_results
+
+    results = extract_results(inputs)
+    write_jsonl(RESULTS, results)
+    from cpushowspeed.curated_dates import MODEL_YEARS, extract_model_years
+
+    write_jsonl(MODEL_YEARS, extract_model_years())
     meta = dict(
         inputs={str(inputs): sha256(inputs)},
         code_sha256={str(p): sha256(p) for p in [Path(__file__), Path(sys.modules[sku_key.__module__].__file__)]},
         mentions=len(rows),
         hardware_records=len(records),
+        results=len(results),
         observations=sum(counts.values()),
     )
     output.with_name(output.name + ".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
@@ -178,9 +186,18 @@ def extract_mentions_command(inputs, output):
     click.echo()
 
 
-def in_scope(alias_scope, mention_scope):
-    field, _, pattern = alias_scope.partition("@")
-    return field == "processor" and (not pattern or fnmatch.fnmatchcase(mention_scope, pattern))
+def in_scope(alias_scope, mention_scope, field="processor"):
+    """'processor' aliases apply to processor text and to the system-name fallback;
+    'processor-from-system' aliases apply only to that fallback."""
+    kind, _, pattern = alias_scope.partition("@")
+    fits = kind == field or (kind == "processor" and field == "processor-from-system")
+    return fits and (not pattern or fnmatch.fnmatchcase(mention_scope, pattern))
+
+
+def clock_fits(alias, clock):
+    want = (alias.get("constraints") or {}).get("clock_mhz")
+    # Only a known, different clock rules the alias out; the alias text already names its part.
+    return want is None or clock is None or abs(clock - want) <= 0.01 * want
 
 
 class Resolver:
@@ -201,18 +218,18 @@ class Resolver:
                     raise ValueError(f"match key {k} names both {self.by_key[k]['sku_id']} and {s['sku_id']}")
                 self.by_key[k] = s
 
-    def resolve(self, scope, text, clock):
+    def resolve(self, scope, text, clock, field="processor"):
         result = dict(level="none", entity_kind=None, entity_id=None, alias_id=None, reason=None, detail=None)
         if not text:
             return dict(result, reason="missing_text")
         for a in self.exact:
-            if in_scope(a["scope"], scope) and a["text"] == text:
+            if in_scope(a["scope"], scope, field) and a["text"] == text and clock_fits(a, clock):
                 if a["status"] == "rejected":
                     return dict(result, alias_id=a["alias_id"], reason="rejected_alias")
                 level = "sku" if a["entity_kind"] == "processor_sku" else "family"
                 return dict(result, level=level, entity_kind=a["entity_kind"], entity_id=a["entity_id"], alias_id=a["alias_id"])
         for a in self.rules:
-            if not in_scope(a["scope"], scope):
+            if not in_scope(a["scope"], scope, field):
                 continue
             key = RULES[a["rule_id"]](text)
             if key is None:
@@ -229,7 +246,7 @@ class Resolver:
                 continue
             return dict(result, level="sku", entity_kind="processor_sku", entity_id=sku["sku_id"], alias_id=a["alias_id"])
         plain = re.sub(r"\((?:r|tm)\)|®|™", "", text, flags=re.I)
-        hits = [a for a, pattern in self.patterns if in_scope(a["scope"], scope) and pattern.search(plain)]
+        hits = [a for a, pattern in self.patterns if in_scope(a["scope"], scope, field) and pattern.search(plain)]
         if len({a["entity_id"] for a in hits}) > 1:
             # Patterns are meant to be mutually exclusive; overlap is a curation error, not a choice.
             return dict(result, reason="ambiguous_family_patterns", detail=", ".join(a["alias_id"] for a in hits))

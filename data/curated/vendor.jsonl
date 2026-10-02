@@ -19,7 +19,7 @@
 {"vendor_id": "org:clearcube-technology", "name": "ClearCube Technology"}
 {"vendor_id": "org:clevo", "name": "Clevo"}
 {"vendor_id": "org:compal-electronics", "name": "Compal Electronics, Inc."}
-{"vendor_id": "org:compaq", "name": "Compaq Computer Corporation", "model_prefixes": ["compaq"]}
+{"vendor_id": "org:compaq", "name": "Compaq Computer Corporation", "model_prefixes": ["compaq", "digital", "dec"]}
 {"vendor_id": "org:control-data", "name": "Control Data Corporation", "note": "Added for classical machine models on 2026-10-02; no SPEC vendor spelling."}
 {"vendor_id": "org:convex", "name": "Convex Computer", "note": "Added for classical machine models on 2026-10-02; no SPEC vendor spelling."}
 {"vendor_id": "org:cray-research", "name": "Cray Research, Inc."}

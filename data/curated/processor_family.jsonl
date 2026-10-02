@@ -1,5 +1,14 @@
+{"family_id": "fam:amd-am386", "vendor": "AMD", "name": "Am386", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
+{"family_id": "fam:amd-am486", "vendor": "AMD", "name": "Am486", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
+{"family_id": "fam:amd-am5x86", "vendor": "AMD", "name": "Am5x86", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
+{"family_id": "fam:amd-athlon-mp", "vendor": "AMD", "name": "Athlon MP", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
+{"family_id": "fam:amd-athlon-thunderbird", "vendor": "AMD", "name": "Athlon (Thunderbird)", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
+{"family_id": "fam:amd-athlon-xp", "vendor": "AMD", "name": "Athlon XP", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
+{"family_id": "fam:amd-duron", "vendor": "AMD", "name": "Duron", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
 {"family_id": "fam:amd-epyc", "vendor": "AMD", "name": "EPYC", "source_ids": ["src:wikipedia/epyc@1377481559"]}
+{"family_id": "fam:amd-k6-2", "vendor": "AMD", "name": "K6-2", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
 {"family_id": "fam:amd-opteron", "vendor": "AMD", "name": "Opteron", "source_ids": ["src:wikipedia/list_of_amd_opteron_processors@1374681203"]}
+{"family_id": "fam:cyrix-5x86", "vendor": "Cyrix", "name": "5x86", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
 {"family_id": "fam:dec-alpha-21064", "vendor": "DEC/Compaq", "name": "Alpha 21064", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:dec-alpha-21064a", "vendor": "DEC/Compaq", "name": "Alpha 21064A", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:dec-alpha-21066", "vendor": "DEC/Compaq", "name": "Alpha 21066", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
@@ -56,6 +65,8 @@
 {"family_id": "fam:ibm-rs64-ii", "vendor": "IBM", "name": "RS64-II", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:ibm-rs64-iii", "vendor": "IBM", "name": "RS64-III", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:ibm-rs64-iv", "vendor": "IBM", "name": "RS64-IV", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-486dx4", "vendor": "Intel", "name": "486DX4 (IntelDX4)", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
+{"family_id": "fam:intel-celeron", "vendor": "Intel", "name": "Celeron", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
 {"family_id": "fam:intel-itanium", "vendor": "Intel", "name": "Itanium (not Itanium 2)", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:intel-itanium-2", "vendor": "Intel", "name": "Itanium 2", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:intel-pentium-4", "vendor": "Intel", "name": "Pentium 4", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
@@ -63,8 +74,11 @@
 {"family_id": "fam:intel-pentium-ii-xeon", "vendor": "Intel", "name": "Pentium II Xeon", "note": "Chip-model line seeded from SPEC processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:intel-pentium-iii", "vendor": "Intel", "name": "Pentium III", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:intel-pentium-iii-xeon", "vendor": "Intel", "name": "Pentium III Xeon", "note": "Chip-model line seeded from SPEC processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:intel-pentium-p5", "vendor": "Intel", "name": "Pentium (P5/P54C)", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
 {"family_id": "fam:intel-pentium-pro", "vendor": "Intel", "name": "Pentium Pro", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:intel-xeon", "vendor": "Intel", "name": "Xeon", "source_ids": ["src:wikipedia/list_of_intel_xeon_processors_-28broadwell-based-29@1362915879", "src:wikipedia/list_of_intel_xeon_processors_-28cascade_lake-e2-80-93based-29@1362298362", "src:wikipedia/list_of_intel_xeon_processors_-28coffee_lake-based-29@1339738082", "src:wikipedia/list_of_intel_xeon_processors_-28comet_lake-based-29@1334627889", "src:wikipedia/list_of_intel_xeon_processors_-28core-based-29@1339906419", "src:wikipedia/list_of_intel_xeon_processors_-28haswell-based-29@1344872412", "src:wikipedia/list_of_intel_xeon_processors_-28ice_lake-based-29@1362298361", "src:wikipedia/list_of_intel_xeon_processors_-28ivy_bridge-e2-80-93based-29@1334629619", "src:wikipedia/list_of_intel_xeon_processors_-28kaby_lake-based-29@1362915881", "src:wikipedia/list_of_intel_xeon_processors_-28nehalem-based-29@1352909520", "src:wikipedia/list_of_intel_xeon_processors_-28netburst-based-29@1339837086", "src:wikipedia/list_of_intel_xeon_processors_-28rocket_lake-based-29@1334626524", "src:wikipedia/list_of_intel_xeon_processors_-28sandy_bridge-e2-80-93based-29@1334629871", "src:wikipedia/list_of_intel_xeon_processors_-28skylake-based-29@1377207682", "src:wikipedia/sierra_forest@1359904899"]}
+{"family_id": "fam:intel-xeon-nocona", "vendor": "Intel", "name": "Xeon (Nocona)", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
+{"family_id": "fam:intel-xeon-woodcrest", "vendor": "Intel", "name": "Xeon (Woodcrest)", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
 {"family_id": "fam:mips-r10000", "vendor": "MIPS", "name": "R10000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:mips-r12000", "vendor": "MIPS", "name": "R12000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:mips-r14000", "vendor": "MIPS", "name": "R14000", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
@@ -106,3 +120,5 @@
 {"family_id": "fam:sun-ultrasparc-t1", "vendor": "Sun", "name": "UltraSPARC T1", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:sun-ultrasparc-t2", "vendor": "Sun", "name": "UltraSPARC T2", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
 {"family_id": "fam:sun-ultrasparc-t2plus", "vendor": "Sun", "name": "UltraSPARC T2+", "note": "Chip-model line seeded from SPEC/classical processor texts on 2026-10-02; no catalogue source yet."}
+{"family_id": "fam:x86-486dx", "vendor": "Intel and compatibles", "name": "486DX", "note": "Added 2026-10-02 from reviewed CPU interpretations."}
+{"family_id": "fam:x86-486dx2", "vendor": "Intel and compatibles", "name": "486DX2", "note": "Added 2026-10-02 from reviewed CPU interpretations."}

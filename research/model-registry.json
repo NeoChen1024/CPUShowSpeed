@@ -536,6 +536,22 @@
       "lineage": "Distinct vendor/system/processor/resource tuples extracted from the input catalogue"
     },
     {
+      "id": "curated-date-events",
+      "path": "data/curated/date_event.jsonl",
+      "kind": "curated-table",
+      "owner": "research/chronology.md",
+      "optional": false,
+      "lineage": "Converted 2026-10-02 from the SKU catalogue, CPU proxies, hardware date evidence, year overrides and SPEC89 introductions"
+    },
+    {
+      "id": "result-records",
+      "path": "data/derived/schema/result-records.jsonl",
+      "kind": "derived",
+      "owner": "research/chronology.md",
+      "optional": true,
+      "lineage": "One row per benchmark result with its hardware tuple and reported dates, from the input catalogue"
+    },
+    {
       "id": "instruction-mix-study",
       "path": "research/data/classic/mix-study",
       "kind": "reviewed-data",
@@ -1739,6 +1755,13 @@
       "role": "evidence",
       "status": "current",
       "purpose": "Schema step 2b: vendors, derived system models, hardware configurations and cross-suite links"
+    },
+    {
+      "path": "research/chronology.md",
+      "title": "Date events and chronology selection",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Schema step 3: date events, selection order, comparison with the former timeline and consistency findings"
     },
     {
       "path": "docs/timeline.md",

@@ -3,7 +3,7 @@
   "$id": "https://github.com/NeoChen1024/CPUShowSpeed/data/curated/schema.json",
   "title": "CPUShowSpeed curated tables",
   "description": "Row schemas and table contracts for data/curated. Semantics are owned by docs/data-schema.md.",
-  "x-schema-version": "1.2.0",
+  "x-schema-version": "1.3.0",
   "x-tables": {
     "source": {
       "file": "source.jsonl",
@@ -55,6 +55,16 @@
         "source_ids": "source"
       },
       "description": "Hand-curated system models; SPEC models are derived by rule spec-system-v1 at build time."
+    },
+    "date_event": {
+      "file": "date_event.jsonl",
+      "row": "#/$defs/date_event",
+      "primary_key": "event_id",
+      "foreign_keys": {
+        "subject_id": "@subject_kind",
+        "source_id": "source"
+      },
+      "description": "Something that happened to a processor or system model on a date, according to one source."
     }
   },
   "$defs": {
@@ -429,7 +439,7 @@
           "$ref": "#/$defs/text"
         },
         "scope": {
-          "description": "Field and source scope: processor, vendor or system, optionally @<glob> over mention scopes such as spec:*.",
+          "description": "processor, processor-from-system (matches a system name when the processor text resolves nothing), vendor or system; optionally @<glob> over mention scopes.",
           "$ref": "#/$defs/text"
         },
         "constraints": {
@@ -437,6 +447,11 @@
           "additionalProperties": false,
           "properties": {
             "clock_within": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "clock_mhz": {
+              "description": "Exact-text alias applies only to mentions with this nominal clock (within 1%).",
               "type": "number",
               "exclusiveMinimum": 0
             }
@@ -583,6 +598,125 @@
         },
         "source_ids": {
           "$ref": "#/$defs/source_ids"
+        }
+      }
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^evt:[a-z0-9][a-z0-9./+@-]*$"
+    },
+    "date_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "subject_kind",
+        "subject_id",
+        "event_type",
+        "date",
+        "date_precision",
+        "claim_status",
+        "chronology",
+        "source_id",
+        "verification",
+        "legacy_ids"
+      ],
+      "properties": {
+        "event_id": {
+          "$ref": "#/$defs/event_id"
+        },
+        "subject_kind": {
+          "enum": [
+            "processor_sku",
+            "processor_family",
+            "system_model"
+          ]
+        },
+        "subject_id": {
+          "$ref": "#/$defs/text"
+        },
+        "event_type": {
+          "enum": [
+            "announcement",
+            "introduction",
+            "release",
+            "first_delivery",
+            "first_installation",
+            "availability",
+            "configuration_availability",
+            "market_release",
+            "reannouncement",
+            "option_announcement",
+            "family_introduction",
+            "architecture_introduction",
+            "operation",
+            "demonstration_installation",
+            "public_demonstration",
+            "model_year",
+            "general_availability",
+            "listed_in_timeline",
+            "contemporary_new_product_listing",
+            "contemporary_advertisement",
+            "processor_introduction",
+            "processor_family_introduction"
+          ]
+        },
+        "date": {
+          "$ref": "#/$defs/partial_date"
+        },
+        "date_precision": {
+          "$ref": "#/$defs/date_precision"
+        },
+        "date_raw": {
+          "$ref": "#/$defs/text"
+        },
+        "claim_status": {
+          "description": "What the source asserts: a reported event, a plan, a future announcement, or a proxy chosen by review.",
+          "enum": [
+            "reported",
+            "planned",
+            "announced_future",
+            "prospective_or_not_confirmed_as_delivered",
+            "internally_inconsistent",
+            "inferred_proxy"
+          ]
+        },
+        "chronology": {
+          "description": "Use in chronology selection: primary evidence, fallback only when nothing better exists, or excluded.",
+          "enum": [
+            "primary",
+            "fallback",
+            "excluded"
+          ]
+        },
+        "source_id": {
+          "$ref": "#/$defs/source_id"
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "verification": {
+          "enum": [
+            "original_page_visual_check",
+            "web_text_checked",
+            "web_page_checked_secondary_source",
+            "parsed_unreviewed",
+            "reviewed_proxy"
+          ]
+        },
+        "reviewed_on": {
+          "$ref": "#/$defs/iso_day"
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        },
+        "legacy_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "uniqueItems": true
         }
       }
     }

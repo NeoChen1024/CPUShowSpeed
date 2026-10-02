@@ -57,7 +57,7 @@ PREFIXES = {
     "org:sugon": ["sugon"],
     "org:nettrix": ["nettrix"],
     "org:gigabyte-technology": ["gigabyte", "giga-byte"],
-    "org:compaq": ["compaq"],
+    "org:compaq": ["compaq", "digital", "dec"],
     "org:digital-equipment": ["digital", "dec"],
     "org:sgi": ["sgi"],
     "org:silicon-graphics": ["sgi", "silicon graphics"],
@@ -117,7 +117,7 @@ def seed_vendors(records):
 
 
 # Hardware options are configuration facts, not part of the model name.
-_OPTIONS = re.compile(r"(?<![0-9a-z])(no[\s-]*fpa|nofpa|with\s+fpa|fpa|w/\s*(?:68)?88[12]|with\s+fpu)(?![0-9a-z])", re.I)
+_OPTIONS = re.compile(r"(?<![0-9a-z])(no[\s-]*fpa|nofpa|with\s+fpa|fpa|w/\s*(?:68)?88[12]|with\s+fpu|eae)(?![0-9a-z])", re.I)
 # Brand words that machine names repeat in sources without a vendor field.
 BRANDS = [
     "dec",
@@ -277,6 +277,22 @@ def import_vendors_command(root, force):
         sys.exit(1)
 
 
+def brand_prefixes(tables):
+    """Every brand word name-system-v1 may strip: built-in brands, vendor prefixes, names and spellings."""
+    prefixes = [p for v in tables["vendor"] for p in v.get("model_prefixes", [])]
+    return sorted(
+        set(BRANDS)
+        | {p.lower() for p in prefixes}
+        | {v["name"].lower() for v in tables["vendor"]}
+        | {a["text"].lower() for a in tables["alias"] if a["entity_kind"] == "vendor"}
+    )
+
+
+def model_id(key):
+    # Spaces and hyphens are spelling only ("UCS C240 M5" / "UCS C240M5", "VAX-11/780").
+    return "sys:" + re.sub(r"[^a-z0-9.+/]", "", key)
+
+
 def build_systems(db, tables):
     """Write hardware_record, system_model_derived and hardware_config tables."""
     if not RECORDS.exists():
@@ -286,12 +302,7 @@ def build_systems(db, tables):
     vendor_alias = {a["text"]: a for a in tables["alias"] if a["entity_kind"] == "vendor" and a["status"] == "accepted"}
     system_alias = {a["text"]: a for a in tables["alias"] if a["entity_kind"] == "system_model" and a["status"] != "candidate"}
     prefixes = {v["vendor_id"]: v.get("model_prefixes", []) for v in tables["vendor"]}
-    brands = sorted(
-        {b for b in BRANDS}
-        | {p.lower() for ps in prefixes.values() for p in ps}
-        | {v["name"].lower() for v in tables["vendor"]}
-        | {a["text"].lower() for a in tables["alias"] if a["entity_kind"] == "vendor"}
-    )
+    brands = brand_prefixes(tables)
     curated = {m["system_id"]: m for m in tables["system_model"]}
     models, configs, stats = {}, {}, Counter()
     db.execute(
@@ -307,7 +318,7 @@ def build_systems(db, tables):
         p = resolver.resolve(r["scope"], r["processor"], r["clock_mhz"])
         basis = "processor_text"
         if p["level"] == "none" and r["system"]:
-            q = resolver.resolve(r["scope"], r["system"], r["clock_mhz"])
+            q = resolver.resolve(r["scope"], r["system"], r["clock_mhz"], field="processor-from-system")
             if q["level"] != "none":
                 p, basis = q, "system_text"
         if p["level"] == "none":
@@ -328,8 +339,7 @@ def build_systems(db, tables):
             )
             if key:
                 # One key space for every rule, so a machine links across sources.
-                # Spaces and hyphens are spelling only ("UCS C240 M5" / "UCS C240M5", "VAX-11/780").
-                system_id = "sys:" + re.sub(r"[^a-z0-9.+/]", "", key)
+                system_id = model_id(key)
                 system_basis = "rule:" + ("spec-system-v1" if spec else "name-system-v1")
         if system_id:
             m = models.setdefault(system_id, dict(name=name, vendors=set(), brands=set(), scopes=set(), observations=0))

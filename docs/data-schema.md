@@ -1,7 +1,7 @@
 # Data schema design
 
-Status: **steps 1 (sources), 2 (processor identity) and 2b (system identity) implemented
-2026-10-02; steps 3–5 designed, not implemented.**
+Status: **steps 1 (sources), 2/2b (processor and system identity) and 3 (dates) implemented
+2026-10-02; steps 4–5 designed, not implemented.**
 This document owns the target
 data model and its migration plan. Until each step lands, the current formats in
 the [data contract](data-contract.md), [input catalog](input-catalog.md),
@@ -219,20 +219,22 @@ merges registry metrics with the input-catalog metric strings
 
 ### `date_event`
 
+Implemented 2026-10-02 as `data/curated/date_event.jsonl`.
+
 | Column | Meaning |
 | --- | --- |
-| `event_id` | Primary key |
-| `subject_kind`, `subject_id` | `processor_sku`, `processor_family`, `system_model`, `hardware_config` or `observation` |
-| `event_type` | `announcement`, `release`, `first_delivery`, `availability`, `hardware_availability`, `software_availability`, `test`, `publication`, `withdrawal` |
-| `date`, `date_precision`, `date_raw` | As above |
-| `claim_status` | `reported`, `announced_future`, `inferred_proxy` |
-| provenance | Source block |
+| `event_id` | Primary key, `evt:<origin>/…` |
+| `subject_kind`, `subject_id` | `processor_sku`, `processor_family` or `system_model` |
+| `event_type` | `announcement`, `introduction`, `release`, `first_delivery`, `availability`, `configuration_availability`, `family_introduction`, `model_year` and the other source vocabularies |
+| `date`, `date_precision`, `date_raw` | As above; quarters as `YYYY-Qn` |
+| `claim_status` | `reported`, `planned`, `announced_future`, `prospective_or_not_confirmed_as_delivered`, `internally_inconsistent`, `inferred_proxy` |
+| `chronology` | `primary`, `fallback` (fills gaps only) or `excluded` |
+| provenance | `source_id`, `locator`, `verification`, `reviewed_on`, `note`, `legacy_ids` |
 
-This single table replaces `cpu-release-proxies.csv`, `cpu-sku-chronology.csv`,
-`hardware-date-evidence.csv` and the year rules in `timeline-year-overrides.csv`.
-SPEC's HW Avail, Test Date and Published fields become extracted events on the
-observation's hardware configuration. Announced future dates (for example a
-"Q4 2026" SKU in a 2026-10 page revision) are `announced_future`, not releases.
+Dates a result reports itself (SPEC hardware availability, test and publication
+months, Longbottom table years) and catalogue years stay extracted
+(`result-records.jsonl`, `model-years.jsonl`) rather than curated. The selection
+order is implemented in `data build`; see [chronology](../research/chronology.md).
 
 ### `review`
 
@@ -251,13 +253,13 @@ A rejection never deletes evidence; selection views read decisions.
 `data build` produces, in SQLite:
 
 - `resolution` — identity results described above.
-- `chronology_candidates` — every date event reachable from an observation
-  (observation → hardware config → SKU/family/system) with its kind.
-- `chronology_selected` — the CPU → hardware → submission-era selection owned by
-  the [timeline contract](timeline.md#cpu-first-date-selection), as a query.
-- `consistency_findings` — reported, not auto-corrected: a SKU release later than
-  a hardware configuration's availability; one SKU with release years more than
-  one year apart; alias collisions; events outside the subject's plausible era.
+- `result_chronology` — per result, every candidate (CPU, hardware tiers,
+  fallbacks, publication) and the selected kind, year and range. The order is CPU
+  release → hardware (own reported date, model events, own table year, model-level
+  dates elsewhere) → reviewed fallbacks → publication.
+- `consistency_finding` — reported, not auto-corrected: a CPU release later than
+  the result's own hardware availability, and subjects whose primary event years
+  are more than one year apart. Alias collisions and era checks remain planned.
 
 The timeline and fitters then read these views instead of private lookups.
 
@@ -302,9 +304,12 @@ is intended and listed in that step's report.
    and hardware configurations; see [system identity](../research/system-identity.md).
    Equality-based configurations cannot link suites that omit counts (CPU92 has no
    core counts); cross-suite pairing is a fitter policy over equal-or-unknown facts.
-3. **Dates.** Create `date_event`; convert proxies, hardware evidence, overrides
-   and SPEC date fields; implement `chronology_selected`. Parity: current timeline
-   years reproduced. Enabling the SKU catalog is a separate, reported change.
+3. **Dates** (done 2026-10-02). `date_event` from the SKU catalogue, CPU proxies,
+   hardware evidence, year overrides and SPEC89 introductions; extracted result and
+   catalogue dates; `result_chronology` and `consistency_finding`. Compared with
+   the former timeline rather than held to parity: 50,298 of 58,813 SPEC records
+   keep their year (most changes are CPU dating, one year earlier); 898 classical
+   configurations are dated in both and 161 lose a year to unmatched spellings.
 4. **Reviews.** Convert submission/date/pair decisions into `review`.
 5. **Observations.** Emit `benchmark-observation-v2` with entity references; switch
    fitters and timeline to the built database; regenerate the input catalog from it.
