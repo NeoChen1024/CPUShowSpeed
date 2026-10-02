@@ -178,8 +178,10 @@ def build(root=CURATED, database=DATABASE):
             meta[f"table:{name}:rows"] = str(len(tables[name]))
             meta[f"table:{name}:sha256"] = sha256(root / spec["file"])
         from cpushowspeed.curated_identity import build_resolution
+        from cpushowspeed.curated_system import build_systems
 
         meta.update(build_resolution(db, tables))
+        meta.update(build_systems(db, tables))
         db.executemany("INSERT INTO _meta VALUES (?, ?)", sorted(meta.items()))
         db.commit()
     partial.replace(database)

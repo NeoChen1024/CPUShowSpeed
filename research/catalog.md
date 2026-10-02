@@ -147,6 +147,8 @@ flowchart TD
 | curated-sources | [guide](../docs/data-schema.md) | `data/curated/source.jsonl` | required in checkout |
 | curated-processors | [guide](../research/processor-identity.md) | `data/curated/processor_sku.jsonl` | required in checkout |
 | processor-mentions | [guide](../research/processor-identity.md) | `data/derived/schema/processor-mentions.jsonl` | optional derived input |
+| curated-vendors | [guide](../research/system-identity.md) | `data/curated/vendor.jsonl` | required in checkout |
+| hardware-records | [guide](../research/system-identity.md) | `data/derived/schema/hardware-records.jsonl` | optional derived input |
 | instruction-mix-study | [guide](../research/instruction-mix-bridge.md) | `research/data/classic/mix-study` | required in checkout |
 | spec95-2000-overlap-audit | [guide](../research/spec95-spec2000-overlap-audit.md) | `research/data/spec/95-2000-audit` | required in checkout |
 
@@ -218,6 +220,7 @@ analysis from evidence, diagnostics and retired work.
 | [Hardware-year evidence: bitsavers discovery and first review](../research/hardware-year-evidence.md) | evidence | current |
 | [CPU SKU release chronology](../research/cpu-sku-chronology.md) | evidence | current |
 | [Processor identity resolution](../research/processor-identity.md) | evidence | current |
+| [System identity resolution](../research/system-identity.md) | evidence | current |
 | [Shared VAXen timeline](../docs/timeline.md) | guide | current |
 | [Unified historical and SPEC rate timeline](../research/unified-vaxen-timeline.md) | primary | current |
 | [Gibson and ADP evidence and calibration experiments](../research/instruction-mix-bridge.md) | primary | current |

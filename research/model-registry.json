@@ -520,6 +520,22 @@
       "lineage": "Distinct processor text/clock mentions extracted from the input catalogue"
     },
     {
+      "id": "curated-vendors",
+      "path": "data/curated/vendor.jsonl",
+      "kind": "curated-table",
+      "owner": "research/system-identity.md",
+      "optional": false,
+      "lineage": "Seeded from SPEC vendor spellings (2026-10-02); edited directly thereafter"
+    },
+    {
+      "id": "hardware-records",
+      "path": "data/derived/schema/hardware-records.jsonl",
+      "kind": "derived",
+      "owner": "research/system-identity.md",
+      "optional": true,
+      "lineage": "Distinct vendor/system/processor/resource tuples extracted from the input catalogue"
+    },
+    {
       "id": "instruction-mix-study",
       "path": "research/data/classic/mix-study",
       "kind": "reviewed-data",
@@ -1716,6 +1732,13 @@
       "role": "evidence",
       "status": "current",
       "purpose": "Schema step 2: processor families, SKUs, aliases, resolution coverage and comparison with the previous key"
+    },
+    {
+      "path": "research/system-identity.md",
+      "title": "System identity resolution",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Schema step 2b: vendors, derived system models, hardware configurations and cross-suite links"
     },
     {
       "path": "docs/timeline.md",

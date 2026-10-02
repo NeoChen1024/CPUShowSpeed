@@ -1,0 +1,122 @@
+{"vendor_id": "org:3score", "name": "3Score"}
+{"vendor_id": "org:acer", "name": "Acer Incorporated", "model_prefixes": ["acer"]}
+{"vendor_id": "org:action", "name": "ACTION S.A."}
+{"vendor_id": "org:advanced-micro-devices", "name": "Advanced Micro Devices"}
+{"vendor_id": "org:alpha-processor", "name": "Alpha Processor, Inc."}
+{"vendor_id": "org:altos-computing", "name": "Altos Computing Inc."}
+{"vendor_id": "org:apple", "name": "Apple Computer, Inc.", "model_prefixes": ["apple"]}
+{"vendor_id": "org:asrock-rack", "name": "ASRock Rack Inc."}
+{"vendor_id": "org:asus-international", "name": "ASUS Computer International", "model_prefixes": ["asus"]}
+{"vendor_id": "org:asustek", "name": "ASUSTeK Computer Inc.", "model_prefixes": ["asus"]}
+{"vendor_id": "org:atos", "name": "ATOS"}
+{"vendor_id": "org:banha-for-electronic-industeries", "name": "Banha for Electronic Industeries"}
+{"vendor_id": "org:boxx-technologies", "name": "BOXX Technologies, Inc."}
+{"vendor_id": "org:bull", "name": "Bull SAS", "model_prefixes": ["bull"]}
+{"vendor_id": "org:caira", "name": "CAIRA"}
+{"vendor_id": "org:cisco-systems", "name": "Cisco Systems", "model_prefixes": ["cisco"]}
+{"vendor_id": "org:clearcube-technology", "name": "ClearCube Technology"}
+{"vendor_id": "org:clevo", "name": "Clevo"}
+{"vendor_id": "org:compal-electronics", "name": "Compal Electronics, Inc."}
+{"vendor_id": "org:compaq", "name": "Compaq Computer Corporation", "model_prefixes": ["compaq"]}
+{"vendor_id": "org:cray-research", "name": "Cray Research, Inc."}
+{"vendor_id": "org:cray-research-superservers", "name": "Cray Research Superservers, Inc."}
+{"vendor_id": "org:cryo-performance-computing", "name": "Cryo Performance Computing Ltd"}
+{"vendor_id": "org:dansk-data-elektronik-a-s", "name": "Dansk Data Elektronik A/S"}
+{"vendor_id": "org:data-general", "name": "Data General Corporation"}
+{"vendor_id": "org:daten-tecnologia-ltda", "name": "Daten Tecnologia Ltda."}
+{"vendor_id": "org:dell", "name": "Dell Inc.", "model_prefixes": ["dell"]}
+{"vendor_id": "org:digital-equipment", "name": "Digital Equipment Corp.", "model_prefixes": ["digital", "dec"]}
+{"vendor_id": "org:e4-engineering-s-p-a", "name": "E4 Computer Engineering S.p.A."}
+{"vendor_id": "org:epsylon-it-sp-z-o-o", "name": "Epsylon IT Sp. z o.o."}
+{"vendor_id": "org:epsylon-sp-z-o-o-sp-komandytowa", "name": "Epsylon Sp. z o.o. Sp. Komandytowa"}
+{"vendor_id": "org:esconet-technologies", "name": "Esconet Technologies Ltd."}
+{"vendor_id": "org:eviden-an-atos-technology", "name": "Eviden an Atos technology"}
+{"vendor_id": "org:exo", "name": "EXO S.A."}
+{"vendor_id": "org:format", "name": "FORMAT"}
+{"vendor_id": "org:format-sp-z-o-o", "name": "Format sp. z o.o."}
+{"vendor_id": "org:fsas-technologies", "name": "Fsas Technologies Inc."}
+{"vendor_id": "org:fujitsu", "name": "Fujitsu", "model_prefixes": ["fujitsu"]}
+{"vendor_id": "org:fujitsu-egypt", "name": "Fujitsu Egypt"}
+{"vendor_id": "org:fujitsu-icl", "name": "Fujitsu ICL"}
+{"vendor_id": "org:fujitsu-siemens", "name": "Fujitsu Siemens Computers", "model_prefixes": ["fujitsu siemens", "fujitsu"]}
+{"vendor_id": "org:fusionstor", "name": "Fusionstor"}
+{"vendor_id": "org:gateway-2000", "name": "Gateway 2000"}
+{"vendor_id": "org:gcocco-software", "name": "gcocco software, inc"}
+{"vendor_id": "org:gigabyte-technology", "name": "GIGA-BYTE Technology Co. Ltd.", "model_prefixes": ["gigabyte", "giga-byte"], "note": "Merges spellings that normalisation keeps apart (GIGA-BYTE / Gigabyte)."}
+{"vendor_id": "org:h3c", "name": "H3C", "model_prefixes": ["h3c"]}
+{"vendor_id": "org:hal-systems", "name": "HAL Computer Systems"}
+{"vendor_id": "org:hcl-infosystems", "name": "HCL INFOSYSTEMS LTD"}
+{"vendor_id": "org:hewlett-packard", "name": "Hewlett-Packard Company", "model_prefixes": ["hewlett-packard", "hewlett packard", "hp"]}
+{"vendor_id": "org:hewlett-packard-enterprise", "name": "Hewlett Packard Enterprise", "model_prefixes": ["hewlett packard enterprise", "hpe", "hp"]}
+{"vendor_id": "org:hitachi", "name": "HITACHI", "model_prefixes": ["hitachi"]}
+{"vendor_id": "org:hitachi-vantara", "name": "Hitachi Vantara"}
+{"vendor_id": "org:huawei", "name": "Huawei", "model_prefixes": ["huawei"]}
+{"vendor_id": "org:hypertechnologies-ciara", "name": "Hypertechnologies Ciara, Inc"}
+{"vendor_id": "org:ibm", "name": "IBM Corporation", "model_prefixes": ["ibm"]}
+{"vendor_id": "org:ieit-systems", "name": "IEIT Systems Co., Ltd."}
+{"vendor_id": "org:incom", "name": "Incom S.A."}
+{"vendor_id": "org:inspur", "name": "Inspur Corporation", "model_prefixes": ["inspur"]}
+{"vendor_id": "org:inspur-electronic-information-industry", "name": "Inspur Electronic Information Industry Co., Ltd."}
+{"vendor_id": "org:inspur-electronic-information-industry-iei", "name": "Inspur Electronic Information Industry Co., Ltd. (IEI)"}
+{"vendor_id": "org:intel", "name": "Intel Corporation", "model_prefixes": ["intel"]}
+{"vendor_id": "org:intergraph", "name": "Intergraph Corporation"}
+{"vendor_id": "org:intergraph-systems", "name": "Intergraph Computer Systems"}
+{"vendor_id": "org:ion-systems", "name": "ION Computer Systems"}
+{"vendor_id": "org:itautec", "name": "Itautec"}
+{"vendor_id": "org:itautec-philco", "name": "Itautec-Philco"}
+{"vendor_id": "org:iwill", "name": "IWILL Corporation"}
+{"vendor_id": "org:j-p-couto", "name": "J.P Sa Couto S.A."}
+{"vendor_id": "org:kaytus-systems-pte", "name": "Kaytus Systems Pte. Ltd."}
+{"vendor_id": "org:kryotech-digital", "name": "KryoTech/DIGITAL"}
+{"vendor_id": "org:ktnf", "name": "KTNF"}
+{"vendor_id": "org:lenovo-global-technology", "name": "Lenovo Global Technology", "model_prefixes": ["lenovo"]}
+{"vendor_id": "org:lenovo-group", "name": "Lenovo Group Limited", "model_prefixes": ["lenovo"]}
+{"vendor_id": "org:m-s-r-o", "name": "M Computers s.r.o."}
+{"vendor_id": "org:maginfra", "name": "Maginfra Co., Ltd."}
+{"vendor_id": "org:maxdata", "name": "Maxdata AG"}
+{"vendor_id": "org:microsoft", "name": "Microsoft Corporation"}
+{"vendor_id": "org:minis-forum", "name": "MINIS FORUM"}
+{"vendor_id": "org:motorola", "name": "Motorola"}
+{"vendor_id": "org:motorola-group", "name": "Motorola Computer Group"}
+{"vendor_id": "org:msi", "name": "MSI"}
+{"vendor_id": "org:nec", "name": "NEC Corporation", "model_prefixes": ["nec"]}
+{"vendor_id": "org:nettrix", "name": "Nettrix", "model_prefixes": ["nettrix"]}
+{"vendor_id": "org:new-h3c-technologies", "name": "New H3C Technologies Co., Ltd.", "model_prefixes": ["h3c"]}
+{"vendor_id": "org:nokia", "name": "Nokia"}
+{"vendor_id": "org:ntt-system-s-a", "name": "NTT System S. A."}
+{"vendor_id": "org:nvidia", "name": "NVIDIA"}
+{"vendor_id": "org:oracle", "name": "Oracle Corporation", "model_prefixes": ["oracle", "sun"]}
+{"vendor_id": "org:pathscale", "name": "PathScale, Inc."}
+{"vendor_id": "org:pc-factory", "name": "PC Factory S.A."}
+{"vendor_id": "org:positivo", "name": "Positivo"}
+{"vendor_id": "org:pyramid-technology", "name": "Pyramid Technology"}
+{"vendor_id": "org:quanta", "name": "Quanta Computer Inc."}
+{"vendor_id": "org:quanta-cloud-technology", "name": "Quanta Cloud Technology"}
+{"vendor_id": "org:rackable-systems", "name": "Rackable Systems"}
+{"vendor_id": "org:racksaver", "name": "RackSaver"}
+{"vendor_id": "org:raspberry-pi", "name": "Raspberry Pi"}
+{"vendor_id": "org:rlx", "name": "RLX"}
+{"vendor_id": "org:ross-technology", "name": "ROSS Technology, Inc."}
+{"vendor_id": "org:scalemp", "name": "ScaleMP"}
+{"vendor_id": "org:sgi", "name": "SGI", "model_prefixes": ["sgi"]}
+{"vendor_id": "org:shuttle", "name": "Shuttle"}
+{"vendor_id": "org:siemens", "name": "Siemens AG"}
+{"vendor_id": "org:siemens-nixdorf-informationssysteme", "name": "Siemens Nixdorf Informationssysteme"}
+{"vendor_id": "org:siemens-pyramid", "name": "Siemens Pyramid"}
+{"vendor_id": "org:silicon-graphics", "name": "Silicon Graphics", "model_prefixes": ["sgi", "silicon graphics"]}
+{"vendor_id": "org:solbourne", "name": "Solbourne Computer, Inc."}
+{"vendor_id": "org:sugon", "name": "Sugon", "model_prefixes": ["sugon"]}
+{"vendor_id": "org:sun-microsystems", "name": "Sun Microsystems", "model_prefixes": ["sun microsystems", "sun"]}
+{"vendor_id": "org:supermicro", "name": "Supermicro", "model_prefixes": ["supermicro", "super micro"]}
+{"vendor_id": "org:tandem", "name": "Tandem Computers"}
+{"vendor_id": "org:tricord-systems", "name": "Tricord Systems Inc."}
+{"vendor_id": "org:tyan", "name": "Tyan"}
+{"vendor_id": "org:tyrone-systems", "name": "Tyrone Systems", "model_prefixes": ["tyrone"]}
+{"vendor_id": "org:unisys", "name": "Unisys Corporation", "model_prefixes": ["unisys"]}
+{"vendor_id": "org:uniwide", "name": "Uniwide"}
+{"vendor_id": "org:verlag-heinz-heise", "name": "Verlag Heinz Heise"}
+{"vendor_id": "org:wipro", "name": "Wipro Limited"}
+{"vendor_id": "org:xfusion", "name": "xFusion", "model_prefixes": ["xfusion"]}
+{"vendor_id": "org:yadro", "name": "Yadro"}
+{"vendor_id": "org:yoyotech", "name": "YOYOtech"}
+{"vendor_id": "org:zte", "name": "ZTE Corporation", "model_prefixes": ["zte"]}

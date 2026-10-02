@@ -162,10 +162,15 @@ def extract_mentions_command(inputs, output):
         for (s, t, c), n in sorted(counts.items(), key=lambda kv: (kv[0][0], kv[0][1], kv[0][2] is None, kv[0][2] or 0))
     ]
     write_jsonl(output, rows)
+    from cpushowspeed.curated_system import RECORDS, extract_records
+
+    records = extract_records(inputs)
+    write_jsonl(RECORDS, records)
     meta = dict(
         inputs={str(inputs): sha256(inputs)},
         code_sha256={str(p): sha256(p) for p in [Path(__file__), Path(sys.modules[sku_key.__module__].__file__)]},
         mentions=len(rows),
+        hardware_records=len(records),
         observations=sum(counts.values()),
     )
     output.with_name(output.name + ".meta.json").write_text(json.dumps(meta, indent=2) + "\n")

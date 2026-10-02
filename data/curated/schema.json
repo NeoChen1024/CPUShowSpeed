@@ -3,7 +3,7 @@
   "$id": "https://github.com/NeoChen1024/CPUShowSpeed/data/curated/schema.json",
   "title": "CPUShowSpeed curated tables",
   "description": "Row schemas and table contracts for data/curated. Semantics are owned by docs/data-schema.md.",
-  "x-schema-version": "1.1.0",
+  "x-schema-version": "1.2.0",
   "x-tables": {
     "source": {
       "file": "source.jsonl",
@@ -39,6 +39,22 @@
         "source_id": "source"
       },
       "description": "Judgements linking source text to entities: exact text, regex pattern or a versioned rule."
+    },
+    "vendor": {
+      "file": "vendor.jsonl",
+      "row": "#/$defs/vendor",
+      "primary_key": "vendor_id",
+      "description": "Organisations named as hardware vendors; only spellings of one legal entity are merged."
+    },
+    "system_model": {
+      "file": "system_model.jsonl",
+      "row": "#/$defs/system_model",
+      "primary_key": "system_id",
+      "foreign_keys": {
+        "vendor_ids": "vendor",
+        "source_ids": "source"
+      },
+      "description": "Hand-curated system models; SPEC models are derived by rule spec-system-v1 at build time."
     }
   },
   "$defs": {
@@ -387,7 +403,9 @@
         "entity_kind": {
           "enum": [
             "processor_sku",
-            "processor_family"
+            "processor_family",
+            "vendor",
+            "system_model"
           ]
         },
         "entity_id": {
@@ -411,7 +429,7 @@
           "$ref": "#/$defs/text"
         },
         "scope": {
-          "description": "Field and source scope, e.g. processor or processor@spec:*.",
+          "description": "Field and source scope: processor, vendor or system, optionally @<glob> over mention scopes such as spec:*.",
           "$ref": "#/$defs/text"
         },
         "constraints": {
@@ -492,6 +510,70 @@
           }
         }
       ]
+    },
+    "vendor_id": {
+      "type": "string",
+      "pattern": "^org:[a-z0-9][a-z0-9.+-]*$"
+    },
+    "system_id": {
+      "type": "string",
+      "pattern": "^sys:[a-z0-9][a-z0-9./+-]*$"
+    },
+    "vendor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vendor_id",
+        "name"
+      ],
+      "properties": {
+        "vendor_id": {
+          "$ref": "#/$defs/vendor_id"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "model_prefixes": {
+          "description": "Leading words removed from system names before keying, e.g. 'hpe', 'proliant' is not one.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "uniqueItems": true
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "system_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "system_id",
+        "name"
+      ],
+      "properties": {
+        "system_id": {
+          "$ref": "#/$defs/system_id"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "vendor_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/vendor_id"
+          },
+          "uniqueItems": true
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "$ref": "#/$defs/source_ids"
+        }
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 # Data schema design
 
-Status: **steps 1 (sources) and 2 (processor identity) implemented 2026-10-02; system
-identity (2b) and steps 3–5 designed, not implemented.**
+Status: **steps 1 (sources), 2 (processor identity) and 2b (system identity) implemented
+2026-10-02; steps 3–5 designed, not implemented.**
 This document owns the target
 data model and its migration plan. Until each step lands, the current formats in
 the [data contract](data-contract.md), [input catalog](input-catalog.md),
@@ -137,8 +137,9 @@ The command refuses to overwrite an existing `source.jsonl` without `--force`.
 | --- | --- | --- |
 | `processor_family` | `fam:` | vendor, name: the most specific processor line a text can identify (Intel Xeon, IBM POWER7, Alpha 21164) |
 | `processor_sku` | `sku:` | family_id, vendor, model, rule match `keys`, every listed `base_clocks_mhz`, verbatim heading `sections` (generation/codename), source_ids |
-| `system_model` | `sys:` | vendor, family, model (model variants such as RS/6000 530 and 530H are separate) |
-| `hardware_config` | `hw:` | system_id, processor ref (sku or family), clock, hardware options (FPU/FPA, vector unit), chips, cores, threads/core, memory, each with `*_status` |
+| `vendor` | `org:` | name, `model_prefixes`; only spellings of one legal entity merge |
+| `system_model` | `sys:` | name, vendor_ids; curated rows plus models derived by `spec-system-v1` (key excludes the vendor, so lines that changed owner stay one model; RS/6000 530 and 530H stay separate) |
+| `hardware_config` | `hw:` | derived: equal tuples of system model, processor entity, nominal clock, chips, cores, threads/core and memory; unknown values never equal known ones. Hardware options (FPU/FPA) await curated classical models |
 
 A processor reference may stop at the family when the source names only a family
 ("Intel Itanium 2", "SPARC64 V"). Family-level date events are family launches
@@ -297,8 +298,10 @@ is intended and listed in that step's report.
    the previous `_processor_key` served only as a comparison (no wrong SKU merges,
    nine prefix splits, an empty key grouping clock-only texts). 71.7% of input
    observations resolve to a SKU and 20.2% to a family.
-   **2b. System identity** (next): `system_model` and `hardware_config`, including
-   CPUs that older sources write only into system names.
+   **2b. System identity** (done 2026-10-02): vendors, derived SPEC system models
+   and hardware configurations; see [system identity](../research/system-identity.md).
+   Equality-based configurations cannot link suites that omit counts (CPU92 has no
+   core counts); cross-suite pairing is a fitter policy over equal-or-unknown facts.
 3. **Dates.** Create `date_event`; convert proxies, hardware evidence, overrides
    and SPEC date fields; implement `chronology_selected`. Parity: current timeline
    years reproduced. Enabling the SKU catalog is a separate, reported change.
