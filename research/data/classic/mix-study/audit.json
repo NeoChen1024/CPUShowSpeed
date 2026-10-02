@@ -1,5 +1,5 @@
 {
-  "method_version": "instruction-mix-inventory-v1",
+  "method_version": "instruction-mix-inventory-v2",
   "source_rows": 380,
   "scores": {
     "Gibson Mix": {
@@ -11,10 +11,6 @@
       "positive": 183
     }
   },
-  "candidate_pairs": 131,
-  "classical_configurations": 37,
-  "approved_pairs": 0,
-  "fitted_models": 0,
   "weights_sum": {
     "Gibson Mix": 1.0,
     "ADP Mix": 1.0
@@ -22,19 +18,15 @@
   "input_sha256": {
     "data/derived/classic/overlap-spec/classical-records.jsonl": "afe7897a53b5267f4b965c435e1779cd4a46404d60a867d40ff74e4b71341e27",
     "data/derived/classic/longbottom-cpumix-84dcf58a736b.json": "e772356cba801ae7a20717140f5fe1aabb1d0d2481693a9d530caceede56985b",
-    "data/raw/classic/blobs/84/84dcf58a736be9fe1622801cbae47b984ae15915507f6b2108a5c29250180173": "7e3920bd0a901edb3b36f9077e8509b206def344051768ef37db7459905d014e",
-    "data/derived/classic/historical-timeline/configurations.csv": "d370a0f727aa0479d4802892030e1628c28314a0aa7d4a6ec2b65d0bc8c0bf61",
-    "research/data/classic/mix-candidate-aliases.csv": "13edafe59bad0c614c23a92210f70836fdfa575c40f276ef4eb94b846bc422f3"
+    "data/raw/classic/blobs/84/84dcf58a736be9fe1622801cbae47b984ae15915507f6b2108a5c29250180173": "7e3920bd0a901edb3b36f9077e8509b206def344051768ef37db7459905d014e"
   },
   "code_sha256": {
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_mix.py": "a15a364af15bc513cae51de951663087236d67c5b5a714e7d7ef688e78877f52",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "31dfa875c6a522a6125e0b6dc019d66f2f9111042e9724464bdaf4cdb3b103c9",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_mix.py": "91c1f0c4c96bd26d373d4e65dc51a57925d7966517fe0fbc0e1f461981f525ff",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_io.py": "7c5345d069e0b41d7bf28cee1efc517f2e804ebd910e1210de856822191cc4da"
   },
   "notes": [
     "Missing-score listings retained; no VAXen targets synthesized.",
-    "Model normalization can drop EAE/EAU/FPU flags: every pairing is unapproved.",
     "Positive numeric cells are transcriptions of calculated ratings, not executed benchmark observations."
   ]
 }

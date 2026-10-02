@@ -5,7 +5,7 @@ import math
 from collections import defaultdict
 
 import numpy as np
-from cpushowspeed.classic_network_data import family
+from cpushowspeed.classical_store import family
 
 
 def metric_weights(metrics):

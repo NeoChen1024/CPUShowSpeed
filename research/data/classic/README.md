@@ -22,15 +22,13 @@ column (Whetstone uses MWIPS/MHz * 1000). Empty fields mean unspecified.
 These curated files remain separate from model inputs pending integration and
 variant/configuration review; no fitted coefficients were changed.
 
-`overlap-summary.csv`, `overlap-models.csv`, `overlap-coverage.csv` and
-`overlap-audit.json` are compact outputs of `cpushowspeed classic overlap-spec`.
-Full records and pairs remain in the ignored derived output directory. After
-a reviewed rerun, copy `summary.csv`, `model-summary.csv`, `source-coverage.csv`
-and `audit.json` to these four snapshot filenames respectively.
-
-All model matches remain candidates. Keep conflicting/missing-clock pairs
-and repeated source rows; they are not automatically independent experiments.
-See the [overlap audit](../../classic-spec-overlap.md) for coverage limits.
+`overlap-coverage.csv` and `overlap-audit.json` are compact outputs of
+`cpushowspeed classic overlap-spec` (copies of `source-coverage.csv` and
+`audit.json`). Full records remain in the ignored derived output directory and
+are loaded by `data extract`. Pairing is by resolved system in the fitters; the
+former name-based `overlap-summary.csv`/`overlap-models.csv` are archived in
+[`../archive/name-pairing/`](../archive/name-pairing/README.md).
+See the [overlap report](../../classic-spec-overlap.md) for coverage limits.
 
 ## Primary direct rate composite experiment
 
@@ -58,18 +56,20 @@ See [method and validation](../../classic-network-fitting.md).
 
 ## Instruction-mix bridge preparation
 
-`mix-candidate-aliases.csv` expands discovery only; it does not approve hardware
-identity or configure fitting. `mix-study/weights.csv`, `coverage.csv`,
-`candidate-pairs.csv` and `audit.json` snapshot the preparation command. Every
-pair is pending review and ineligible for fitting. Counts span metric variants
-and repeated source configurations, not independent experiments. Full source
-listings including missing scores remain in the generated `mix-records.csv`.
-See [the preparation report](../../instruction-mix-bridge.md).
+`mix-candidate-aliases.csv` is the frozen input of the step-4 review import,
+which turned it into open `system_link` reviews; it does not approve hardware
+identity and no fitter reads it. `mix-study/weights.csv` and `audit.json`
+snapshot `classic mix-inventory`. Full source listings including missing scores
+remain in the generated `mix-records.csv`. See
+[the preparation report](../../instruction-mix-bridge.md).
 
 `mix-study/bridge-classical-fit-summary.csv` records exploratory `y=kx` factors
-in classical-score units per mix KIPS, never VAXen. The two name-match scenarios
-retain their own group counts, bootstrap CI95 and shared relative-error policy.
-`bridge-spec89-target-coverage.csv`, `bridge-spec92-target-coverage.csv` and
-`bridge-spec89-family-leads.csv` record direct-bridge feasibility, including
-zero-overlap findings and a rejected-for-fitting CPU-family lead.
-`bridge-audit.json` preserves input hashes, seed and interpretation boundaries.
+in classical-score units per mix KIPS, never VAXen, for the `resolved_system`
+and `plus_pending_links` scenarios, each with its own group counts, bootstrap
+CI95 and shared relative-error policy. `bridge-classical-coverage.csv` counts
+pairs, mix rows, classical results and systems per metric.
+`bridge-spec89-target-coverage.csv` and `bridge-spec92-target-coverage.csv`
+record direct-bridge feasibility (currently zero pairs), and the hand-written
+`bridge-spec89-family-leads.csv` keeps a rejected-for-fitting CPU-family lead.
+`bridge-audit.json` preserves the database input digest, seed and
+interpretation boundaries.

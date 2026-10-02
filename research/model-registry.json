@@ -435,25 +435,15 @@
       "kind": "derived",
       "owner": "research/classic-spec-overlap.md",
       "optional": true,
-      "lineage": "Source-level candidates, not verified identical configurations"
+      "lineage": "Parsed classical and SPEC89/92 records; pairing happens over resolved systems in the database"
     },
     {
-      "id": "classic-source-pairs",
-      "path": "data/derived/classic/source-pair-fit/pairs.csv",
+      "id": "schema-database",
+      "path": "data/derived/schema/cpushowspeed.sqlite",
       "kind": "derived",
-      "owner": "docs/classic-collection.md",
+      "owner": "docs/data-schema.md",
       "optional": true,
-      "lineage": "Reuses DEC and legacy tuples; repeated stages and patterns are not independent samples",
-      "preparation_command": "cpushowspeed classic prepare-sources (after classic prepare-pairs)"
-    },
-    {
-      "id": "classic-source-vectors",
-      "path": "data/derived/classic/source-pair-fit/vectors.jsonl",
-      "kind": "derived",
-      "owner": "docs/classic-collection.md",
-      "optional": true,
-      "lineage": "Same DEC columns as classical targets and SPEC92 speed/rate bridge",
-      "preparation_command": "cpushowspeed classic prepare-sources (after classic prepare-pairs)"
+      "lineage": "Built by data build from curated tables and extracted observations; classical fitters pair results by resolved system_id"
     },
     {
       "id": "historical-observations",
@@ -557,7 +547,7 @@
       "kind": "reviewed-data",
       "owner": "research/instruction-mix-bridge.md",
       "optional": false,
-      "lineage": "CCTA source ratings; unapproved classical configuration joins; joint fit snapshots"
+      "lineage": "CCTA source ratings; resolved-system classical pairing snapshots (automatic, unreviewed)"
     },
     {
       "id": "spec95-2000-overlap-audit",
@@ -1068,7 +1058,7 @@
       "status": "implemented-conditional",
       "owner": "research/spec89-rate-bridge.md",
       "dataset_ids": [
-        "classic-source-vectors"
+        "schema-database"
       ],
       "depends_on": [
         "rate92-unit"
@@ -1165,7 +1155,7 @@
       "status": "implemented-conditional",
       "owner": "research/classic-rate-composite-fitting.md",
       "dataset_ids": [
-        "classic-source-pairs",
+        "schema-database",
         "classic-unit-policy"
       ],
       "depends_on": [
@@ -1198,7 +1188,7 @@
       "status": "implemented-conditional",
       "owner": "research/spec89-rate-bridge.md",
       "dataset_ids": [
-        "classic-source-pairs"
+        "schema-database"
       ],
       "depends_on": [
         "classical-composite",
@@ -1230,7 +1220,7 @@
       "status": "implemented-conditional",
       "owner": "research/spec89-rate-bridge.md",
       "dataset_ids": [
-        "classic-source-pairs"
+        "schema-database"
       ],
       "depends_on": [
         "classical-composite",
@@ -1294,7 +1284,7 @@
       "owner": "research/classic-network-fitting.md",
       "dataset_ids": [
         "classic-overlap",
-        "classic-source-vectors",
+        "schema-database",
         "spec89-native-bridge"
       ],
       "depends_on": [
@@ -1545,6 +1535,13 @@
       "role": "archive",
       "status": "retired",
       "purpose": "Unchanged records of finished hardware-date review passes; no code reads them"
+    },
+    {
+      "path": "research/data/archive/name-pairing/README.md",
+      "title": "Name-based classical/SPEC pairing snapshots",
+      "role": "archive",
+      "status": "retired",
+      "purpose": "Unchanged candidate-pair snapshots replaced by resolved-system pairing in schema step 5c; no code reads them"
     },
     {
       "path": "research/data/spec89/helman-1991/README.md",

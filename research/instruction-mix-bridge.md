@@ -1,7 +1,8 @@
 # Gibson / ADP bridge preparation
 
-Reviewed: 2026-09-28. Status: implemented source inventory, candidate discovery
-and SPEC89/SPEC92 feasibility audits. The joint network fit was removed on
+Reviewed: 2026-09-28; pairing recomputed on resolved systems 2026-10-02 (schema
+step 5c). Status: implemented source inventory, resolved-system pairing and
+SPEC89/SPEC92 feasibility audits. The joint network fit was removed on
 2026-10-02; no mix value is calibrated to VAXen.
 
 ## Reproduce and inspect
@@ -10,19 +11,20 @@ and SPEC89/SPEC92 feasibility audits. The joint network fit was removed on
 uv run cpushowspeed classic mix-inventory
 ```
 
-The command reads the cached Longbottom CCTA/TSU mix source, classical records,
-existing historical source/configuration aggregation and explicit candidate
-aliases. It validates the original blob's BLAKE3, independently reparses its
+The command reads the cached Longbottom CCTA/TSU mix source. It validates the original blob's BLAKE3, independently reparses its
 190 table rows, and checks both sets of extracted raw rows against that original
 HTML. It validates both operation-weight tables and exports all 380 mix listings,
 including missing scores. Numerical source cells are calculated ratings, not
 newly verified hardware executions.
 
 Output: `data/derived/classic/mix-study/`, with `mix-records.csv`,
-`mix-weights.csv`, `candidate-pairs.csv`, `coverage.csv`, and `audit.json`.
-The small [review artifacts](data/classic/mix-study/) are versioned. The
-[candidate alias list](data/classic/mix-candidate-aliases.csv) is explicitly
-**not** approval of configuration equivalence.
+`mix-weights.csv` and `audit.json`; `data extract` loads the positive listings as
+`mix:longbottom-cpumix` results. Pairing with classical results happens in
+`classic mix-bridge` over resolved systems. The small
+[review artifacts](data/classic/mix-study/) are versioned. The former
+[candidate alias list](data/classic/mix-candidate-aliases.csv) was converted in
+step 4 into open `system_link` reviews; it is **not** approval of configuration
+equivalence and is read only by that review import.
 
 ## Source and definition findings
 
@@ -70,24 +72,28 @@ ratings remain a distinct, unestablished mix variant.
 
 ## Actual bridge candidates
 
-The new search compares mixes against the **current classical configuration
-inventory**, not only SPEC-era machines. Target values are original interpreted
-classical scores; predicted VAXen values were not used to manufacture bridge
-observations. Every candidate is pending review and `fit_eligible=false`.
+Mix results pair with classical results of the **current classical inventory**
+(not only SPEC-era machines) in two scenarios:
 
-| Mix | Classical metric | Row pairs | Mix rows | Classical configurations | Normalized model keys |
-| --- | --- | ---: | ---: | ---: | ---: |
-| Gibson | Whetstone native MWIPS | 41 | 19 | 32 | 16 |
-| Gibson | Whetstone DP MWIPS | 24 | 15 | 17 | 13 |
-| Gibson | LINPACK n=100 MFLOPS | 5 | 2 | 5 | 2 |
-| ADP | Whetstone native MWIPS | 38 | 18 | 29 | 15 |
-| ADP | Whetstone DP MWIPS | 23 | 14 | 16 | 12 |
+- `resolved_system`: both resolve to the same `system_id`.
+- `plus_pending_links`: additionally, the system links a review leaves open
+  (`needs_review`, from the former alias list); rejected links never pair.
 
-Total: **131 candidate metric pairs / 37 classical configurations**, involving
-20 distinct mix-side labels. These counts overlap across metrics and variants;
-model keys are discovery groupings, not verified independent configurations.
-There are **no Dhrystone candidates** in this run. All existing contributing
-observations remain traceable through the historical `observations.csv`.
+Target values are original interpreted classical scores; predicted VAXen values
+were not used to manufacture bridge observations. No pairing is approved.
+
+| Mix | Classical metric | `resolved_system` pairs / systems | `plus_pending_links` pairs / systems |
+| --- | --- | ---: | ---: |
+| Gibson | Whetstone native MWIPS | 19 / 9 | 40 / 15 |
+| Gibson | Whetstone DP MWIPS | 8 / 6 | 25 / 12 |
+| Gibson | LINPACK n=100 MFLOPS | 5 / 2 | 5 / 2 |
+| ADP | Whetstone native MWIPS | 14 / 8 | 35 / 14 |
+| ADP | Whetstone DP MWIPS | 5 / 5 | 22 / 11 |
+
+Total: **127 metric pairs**, 76 of them only through pending links. Counts
+overlap across metrics and variants. There are **no Dhrystone pairs**. The
+former name-based run (2026-09-28) found 131 pairs on 37 configurations; its
+tables are archived in [`data/archive/name-pairing/`](data/archive/name-pairing/README.md).
 
 The five LINPACK pairs come from CDC 6600/7600, with no ADP score for those mix
 rows. They are useful diagnostics, but two related machines cannot establish
@@ -416,11 +422,16 @@ Reproduce after `classic mix-inventory` with:
 uv run cpushowspeed classic mix-bridge --bootstrap 2000 --seed 20260928
 ```
 
-The command validates the inventory's source-input hashes and saves its own
-input/code hashes. Results and PNG/SVG scatterplots live under
+The command reads the built database and records its input digest and code
+hashes. Results and PNG/SVG scatterplots live under
 `data/derived/classic/mix-bridge/`; compact `bridge-*` snapshots are versioned in
-[data/classic/mix-study/](data/classic/mix-study/). All original candidate rows
-remain in the full exported pair table. No production coefficients changed.
+[data/classic/mix-study/](data/classic/mix-study/). Every pairing remains in the
+full exported pair tables. No production coefficients changed.
+
+Since step 5c (2026-10-02) the command reads only the database. The 360 positive
+CCTA/TSU listings enter; the curated TR 440, Sigma and SC-3 cells below are not
+yet database observations and no longer enter its audit. The counts in the
+following two SPEC subsections were recomputed on that basis.
 
 ### Direct mix → SPEC89: no current model intersection
 
@@ -431,15 +442,14 @@ simulation durations are different quantities and are not absolute ADP/Gibson
 score inputs. Of the 390 listings, 370 have positive values, including the two
 Sigma relative cells; these units are not pooled.
 
-The SPEC89 inventory has **421 source records / 160 distinct system labels**.
-Literal or existing normalized-model matching yields **zero candidate pairs**
+No mix result shares a resolved system with a SPEC89 result: **zero pairs**
 for all three target metrics. This is an input-coverage result, not a claim that
 no overlap can exist in undiscovered archives.
 
-| SPEC89 target | Positive source records | Distinct system labels | Model-matched mix pairs |
+| SPEC89 target | Positive values | Resolved systems | Mix pairs |
 | --- | ---: | ---: | ---: |
-| SPECint89 | 182 | 94 | 0 |
-| SPECmark89 | 264 | 133 | 0 |
+| SPECint89 | 182 | 91 | 0 |
+| SPECmark89 | 264 | 132 | 0 |
 | SPECfp89 | 207 | 106 | 0 |
 
 Counts overlap across metrics. Reference-definition records are counted and
@@ -468,27 +478,42 @@ architecture diversity.
 
 Five edges were fitted using the established zero-intercept model `y = kx`.
 Here `x` is mix KIPS and `y` is the **original classical score**, not VAXen.
-Each normalized classical model contributes its median log score ratio, and
-`k` is the geometric mean across those model centers. Repeated observations
+Each resolved classical system contributes its median log score ratio, and
+`k` is the geometric mean across those system centers. Repeated observations
 remain represented in their existing configuration aggregates and pair rows;
-there is no error-based deletion. Models are held out together. The primary error statistic is model-center P95; the table below explicitly
+there is no error-based deletion. Systems are held out together. The primary error statistic is model-center P95; the table below explicitly
 reports the secondary model-balanced observation P95 to retain within-model
 spread. Coefficient CI95 uses model bootstrap resampling.
 
-| Mix → classical score | Pairs | Model groups | k (classical unit / mix KIPS) | Held-out observation P95 |
+`plus_pending_links` scenario:
+
+| Mix → classical score | Pairs | Systems | k (classical unit / mix KIPS) | Held-out observation P95 |
 | --- | ---: | ---: | ---: | ---: |
-| Gibson → Whetstone native MWIPS | 41 | 16 | 0.000759617 | 471.4% |
-| Gibson → Whetstone DP MWIPS | 24 | 13 | 0.000219525 | 512.9% |
+| Gibson → Whetstone native MWIPS | 40 | 15 | 0.000816159 | 146.4% |
+| Gibson → Whetstone DP MWIPS | 25 | 12 | 0.000265175 | 307.8% |
 | Gibson → LINPACK n=100 MFLOPS | 5 | 2 | 0.000232879 | 73.8% |
-| ADP → Whetstone native MWIPS | 38 | 15 | 0.000400913 | 1053.8% |
-| ADP → Whetstone DP MWIPS | 23 | 12 | 0.000121170 | 837.8% |
+| ADP → Whetstone native MWIPS | 35 | 14 | 0.000408053 | 677.0% |
+| ADP → Whetstone DP MWIPS | 22 | 11 | 0.000135528 | 982.8% |
+
+`resolved_system` scenario (no pending link):
+
+| Mix → classical score | Pairs | Systems | k | Held-out observation P95 |
+| --- | ---: | ---: | ---: | ---: |
+| Gibson → Whetstone native MWIPS | 19 | 9 | 0.000800293 | 144.8% |
+| Gibson → Whetstone DP MWIPS | 8 | 6 | 0.000402074 | 394.7% |
+| Gibson → LINPACK n=100 MFLOPS | 5 | 2 | 0.000232879 | 73.8% |
+| ADP → Whetstone native MWIPS | 14 | 8 | 0.000436453 | 835.0% |
+| ADP → Whetstone DP MWIPS | 5 | 5 | 0.000247937 | 181.1% |
+
+The earlier name-matched run (2026-09-28) gave, for example, Gibson → Whetstone
+native 0.000759617 on 16 model groups and ADP → Whetstone DP 0.000121170 on 12.
 
 The large tail errors describe variation under these assumed matches; they are
 not a declaration of failure or grounds for removing points. Language/compiler,
 software floating point, model options and unreviewed aliases remain possible
-contributors. A separate literal-name-only scenario is included as a matching
-sensitivity check, not chosen as a replacement cohort because its errors are
-smaller. Literal names do not themselves validate configurations.
+contributors. The `resolved_system` scenario is a matching sensitivity check,
+not chosen as a replacement cohort because its errors differ. A shared resolved
+system does not itself validate configurations.
 
 [Scatterplots](../data/derived/classic/mix-bridge/classical-mix-scatter.png) show
 all candidate points plus both fitted lines and conditional coefficient CI95.
@@ -505,24 +530,22 @@ The same command also audits SPEC92, preserving speed/rate and integer/FP
 identities. The cached speed summaries are useful archaeological input here;
 this does not change the project's production integer-rate target.
 
-| Source cohort / metric | Positive score cells | System labels | Mix pairs |
+| Metric (all database scopes) | Positive values | Resolved systems | Mix pairs |
 | --- | ---: | ---: | ---: |
-| Netlib speed / SPECint92 | 302 | 244 | 0 |
-| Netlib speed / SPECbase_int92 | 214 | 175 | 0 |
-| Netlib speed / SPECfp92 | 228 | 202 | 0 |
-| Netlib speed / SPECbase_fp92 | 162 | 146 | 0 |
-| Curated source vectors / SPECint92 | 62 | 38 | 0 |
-| Curated source vectors / SPECbase_int92 | 17 | 9 | 0 |
-| Curated source vectors / SPECfp92 | 78 | 54 | 0 |
-| Rate archive / SPECrate_int92 | 283 | 165 | 0 |
-| Rate archive / SPECrate_base_int92 | 199 | 117 | 0 |
+| SPECint92 | 363 | 229 | 0 |
+| SPECbase_int92 | 230 | 144 | 0 |
+| SPECfp92 | 78 | 54 | 0 |
+| SPECrate_int92 | 331 | 151 | 0 |
+| SPECrate_base_int92 | 199 | 104 | 0 |
 
-These **1,545 score cells** are not 1,545 independent submissions: metrics,
-source compilations and dated summary snapshots can describe the same system
-or result repeatedly. All rows remain exported; seven explicit missing speed
-summary cells remain in a separate file. No coefficient is computed from zero
-pairs. The compact `bridge-spec92-target-coverage.csv` and audit snapshot retain
-counts and source hashes; full scores stay in ignored derived storage.
+These **1,201 values** are not 1,201 independent submissions: metrics and
+source compilations can describe the same system or result repeatedly.  The
+counts span every database scope reporting the metric (the CPU92 results,
+including the Netlib speed summaries, the DEC report columns and the DEC OpenVMS
+table), so they differ from the former per-source-cohort table. SPECbase_fp92 is
+no longer audited. No coefficient is computed from zero pairs. The
+compact `bridge-spec92-target-coverage.csv` and audit snapshot retain counts and
+the database input digest.
 
 A targeted review of apparent old-model substrings found modern names such as
 AlphaServer 2100 and RS/6000 360/370, not HP 2100 or IBM System/360 and /370.

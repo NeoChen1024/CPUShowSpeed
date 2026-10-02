@@ -1,8 +1,8 @@
 # Data schema design
 
 Status: **steps 1 (sources), 2/2b (processor and system identity), 3 (dates), 4
-(reviews), 5a (observations) and 5b (SPEC rate fitters) implemented 2026-10-02;
-steps 5c–5d (other fitters and timeline) not implemented.**
+(reviews), 5a (observations), 5b (SPEC rate fitters) and 5c (classical, SPEC89
+and mix fitters) implemented 2026-10-02; step 5d (timeline) not implemented.**
 This document owns the target
 data model and its migration plan. Until each step lands, the current formats in
 the [data contract](data-contract.md), [input catalog](input-catalog.md),
@@ -226,8 +226,8 @@ source block, raw record, qualification) plus
 `source_id` (by content hash, then a registry key the adapter cites such as a
 SPEC89 package source ID, then an address claimed by one source, then a dataset's
 `member_url_prefix`), the result's `hardware_id`, `system_id` and
-`processor_entity`, and its selected chronology year. All 103,456 observations
-resolve to a source. Curated observations (`historical/observations.jsonl`,
+`processor_entity`, and its selected chronology year. All 103,119 observations
+(56,538 results, after step 5c) resolve to a source. Curated observations (`historical/observations.jsonl`,
 future KIPS/Auerbach/VUP values) are not yet loaded.
 
 ### `date_event`
@@ -271,8 +271,9 @@ resolves them into `review_result` (one row per matched result and side) and
 `review_finding` any selector that matches nothing and any unreviewed link the
 identity rules already merge. A rejected result date leaves every chronology use
 (own tier and model-level dates for other results) and is kept in the candidates
-as `rejected_<field>`; the extracted record is unchanged. Accepted pairs are
-recorded for the fitters (step 5); nothing reads them yet.
+as `rejected_<field>`; the extracted record is unchanged. The CPU92 rate fit reads
+`result_pair` decisions (step 5b) and `mix-bridge` reads open system links
+(step 5c); the CPU92–CPU95 speed pairs have no consumer yet.
 
 ## Built views and consistency checks
 
@@ -368,8 +369,23 @@ changed.
      reviews of the automatic hardware-near CPU92/CPU95 rate pairs (42 accepted, 2
      rejected for differing cache), which left the same-OS anchor unchanged. The 13
      step-4 speed pairs have no consumer.
-   - **5c**: classical, SPEC89 and mix fitters likewise; the duplicate
-     `historical-spec:spec92-netlib` view of the Netlib CPU92 pages is dropped.
+   - **5c** (done 2026-10-02): `rate-composite-fit`, `spec89-rate-fit`,
+     `network-fit` and `mix-bridge` read the database and pair a classical result
+     with a SPEC or mix result only when both resolve to the same `system_id`
+     (`classical_store`); OS is a run condition, clocks must agree within 1% when
+     both are known. The pairings are automatic; their review is later work. The
+     duplicate `historical-spec:spec92-netlib` view of the Netlib CPU92 pages is
+     dropped, and the SPEC89 integer bridge rows and DEC N3909 report columns
+     become observations (`historical-spec:spec89-bridge`,
+     `reviewed-vector:dec-n3909-1994`): 103,119 observations, 56,538 results, no
+     chronology selection changed. `prepare-pairs`, `prepare-sources` and the
+     name-based candidate pairs of `overlap-spec`/`mix-inventory` are removed; their
+     tracked snapshots are archived. Same-column cohorts and both SPEC89 bridge
+     edges are unchanged; cross-source composites, the network (−8% to +4%) and the
+     SPEC89 joint cohorts change. See the
+     [rate composites](../research/classic-rate-composite-fitting.md#changes-from-the-name-matched-fit-2026-10-02),
+     [SPEC89 bridge](../research/spec89-rate-bridge.md#changes-from-the-name-matched-run-2026-10-02)
+     and [network](../research/classic-network-fitting.md#changes-from-the-name-matched-run-2026-10-02).
    - **5d**: the timeline reads `result_chronology`; the legacy date files, the
      input catalog snapshot (`inputs build`, `--input-catalog`) and their readers
      are deleted.

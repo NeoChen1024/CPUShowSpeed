@@ -1,21 +1,20 @@
 {
-  "method": "classic-hardware-overlap-v1",
+  "method": "classic-hardware-overlap-v2-records-only",
   "parsed_classic_rows": 3794,
   "spec_records": 724,
-  "candidate_pairs": 643,
   "rejected_rows": 0,
   "inputs": {
     "research/data/classic/acquisition.csv": "62812b003ddbfdb37adbee3fe8b60ae6e75cbc798de661e02dc9f788116c0a9c",
     "research/data/spec89/aggregate89-plus-helman.csv": "0e301ae5271ea95054dba55762e83a79c2da6ddd4a431019559b19bf7de7a42f",
     "research/data/spec89/v2.0.0/csv/throughput89.csv": "f95430702680a7c63c63b2566f5af52be99a10e84cf8bb95291d3d07beac13dc",
-    "data/derived/spec/cpu92-rate/cpu92-rate-records.csv": "4e51119deca48ac877be2589a2123c3b88edf7a9850425f6a6fa6829bfe2591a",
+    "data/derived/spec/cpu92-rate/cpu92-rate-records.csv": "0a69befb21d7e22c043fb1d0595d710d9fd06ba3548d1386f2140e8c06267a15",
     "research/data/spec/cpu92-dec-alpha-openvms-1992.csv": "bd3dc89233286498f58c4bcf6913d61bf61babe8fd6f52b2fba9a083d538a1ed"
   },
   "pdf_text_extractions": {
     "netlib-linpack-report": "da10c65aaa7ab32ab41690cdedf2963d37522ed22ee862167400f72a3c759381"
   },
   "pdftotext_version": "pdftotext version 26.08.0",
-  "parser_sha256": "d16a31770645046779b786f8b623e2bfb61ac1cb6146081fbf6914e284fdc6b8",
+  "parser_sha256": "169d21f7160d99a6b8414043ece5cf140c6861b7eda3ed89929792d1e11b7c9c",
   "derived_inputs": {
     "data/derived/classic/longbottom-cpumix-84dcf58a736b.json": "e772356cba801ae7a20717140f5fe1aabb1d0d2481693a9d530caceede56985b",
     "data/derived/classic/longbottom-whetstone-history-ea8d7e6944e1.json": "eeef84bb1b8d4d0b3404fd9dbe78f5fca73fd9db47d4fed7aadf8c8b805b6e0c",
@@ -25,5 +24,5 @@
     "data/derived/classic/longbottom-livermore-results-c2d54c2d0c7a.json": "e7f41c99e3bfa7634b0ae2adfe05b9f6dc0373e5cace512970287e564fabbe46",
     "data/derived/classic/netlib-dhrystone-results-404848e0ce3f.json": "60558d2784fedb5cc6c603a58b382c359b0d42a00a5c3c52f613c40d275e9f07"
   },
-  "caution": "Model-name candidates only. Repeated source rows retained. No score fitting or configuration equivalence established."
+  "caution": "Parsed records only; pairing is by resolved system in the built database. Repeated source rows retained."
 }

@@ -1,24 +1,20 @@
-"""Instruction-mix source inventory and classical bridge candidates, not fitted estimates."""
+"""Instruction-mix source inventory and weights, not fitted estimates; pairing is in `mix_bridge`."""
 
 import hashlib
 import json
 import math
-import re
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 import click
 from blake3 import blake3
 from bs4 import BeautifulSoup
-from cpushowspeed.classic_overlap import model_key
 from cpushowspeed.classic_values import numeric
 from cpushowspeed.research_io import code_hashes, read_csv, write_csv
 
 RECORDS = Path("data/derived/classic/overlap-spec/classical-records.jsonl")
 SOURCE = Path("data/derived/classic/longbottom-cpumix-84dcf58a736b.json")
-HISTORICAL = Path("data/derived/classic/historical-timeline/configurations.csv")
 SNAPSHOT = Path("data/raw/classic/blobs/84/84dcf58a736be9fe1622801cbae47b984ae15915507f6b2108a5c29250180173")
-ALIASES = Path("research/data/classic/mix-candidate-aliases.csv")
 
 
 def weights(source):
@@ -58,7 +54,7 @@ def weights(source):
 @click.command("mix-inventory")
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/classic/mix-study"), show_default=True)
 def mix_inventory(output_dir):
-    """Inventory Gibson/ADP scores, definitions and unapproved classical overlap candidates."""
+    """Inventory Gibson/ADP scores and mix definitions from the archived Longbottom page."""
     records = [json.loads(s) for s in RECORDS.read_text().splitlines()]
     mixes = [r for r in records if r["benchmark"] in ("Gibson Mix", "ADP Mix")]
     original = json.loads(SOURCE.read_text())
@@ -103,74 +99,8 @@ def mix_inventory(output_dir):
                 fit_eligible=False,
             )
         )
-    classical = [r for r in read_csv(HISTORICAL) if r["route"] == "classical"]
-    aliases = read_csv(ALIASES)
-    pairs = []
-    for m in source_rows:
-        if not m["kips"]:
-            continue
-        for c in classical:
-            tier = ""
-            if m["system"].casefold() == c["system"].casefold():
-                tier = "literal_name"
-            elif model_key(m["system"]) == model_key(c["system"]):
-                tier = "normalized_model"
-            reasons = []
-            for a in aliases:
-                if re.fullmatch(a["mix_regex"], m["system"], re.I) and re.fullmatch(a["classical_regex"], c["system"], re.I):
-                    tier = tier or "explicit_candidate_alias"
-                    reasons.append(a["reason"])
-            if not tier:
-                continue
-            scores = json.loads(c["scores"])
-            for metric, value in scores.items():
-                pairs.append(
-                    dict(
-                        mix_id=m["mix_id"],
-                        mix=m["mix"],
-                        mix_system=m["system"],
-                        mix_kips=m["kips"],
-                        classical_configuration_id=c["configuration_id"],
-                        classical_system=c["system"],
-                        metric=metric,
-                        classical_score=value,
-                        observation_count=c["observation_count"],
-                        candidate_tier=tier,
-                        mix_memory_cycle_us_raw=m["memory_cycle_us_raw"],
-                        classical_configuration=c["configuration"],
-                        mix_source_url=m["source_url"],
-                        mix_locator=m["source_locator"],
-                        classical_source_url=c["source_url"],
-                        source_lineage_relation=(
-                            "same_Longbottom_compilation"
-                            if "roylongbottom" in c["source_url"]
-                            else "different_archive_independence_unestablished"
-                        ),
-                        review_status="pending_configuration_review",
-                        fit_eligible=False,
-                        review_reason="; ".join(reasons)
-                        or "Name overlap only; options, memory timing and workload semantics require review.",
-                    )
-                )
-    summaries = []
-    for mix in ("Gibson Mix", "ADP Mix"):
-        ms = [r for r in source_rows if r["mix"] == mix]
-        ps = [r for r in pairs if r["mix"] == mix]
-        for metric in sorted({p["metric"] for p in ps}):
-            sub = [p for p in ps if p["metric"] == metric]
-            summaries.append(
-                dict(
-                    mix=mix,
-                    metric=metric,
-                    candidate_pairs=len(sub),
-                    mix_rows=len({r["mix_id"] for r in sub}),
-                    classical_configurations=len({r["classical_configuration_id"] for r in sub}),
-                    model_keys=len({model_key(r["classical_system"]) for r in sub}),
-                    approved_pairs=0,
-                )
-            )
     audit = dict(
-        method_version="instruction-mix-inventory-v1",
+        method_version="instruction-mix-inventory-v2",
         source_rows=len(source_rows),
         scores={
             mix: dict(
@@ -179,23 +109,16 @@ def mix_inventory(output_dir):
             )
             for mix in ("Gibson Mix", "ADP Mix")
         },
-        candidate_pairs=len(pairs),
-        classical_configurations=len({r["classical_configuration_id"] for r in pairs}),
-        approved_pairs=0,
-        fitted_models=0,
         weights_sum={mix: sum(r["weight"] for r in definitions if r["mix"] == mix) for mix in ("Gibson Mix", "ADP Mix")},
-        input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in [RECORDS, SOURCE, SNAPSHOT, HISTORICAL, ALIASES]},
+        input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in [RECORDS, SOURCE, SNAPSHOT]},
         code_sha256=code_hashes(__file__),
         notes=[
             "Missing-score listings retained; no VAXen targets synthesized.",
-            "Model normalization can drop EAE/EAU/FPU flags: every pairing is unapproved.",
             "Positive numeric cells are transcriptions of calculated ratings, not executed benchmark observations.",
         ],
     )
     output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(output_dir / "mix-records.csv", source_rows)
     write_csv(output_dir / "mix-weights.csv", definitions)
-    write_csv(output_dir / "candidate-pairs.csv", pairs)
-    write_csv(output_dir / "coverage.csv", summaries)
     (output_dir / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps({k: v for k, v in audit.items() if k not in ("input_sha256", "code_sha256")}))

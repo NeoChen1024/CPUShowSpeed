@@ -45,10 +45,11 @@ detected by the ambiguity check and fixed with explicit families.
 
 ## Coverage
 
-3,951 distinct (scope, text, clock) mentions over 103,456 input observations:
-**74,344 SKU (71.9%), 21,116 family (20.4%), 5,596 unresolved and 2,400 without
-processor text** (recounted 2026-10-02 from the built database, after the P5
-Pentium pattern alias below).
+3,868 distinct (scope, text, clock) mentions over 103,119 input observations:
+**74,344 SKU (72.1%), 20,711 family (20.1%), 5,528 unresolved and 2,536 without
+processor text** (recounted 2026-10-02 from the built database after schema step
+5c, which dropped the duplicate `historical-spec:spec92-netlib` view and added the
+SPEC89 bridge rows; the P5 Pentium pattern alias below is included).
 
 | Scope | Observations | SKU | Family | Unresolved | Missing text |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -62,9 +63,9 @@ Pentium pattern alias below).
 | `reviewed-vector:dec-n3909-1994` | 661 | 0 | 0 | 0 | 661 |
 | `historical-spec:spec89` | 653 | 7 | 53 | 90 | 503 |
 | `classical:netlib-dhrystone-results` | 542 | 107 | 195 | 240 | 0 |
-| `historical-spec:spec92-netlib` | 473 | 0 | 405 | 68 | 0 |
 | `spec:cpu2026` | 423 | 205 | 200 | 18 | 0 |
 | `mix:longbottom-cpumix` | 360 | 0 | 0 | 0 | 360 |
+| `historical-spec:spec89-bridge` | 136 | 0 | 0 | 0 | 136 |
 | `historical-spec:spec89-throughput` | 20 | 0 | 0 | 0 | 20 |
 | `historical-spec:spec92-dec` | 9 | 0 | 0 | 0 | 9 |
 

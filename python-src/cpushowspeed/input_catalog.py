@@ -13,6 +13,7 @@ from cpushowspeed.benchmark_records import (
     spec_observations,
     write_jsonl,
 )
+from cpushowspeed.classic_values import numeric
 from cpushowspeed.research_io import code_hashes, read_csv
 from cpushowspeed.spec_inputs import (
     collect_cpu92_rate,
@@ -50,10 +51,12 @@ def package_source(record):
 
 
 def historical_observation(record, metric, score, prefix):
+    """One source row or report column is one result; each of its metrics is one observation."""
     return observation(
         prefix + ":" + record["id"] + ":" + metric,
         metric,
         score,
+        result_id=prefix + ":" + record["id"],
         unit=score_unit(metric),
         track="rate" if "SPECrate" in metric else "speed" if metric.startswith("SPEC") else "classical",
         mode="base" if "base" in metric.lower() else "reported",
@@ -83,6 +86,35 @@ def historical_observation(record, metric, score, prefix):
     )
 
 
+def spec89_bridges():
+    """SPEC89 package rows reporting SPEC89 and SPEC92 values for one system in one source."""
+    import csv
+
+    path = SPEC89_PACKAGE / "csv" / "bridges89_92.csv"
+    with path.open(encoding="utf-8-sig", newline="") as stream:
+        for row in csv.DictReader(stream):
+            yield dict(
+                id="spec89-bridge:" + row["bridge_id"],
+                system=row["system"],
+                os_raw=row["operating_system"],
+                source_url=row["source_url"],
+                locator=row["page_table"],
+                qualification=row["notes"],
+                evidence_class="contemporary_collector",
+                raw_record=row,
+                **{k: row[k] for k in ("SPECmark89", "SPECint89", "SPECfp89", "SPECint92", "SPECfp92")},
+            )
+
+
+def dec_vectors():
+    """DEC N3909 report columns: classical scores and SPEC targets measured for one machine."""
+    from cpushowspeed.classic_source_data import source_vectors
+
+    root = Path("research/data/classic/pdf-extraction")
+    tables = [json.loads(line) for line in (root / "tables.jsonl").read_text().splitlines()]
+    return source_vectors(tables, read_csv(root / "dec-interpreted.csv"))[0]
+
+
 def records(raw):
     for track in ("rate", "speed"):
         for group in collect_integer(raw, track).values():
@@ -99,6 +131,8 @@ def records(raw):
             yield historical_observation(r, metric, score, "classical")
     for line in Path("data/derived/classic/overlap-spec/spec-records.jsonl").read_text().splitlines():
         r = json.loads(line)
+        if r["cohort"] == "SPEC92 rate Netlib":
+            continue  # the same Netlib pages are the spec:cpu92 rate results
         for metric, score in r["metrics_raw"].items():
             try:
                 value = float(score)
@@ -106,8 +140,11 @@ def records(raw):
                 continue
             if value > 0:
                 yield historical_observation(r, metric, value, "historical-spec")
-    for line in Path("data/derived/classic/source-pair-fit/vectors.jsonl").read_text().splitlines():
-        r = json.loads(line)
+    for r in spec89_bridges():
+        for metric in ("SPECmark89", "SPECint89", "SPECfp89", "SPECint92", "SPECfp92"):
+            if numeric(r[metric]):
+                yield historical_observation(r, metric, numeric(r[metric]), "historical-spec")
+    for r in dec_vectors():
         for metric, score in {**r["scores"], **r["targets"]}.items():
             yield historical_observation(r, metric, score, "reviewed-vector")
     for row in read_csv(Path("data/derived/classic/mix-study/mix-records.csv")):

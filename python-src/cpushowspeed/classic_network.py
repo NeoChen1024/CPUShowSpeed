@@ -1,17 +1,21 @@
-"""Sparse joint classical calibration and availability-masked model holdouts."""
+"""Sparse joint classical calibration and availability-masked holdouts, from the built database.
 
-import hashlib
+Nodes are SPEC targets (observed SPEC92 integer rate, or SPECint89 carried
+through the two-edge bridge) with the classical scores of their paired results,
+plus unanchored classical configurations whose co-measured scores constrain
+relative benchmark scales. Folds and bootstrap clusters are resolved systems.
+"""
+
 import json
 import math
+import re
+import statistics
 from collections import defaultdict
 from pathlib import Path
 
 import click
 import numpy as np
-from cpushowspeed.calibration import error_summary
-from cpushowspeed.classic_89_rate import centers, evidence
-from cpushowspeed.classic_bridge_data import bridge_rows
-from cpushowspeed.classic_network_data import build, family, frequency_checks
+from cpushowspeed.calibration import ANCHOR, error_summary
 from cpushowspeed.classic_network_model import (
     bootstrap,
     bridge_log,
@@ -20,9 +24,150 @@ from cpushowspeed.classic_network_model import (
     train,
 )
 from cpushowspeed.classic_predict import write_prediction_manifest
-from cpushowspeed.input_context import ACTIVE_CATALOG, source_view
-from cpushowspeed.research_io import code_hashes, read_csv, write_csv
+from cpushowspeed.classical_fit import DERIVED, RESEARCH, bridge_evidence, centers
+from cpushowspeed.classical_store import (
+    BRIDGE_SCOPE,
+    SCOPES,
+    family,
+    pairings,
+    results,
+    target_value,
+)
+from cpushowspeed.curated import DATABASE
+from cpushowspeed.observation_store import connect, inputs_digest
+from cpushowspeed.research_io import code_hashes, write_csv
 from cpushowspeed.research_plot import save_figure
+
+
+def build(rows, scaling):
+    """Anchored target nodes, unanchored classical configurations, their observations and the pairing audit."""
+    nodes, observations, audit = {}, [], []
+    anchored_results = set()
+
+    def add(node, classical, metric, score, adjusted, target_clock, policy):
+        row = dict(
+            node_id=node["node_id"],
+            model_key=node["model_key"],
+            metric=metric,
+            observation_id=classical.observation_ids[metric],
+            classical_result_id=classical.result_id,
+            original_score=score,
+            adjusted_score=adjusted,
+            multiplier=adjusted / score,
+            measured_clock_mhz=classical.clock_mhz,
+            target_clock_mhz=target_clock,
+            clock_policy=policy,
+            source_url=classical.source_url,
+        )
+        observations.append(row)
+        node["observations"].append(row)
+
+    for p in pairings(rows, scaling):
+        t, c = p["target"], p["classical"]
+        rate = target_value(t, "SPECrate_int92")
+        old = t.values.get("SPECint89") if t.scope == "historical-spec:spec89" else None
+        if not rate and not old:
+            continue
+        audit.append(
+            dict(target_result_id=t.result_id, classical_result_id=c.result_id, status=p["status"], included=bool(p["scores"]))
+        )
+        if not p["scores"]:
+            continue
+        node = nodes.setdefault(
+            t.result_id,
+            dict(
+                node_id=t.result_id,
+                model_key=t.system_id,
+                system=t.system,
+                target_kind="observed_rate" if rate else "estimated_89",
+                target=rate * ANCHOR if rate else old,
+                observations=[],
+            ),
+        )
+        for metric, adjusted in p["scores"].items():
+            add(node, c, metric, c.values[metric], adjusted, t.clock_mhz, p["status"])
+        anchored_results.add(c.result_id)
+    # Co-measured classical configurations without a target still relate benchmark scales.
+    # Clocks are never scaled here, and results already attached to a target are not reused.
+    for c in rows:
+        if not c.classical or c.result_id in anchored_results or c.cpu_count not in (None, 1):
+            continue
+        raw = c.raw.get("raw_record") if isinstance(c.raw.get("raw_record"), dict) else c.raw
+        text = (c.system + " " + str(raw.get("configuration_raw") or c.raw.get("configuration_raw") or "")).lower()
+        options = ";".join(sorted(set(re.findall(r"\b(?:nof|fpa|fpu|fpp)\b", text))))
+        key = c.system_id or "result:" + c.result_id
+        node_id = f"classical:{key}:{c.clock_mhz}:{options}"
+        node = nodes.setdefault(
+            node_id, dict(node_id=node_id, model_key=key, system=c.system, target_kind="unanchored", target=None, observations=[])
+        )
+        for metric, score in c.classical.items():
+            add(node, c, metric, score, score, c.clock_mhz, "reported")
+    out = []
+    for node in nodes.values():
+        groups = defaultdict(list)
+        for r in node["observations"]:
+            groups[r["metric"]].append(math.log(r["adjusted_score"]))
+        node["log_scores"] = {m: statistics.median(v) for m, v in groups.items()}
+        if node["log_scores"]:
+            out.append(node)
+    return out, observations, audit
+
+
+def frequency_checks(rows):
+    """Conditional same-label frequency sweeps within one source; not proof of equal software or hardware."""
+    grouped = defaultdict(lambda: defaultdict(list))
+    members = defaultdict(list)
+    for r in rows:
+        if not r.clock_mhz:
+            continue
+        raw = r.raw
+        for metric, score in r.classical.items():
+            if family(metric) not in ("Dhrystone", "Whetstone"):
+                continue
+            key = (
+                r.scope,
+                r.system_id or r.system,
+                metric,
+                raw.get("processor_raw", ""),
+                raw.get("os_raw", ""),
+                raw.get("language_raw", ""),
+                raw.get("configuration_raw", ""),
+            )
+            grouped[key][r.clock_mhz].append(math.log(score))
+            members[key].append(r.result_id)
+    out = []
+    for key, frequencies in sorted(grouped.items()):
+        if len(frequencies) < 2:
+            continue
+        first = min(frequencies)
+        base = statistics.median(frequencies[first])
+        for f, scores in sorted(frequencies.items()):
+            if f == first:
+                continue
+            z = statistics.median(scores) - base
+            out.append(
+                dict(
+                    scope=key[0],
+                    system=key[1],
+                    metric=key[2],
+                    processor_raw=key[3],
+                    os_raw=key[4],
+                    language_raw=key[5],
+                    configuration_raw=key[6],
+                    reference_clock=first,
+                    target_clock=f,
+                    reference_score=math.exp(base),
+                    target_score=math.exp(statistics.median(scores)),
+                    observed_score_ratio=math.exp(z),
+                    clock_ratio=f / first,
+                    normalized_ratio=math.exp(z) / (f / first),
+                    scaling_signed_error_percent=100 * math.expm1(math.log(f / first) - z),
+                    loglog_exponent=z / math.log(f / first),
+                    result_ids=json.dumps(members[key]),
+                    qualification="same_source_and_labels;missing_configuration_fields_not_verification",
+                )
+            )
+    return out
 
 
 def evaluate(nodes, edges, enabled):
@@ -158,45 +303,20 @@ def plot(output, summary):
 
 
 @click.command("network-fit")
-@click.option(
-    "--input-root",
-    type=click.Path(path_type=Path, exists=True),
-    default=Path("data/derived/classic/overlap-spec"),
-    show_default=True,
-)
-@click.option(
-    "--source-root",
-    type=click.Path(path_type=Path, exists=True),
-    default=Path("data/derived/classic/source-pair-fit"),
-    show_default=True,
-)
-@click.option(
-    "--native-bridge",
-    type=click.Path(path_type=Path, exists=True),
-    default=Path("research/data/spec89/v2.0.0/csv/bridges89_92.csv"),
-    show_default=True,
-)
-@click.option(
-    "--linpack-text",
-    type=click.Path(path_type=Path, exists=True),
-    default=Path("data/derived/classic/netlib-linpack-report.txt"),
-    show_default=True,
-)
-@click.option("--output", type=click.Path(path_type=Path), default=Path("data/derived/classic/network-fit"), show_default=True)
+@click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
+@click.option("--output", type=click.Path(path_type=Path), default=DERIVED / "network-fit", show_default=True)
+@click.option("--research-dir", type=click.Path(path_type=Path), default=RESEARCH, show_default=True)
 @click.option("--bootstrap", "draws", type=click.IntRange(min=100), default=10000, show_default=True)
 @click.option("--seed", type=int, default=20260927, show_default=True)
-def network_fit(input_root, source_root, native_bridge, linpack_text, output, draws, seed):
+def network_fit(database, output, research_dir, draws, seed):
     """Calibrate individual benchmark coefficients jointly with missing measurements."""
-    paths = [input_root / n for n in ("classical-records.jsonl", "spec-records.jsonl", "candidate-pairs.csv")]
-    classical, specs = [{r["id"]: r for r in source_view(p, view)} for p, view in zip(paths[:2], ("classical", "historical-spec"))]
-    vectors = source_view(source_root / "vectors.jsonl", "vectors")
-    matching = read_csv(source_root / "matching-review.csv")
-    pairs = read_csv(paths[2])
-    pages = linpack_text.read_text().split("\f")
-    ev, _ = evidence(list(specs.values()), vectors, bridge_rows(native_bridge))
-    edges = centers(ev)
+    with connect(database) as db:
+        rows = results(db, SCOPES + (BRIDGE_SCOPE,))
+        digest = inputs_digest(db)
+    edges = centers(bridge_evidence(rows))
     output.mkdir(parents=True, exist_ok=True)
-    clock_checks = frequency_checks(classical, pages)
+    research_dir.mkdir(parents=True, exist_ok=True)
+    clock_checks = frequency_checks(rows)
     write_csv(output / "frequency-checks.csv", clock_checks)
     coefficients = []
     summary = []
@@ -210,9 +330,7 @@ def network_fit(input_root, source_root, native_bridge, linpack_text, output, dr
     runs = []
     for scaling in (False, True):
         scenario = "linear_clock" if scaling else "reported_clock"
-        nodes, observations, audit, aliases = build(classical, specs, pairs, vectors, matching, pages, scaling)
-        aliased_evidence = [dict(r, model_key=aliases.get(r["model_key"], r["model_key"])) for r in ev]
-        edges = centers(aliased_evidence)
+        nodes, observations, audit = build(rows, scaling)
         active = {(n["node_id"], r["metric"], r["observation_id"]) for n in nodes for r in n["observations"]}
         obs_rows.extend(
             dict(r, scenario=scenario, used_in_node_summary=(r["node_id"], r["metric"], r["observation_id"]) in active)
@@ -304,20 +422,23 @@ def network_fit(input_root, source_root, native_bridge, linpack_text, output, dr
     np.savez_compressed(output / "coefficient-log-draws.npz", **bootstrap_arrays)
     write_prediction_manifest(output, runs)
     plot(output, summary)
-    paths += [source_root / "vectors.jsonl", source_root / "matching-review.csv", native_bridge, linpack_text]
+    write_csv(research_dir / "network-coefficients.csv", coefficients)
+    write_csv(research_dir / "network-summary.csv", summary)
+    write_csv(research_dir / "network-frequency-checks.csv", clock_checks)
     audit = dict(
-        method="sparse-family-balanced-log-network-v1",
-        date="2026-09-27",
+        method="sparse-family-balanced-log-network-v2-resolved-systems",
         bootstrap=draws,
         seed=seed,
         runs=runs,
         frequency_check_rows=len(clock_checks),
         target="SPEC92 integer-rate VAXen; peak only",
-        clock_assumption="Dhrystone/Whetstone linear within existing model candidates with recognized compatible CPU identity; unknown clocks unscaled; unresolved/conflicting CPU clock conflicts excluded; LINPACK unscaled",
+        pairing="same resolved system_id; reported clocks agree within 1% or one is unknown",
+        clock_assumption="linear_clock scales Dhrystone/Whetstone to the target clock only when both results resolve to one processor; unknown clocks unscaled; LINPACK never scaled",
         fit="family/variant/node/model balanced log least squares; unanchored node values eliminated analytically",
-        qualification="candidate hardware/clock/FPU/cache/software equivalence unverified; coefficient intervals omit model discrepancy and scaling exponent uncertainty",
-        input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
+        qualification="hardware/clock/FPU/cache/software equivalence unverified across sources; coefficient intervals omit model discrepancy and scaling exponent uncertainty",
+        inputs_sha256=digest,
         shared_code_sha256=code_hashes(Path(__file__)),
     )
-    (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
+    for path in (output / "audit.json", research_dir / "network-audit.json"):
+        path.write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps(dict(output=str(output), runs=runs, coefficients=len(coefficients), comparisons=len(summary))))

@@ -1,7 +1,8 @@
 # Sparse joint calibration of individual classical benchmarks
 
-Computed and reviewed: 2026-09-27. This is an implemented **new experimental
-model**, alongside the earlier fixed-composite multiplier fits. It does not
+Computed and reviewed: 2026-09-27; recomputed on resolved systems 2026-10-02
+(method `sparse-family-balanced-log-network-v2-resolved-systems`). This is an
+implemented **new experimental model**, alongside the earlier fixed-composite multiplier fits. It does not
 replace measured rate observations or the production SPEC rate converter.
 
 ## Objective and model
@@ -33,7 +34,7 @@ ordinary score space. Unlike the previous separate composite fits, this uses
 log-ratio coefficient. Within each node/metric, source runs first contribute a
 median log score. All original observations remain in the export.
 
-Each informative normalized hardware model gets total weight one; its weight
+Each informative resolved system ("model" below) gets total weight one; its weight
 is split equally across informative configuration nodes, then across available
 families, then across versions/precision variants in a family. Dhrystone 1.1
 and 2.1 do not create two family votes. Whetstone native/SP/DP share one family
@@ -50,58 +51,56 @@ prediction. Factor draws are combined jointly when calculating estimate CI95.
 
 ## Input construction and clock assumption
 
-The inputs are existing normalized classical records, SPEC records and candidate
-pairings, plus reviewed DEC source vectors and the approved candidate extension
-table. A single interpretable classical metric is sufficient for an anchor
-association; the old two-family intersection is not required.
+The command reads the built database. Anchored nodes are target results: CPU92
+integer-rate results (Netlib, manufacturer and the reviewed DEC report columns)
+and, in the SPEC89-enabled cohort, SPECint89 results. A target's classical
+scores come from its own result (DEC columns) and from every classical result
+resolving to the same `system_id`; names are never compared. A single
+interpretable classical metric is enough for an anchor association.
 
-Same-column DEC vectors are kept as configuration nodes. Other unanchored
-classical co-observations are grouped by normalized model, reported clock and
-explicit FPU-option labels. This is candidate grouping, not proof of identical
-compiler, cache, memory or OS. Their full source records are exported. Known
-classical processor counts other than one and archive SPEC rate processor
-counts other than one retain the prior eligibility policy. Unknown same-column
-DEC concurrency is not invented as one.
-
-An observation already used in an anchored/89 candidate node is not reused as
-an additional standalone unanchored training observation. Repeated published
-records remain distinct; repeated enumeration of the same node/metric/source ID
-is not a new observation. Alias closure across existing candidate links ensures
-all uses of a source observation share a model holdout group. A data check found
-zero source observation IDs split across model folds.
+Classical results not attached to any target become unanchored nodes, grouped by
+resolved system (or the result itself when unresolved), reported clock and
+explicit FPU-option labels. This grouping does not prove identical compiler,
+cache, memory or OS. Classical results reporting more than one CPU, rate values
+with a reported CPU count other than one, and reference-definition targets are
+excluded. Unknown same-column DEC concurrency is not invented as one. A result
+already attached to a target is not reused as an unanchored node. Holdout groups
+and bootstrap clusters are resolved systems, so all uses of one result share a fold.
 
 Two scenarios are run:
 
-- `reported_clock`: reject known frequency conflicts; retain unknown clocks as
-  explicitly unscaled candidates.
+- `reported_clock`: reject known frequency conflicts (more than 1%); retain
+  unknown clocks as explicitly unscaled candidates.
 - `linear_clock`: for Dhrystone and Whetstone, use
   `score_at_target = original_score * target_clock / measured_clock` only when
-  the existing model candidate also has a recognized compatible CPU identity.
-  Unknown clocks stay unscaled; unresolved CPU identities cannot authorize a
-  frequency-conflict conversion. LINPACK is never clock-scaled.
+  both results resolve to the same processor entity. Unknown clocks stay
+  unscaled; a conflict without one resolved processor stays excluded
+  (`clock_conflict_processor_unverified`). LINPACK is never clock-scaled.
 
-Frequency normalization applies only to existing SPEC-target associations. An
-unanchored historical measurement stays at its actual reported frequency; it is
-not scaled again when multiplying by its final coefficient. Same CPU model is
+Frequency normalization applies only to target associations. An unanchored
+historical measurement stays at its actual reported frequency. Same processor is
 necessary but does not establish equal cache, memory or compiler behavior.
 
-### Source checks that constrained scaling
+### Clock decisions
 
-The initial model-only candidates included SPARCstation 2 with a Weitek upgrade
-at 80 MHz versus the original CY7C601 configuration at 40 MHz, and PA-RISC 7100
-at 33 MHz versus 7100LC at 100 MHz. These are processor changes, so their 0.5×
-and 3.03× adjustments are rejected on identity evidence, not residual magnitude.
-Original scores remain intact.
+Of the target/classical pairings, 48 are same-result, 109 clock-compatible,
+246 clock-unknown, 14 clock-conflicting and 21 reference-definition targets.
+Under `linear_clock`, two conflicts are scaled and twelve stay excluded because
+the processors do not resolve to one entity: processor changes such as a
+SPARCstation 2 Weitek upgrade or PA-RISC 7100 versus 7100LC can no longer
+authorize scaling. The two scaled pairings are one Netlib Dhrystone row for the
+DEC 7000/610 at 182 MHz carried to two 200 MHz CPU92 rate results (factor 1.0989,
+four metric links). The two scenarios therefore differ by at most 0.03% in any
+coefficient. Every decision is recorded in `clock-audit.csv`.
 
-The final run applies non-unit scaling to **25 candidate metric links from 13
-source rows**, with factors **0.6–1.3333**. The linear scenario excludes 11
-metric links for CPU identity conflict, 29 for unverified identity and two for
-unscaled clock conflict. Eligibility and factors are recorded in `clock-audit.csv`.
+The earlier name-matched run scaled 25 metric links from 13 source rows with
+factors 0.6–1.3333. Most of those pairs relied on clock-suffixed model names or
+CPU-text identity checks that resolved-system pairing does not reproduce.
 
 A separate conditional same-label frequency check finds **7 Dhrystone comparisons
-on 4 model keys**, but no Whetstone sweep. For HP 9000/715, matching PA-RISC7100,
+on 4 systems**, but no Whetstone sweep. For HP 9000/715, matching PA-RISC7100,
 HP-UX 9.0 and reference-5 source labels, 33→50 MHz linear predictions differ
-from the observed score ratios by +0.686% (1.1) and −0.362% (2.1). This is limited
+from the observed score ratios by +0.68% (1.1) and −0.36% (2.1). This is limited
 support, not proof for every architecture. Missing software/configuration fields
 still prevent exact equivalence claims. Whetstone linearity remains an assumed
 sensitivity rule in this dataset. Full rows/qualifications are in
@@ -110,8 +109,8 @@ sensitivity rule in this dataset. Full rows/qualifications are in
 ## Calibration, uncertainty and holdouts
 
 Both clock scenarios are fitted with rate targets only and with the additional
-SPEC89 estimated targets. The two-edge SPEC89 bridge is recomputed under the
-same alias grouping and excluded-model rule. An `anchored_only` log-regression
+SPEC89 estimated targets. The two-edge SPEC89 bridge is recomputed with the
+same system grouping and excluded-system rule. An `anchored_only` log-regression
 control uses the same anchor population but omits unanchored coupling; it is
 not identical to the previous pair/triple model with a different cohort.
 
@@ -137,52 +136,67 @@ counts are recorded in `fold-coverage.csv`, not silently scored as success.
 
 ## Results
 
-Both scenarios identify all six coefficients. The rate-only network has 457
-informative model groups; the SPEC89-enabled network has 467. These include
+Both scenarios identify all six coefficients. The rate-only network has 466
+informative systems; the SPEC89-enabled network has 475. These include
 unanchored co-observations constraining relative scales and are **not** hundreds
-of measured SPEC anchor machines. The linear/SPEC89 run has 75 observed-rate
-nodes, 77 inferred-89 nodes and 1,165 unanchored nodes; one-metric unanchored
+of measured SPEC anchor machines. The SPEC89-enabled run has 73 observed-rate
+nodes, 80 inferred-89 nodes and 1,172 unanchored nodes; one-metric unanchored
 nodes do not influence training.
 
 For `linear_clock / with_spec89`:
 
 | Input metric | Score unit | VAXen coefficient k | Conditional factor CI95 |
 | --- | --- | ---: | --- |
-| Dhrystone 1.1 | DMIPS | 0.64719 | 0.58877–0.71321 |
-| Dhrystone 2.1 | DMIPS | 0.68518 | 0.62304–0.75547 |
-| Whetstone native | MWIPS | 0.54200 | 0.43686–0.65032 |
-| Whetstone SP | MWIPS | 0.52698 | 0.46131–0.59137 |
-| Whetstone DP | MWIPS | 0.96013 | 0.78858–1.13601 |
-| LINPACK n=100 | MFLOPS | 4.07990 | 3.56991–4.63690 |
+| Dhrystone 1.1 | DMIPS | 0.65970 | 0.60694–0.71935 |
+| Dhrystone 2.1 | DMIPS | 0.70850 | 0.65607–0.76996 |
+| Whetstone native | MWIPS | 0.55661 | 0.45215–0.66058 |
+| Whetstone SP | MWIPS | 0.52290 | 0.44663–0.59725 |
+| Whetstone DP | MWIPS | 0.97946 | 0.80867–1.15050 |
+| LINPACK n=100 | MFLOPS | 3.75630 | 3.32136–4.22859 |
 
 For example, a Dhrystone **1.1** score of **10 DMIPS** maps to approximately
-6.4719 VAXen using this experimental coefficient. Raw Dhrystones/second first
+6.597 VAXen using this experimental coefficient. Raw Dhrystones/second first
 need the declared /1757 DMIPS conversion; coefficients must not be applied to
 uninterpreted KIPS or printed unit labels with unresolved meaning.
 
-On the common 19-model, 51-node observed-rate holdout cohort:
+On the common 20-system, 59-node observed-rate holdout cohort with all three
+families (`linear_clock / with_spec89`):
 
-| Available inputs | Network P95, linear/SPEC89 |
-| --- | ---: |
-| Dhrystone 1.1 only | 25.43% |
-| Dhrystone 2.1 only | 31.97% |
-| Whetstone SP only | 37.93% |
-| Whetstone DP only | 47.11% |
-| LINPACK only | 54.20% |
-| Dhrystone + Whetstone families | 23.74% |
-| Dhrystone + LINPACK families | 38.29% |
-| Whetstone + LINPACK families | 33.83% |
-| All available measurements | 31.19% |
+| Available inputs | Network P95 | Anchored-only control P95 |
+| --- | ---: | ---: |
+| Dhrystone 1.1 only | 27.15% | 18.76% |
+| Dhrystone 2.1 only | 43.26% | 32.02% |
+| Whetstone SP only (19 systems) | 36.70% | 27.54% |
+| Whetstone DP only | 66.35% | 47.44% |
+| LINPACK only | 39.30% | 37.19% |
+| Dhrystone + Whetstone families | 21.19% | 17.26% |
+| Dhrystone + LINPACK families | 31.98% | 26.07% |
+| Whetstone + LINPACK families | 16.15% | 20.07% |
+| All available measurements | 14.74% | 15.42% |
 
-More available workloads do not guarantee a lower error against this integer-rate
-population. All combinations remain; the table is not a residual-based selection
-rule. Joint coverage and uncertainty remain explicit research objectives.
+More available workloads do not guarantee a lower error, and the unanchored
+coupling does not uniformly beat the anchored-only control on this population.
+All combinations remain; the table is not a residual-based selection rule.
 
-The network emits full-availability estimates for **1,165 unanchored candidate
-nodes on 1,116 normalized model keys**. Of these, 1,119 nodes have one benchmark
-family, 12 have two and 34 have three. They are not 1,165 newly verified machines:
-configuration identity and source interpretation still need source-specific
-review. Their estimates are stored separately from observed SPEC targets.
+The network emits full-availability estimates for **1,172 unanchored nodes on
+1,130 system keys** (an unresolved result counts as its own key). Of these, 1,139
+nodes have one benchmark family, 12 have two and 21 have three. They are not
+1,172 newly verified machines: configuration identity and source interpretation
+still need source-specific review. Their estimates are stored separately from
+observed SPEC targets.
+
+### Changes from the name-matched run (2026-10-02)
+
+Coefficients moved by −8% to +4% (for example `reported_clock / rate_only`
+LINPACK 3.595 → 3.326, Dhrystone 1.1 0.635 → 0.614; `linear_clock /
+with_spec89` LINPACK 4.080 → 3.756, Dhrystone 1.1 0.647 → 0.660). Informative
+groups rose from 457/467 to 466/475. Anchored rate systems fell from 32 to 28
+because names no longer link archive rate results to classical rows of other
+configurations, while SPEC89 anchors grew as in the
+[SPEC89 bridge](spec89-rate-bridge.md#changes-from-the-name-matched-run-2026-10-02).
+The all-available observed-rate holdout P95 improved (for example
+`reported_clock / rate_only` anchored-only 50.7% → 33.6%). Cohorts differ, so
+the improvement is not a controlled comparison.
 
 ## Predict from new measurements
 
@@ -193,31 +207,30 @@ and VAXen with conditional CI95. It does not refit the experiment per request.
 ## Reproduce and artifacts
 
 ```sh
-UV_CACHE_DIR=/tmp/uv-cache OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/cpushowspeed-mpl \
-  uv run --no-sync cpushowspeed classic network-fit
+OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/cpushowspeed-mpl .venv/bin/cpushowspeed classic network-fit
 ```
 
-Inputs and resampling can be selected with `--input-root`, `--source-root`,
-`--native-bridge`, `--linpack-text`, `--bootstrap`, `--seed` and `--output`.
-The default output is `data/derived/classic/network-fit/`.
+Options `--database`, `--output`, `--research-dir`, `--bootstrap` and `--seed`
+select the built database, outputs and resampling. The default output is
+`data/derived/classic/network-fit/`.
 
 - `coefficients.csv`: per-benchmark coefficients, units, cohort/scenario and CI95.
-- `nodes.csv`, `observations.csv`: original/adjusted values, source identities,
-  qualified matching, target kind and whether an observation enters its node summary.
-- `clock-audit.csv`, `frequency-checks.csv`: every frequency decision and the
-  independent conditional frequency-sweep check.
-- `summary.csv`, `predictions.csv`, `fold-coverage.csv`: model-held-out masked
+- `nodes.csv`, `observations.csv`: original/adjusted values, classical result
+  IDs, pairing status, target kind and whether an observation enters its node summary.
+- `clock-audit.csv`, `frequency-checks.csv`: every target/classical pairing
+  decision and the conditional frequency-sweep check.
+- `summary.csv`, `predictions.csv`, `fold-coverage.csv`: system-held-out masked
   evaluations; observed and inferred targets remain distinct.
 - `hardware-estimates.csv`: single, family, pair and available-input estimates
   with conditional calibration intervals, never labelled measured rate scores.
 - `coefficient-log-draws.npz`: correlated coefficient samples for combining inputs.
 - `availability-comparison.png/.svg`: joint/control errors on complete-family nodes.
 - `prediction-calibration.json`: hash-bound coefficient/draw bundle, with ordered metric columns for the predictor.
-- `audit.json`: input hashes, source/code dependency hashes, counts and assumptions.
 
-Compact coefficients, summary, frequency checks and audit are retained under
-`research/data/classic/network-*`. Bulk evidence/predictions/estimates remain
-reproducible derived products. Tests cover known analytic coefficients from an
-unanchored bridge, disconnected metrics, shared bridge covariance, family/variant
-weights, single/partial prediction, held-out bridge exclusion and CPU-upgrade
-rejection. The full suite passes **111 tests**.
+Compact coefficients, summary, frequency checks and audit (database input
+digest, counts and assumptions) are retained under
+`research/data/classic/network-*`. Tests cover known analytic coefficients from
+an unanchored bridge, disconnected metrics, shared bridge covariance,
+family/variant weights, single/partial prediction, held-out bridge exclusion and
+processor-change rejection (`tests/test_classic_network.py`,
+`tests/test_classical_store.py`).

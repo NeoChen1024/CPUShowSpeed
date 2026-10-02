@@ -1,13 +1,13 @@
 # SPECint89 bridge to SPEC92 rate and joint classical fitting
 
-Computed and reviewed: 2026-09-27.
+Computed and reviewed: 2026-09-27. Recomputed on resolved systems: 2026-10-02
+(method `spec89-two-edge-rate-joint-v2-resolved-systems`).
 
 ## Evidence path
 
-The normalized hardware-key intersection between the current SPECint89 records
-and the available SPEC92 integer-rate records is **empty**. This remains true
-with the existing clock-supported name relaxation, including DEC source-column
-rate observations and even before restricting processor counts. The audit
+No resolved system has both a SPECint89 result and a SPEC92 integer-rate result
+in the built database, including the DEC source-column rate observations and
+before restricting processor counts. The audit
 records this result; it is not a claim about all surviving historical sources.
 
 The implemented path therefore uses two separately observed edges:
@@ -15,10 +15,11 @@ The implemented path therefore uses two separately observed edges:
 `SPECint89 → SPECint92 → SPECrate_int92 × 25500 / 604800`.
 
 1. The [archived integer bridge](data/spec89/v2.0.0/csv/bridges89_92.csv) supplies
-   17 paired source rows on 15 normalized models, including republications and
-   development-level systems with their existing qualifications.
+   17 paired source rows on 15 resolved systems, including republications and
+   development-level systems with their existing qualifications. They are
+   extracted into scope `historical-spec:spec89-bridge`.
 2. The [reviewed DEC tables](classic-pdf-extraction.md) supply 48 columns on 24
-   models with both SPECint92 and SPECrate_int92. These are the two explicitly
+   resolved systems with both SPECint92 and SPECrate_int92. These are the two explicitly
    distinct rows in each machine/OS column. Rate is normalized once to VAXen.
    Compiler, active CPU and copy-count equivalence remain unverified; the fit
    is an empirical source-column relationship, not a speed/rate identity.
@@ -27,11 +28,11 @@ This is a new explicitly labelled empirical bridge, not a reclassification of
 ordinary SPECint92 source values as rate observations. No simulated score or
 assumed processor-count multiplier creates a direct 89/rate pair.
 
-| Edge | Models / source rows | Multiplier | Factor CI95 | LOMO model-center P95 |
+| Edge | Systems / source rows | Multiplier | Factor CI95 | LOMO model-center P95 |
 | --- | ---: | ---: | --- | ---: |
-| SPECint89 → SPECint92 | 15 / 17 | 0.9603866 | 0.942979–0.978902 | 8.61% |
-| SPECint92 → rate-VAXen | 24 / 48 | 0.9965475 | 0.992226–1.000729 | 1.86% |
-| Chained SPECint89 → rate-VAXen | No direct pairs | **0.9570709** | **0.939392–0.976940** | Not directly measurable |
+| SPECint89 → SPECint92 | 15 / 17 | 0.9603866 | 0.942655–0.979452 | 8.61% |
+| SPECint92 → rate-VAXen | 24 / 48 | 0.9965475 | 0.992201–1.000572 | 1.86% |
+| Chained SPECint89 → rate-VAXen | No direct pairs | **0.9570709** | **0.938679–0.976961** | Not directly measurable |
 
 Thus `estimated peak rate-VAXen = 0.9570709 × SPECint89` under the observed
 bridge populations. The final interval is a joint bootstrap result, not the
@@ -45,7 +46,8 @@ experiment is peak-only; base estimates are not fabricated.
 
 The primary direct-rate model is retained as the comparison. The joint model
 adds the SPECint89 classical pairs after translating their targets through the
-two-edge bridge. It uses the unscaled source-pair stage, fixed equal-weight
+two-edge bridge. It uses the `same_system` cohort (resolved system, no clock
+scaling) of the direct experiment, fixed equal-weight
 geometric composites and the same model-balanced log-ratio estimator as the
 [direct rate experiment](classic-rate-composite-fitting.md). Dhrystone versions,
 Whetstone precision and LINPACK n=100 remain distinct. All repeat observations
@@ -57,7 +59,7 @@ compatible component-pair edges, as in the direct experiment. Every derived
 row labels its target as either `observed_rate_target` or `estimated_89_target`.
 A converted SPEC89 target is never presented as a rate measurement.
 
-For bootstrap CI95, jointly resample normalized model keys from the union of
+For bootstrap CI95, jointly resample resolved systems from the union of
 both bridge edges and the classical cohort, using 10,000 draws and seed
 20260926. A model present in several places receives the same resampling weight.
 Each draw refits both edge factors and the classical factor, applying one shared
@@ -80,30 +82,34 @@ outside the conditional interval.
 
 ## Coverage and observed-rate holdouts
 
-| Composite | Rate-only → joint models | Rate-only P95 | Joint P95 on the same observed-rate models |
+| Composite | Rate-only → joint systems | Rate-only P95 | Joint P95 on the same observed-rate systems |
 | --- | ---: | ---: | ---: |
-| Dhrystone 1.1 + LINPACK | 25 → 32 | 24.78% | 29.59% |
-| Dhrystone 2.1 + LINPACK | 25 → 32 | 27.45% | 33.44% |
-| Dhrystone 1.1 + Whetstone native | 5 → 6 | 44.69% | 43.57% |
-| Dhrystone 2.1 + Whetstone native | 6 → 7 | 41.57% | 40.68% |
-| Whetstone native + LINPACK | 8 → 9 | 9.07% | 17.02% |
-| Whetstone DP + LINPACK | 20 → 21 | 21.01% | 25.91% |
+| Dhrystone 1.1 + LINPACK | 25 → 42 | 28.19% | 40.34% |
+| Dhrystone 2.1 + LINPACK | 25 → 36 | 29.87% | 38.37% |
+| Whetstone native + LINPACK | 8 → 9 | 12.16% | 19.87% |
+| Whetstone DP + LINPACK | 20 → 32 | 13.06% | 23.13% |
+| Whetstone SP + LINPACK | 19 → 30 | 14.45% | 18.49% |
+| Dhrystone 1.1 + Whetstone DP | 20 → 31 | 30.55% | 27.38% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 20 → 31 | 12.84% | 17.53% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 20 → 25 | 15.87% | 14.71% |
+| Dhrystone 1.1 + Whetstone SP + LINPACK | 19 → 30 | 11.27% | 13.63% |
 
-These are all six patterns that gain SPEC89 observations. The remaining patterns,
-including every three-family combination, currently gain none. Full results and
-baseline comparisons are in [the machine-readable summary](data/classic/spec89-rate-summary.csv).
+Thirteen of the seventeen patterns now gain SPEC89 systems, including every
+three-family combination with DP or SP Whetstone; the four patterns combining
+Dhrystone with native Whetstone gain none. Full results and baseline comparisons are in
+[the machine-readable summary](data/classic/spec89-rate-summary.csv).
 
-The seven extra Dhrystone/LINPACK models are DECstation 3100, DECstation
-5000/200, HP 9000/720, HP 9000/730, HP 9000/750, Sun SPARCstation 1+ and
-Sun SPARCstation 2. They contribute 86 additional tuples with Dhrystone 1.1
-and 89 with version 2.1; these are multiple observations/combinations, not that
-many independent machines.
+The 17 added Dhrystone 1.1/LINPACK systems are DEC VAX 4000/300 and 4000/400,
+VAXstation 3100/38, 3100/76, 4000 VLC and 4000/60, DECstation 3100 and
+5000/20, /25, /125, /133 and /240, HP 9000/720, /730 and /750, and Sun
+SPARCstation 1+ and 2. They contribute 41 SPEC89 target tuples; repeated
+SPECint89 results of one system are separate tuples, not separate machines.
 
-For Dhrystone 1.1 + LINPACK, the joint classical factor is 1.380390
-(CI95 1.284257–1.489006), compared with the direct factor 1.326444. Its P95
-agreement error on the seven inferred SPEC89 model targets is 40.40%, separate
-from the 29.59% error on measured rate targets. Version 2.1's joint factor is
-1.415281 (CI95 1.318737–1.523830), with inferred-target P95 41.49%.
+For Dhrystone 1.1 + LINPACK, the joint classical factor is 1.499819
+(CI95 1.404085–1.603175), compared with the direct factor 1.367455. Its P95
+agreement error on the inferred SPEC89 targets is 37.45%, separate from the
+40.34% error on measured rate targets. Version 2.1's joint factor is 1.476001
+(CI95 1.378734–1.581611), with inferred-target P95 37.76%.
 
 The joint path achieves the intended expansion of historical coverage. Its
 higher observed-rate holdout error for most affected combinations is a tradeoff
@@ -122,10 +128,22 @@ research criteria](../docs/methods.md#evaluating-broader-historical-coverage)
 require coverage and error diagnostics to be interpreted together. Numerical
 fits and uncertainty definitions are unchanged by this interpretation update.
 
+### Changes from the name-matched run (2026-10-02)
+
+The bridge edges are unchanged (17 rows / 15 systems and 48 columns / 24
+systems; point factors identical; CI endpoints move in the fourth decimal
+because the bootstrap now resamples resolved systems). The 89-only and joint
+cohorts grew: Dhrystone 1.1 + LINPACK went from 7 to 17 SPEC89 systems, and
+three-family patterns went from none to 5–11. The earlier matching used
+normalized names and required an OS match between DEC columns and archive rows,
+which SPEC89 rows do not carry; resolved-system pairing treats OS as a run
+condition. The added pairs are automatic and not yet individually reviewed, so
+their configuration equivalence is unverified.
+
 ## SPEC89-only hardware estimates
 
-The bridge also produces **179 source-record estimates on 93 normalized model
-keys**, independently of whether two classical benchmark families are available.
+The bridge also produces **179 source-record estimates on 90 resolved
+systems**, independently of whether two classical benchmark families are available.
 Reference-definition rows are excluded. Each record preserves its reported
 SPECint89, record ID and source URL and labels its result as a two-edge estimate.
 Original source qualifications remain in full derived provenance, including any
@@ -141,33 +159,28 @@ architectures outside the calibration cohorts require additional validation.
 ## Reproduce and validation
 
 ```sh
-UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/cpushowspeed-mpl \
-  uv run --no-sync cpushowspeed classic spec89-rate-fit
+MPLCONFIGDIR=/tmp/cpushowspeed-mpl .venv/bin/cpushowspeed classic spec89-rate-fit
 ```
 
-Inputs: source-pair `pairs.csv` and `vectors.jsonl`, normalized SPEC records and
-the archived native integer bridge. Options `--input-root`, `--spec-records`,
-`--native-bridge`, `--output`, `--bootstrap` and `--seed` are documented by CLI help.
+Input: the built database (`data build`). Options `--database`, `--output`,
+`--research-dir`, `--bootstrap` and `--seed` are documented by CLI help.
 
 Outputs under `data/derived/classic/spec89-rate-fit/`:
 
 - `bridge-evidence.csv`, `bridge-summary.csv`: source-linked edge observations,
   individual fits and chained factor uncertainty.
-- `observations.csv`: all classical components, source evidence, original target
-  and assigned VAXen target with measured/estimated labels.
+- `observations.csv`: all classical components, original target and assigned
+  VAXen target with measured/estimated labels.
 - `summary.csv`, `predictions.csv`: separate observed/inferred-target validation
   and all matched single-score baselines.
-- `spec89-estimates.csv`: full source provenance and all eligible score conversions.
-- `joint-scatter.png/.svg`: all six affected patterns, separate measured points
-  and inferred triangles, direct/joint lines and conditional factor CI95.
-- `audit.json`: source/code checksums, direct-overlap audit, route and settings.
+- `joint-scatter.png/.svg`: measured points and inferred triangles, direct/joint
+  lines and conditional factor CI95.
 
-Compact bridge evidence/summary, model summary, estimate table and audit are
-retained under `research/data/classic/spec89-rate-*`. Bulk observations and
-predictions remain derived.
+Compact bridge evidence/summary, cohort summary, estimate table and audit
+(database input digest, direct-overlap check, route and settings) are retained
+under `research/data/classic/spec89-rate-*`.
 
-Validation: **57 rate-only factors and observed-rate held-out P95 values** match
-the preceding direct experiment to relative tolerance 1e-10. New synthetic tests
-check chained-factor multiplication, removal of held-out models from both edges,
-shared-model covariance and preservation of shared uncertainty when inferred
-observations repeat. The full suite passes **95 tests**.
+Validation: both edges reproduce the earlier point factors and estimate count.
+Synthetic tests (`tests/test_classical_fit.py`) check chained-factor
+multiplication, removal of held-out systems from both edges, shared-system
+covariance and preservation of shared uncertainty when inferred observations repeat.

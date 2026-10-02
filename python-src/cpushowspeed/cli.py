@@ -9,15 +9,13 @@ from cpushowspeed.bridge import bridge
 from cpushowspeed.caption import caption_command
 from cpushowspeed.caption_backfill import backfill_captions_command
 from cpushowspeed.classic import classic
-from cpushowspeed.classic_89_rate import spec89_rate_fit
 from cpushowspeed.classic_mix import mix_inventory
 from cpushowspeed.classic_network import network_fit
 from cpushowspeed.classic_overlap import overlap_spec
 from cpushowspeed.classic_pdf import extract_pdf_tables
 from cpushowspeed.classic_predict import predict_rate
-from cpushowspeed.classic_prepare import prepare_pairs, prepare_sources
-from cpushowspeed.classic_rate_composite import rate_composite_fit
 from cpushowspeed.classic_timeline import historical_timeline
+from cpushowspeed.classical_fit import rate_composite_fit, spec89_rate_fit
 from cpushowspeed.cpu_chronology import cpu_chronology_command
 from cpushowspeed.curated import data
 from cpushowspeed.curated_dates import import_dates_command
@@ -99,8 +97,6 @@ documents.add_command(render_tables_command)
 cli.add_command(documents)
 classic.add_command(overlap_spec)
 classic.add_command(mix_inventory)
-classic.add_command(prepare_pairs)
-classic.add_command(prepare_sources)
 classic.add_command(extract_pdf_tables)
 classic.add_command(rate_composite_fit)
 classic.add_command(spec89_rate_fit)

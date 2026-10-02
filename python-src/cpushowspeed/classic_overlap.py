@@ -6,7 +6,6 @@ import hashlib
 import json
 import re
 import subprocess
-from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
 
@@ -16,7 +15,7 @@ from bs4 import BeautifulSoup
 from cpushowspeed.research_io import read_csv as shared_read_csv
 from cpushowspeed.research_io import write_csv as shared_write_csv
 
-METHOD = "classic-hardware-overlap-v1"
+METHOD = "classic-hardware-overlap-v2-records-only"
 
 
 def read_csv(path):
@@ -426,52 +425,6 @@ def load_specs():
     return records
 
 
-def compare(records, specs):
-    pairs = []
-    for c in records:
-        if c["identity_scope"] != "system":
-            continue
-        key = model_key(c["system"])
-        loose = relaxed_key(c["system"], c["clock_mhz"])
-        for s in specs:
-            skey = model_key(s["system"])
-            sl = relaxed_key(s["system"], s["clock_mhz"])
-            if key != skey and loose != sl:
-                continue
-            ca, cb = c["clock_mhz"], s["clock_mhz"]
-            clock = (
-                "unknown" if ca is None or cb is None else ("compatible_1pct" if abs(ca - cb) <= 0.01 * max(ca, cb) else "conflict")
-            )
-            pairs.append(
-                dict(
-                    classic_id=c["id"],
-                    spec_id=s["id"],
-                    benchmark=c["benchmark"],
-                    spec_cohort=s["cohort"],
-                    model_key=loose,
-                    classic_system=c["system"],
-                    spec_system=s["system"],
-                    match_rule="normalized_model" if key == skey else "corroborated_clock_suffix",
-                    clock_check=clock,
-                    classic_clock_mhz=ca,
-                    spec_clock_mhz=cb,
-                    classic_config=c["configuration_raw"],
-                    classic_os=c["os_raw"],
-                    spec_os=s["os_raw"],
-                    spec_cpu_count=s["cpu_count"],
-                    review_status="candidate_not_configuration_verified",
-                    fit_eligible=False,
-                    spec_evidence_class=s["evidence_class"],
-                    classic_processor=c["processor_raw"],
-                    spec_processor=s["processor_raw"],
-                    classic_locator=c["locator"],
-                    classic_url=c["source_url"],
-                    spec_url=s["source_url"],
-                )
-            )
-    return pairs
-
-
 def write_csv(path, rows):
     return shared_write_csv(path, rows, fields=list(rows[0]) if rows else [], lineterminator="\n", empty_text="")
 
@@ -487,59 +440,14 @@ def write_csv(path, rows):
     "--output-root", type=click.Path(path_type=Path), default=Path("data/derived/classic/overlap-spec"), show_default=True
 )
 def overlap_spec(acquisition, output_root):
-    """Parse supported classical rows and enumerate SPEC89/92 model candidates."""
+    """Parse supported classical rows and collect SPEC89/92 records for the observation extract."""
     try:
         records, rejected, coverage = parse_classics(acquisition)
         specs = load_specs()
-        pairs = compare(records, specs)
         output_root.mkdir(parents=True, exist_ok=True)
         for name, rows in [("classical-records", records), ("spec-records", specs), ("rejected-rows", rejected)]:
             (output_root / (name + ".jsonl")).write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows))
-        write_csv(output_root / "candidate-pairs.csv", pairs)
         write_csv(output_root / "source-coverage.csv", coverage)
-        summary = []
-        for family in sorted({r["benchmark"] for r in records}):
-            cr = [r for r in records if r["benchmark"] == family]
-            for cohort in sorted({r["cohort"] for r in specs}):
-                ps = [p for p in pairs if p["benchmark"] == family and p["spec_cohort"] == cohort]
-                summary.append(
-                    dict(
-                        benchmark=family,
-                        spec_cohort=cohort,
-                        parsed_classic_rows=len(cr),
-                        system_rows=sum(r["identity_scope"] == "system" for r in cr),
-                        cpu_only_rows=sum(r["identity_scope"] == "cpu_only" for r in cr),
-                        candidate_models=len({p["model_key"] for p in ps}),
-                        matched_classic_rows=len({p["classic_id"] for p in ps}),
-                        matched_spec_records=len({p["spec_id"] for p in ps}),
-                        candidate_pairs=len(ps),
-                        clock_conflict_pairs=sum(p["clock_check"] == "conflict" for p in ps),
-                        verified_configurations=0,
-                    )
-                )
-        write_csv(output_root / "summary.csv", summary)
-        groups = defaultdict(list)
-        for pair in pairs:
-            groups[(pair["benchmark"], pair["spec_cohort"], pair["model_key"])].append(pair)
-        models = []
-        for (benchmark, cohort, key), members in sorted(groups.items()):
-            models.append(
-                dict(
-                    benchmark=benchmark,
-                    spec_cohort=cohort,
-                    model_key=key,
-                    classic_systems=" | ".join(sorted({p["classic_system"] for p in members})),
-                    spec_systems=" | ".join(sorted({p["spec_system"] for p in members})),
-                    candidate_pairs=len(members),
-                    classic_rows=len({p["classic_id"] for p in members}),
-                    spec_rows=len({p["spec_id"] for p in members}),
-                    clock_compatible_pairs=sum(p["clock_check"] == "compatible_1pct" for p in members),
-                    clock_conflict_pairs=sum(p["clock_check"] == "conflict" for p in members),
-                    clock_unknown_pairs=sum(p["clock_check"] == "unknown" for p in members),
-                    review_status="pending_configuration_review",
-                )
-            )
-        write_csv(output_root / "model-summary.csv", models)
 
         inputs = [
             Path(acquisition),
@@ -552,7 +460,6 @@ def overlap_spec(acquisition, output_root):
             "method": METHOD,
             "parsed_classic_rows": len(records),
             "spec_records": len(specs),
-            "candidate_pairs": len(pairs),
             "rejected_rows": len(rejected),
             "inputs": {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},
             "pdf_text_extractions": {r["source_id"]: r["text_extraction_sha256"] for r in records if "text_extraction_sha256" in r},
@@ -565,7 +472,7 @@ def overlap_spec(acquisition, output_root):
                 for r in read_csv(acquisition)
                 if r["source_id"] in {x["source_id"] for x in records} and r["extraction_path"]
             },
-            "caution": "Model-name candidates only. Repeated source rows retained. No score fitting or configuration equivalence established.",
+            "caution": "Parsed records only; pairing is by resolved system in the built database. Repeated source rows retained.",
         }
         (output_root / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
         click.echo(json.dumps(audit))

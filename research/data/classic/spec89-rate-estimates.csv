@@ -1,180 +1,180 @@
-spec_id,system,raw_specint89,estimated_rate_vaxen,factor_ci95_target_low,factor_ci95_target_high,evidence_class,source_url
-spec89:A0099,SGI Indigo,23.6,22.586873501253315,22.169658280304677,23.05578283953218,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0100,SGI 4D/35,28.0,26.797985509961556,26.302984400361478,27.35431862317377,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0101,SGI 4D/25G,14.0,13.398992754980778,13.151492200180739,13.677159311586886,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0102,IBM RS/6000 350,36.2,34.64596698073601,34.00600126046734,35.36522621996038,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0103,IBM RS/6000 320H,21.8,20.864145861327213,20.478752140281436,21.29729092804244,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0104,IBM RS/6000 220,17.5,16.748740943725974,16.439365250225926,17.096449139483607,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0105,HP 9000/720,39.5,37.8043009872672,37.10599585050994,38.589128057691575,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0106,HP 9000/710,35.4,33.88031025187997,33.25448742045701,34.58367425929827,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0107,HP 9000/705,24.6,23.54394441232337,23.109050580317586,24.032722790359816,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0108,HP 9000/425e,12.2,11.676265115054678,11.460586060157501,11.918667400097144,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0109,HP 9000/425t,12.3,11.771972206161685,11.554525290158793,12.016361395179908,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0110,Sun SPARCstation 2,21.7,20.768438770220207,20.384812910280147,21.199596932959672,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0111,Sun SPARCstation IPX,21.7,20.768438770220207,20.384812910280147,21.199596932959672,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0112,Sun SPARCstation ELC,18.0,17.227276399261,16.90906140023238,17.584919114897424,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0113,Sun SPARCstation IPC,12.8,12.250507661696712,12.024221440165249,12.504831370593726,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0114,DECstation 5000/240,27.9,26.70227841885455,26.209045170360188,27.256624628091007,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0115,DECstation 5000/200,19.5,18.662882765866083,18.318149850251743,19.050329041138877,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0116,DECstation 5000/133,20.9,20.00278204136416,19.633299070269818,20.418044972297565,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0117,DECstation 5000/125,16.1,15.408841668227897,15.124216030207851,15.72873320832492,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0118,DECstation 5000/120,13.8,13.207578572766767,12.963613740178157,13.48177132142136,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0119,DECstation 5000/25,15.7,15.026013303799871,14.748459110202687,15.337957227993865,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0120,DECstation 5000/20,13.5,12.92045729944575,12.681796050174285,13.188689336173068,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
-spec89:A0121,DEC VAXstation 3100/38,3.5,3.3497481887451945,3.2878730500451847,3.4192898278967214,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0122,DEC VAXstation 3100/76,7.1,6.7952034685973945,6.66968533009166,6.936273650876206,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0123,DEC VAXstation 4000 VLC,5.8,5.551011284206322,5.448475340074878,5.666251714800281,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0124,DEC VAXstation 4000/60,11.1,10.623487112877617,10.4272545301433,10.844033454186745,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0125,DECstation 5000/125,16.1,15.408841668227897,15.124216030207851,15.72873320832492,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0126,HP 9000/425t,12.3,11.771972206161685,11.554525290158793,12.016361395179908,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0127,HP 9000/720,39.5,37.8043009872672,37.10599585050994,38.589128057691575,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0128,Sun SPARCstation IPC,12.8,12.250507661696712,12.024221440165249,12.504831370593726,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0129,Sun SPARCstation ELC,18.0,17.227276399261,16.90906140023238,17.584919114897424,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0130,Sun SPARCstation IPX,21.7,20.768438770220207,20.384812910280147,21.199596932959672,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0131,Sun SPARCstation 2,21.7,20.768438770220207,20.384812910280147,21.199596932959672,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0132,SGI Indigo,23.6,22.586873501253315,22.169658280304677,23.05578283953218,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
-spec89:A0143,Intel i486DX-33,19.0,18.184347310331056,17.84845370024529,18.56185906572506,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060304.PDF
-spec89:A0144,Intel i486DX2-50,25.4,24.30960114117941,23.86056442032791,24.81427475102192,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060304.PDF
-spec89:A0145,Intel i486DX-50,28.5,27.276520965496584,26.772680550367934,27.84278859858759,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060304.PDF
-spec89:A0146,Intel i486DX2-66,34.0,32.54041097638189,31.93933820043894,33.21595832813958,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060304.PDF
-spec89:A0148,Intel OverDrive 25/50 MHz system,21.3,20.385610405792185,20.009055990274984,20.808820952628622,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060802.PDF
-spec89:A0149,IBM RS/6000 970,49.3,47.18359591575374,46.31204039063646,48.16313957580239,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/MSB/0607MSB.PDF
-spec89:A0150,MIPS Magnum R4000,40.0,38.28283644280222,37.5756920005164,39.07759803310539,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/MSB/0607MSB.PDF
-spec89:A0151,SGI Crimson,60.6,57.99849721084537,56.92717338078234,59.20256102015467,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
-spec89:A0152,HP 9000/750,51.5,49.28915192010786,48.378703450664865,50.31240746762319,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
-spec89:A0153,IBM RS/6000 560,43.8,41.91970590486843,41.14538274056545,42.7899698462504,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
-spec89:A0154,HP 9000/710,35.4,33.88031025187997,33.25448742045701,34.58367425929827,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
-spec89:A0155,Intel XPRESS 486DX-50,28.5,27.276520965496584,26.772680550367934,27.84278859858759,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
-spec89:A0156,DECstation 5000/240,27.9,26.70227841885455,26.209045170360188,27.256624628091007,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
-spec89:A0157,Sun SPARCstation 2,21.7,20.768438770220207,20.384812910280147,21.199596932959672,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
-spec89:A0187,HP 9000/340,2.7,2.5840914598891502,2.536359210034857,2.637737867234614,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0188,HP 9000/370,5.2,4.9767687375642895,4.884839960067132,5.080087744303701,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0189,DECstation 2100,8.7,8.326516926309482,8.172713010112316,8.499377572200421,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0190,Sun 4/260,8.7,8.326516926309482,8.172713010112316,8.499377572200421,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0191,Sun SPARCstation 1,9.5,9.092173655165528,8.924226850122645,9.28092953286253,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0192,HP 9000/834,10.2,9.762123292914566,9.58180146013168,9.964787498441874,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0193,Sun SPARCstation 1+,11.2,10.719194203984623,10.521193760144591,10.941727449269509,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0194,MIPS RC2030,11.3,10.814901295091628,10.615132990145883,11.039421444352273,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0195,Data General AV 310,11.6,11.102022568412645,10.896950680149756,11.332503429600562,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0196,DECstation 3100,11.8,11.293436750626658,11.084829140152339,11.52789141976609,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0197,HP Apollo DN10000,11.9,11.389143841733661,11.178768370153628,11.625585414848853,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0198,Sun SPARCstation 330,12.3,11.771972206161685,11.554525290158793,12.016361395179908,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0199,HP 9000/425s,12.9,12.346214752803718,12.118160670166539,12.602525365676488,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0200,MIPS M/120-5,13.0,12.441921843910723,12.21209990016783,12.700219360759252,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0201,Intel i486,13.3,12.72904311723174,12.493917590171703,12.993301346007543,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0202,SGI 4D/25S,14.0,13.398992754980778,13.151492200180739,13.677159311586886,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0203,IBM RS/6000 320,15.8,15.121720394906879,14.842398340203978,15.43565122307663,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0204,IBM RS/6000 520,15.8,15.121720394906879,14.842398340203978,15.43565122307663,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0205,AT&T Starserver E,17.2,16.461619670404957,16.15754756022205,16.803367154235318,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0206,Stardent 3010,18.6,17.801518945903034,17.472696780240128,18.171083085394006,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0207,DECstation 5000/200,18.9,18.08864021922405,17.754514470243997,18.464165070642295,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0208,MIPS RC3260,19.3,18.471468583652072,18.130271390249163,18.854941050973352,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0209,MIPS Magnum (RC3230),19.5,18.662882765866083,18.318149850251743,19.050329041138877,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0210,CDC 4360,19.7,18.854296948080094,18.506028310254326,19.245717031304405,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0211,MIPS M/2000,19.8,18.950004039187103,18.59996754025562,19.34341102638717,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0212,Sun SPARCstation 2,20.2,19.33283240361512,18.975724460260782,19.734187006718223,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0213,IBM RS/6000 530,20.2,19.33283240361512,18.975724460260782,19.734187006718223,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0214,IBM RS/6000 540,24.0,22.969701865681333,22.54541520030984,23.446558819863235,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0215,HP 9000/720,38.5,36.84723007619714,36.16660355049704,37.61218810686394,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0216,CDC 4680 (Beta),42.0,40.19697826494234,39.45447660054222,41.03147793476066,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0217,HP 9000/730,51.0,48.81061646457284,47.90900730065841,49.823937492209375,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
-spec89:A0231,DEC VAX 4000/100,24.3,23.256823139002353,22.827232890313713,23.739640805111524,two_edge_estimate,https://lastin.dti.supsi.ch/VET/sys/VAX/MicroVAX-3100-90/Design_of_MicroVAX_3100-90.pdf
-spec89:A0232,DEC MicroVAX 3100/90,24.3,23.256823139002353,22.827232890313713,23.739640805111524,two_edge_estimate,https://lastin.dti.supsi.ch/VET/sys/VAX/MicroVAX-3100-90/Design_of_MicroVAX_3100-90.pdf
-spec89:A0233,DEC VAX 4000/300,7.7,7.369446015239428,7.233320710099407,7.522437621372788,two_edge_estimate,https://www.researchgate.net/publication/2794870_Performance_from_Architecture_Comparing_a_RISC_and_a_CISC_with_Similar_Hardware_Organization
-spec89:A0234,MIPS M/2000,19.7,18.854296948080094,18.506028310254326,19.245717031304405,two_edge_estimate,https://www.researchgate.net/publication/2794870_Performance_from_Architecture_Comparing_a_RISC_and_a_CISC_with_Similar_Hardware_Organization
-spec89:A0235,DEC VAX 8700,5.0,4.785354555350278,4.69696150006455,4.884699754138174,two_edge_estimate,https://www.researchgate.net/publication/2794870_Performance_from_Architecture_Comparing_a_RISC_and_a_CISC_with_Similar_Hardware_Organization
-spec89:A0239,DEC VAX 4000/400,17.1,16.36591257929795,16.063608330220763,16.705673159152557,two_edge_estimate,https://www.1000bit.it/ad/bro/digital/djt/dtj_v04-03_1992.pdf
-spec89:A0240,DEC VAX 4000/500,24.9,23.831065685644383,23.390868270321455,24.325804775608102,two_edge_estimate,https://www.1000bit.it/ad/bro/digital/djt/dtj_v04-03_1992.pdf
-spec89:A0241,DEC VAX 4000/600,31.8,30.434854972027768,29.87267514041054,31.066690436318787,two_edge_estimate,https://www.1000bit.it/ad/bro/digital/djt/dtj_v04-03_1992.pdf
-spec89:I91A02,HP 9000/340,2.7,2.5840914598891502,2.536359210034857,2.637737867234614,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91A03,Sun 4/260,8.7,8.326516926309482,8.172713010112316,8.499377572200421,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91A04,Sun SPARCstation 1,9.5,9.092173655165528,8.924226850122645,9.28092953286253,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91A05,HP 9000/834,10.2,9.762123292914566,9.58180146013168,9.964787498441874,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91A06,MIPS RC2030,11.3,10.814901295091628,10.615132990145883,11.039421444352273,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91A07,DECstation 3100,11.8,11.293436750626658,11.084829140152339,11.52789141976609,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91A08,HP Apollo DN10000,11.9,11.389143841733661,11.178768370153628,11.625585414848853,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91A09,Sun SPARCstation 330,12.3,11.771972206161685,11.554525290158793,12.016361395179908,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91A10,MIPS M/120-5,13.0,12.441921843910723,12.21209990016783,12.700219360759252,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91A11,MIPS M/2000,19.8,18.950004039187103,18.59996754025562,19.34341102638717,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B02,HP 9000/340,2.7,2.5840914598891502,2.536359210034857,2.637737867234614,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B03,Sun 4/260,8.7,8.326516926309482,8.172713010112316,8.499377572200421,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B04,Sun SPARCstation 1,9.5,9.092173655165528,8.924226850122645,9.28092953286253,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B05,HP 9000/834,10.2,9.762123292914566,9.58180146013168,9.964787498441874,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B06,MIPS RC2030,11.3,10.814901295091628,10.615132990145883,11.039421444352273,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B07,DECstation 3100,11.8,11.293436750626658,11.084829140152339,11.52789141976609,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B08,HP Apollo DN10000,11.9,11.389143841733661,11.178768370153628,11.625585414848853,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B09,Sun SPARCstation 330,12.3,11.771972206161685,11.554525290158793,12.016361395179908,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B10,HP 9000/425s,12.9,12.346214752803718,12.118160670166539,12.602525365676488,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B11,MIPS M/120-5,13.0,12.441921843910723,12.21209990016783,12.700219360759252,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B12,IBM POWERstation 320,15.8,15.121720394906879,14.842398340203978,15.43565122307663,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B13,Intel STAR860,16.7,15.983084214869928,15.687851410215595,16.3148971788215,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B14,AT&T Starserver E,17.2,16.461619670404957,16.15754756022205,16.803367154235318,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B15,DECstation 5000/200,18.9,18.08864021922405,17.754514470243997,18.464165070642295,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B16,MIPS M/2000,19.8,18.950004039187103,18.59996754025562,19.34341102638717,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B17,Sun SPARCstation 2,20.2,19.33283240361512,18.975724460260782,19.734187006718223,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B18,HP 9000/720,38.5,36.84723007619714,36.16660355049704,37.61218810686394,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:I91B19,HP 9000/730,51.0,48.81061646457284,47.90900730065841,49.823937492209375,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP01,HP 9000/750,51.5,49.28915192010786,48.378703450664865,50.31240746762319,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP02,HP 9000/730,51.2,49.00203064678685,48.096885760660996,50.0193254823749,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP03,HP 9000/720,39.5,37.8043009872672,37.10599585050994,38.589128057691575,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP04,HP 9000/710,35.4,33.88031025187997,33.25448742045701,34.58367425929827,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP05,IBM RS/6000 550,33.9,32.44470388527488,31.845398970437646,33.118264333056814,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP06,SGI 4D/35,28.0,26.797985509961556,26.302984400361478,27.35431862317377,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP07,IBM RS/6000 530H,26.6,25.45808623446348,24.987835180343406,25.986602692015087,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP08,SGI Indigo,23.6,22.586873501253315,22.169658280304677,23.05578283953218,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP09,Sun SPARCstation 2,21.7,20.768438770220207,20.384812910280147,21.199596932959672,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP10,Sun SPARCstation IPX,21.7,20.768438770220207,20.384812910280147,21.199596932959672,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP11,IBM RS/6000 320H,20.0,19.14141822140111,18.7878460002582,19.538799016552694,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP12,DECstation 5000/200,19.5,18.662882765866083,18.318149850251743,19.050329041138877,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UHP13,Sun SPARCstation ELC,18.0,17.227276399261,16.90906140023238,17.584919114897424,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UNEXT1,NeXTstation Color,12.45,11.915532842822191,11.695434135160728,12.162902387804051,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UNEXT2,NeXTstation,11.9,11.389143841733661,11.178768370153628,11.625585414848853,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UIBM01,IBM RS/6000 220,17.5,16.748740943725974,16.439365250225926,17.096449139483607,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UIBM02,IBM RS/6000 320H,21.8,20.864145861327213,20.478752140281436,21.29729092804244,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UIBM03,IBM RS/6000 340,28.8,27.5636422388176,27.054498240371807,28.13587058383588,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UIBM04,IBM RS/6000 350,36.2,34.64596698073601,34.00600126046734,35.36522621996038,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UIBM05,IBM RS/6000 520H,21.8,20.864145861327213,20.478752140281436,21.29729092804244,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UIBM06,IBM RS/6000 530H,29.2,27.946470603245622,27.43025516037697,28.526646564166935,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UIBM07,IBM RS/6000 550,36.8,35.220209527378046,34.56963664047508,35.951390190456955,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UIBM08,IBM RS/6000 560,43.8,41.91970590486843,41.14538274056545,42.7899698462504,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:UIBM09,IBM RS/6000 970,49.3,47.18359591575374,46.31204039063646,48.16313957580239,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0001,IBM RS/6000 320,15.78,15.102578976685477,14.823610494203718,15.416112424060076,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0002,IBM RS/6000 320,16.3,15.600255850441908,15.312094490210432,15.924121198490447,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0003,IBM RS/6000 520,15.8,15.121720394906879,14.842398340203978,15.43565122307663,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0004,IBM RS/6000 530,20.27,19.399827367390028,19.041481921261685,19.802572803276156,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0005,IBM RS/6000 540,23.98,22.950560447459935,22.526627354309582,23.427020020846683,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0006,IBM RS/6000 550,34.5,33.018946431916916,32.409034350445395,33.7044283035534,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0007,IBM RS/6000 730,20.05,19.189271766954615,18.834815615258844,19.587646014094076,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0008,IBM RS/6000 930,20.15,19.28497885806162,18.928754845260134,19.685340009176837,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0009,HP 9000/720,38.48,36.828088657975734,36.14781570449677,37.59264930784738,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0010,HP 9000/730,51.05,48.85847001012633,47.95597691565905,49.87278448975075,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0011,DECstation 2100,8.69,8.316946217198783,8.163319087112187,8.489608172692146,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0012,DECstation 2100,8.71,8.336087635420185,8.182106933112447,8.509146971708699,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0013,DECstation 3100,11.78,11.274295332405254,11.066041294152079,11.508352620749537,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0014,DECstation 3100,11.45,10.958461931752137,10.756041835147819,11.185962436976418,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0015,DECstation 5000/200,19.1,18.280054401438065,17.94239293024658,18.659553060807823,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0016,DECsystem 5400,12.64,12.097376315925503,11.873918672163182,12.348520978461304,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0017,DECsystem 5810,12.84,12.288790498139514,12.061797132165763,12.54390896862683,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0018,MIPS 6280 (beta),42.05,40.24483181049583,39.50144621554286,41.08032493230204,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0019,MIPS M/120-5,12.94,12.38449758924652,12.155736362167055,12.641602963709593,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0020,MIPS M/2000,19.55,18.710736311419588,18.36511946525239,19.09917603868026,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0021,MIPS M/2000,19.69,18.844726238969397,18.496634387254197,19.23594763179613,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0022,MIPS RC2030,11.18,10.700052785763221,10.502405914144333,10.922188650252956,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0023,MIPS RC3240,17.6,16.84444803483298,16.533304480227216,17.194143134566374,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0024,MIPS RC3260,19.27,18.44275645631997,18.102089621248776,18.82563285244852,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0025,MIPS RX2030,11.34,10.85318413153443,10.652708682146399,11.078499042385378,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0026,MIPS RX3230,19.29,18.46189787454137,18.12087746724903,18.845171651465073,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0027,SGI 4D/210S,16.79,16.069220596866234,15.772396717216758,16.402821774395985,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0028,SGI 4D/25S,13.98,13.379851336759378,13.13270435418048,13.657620512570334,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0029,SGI 4D/320S,22.56,21.591519753740453,21.19269028829125,22.03976529067144,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0030,Solbourne 5/801,17.69,16.930584416829284,16.61784978722838,17.28206773014086,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0031,Sun 4/260,8.71,8.336087635420185,8.182106933112447,8.509146971708699,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0032,Sun SPARCstation SLC,9.52,9.11131507338693,8.943014696122903,9.300468331879083,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0033,Sun SPARCstation 1,9.58,9.168739328051133,8.999378234123677,9.35908472892874,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0034,Sun SPARCstation 1,9.56,9.149597909829732,8.980590388123419,9.33954592991219,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0035,Sun SPARCstation 1+,11.22,10.738335622206025,10.53998160614485,10.961266248286062,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0036,Sun SPARCstation IPC,12.4,11.86767929726869,11.648464520160084,12.11405539026267,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0037,Sun SPARCstation 330,12.25,11.72411866060818,11.507555675158146,11.967514397638526,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0038,Sun SPARCstation 330,12.22,11.69540653327608,11.479373906157761,11.938206199113697,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0039,Sun SPARCstation 490,18.62,17.820660364124436,17.491484626240386,18.19062188441056,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
-spec89:R3H0040,Sun SPARCstation 2,20.24,19.371115240057925,19.013300152261298,19.773264604751326,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+spec_id,system,system_id,raw_specint89,estimated_rate_vaxen,factor_ci95_target_low,factor_ci95_target_high,evidence_class,source_url
+historical-spec:spec89:A0099,SGI Indigo,sys:indigo,23.6,22.586873501253315,22.15283228078054,23.05627787251803,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0100,SGI 4D/35,sys:4d/35,28.0,26.797985509961556,26.283021350078602,27.35490595044512,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0101,SGI 4D/25G,sys:4d/25g,14.0,13.398992754980778,13.141510675039301,13.67745297522256,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0102,IBM RS/6000 350,sys:rs/6000350,36.2,34.64596698073601,33.980191888315915,35.36598555021833,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0103,IBM RS/6000 320H,sys:rs/6000320h,21.8,20.864145861327213,20.463209479704055,21.29774820427513,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0104,IBM RS/6000 220,sys:rs/6000220,17.5,16.748740943725974,16.426888343799128,17.0968162190282,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0105,HP 9000/720,sys:hp9000/720,39.5,37.8043009872672,37.07783369028946,38.58995660866365,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0106,HP 9000/710,sys:hp9000/710,35.4,33.88031025187997,33.2292484211708,34.58441680877704,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0107,HP 9000/705,sys:hp9000/705,24.6,23.54394441232337,23.091511614711916,24.03323879931964,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0108,HP 9000/425e,sys:9000/425e,12.2,11.676265115054678,11.45188787396282,11.918923306979659,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0109,HP 9000/425t,sys:9000/425t,12.3,11.771972206161685,11.545755807355958,12.01661939965982,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0110,Sun SPARCstation 2,sys:sparcstation2,21.7,20.768438770220207,20.369341546310917,21.200052111594967,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0111,Sun SPARCstation IPX,sys:sparcstationipx,21.7,20.768438770220207,20.369341546310917,21.200052111594967,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0112,Sun SPARCstation ELC,sys:sparcstationelc,18.0,17.227276399261,16.896228010764816,17.585296682429004,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0113,Sun SPARCstation IPC,sys:sparcstationipc,12.8,12.250507661696712,12.015095474321647,12.505099863060627,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0114,DECstation 5000/240,sys:decstation5000/240,27.9,26.70227841885455,26.189153416685464,27.257209857764956,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0115,DECstation 5000/200,sys:decstation5000/200,19.5,18.662882765866083,18.304247011661886,19.05073807263142,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0116,DECstation 5000/133,sys:decstation5000/133,20.9,20.00278204136416,19.618398079165814,20.418483370153677,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0117,DECstation 5000/125,sys:decstation5000/125,16.1,15.408841668227897,15.1127372762952,15.729070921505945,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0118,DECstation 5000/120,sys:decstation5000/120,13.8,13.207578572766767,12.953774808253026,13.482060789862238,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0119,DECstation 5000/25,sys:decstation5000/25,15.7,15.026013303799871,14.737265542722644,15.338286550785298,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0120,DECstation 5000/20,sys:decstation5000/20,13.5,12.92045729944575,12.672171008073612,13.188972511821754,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Apr-92.pdf
+historical-spec:spec89:A0121,DEC VAXstation 3100/38,sys:vaxstation3100/38,3.5,3.3497481887451945,3.2853776687598253,3.41936324380564,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0122,DEC VAXstation 3100/76,sys:vaxstation3100/76,7.1,6.7952034685973945,6.664623270912789,6.936422580291441,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0123,DEC VAXstation 4000 VLC,sys:vaxstation4000vlc,5.8,5.551011284206322,5.444340136801996,5.6663733754493455,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0124,DEC VAXstation 4000/60,sys:vaxstation4000/60,11.1,10.623487112877617,10.419340606638304,10.844266287497886,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0125,DECstation 5000/125,sys:decstation5000/125,16.1,15.408841668227897,15.1127372762952,15.729070921505945,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0126,HP 9000/425t,sys:9000/425t,12.3,11.771972206161685,11.545755807355958,12.01661939965982,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0127,HP 9000/720,sys:hp9000/720,39.5,37.8043009872672,37.07783369028946,38.58995660866365,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0128,Sun SPARCstation IPC,sys:sparcstationipc,12.8,12.250507661696712,12.015095474321647,12.505099863060627,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0129,Sun SPARCstation ELC,sys:sparcstationelc,18.0,17.227276399261,16.896228010764816,17.585296682429004,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0130,Sun SPARCstation IPX,sys:sparcstationipx,21.7,20.768438770220207,20.369341546310917,21.200052111594967,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0131,Sun SPARCstation 2,sys:sparcstation2,21.7,20.768438770220207,20.369341546310917,21.200052111594967,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0132,SGI Indigo,sys:indigo,23.6,22.586873501253315,22.15283228078054,23.05627787251803,two_edge_estimate,https://web-docs.gsi.de/~kraemer/COLLECTION/DEC/vaxstation-family.pdf
+historical-spec:spec89:A0143,Intel i486DX-33,sys:intel,19.0,18.184347310331056,17.834907344696195,18.562257609230617,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060304.PDF
+historical-spec:spec89:A0144,Intel i486DX2-50,sys:intel,25.4,24.30960114117941,23.84245508185702,24.814807540760928,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060304.PDF
+historical-spec:spec89:A0145,Intel i486DX-50,sys:intel,28.5,27.276520965496584,26.752361017044294,27.843386413845923,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060304.PDF
+historical-spec:spec89:A0146,Intel i486DX2-66,sys:intel,34.0,32.54041097638189,31.915097353666877,33.21667151125479,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060304.PDF
+historical-spec:spec89:A0148,Intel OverDrive 25/50 MHz system,sys:overdrive25/system,21.3,20.385610405792185,19.993869812738367,20.809267740874322,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/060802.PDF
+historical-spec:spec89:A0149,IBM RS/6000 970,sys:rs/6000970,49.3,47.18359591575374,46.276891162816966,48.16417369131944,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/MSB/0607MSB.PDF
+historical-spec:spec89:A0150,MIPS Magnum R4000,sys:magnumr4000,40.0,38.28283644280222,37.54717335725515,39.07843707206445,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/MSB/0607MSB.PDF
+historical-spec:spec89:A0151,SGI Crimson,sys:crimson,60.6,57.99849721084537,56.88396763624155,59.203832164177655,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
+historical-spec:spec89:A0152,HP 9000/750,sys:hp9000/750,51.5,49.28915192010786,48.341985697466,50.313487730282986,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
+historical-spec:spec89:A0153,IBM RS/6000 560,sys:rs/6000560,43.8,41.91970590486843,41.11415482619439,42.79088859391057,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
+historical-spec:spec89:A0154,HP 9000/710,sys:hp9000/710,35.4,33.88031025187997,33.2292484211708,34.58441680877704,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
+historical-spec:spec89:A0155,Intel XPRESS 486DX-50,sys:xpress,28.5,27.276520965496584,26.752361017044294,27.843386413845923,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
+historical-spec:spec89:A0156,DECstation 5000/240,sys:decstation5000/240,27.9,26.70227841885455,26.189153416685464,27.257209857764956,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
+historical-spec:spec89:A0157,Sun SPARCstation 2,sys:sparcstation2,21.7,20.768438770220207,20.369341546310917,21.200052111594967,two_edge_estimate,https://www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/061203.pdf
+historical-spec:spec89:A0187,HP 9000/340,sys:hp9000/340,2.7,2.5840914598891502,2.5344342016147228,2.637794502364351,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0188,HP 9000/370,sys:hp9000/370,5.2,4.9767687375642895,4.881132536443169,5.080196819368379,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0189,DECstation 2100,sys:decstation2100,8.7,8.326516926309482,8.166510205202995,8.499560063174018,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0190,Sun 4/260,sys:sun4/260,8.7,8.326516926309482,8.166510205202995,8.499560063174018,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0191,Sun SPARCstation 1,sys:sparcstation1,9.5,9.092173655165528,8.917453672348097,9.281128804615308,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0192,HP 9000/834,sys:hp9000/834,10.2,9.762123292914566,9.574529206100062,9.965001453376436,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0193,Sun SPARCstation 1+,sys:sparcstation1+,11.2,10.719194203984623,10.51320854003144,10.941962380178047,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0194,MIPS RC2030,sys:rc2030,11.3,10.814901295091628,10.60707647342458,11.039658472858209,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0195,Data General AV 310,sys:av310,11.6,11.102022568412645,10.888680273603992,11.332746750898691,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0196,DECstation 3100,sys:decstation3100,11.8,11.293436750626658,11.07641614039027,11.528138936259015,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0197,HP Apollo DN10000,sys:apollodn10000,11.9,11.389143841733661,11.170284073783407,11.625835028939177,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0198,Sun SPARCstation 330,sys:sparcstation330,12.3,11.771972206161685,11.545755807355958,12.01661939965982,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0199,HP 9000/425s,sys:9000/425s,12.9,12.346214752803718,12.108963407714786,12.602795955740786,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0200,MIPS M/120-5,sys:m/1205,13.0,12.441921843910723,12.202831341107924,12.700492048420948,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0201,Intel i486,sys:i486,13.3,12.72904311723174,12.484435141287337,12.993580326461432,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0202,SGI 4D/25S,sys:4d/25s,14.0,13.398992754980778,13.141510675039301,13.67745297522256,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0203,IBM RS/6000 320,sys:rs/6000320,15.8,15.121720394906879,14.831133476115784,15.435982643465461,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0204,IBM RS/6000 520,sys:rs/6000520,15.8,15.121720394906879,14.831133476115784,15.435982643465461,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0205,AT&T Starserver E,sys:attstarservere,17.2,16.461619670404957,16.145284543619713,16.803727940987716,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0206,Stardent 3010,sys:stardent3010,18.6,17.801518945903034,17.459435611123645,18.171473238509975,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0207,DECstation 5000/200,sys:decstation5000/200,18.9,18.08864021922405,17.741039411303056,18.464561516550454,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0208,MIPS RC3260,sys:rc3260,19.3,18.471468583652072,18.11651114487561,18.8553458872711,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0209,MIPS Magnum (RC3230),sys:magnum,19.5,18.662882765866083,18.304247011661886,19.05073807263142,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0210,CDC 4360,sys:cdc4360,19.7,18.854296948080094,18.49198287844816,19.246130257991744,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0211,MIPS M/2000,sys:m/2000,19.8,18.950004039187103,18.5858508118413,19.343826350671907,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0212,Sun SPARCstation 2,sys:sparcstation2,20.2,19.33283240361512,18.96132254541385,19.73461072139255,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0213,IBM RS/6000 530,sys:rs/6000530,20.2,19.33283240361512,18.96132254541385,19.73461072139255,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0214,IBM RS/6000 540,sys:rs/6000540,24.0,22.969701865681333,22.52830401435309,23.447062243238673,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0215,HP 9000/720,sys:hp9000/720,38.5,36.84723007619714,36.13915435635808,37.61299568186204,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0216,CDC 4680 (Beta),sys:cdc4680,42.0,40.19697826494234,39.424532025117905,41.03235892566768,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0217,HP 9000/730,sys:hp9000/730,51.0,48.81061646457284,47.87264603050031,49.82500726688218,two_edge_estimate,https://www.mrob.com/pub/comp/benchmarks/spec.html
+historical-spec:spec89:A0231,DEC VAX 4000/100,sys:vax4000/100,24.3,23.256823139002353,22.809907814532504,23.74015052127916,two_edge_estimate,https://lastin.dti.supsi.ch/VET/sys/VAX/MicroVAX-3100-90/Design_of_MicroVAX_3100-90.pdf
+historical-spec:spec89:A0232,DEC MicroVAX 3100/90,sys:microvax3100/90,24.3,23.256823139002353,22.809907814532504,23.74015052127916,two_edge_estimate,https://lastin.dti.supsi.ch/VET/sys/VAX/MicroVAX-3100-90/Design_of_MicroVAX_3100-90.pdf
+historical-spec:spec89:A0233,DEC VAX 4000/300,sys:vax4000/300,7.7,7.369446015239428,7.227830871271617,7.522599136372408,two_edge_estimate,https://www.researchgate.net/publication/2794870_Performance_from_Architecture_Comparing_a_RISC_and_a_CISC_with_Similar_Hardware_Organization
+historical-spec:spec89:A0234,MIPS M/2000,sys:m/2000,19.7,18.854296948080094,18.49198287844816,19.246130257991744,two_edge_estimate,https://www.researchgate.net/publication/2794870_Performance_from_Architecture_Comparing_a_RISC_and_a_CISC_with_Similar_Hardware_Organization
+historical-spec:spec89:A0235,DEC VAX 8700,sys:vax8700,5.0,4.785354555350278,4.693396669656893,4.884804634008057,two_edge_estimate,https://www.researchgate.net/publication/2794870_Performance_from_Architecture_Comparing_a_RISC_and_a_CISC_with_Similar_Hardware_Organization
+historical-spec:spec89:A0239,DEC VAX 4000/400,sys:vax4000/400,17.1,16.36591257929795,16.05141661022658,16.706031848307557,two_edge_estimate,https://www.1000bit.it/ad/bro/digital/djt/dtj_v04-03_1992.pdf
+historical-spec:spec89:A0240,DEC VAX 4000/500,sys:vax4000/500,24.9,23.831065685644383,23.373115414891327,24.326327077360123,two_edge_estimate,https://www.1000bit.it/ad/bro/digital/djt/dtj_v04-03_1992.pdf
+historical-spec:spec89:A0241,DEC VAX 4000/600,sys:vax4000/600,31.8,30.434854972027768,29.850002819017842,31.067357472291242,two_edge_estimate,https://www.1000bit.it/ad/bro/digital/djt/dtj_v04-03_1992.pdf
+historical-spec:spec89:I91A02,HP 9000/340,sys:hp9000/340,2.7,2.5840914598891502,2.5344342016147228,2.637794502364351,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91A03,Sun 4/260,sys:sun4/260,8.7,8.326516926309482,8.166510205202995,8.499560063174018,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91A04,Sun SPARCstation 1,sys:sparcstation1,9.5,9.092173655165528,8.917453672348097,9.281128804615308,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91A05,HP 9000/834,sys:hp9000/834,10.2,9.762123292914566,9.574529206100062,9.965001453376436,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91A06,MIPS RC2030,sys:rc2030,11.3,10.814901295091628,10.60707647342458,11.039658472858209,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91A07,DECstation 3100,sys:decstation3100,11.8,11.293436750626658,11.07641614039027,11.528138936259015,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91A08,HP Apollo DN10000,sys:apollodn10000,11.9,11.389143841733661,11.170284073783407,11.625835028939177,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91A09,Sun SPARCstation 330,sys:sparcstation330,12.3,11.771972206161685,11.545755807355958,12.01661939965982,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91A10,MIPS M/120-5,sys:m/1205,13.0,12.441921843910723,12.202831341107924,12.700492048420948,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91A11,MIPS M/2000,sys:m/2000,19.8,18.950004039187103,18.5858508118413,19.343826350671907,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B02,HP 9000/340,sys:hp9000/340,2.7,2.5840914598891502,2.5344342016147228,2.637794502364351,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B03,Sun 4/260,sys:sun4/260,8.7,8.326516926309482,8.166510205202995,8.499560063174018,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B04,Sun SPARCstation 1,sys:sparcstation1,9.5,9.092173655165528,8.917453672348097,9.281128804615308,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B05,HP 9000/834,sys:hp9000/834,10.2,9.762123292914566,9.574529206100062,9.965001453376436,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B06,MIPS RC2030,sys:rc2030,11.3,10.814901295091628,10.60707647342458,11.039658472858209,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B07,DECstation 3100,sys:decstation3100,11.8,11.293436750626658,11.07641614039027,11.528138936259015,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B08,HP Apollo DN10000,sys:apollodn10000,11.9,11.389143841733661,11.170284073783407,11.625835028939177,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B09,Sun SPARCstation 330,sys:sparcstation330,12.3,11.771972206161685,11.545755807355958,12.01661939965982,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B10,HP 9000/425s,sys:9000/425s,12.9,12.346214752803718,12.108963407714786,12.602795955740786,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B11,MIPS M/120-5,sys:m/1205,13.0,12.441921843910723,12.202831341107924,12.700492048420948,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B12,IBM POWERstation 320,sys:powerstation320,15.8,15.121720394906879,14.831133476115784,15.435982643465461,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B13,Intel STAR860,sys:star860,16.7,15.983084214869928,15.675944876654023,16.315247477586908,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B14,AT&T Starserver E,sys:attstarservere,17.2,16.461619670404957,16.145284543619713,16.803727940987716,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B15,DECstation 5000/200,sys:decstation5000/200,18.9,18.08864021922405,17.741039411303056,18.464561516550454,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B16,MIPS M/2000,sys:m/2000,19.8,18.950004039187103,18.5858508118413,19.343826350671907,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B17,Sun SPARCstation 2,sys:sparcstation2,20.2,19.33283240361512,18.96132254541385,19.73461072139255,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B18,HP 9000/720,sys:hp9000/720,38.5,36.84723007619714,36.13915435635808,37.61299568186204,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:I91B19,HP 9000/730,sys:hp9000/730,51.0,48.81061646457284,47.87264603050031,49.82500726688218,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0001,IBM RS/6000 320,sys:rs/6000320,15.78,15.102578976685477,14.812359889437156,15.416443424929428,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0002,IBM RS/6000 320,sys:rs/6000320,16.3,15.600255850441908,15.300473143081474,15.924463106866266,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0003,IBM RS/6000 520,sys:rs/6000520,15.8,15.121720394906879,14.831133476115784,15.435982643465461,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0004,IBM RS/6000 530,sys:rs/6000530,20.27,19.399827367390028,19.027030098789044,19.80299798626866,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0005,IBM RS/6000 540,sys:rs/6000540,23.98,22.950560447459935,22.509530427674463,23.42752302470264,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0006,IBM RS/6000 550,sys:rs/6000550,34.5,33.018946431916916,32.38443702063257,33.70515197465559,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0007,IBM RS/6000 730,sys:rs/6000730,20.05,19.189271766954615,18.820520645324144,19.58806658237231,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0008,IBM RS/6000 930,sys:rs/6000930,20.15,19.28497885806162,18.91438857871728,19.68576267505247,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0009,HP 9000/720,sys:hp9000/720,38.48,36.828088657975734,36.12038076967945,37.59345646332601,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0010,HP 9000/730,sys:hp9000/730,51.05,48.85847001012633,47.91957999719688,49.87385531322226,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0011,DECstation 2100,sys:decstation2100,8.69,8.316946217198783,8.157123411863681,8.489790453906002,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0012,DECstation 2100,sys:decstation2100,8.71,8.336087635420185,8.17589699854231,8.509329672442036,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0013,DECstation 3100,sys:decstation3100,11.78,11.274295332405254,11.05764255371164,11.508599717722982,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0014,DECstation 3100,sys:decstation3100,11.45,10.958461931752137,10.747878373514286,11.18620261187845,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0015,DECstation 5000/200,sys:decstation5000/200,19.1,18.280054401438065,17.928775278089333,18.65995370191078,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0016,DECsystem 5400,sys:decsystem5400,12.64,12.097376315925503,11.864906780892627,12.348786114772368,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0017,DECsystem 5810,sys:decsystem5810,12.84,12.288790498139514,12.052642647678903,12.54417830013269,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0018,MIPS 6280 (beta),sys:mips6280,42.05,40.24483181049583,39.47146599181447,41.081206972007756,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0019,MIPS M/120-5,sys:m/1205,12.94,12.38449758924652,12.14651058107204,12.64187439281285,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0020,MIPS M/2000,sys:m/2000,19.55,18.710736311419588,18.351180978358453,19.099586118971505,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0021,MIPS M/2000,sys:m/2000,19.69,18.844726238969397,18.48259608510885,19.23636064872373,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0022,MIPS RC2030,sys:rc2030,11.18,10.700052785763221,10.494434953352814,10.922423161642016,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0023,MIPS RC3240,sys:rc3240,17.6,16.84444803483298,16.520756277192266,17.194512311708362,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0024,MIPS RC3260,sys:rc3260,19.27,18.44275645631997,18.08835076485767,18.82603705946705,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0025,MIPS RX2030,sys:rx2030,11.34,10.85318413153443,10.644623646781834,11.078736909930273,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0026,MIPS RX3230,sys:rx3230,19.29,18.46189787454137,18.107124351536296,18.845576278003083,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0027,SGI 4D/210S,sys:4d/210s,16.79,16.069220596866234,15.760426016707848,16.403173960999055,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0028,SGI 4D/25S,sys:4d/25s,13.98,13.379851336759378,13.122737088360674,13.657913756686527,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0029,SGI 4D/320S,sys:4d/320s,22.56,21.591519753740453,21.176605773491904,22.04023850864435,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0030,Solbourne 5/801,sys:solbourne5/801,17.69,16.930584416829284,16.60523741724609,17.282438795120505,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0031,Sun 4/260,sys:sun4/260,8.71,8.336087635420185,8.17589699854231,8.509329672442036,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0032,Sun SPARCstation SLC,sys:sparcstationslc,9.52,9.11131507338693,8.936227259026724,9.30066802315134,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0033,Sun SPARCstation 1,sys:sparcstation1,9.58,9.168739328051133,8.992548019062609,9.359285678759438,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0034,Sun SPARCstation 1,sys:sparcstation1,9.56,9.149597909829732,8.973774432383982,9.339746460223406,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0035,Sun SPARCstation 1+,sys:sparcstation1+,11.22,10.738335622206025,10.53198212671007,10.961501598714081,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0036,Sun SPARCstation IPC,sys:sparcstationipc,12.4,11.86767929726869,11.639623740749096,12.114315492339982,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0037,Sun SPARCstation 330,sys:sparcstation330,12.25,11.72411866060818,11.498821840659389,11.967771353319739,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0038,Sun SPARCstation 330,sys:sparcstation330,12.22,11.69540653327608,11.470661460641448,11.938462525515693,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0039,Sun SPARCstation 490,sys:sparcstation490,18.62,17.820660364124436,17.478209197802272,18.191012457046003,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:R3H0040,Sun SPARCstation 2,sys:sparcstation2,20.24,19.371115240057925,18.998869718771104,19.773689158464613,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP01,HP 9000/750,sys:hp9000/750,51.5,49.28915192010786,48.341985697466,50.313487730282986,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP02,HP 9000/730,sys:hp9000/730,51.2,49.00203064678685,48.06038189728659,50.02039945224251,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP03,HP 9000/720,sys:hp9000/720,39.5,37.8043009872672,37.07783369028946,38.58995660866365,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP04,HP 9000/710,sys:hp9000/710,35.4,33.88031025187997,33.2292484211708,34.58441680877704,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP05,IBM RS/6000 550,sys:rs/6000550,33.9,32.44470388527488,31.82122942027374,33.11897541857463,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP06,SGI 4D/35,sys:4d/35,28.0,26.797985509961556,26.283021350078602,27.35490595044512,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP07,IBM RS/6000 530H,sys:rs/6000530h,26.6,25.45808623446348,24.968870282574674,25.987160652922864,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP08,SGI Indigo,sys:indigo,23.6,22.586873501253315,22.15283228078054,23.05627787251803,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP09,Sun SPARCstation 2,sys:sparcstation2,21.7,20.768438770220207,20.369341546310917,21.200052111594967,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP10,Sun SPARCstation IPX,sys:sparcstationipx,21.7,20.768438770220207,20.369341546310917,21.200052111594967,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP11,IBM RS/6000 320H,sys:rs/6000320h,20.0,19.14141822140111,18.773586678627574,19.539218536032227,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP12,DECstation 5000/200,sys:decstation5000/200,19.5,18.662882765866083,18.304247011661886,19.05073807263142,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UHP13,Sun SPARCstation ELC,sys:sparcstationelc,18.0,17.227276399261,16.896228010764816,17.585296682429004,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UIBM01,IBM RS/6000 220,sys:rs/6000220,17.5,16.748740943725974,16.426888343799128,17.0968162190282,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UIBM02,IBM RS/6000 320H,sys:rs/6000320h,21.8,20.864145861327213,20.463209479704055,21.29774820427513,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UIBM03,IBM RS/6000 340,sys:rs/6000340,28.8,27.5636422388176,27.03396481722371,28.13647469188641,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UIBM04,IBM RS/6000 350,sys:rs/6000350,36.2,34.64596698073601,33.980191888315915,35.36598555021833,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UIBM05,IBM RS/6000 520H,sys:rs/6000520h,21.8,20.864145861327213,20.463209479704055,21.29774820427513,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UIBM06,IBM RS/6000 530H,sys:rs/6000530h,29.2,27.946470603245622,27.409436550796258,28.52725906260705,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UIBM07,IBM RS/6000 550,sys:rs/6000550,36.8,35.220209527378046,34.54339948867473,35.9521621062993,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UIBM08,IBM RS/6000 560,sys:rs/6000560,43.8,41.91970590486843,41.11415482619439,42.79088859391057,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UIBM09,IBM RS/6000 970,sys:rs/6000970,49.3,47.18359591575374,46.276891162816966,48.16417369131944,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UNEXT1,NeXTstation Color,sys:nextstationcolor,12.45,11.915532842822191,11.686557707445663,12.163163538680061,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip
+historical-spec:spec89:UNEXT2,NeXTstation,sys:nextstation,11.9,11.389143841733661,11.170284073783407,11.625835028939177,two_edge_estimate,https://archive.org/download/usenet-comp/comp.benchmarks.mbox.zip

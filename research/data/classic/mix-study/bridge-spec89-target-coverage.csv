@@ -1,4 +1,4 @@
-metric,positive_records,source_system_labels,reference_definition_records,candidate_pairs
-SPECint89,182,94,3,0
-SPECmark89,264,133,1,0
-SPECfp89,207,106,2,0
+metric,spec_values,systems,mix_pairs,mix_systems
+SPECint89,182,91,0,0
+SPECmark89,264,132,0,0
+SPECfp89,207,106,0,0

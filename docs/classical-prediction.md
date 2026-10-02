@@ -56,8 +56,9 @@ uv run --no-sync cpushowspeed classic predict-rate \
 ```
 
 With the current default calibration, this produces approximately
-153.49934 SPECrate_int92, CI95 139.64299–169.15674; equivalently
-6.47195 VAXen, CI95 5.88773–7.13210.
+156.46451 SPECrate_int92, CI95 143.95126–170.61389; equivalently
+6.59697 VAXen, CI95 6.06937–7.19354 (network recomputed on resolved systems,
+2026-10-02).
 
 Multiple families:
 
@@ -66,7 +67,7 @@ uv run --no-sync cpushowspeed classic predict-rate \
   --dhrystone-1-1 10 --whetstone-dp 8 --linpack-100 2 --format text
 ```
 
-This example produces approximately 175.56987 SPECrate_int92 and 7.40250 VAXen.
+This example produces approximately 173.03837 SPECrate_int92 and 7.29576 VAXen.
 It is a hypothetical input example, not an additional historical measurement.
 
 Both Dhrystone versions, with scores supplied as iterations per second:

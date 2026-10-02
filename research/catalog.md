@@ -137,8 +137,7 @@ flowchart TD
 | classic-pdf-tables | [guide](../research/classic-pdf-extraction.md) | `research/data/classic/pdf-extraction/tables.jsonl` | required in checkout |
 | classic-unit-policy | [guide](../docs/classic-collection.md) | `research/data/classic/pdf-extraction/interpretation-policy.json` | required in checkout |
 | classic-overlap | [guide](../research/classic-spec-overlap.md) | `data/derived/classic/overlap-spec` | optional derived input |
-| classic-source-pairs | [guide](../docs/classic-collection.md) | `data/derived/classic/source-pair-fit/pairs.csv` | optional derived input |
-| classic-source-vectors | [guide](../docs/classic-collection.md) | `data/derived/classic/source-pair-fit/vectors.jsonl` | optional derived input |
+| schema-database | [guide](../docs/data-schema.md) | `data/derived/schema/cpushowspeed.sqlite` | optional derived input |
 | historical-observations | [guide](../research/early-benchmark-evidence.md) | `research/data/historical` | required in checkout |
 | maintenance-inventory | [guide](../research/cleanup-inventory.md) | `research/data/maintenance` | required in checkout |
 | historical-timeline-years | [guide](../research/historical-vaxen-timeline.md) | `research/data/historical/timeline-year-overrides.csv` | required in checkout |
@@ -193,6 +192,7 @@ analysis from evidence, diagnostics and retired work.
 | [DEC, SSCL and Tomari/Hiraki table extraction](../research/data/classic/pdf-extraction/README.md) | guide | current |
 | [Curated historical observations](../research/data/historical/README.md) | guide | current |
 | [Completed date-pass logs](../research/data/archive/date-passes/README.md) | archive | retired |
+| [Name-based classical/SPEC pairing snapshots](../research/data/archive/name-pairing/README.md) | archive | retired |
 | [Helman SPEC89 worksheet derivative (1991-03-31)](../research/data/spec89/helman-1991/README.md) | guide | current |
 | [SPEC89 recovered observations, curated v2.0.0 snapshot](../research/data/spec89/v2.0.0/README.md) | guide | current |
 | [First local early-benchmark evidence pass](../research/early-benchmark-evidence.md) | evidence | current |

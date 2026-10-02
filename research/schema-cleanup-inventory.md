@@ -52,7 +52,13 @@ not all the same kind of logic:
 Step 5b (2026-10-02) took the SPEC rate fitters off `spec_overlap._processor_key`
 and `_normalized` system matching; `spec_rate_chain.config_key` now groups resolved
 processor keys. `spec_inputs` still uses the private key for the speed overlap
-audit and timeline estimates until steps 5c–5d.
+audit and timeline estimates until step 5d.
+
+Step 5c (2026-10-02) removed `classic_network_data.cpu_identity`, the
+`classic_overlap.compare` name pairing and the `prepare-pairs`/`prepare-sources`
+stage: the classical, SPEC89 and mix fitters pair over resolved `system_id`
+(`classical_store`). `classic_overlap.model_key`/`relaxed_key` and
+`classic_timeline.date_key` remain only for the legacy timeline (step 5d).
 
 Alias tables with their own formats (`classic/mix-candidate-aliases.csv`, SPEC89
 `aliases.csv`, `system_regex` in `timeline-year-overrides.csv` and
@@ -74,7 +80,7 @@ Status 2026-10-02: steps 3–4 converted all five, plus `spec/hardware-date-excl
 `date_event` and `review` rows; the built view is `result_chronology`. The legacy
 files are frozen (the curated tables are canonical) and are deleted with their
 readers when step 5 rebuilds the timeline and fitters; `mix-candidate-aliases.csv`
-is still read by `classic_mix`.
+was read by `classic_mix` until step 5c; now only the review import reads it.
 
 ### 4. Date-pass logs (archive any time; no code consumer)
 
@@ -111,6 +117,14 @@ replaced by `resolution` plus accepted `alias` rows. Step 5 must switch these
 readers to the built database, not only the modules that already accept
 `--input-catalog`. This is the largest single porting cost in the migration.
 
+Status 2026-10-02 (step 5c): the classical fitters and `mix-bridge` read the built
+database; `candidate-pairs.csv` and the mix candidate pairs are no longer
+written, and their tracked snapshots (`overlap-summary.csv`, `overlap-models.csv`,
+`mix-study/candidate-pairs.csv`, `mix-study/coverage.csv`) moved to
+[`data/archive/name-pairing/`](data/archive/name-pairing/README.md). The parsed
+`classical-records.jsonl`/`spec-records.jsonl` and `mix-records.csv` remain as
+`data extract` inputs.
+
 ### 6. Already obsolete regardless of the schema
 
 - **I/O helpers** (checked 2026-10-02): `classic_overlap.read_csv`/`write_csv`
@@ -138,8 +152,8 @@ schema. Removed together:
 
 `classic source-diagnostics` was not a registered model but belonged to the same
 diagnostic group and was removed with it. Preparation (`prepare-pairs`,
-`prepare-sources`) and the primary rate, SPEC89 bridge and network fits are
-unchanged. `plot timeline` is knowingly left broken: it consumed the joint,
+`prepare-sources`) and the primary rate, SPEC89 bridge and network fits were
+unchanged then; step 5c later replaced the preparation stage (section 5). `plot timeline` is knowingly left broken: it consumed the joint,
 relaxed and mix-network outputs and will be rebuilt on the schema. Everything
 removed remains recoverable from Git history. Their 12 test modules (and one
 environment-model test in `test_calibration_policy.py`) were missed in that commit
@@ -165,4 +179,5 @@ For every item:
 | Step 1 | Source registries |
 | Step 2 | Identity functions and alias tables; `spec_coverage` |
 | Steps 3–4 | Date tables and the four date-selection paths |
-| Step 5 | Observation formats, historical aggregation, `--text-exports` |
+| Steps 5a–5c, done 2026-10-02 | Observation table; SPEC rate, classical, SPEC89 and mix fitters on the database; name-pairing snapshots archived |
+| Step 5d | Timeline on `result_chronology`, historical aggregation, `--text-exports`, input catalog |

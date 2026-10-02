@@ -9,7 +9,7 @@ from pathlib import Path
 
 import click
 import numpy as np
-from cpushowspeed.classic_network_data import values
+from cpushowspeed.benchmark_records import classical_values as values
 from cpushowspeed.classic_overlap import full_name, model_key, relaxed_key
 from cpushowspeed.classic_predict import predict_scores
 from cpushowspeed.research_io import code_hashes, read_csv, write_csv

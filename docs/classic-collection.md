@@ -4,13 +4,16 @@ Implemented on 2026-09-26. The active VAXen series remains integer rate; this
 collector preserves broader historical evidence without declaring benchmarks
 interchangeable or importing normalized scores.
 
-## Preparation without experiments
+## Pipeline
 
-The current minimal pipeline is `classic prepare-pairs`, `classic prepare-sources`,
-then `classic rate-composite-fit` and/or `classic spec89-rate-fit`. Preparation
-emits the same source-linked inputs and its own audit without running fits or
-generating figures. The earlier diagnostic fitting commands were removed on
-2026-10-02; see the [schema cleanup inventory](../research/schema-cleanup-inventory.md).
+Collectors and parsers (`classic collect`, `extract`, `extract-pdf-tables`,
+`overlap-spec`, `mix-inventory`) write derived records; `data extract` and
+`data build` load them into the built database. The fitters
+(`classic rate-composite-fit`, `spec89-rate-fit`, `network-fit`, `mix-bridge`)
+read only that database and pair classical with SPEC results by resolved
+`system_id` (schema step 5c, 2026-10-02). The former `prepare-pairs` /
+`prepare-sources` name-matching stage and the earlier diagnostic fitting commands
+were removed; see the [schema cleanup inventory](../research/schema-cleanup-inventory.md).
 
 ## Reading and reproduction order
 
@@ -20,7 +23,7 @@ For the research interpretation, start with the [classical track](../research/tr
 | --- | --- |
 | Acquire source snapshots | `classic collect`, `classic extract` below |
 | Extract reviewed PDF tables | [Selected tables](#selected-historical-pdf-tables) |
-| Build source vectors and candidate pairs | `classic prepare-pairs`, `classic prepare-sources` |
+| Parse records and build the database | `classic overlap-spec`, `classic mix-inventory`, then `data extract`, `data build` |
 | Fit current direct rate models | [Primary rate fitting](#primary-classical-rate-fitting) |
 | Add the SPEC89 estimated-target route | `classic spec89-rate-fit` in the primary fitting section |
 
@@ -97,8 +100,9 @@ not replace a future reviewed per-result dataset.
 ## Hardware overlap discovery
 
 Run `.venv/bin/cpushowspeed classic overlap-spec` from the repository root.
-It uses acquired sources and existing SPEC archives, requires Poppler's
-`pdftotext`, and does not download more sources or calculate conversion factors.
+It parses acquired sources and existing SPEC archives into records, requires
+Poppler's `pdftotext`, and does not download sources, pair records or calculate
+conversion factors. Pairing happens over resolved systems in the database.
 
 Implemented readers:
 
@@ -122,30 +126,22 @@ SPEC inputs are the combined SPEC89 aggregate archive, the separately labelled
 SPEC89 throughput archive, Netlib SPEC92 rate records and the rate-only DEC
 manufacturer supplement. Hardware discovery does not restore a speed-to-rate fit.
 
-Model keys normalize vendor prefixes, spelling and `Model`/`AXP` syntax while
-preserving variant letters, grouped numeric model labels and `+` distinctions.
-FPA/EAE and explicit CPU-count qualifiers can be omitted from a model key but
-remain in the source record: a key is a model group, not a configuration.
-Trailing HP `/clock` or numeric parentheses are removed only when corroborated
-by the source's MHz field. Clocks are never inferred from model suffixes.
-Clocks within 1% are labelled compatible; conflicts and unknowns remain in the
-outputs. RAM is not an exclusion rule.
+The `model_key`/`relaxed_key` name helpers remain only for the legacy
+timeline's date lookup (removed in schema step 5d); they no longer pair records. Clocks are taken from the source's MHz field and
+never inferred from model suffixes.
 
 Outputs in `data/derived/classic/overlap-spec/`:
 
 | File | Meaning |
 | --- | --- |
-| `classical-records.jsonl`, `spec-records.jsonl` | Raw fields/provenance and derived matching fields |
-| `candidate-pairs.csv` | Every candidate pair, including repeated submissions and clock conflicts |
-| `summary.csv`, `model-summary.csv` | Counts by benchmark/cohort and model group |
+| `classical-records.jsonl`, `spec-records.jsonl` | Raw fields and provenance; read by `data extract` |
 | `source-coverage.csv` | Parsed sources/sections and unparsed material |
 | `rejected-rows.jsonl` | Supported-layout rows whose values could not be interpreted |
 | `audit.json` | Source/derived/parser hashes and PDF extraction version/hash |
 
-No pair is configuration-verified or fitting-eligible. Processor implementation,
-FPU/options, concurrency, compiler, OS and source independence require review.
 Generic CPU labels and unparsed sources cannot establish absence of overlap.
-See the [first overlap audit](../research/classic-spec-overlap.md).
+See the [overlap report](../research/classic-spec-overlap.md) for resolved-system
+pairing counts.
 
 ## Selected historical PDF tables
 
@@ -160,22 +156,23 @@ See [extraction findings](../research/classic-pdf-extraction.md) and the
 The PDF extractor also emits `dec-interpreted.csv` using the source-bound
 `interpretation-policy.json`: DEC Whetstone numeric values are interpreted as MWIPS despite printed KWIPS; omitted
 Dhrystone K suffixes use the explicit user-selected thousands interpretation.
-Original observations stay literal. `classic prepare-sources` and subsequent
-fitting commands consume the reviewed interpretation policy.
+Original observations stay literal. `data extract` reads the interpreted DEC
+report columns as `reviewed-vector:dec-n3909-1994` results.
 
 ### Primary classical rate fitting
 
 `uv run cpushowspeed classic rate-composite-fit` fits two/three-family geometric
 composites directly to SPEC92 integer-rate VAXen, with separate base and peak
-cohorts and matched single-score baselines. `--pairs`, `--output`, `--bootstrap`
-and `--seed` control inputs and resampling. It reuses the input's existing rate
+cohorts and matched single-score baselines, in `same_result` and `same_system`
+cohorts. `--database`, `--output`, `--research-dir`, `--bootstrap` and `--seed`
+control inputs, outputs and resampling. It applies the rate-to-VAXen
 normalization once and excludes ordinary SPECint89/92 targets. See [results and
 validation](../research/classic-rate-composite-fitting.md).
 
 `uv run cpushowspeed classic spec89-rate-fit` audits direct SPECint89/rate hardware
 overlap, fits the observed two-edge native-integer/rate path, and evaluates joint
-classical models. `--input-root`, `--spec-records`, `--native-bridge`, `--output`,
-`--bootstrap` and `--seed` select inputs and settings. See [bridge findings](../research/spec89-rate-bridge.md)
+classical models. `--database`, `--output`, `--research-dir`, `--bootstrap` and
+`--seed` select inputs and settings. See [bridge findings](../research/spec89-rate-bridge.md)
 for the absence of direct pairs, peak-only scope and separation of observed-rate
 validation from agreement with estimated targets.
 
@@ -184,7 +181,7 @@ validation from agreement with estimated targets.
 `uv run cpushowspeed classic network-fit` estimates individual benchmark
 coefficients jointly from anchor observations and unanchored co-measurements.
 It runs reported/linear-clock scenarios and rate-only/SPEC89-enabled cohorts,
-with availability-masked whole-model holdouts. See [network methods and
+with availability-masked whole-system holdouts. See [network methods and
 results](../research/classic-network-fitting.md) for weighting, eligibility,
 identifiability and conditional CI95. It writes estimates without updating
 the production SPEC rate converter.
@@ -195,12 +192,11 @@ nonempty score subset. See [input units, examples and CI95 semantics](classical-
 ## Instruction-mix preparation
 
 `uv run cpushowspeed classic mix-inventory` inventories the cached CCTA/TSU
-Gibson and ADP tables and discovers candidate overlaps with the current
-historical classical configuration export. It independently checks the cached
-HTML rows, records missing scores, validates operation weights, and preserves
+Gibson and ADP tables. It independently checks the cached HTML rows, records missing scores, validates operation weights, and preserves
 source/configuration/metric identities. Default outputs live in
 `data/derived/classic/mix-study/`; `--output-dir` selects another directory.
-No candidate is approved or fitted automatically. The
+It writes `mix-records.csv`, `mix-weights.csv` and an audit; it no longer
+pairs mixes with classical rows. The
 [research report](../research/instruction-mix-bridge.md) owns the checked counts,
 configuration risks and next experiment design.
 
@@ -212,10 +208,10 @@ It only reads published DocIR; it does not publish incomplete staged documents
 or turn keyword hits into calibrated scores. Original-page review and curated
 SC-3/DINKIAC CSVs are described in the same research report.
 
-`uv run cpushowspeed classic mix-bridge` fits the existing unapproved mix/classical
-candidate cohorts with the shared geometric-ratio policy and audits direct
-SPEC89/SPEC92 name overlap. SPEC92 screening includes cached Netlib speed
-summaries, curated source vectors and the rate archive. It preserves metric
+`uv run cpushowspeed classic mix-bridge` pairs mix results with classical results
+of the same resolved system (`resolved_system`), and separately adds the system
+links a review leaves open (`plus_pending_links`); it fits them with the shared
+geometric-ratio policy and audits direct SPEC89/SPEC92 overlap on the database. It preserves metric
 identities and reports missing cells separately. Outputs include source-score
 inventories, coverage, conditional fit summaries and PNG/SVG scatterplots under
 `data/derived/classic/mix-bridge/`. No production VAXen coefficient is updated.

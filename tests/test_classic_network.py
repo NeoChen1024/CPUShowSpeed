@@ -2,7 +2,8 @@ import math
 import unittest
 
 import numpy as np
-from cpushowspeed.classic_network_data import build, clock_adjust, scaling_cpu_check
+from classical_fixture import result
+from cpushowspeed.classic_network import build
 from cpushowspeed.classic_network_model import (
     bootstrap,
     estimates,
@@ -22,49 +23,16 @@ def node(key, scores, target=None, kind=None):
 
 
 class NetworkTests(unittest.TestCase):
-    def test_clock_scaling_is_explicit_and_never_applied_to_linpack(self):
-        self.assertEqual(clock_adjust(10, "Dhrystone:v1.1_DMIPS", 100, 200, True), (20, 2, "linear_clock_assumption"))
-        self.assertIsNone(clock_adjust(10, "Dhrystone:v1.1_DMIPS", 100, 200, False)[0])
-        self.assertIsNone(clock_adjust(10, "LINPACK:n100_MFLOPS", 100, 200, True)[0])
-        self.assertEqual(clock_adjust(10, "Whetstone:MWIPS_DP", None, 200, True)[0], 10)
-
-    def test_cpu_upgrades_are_not_clock_scaling(self):
-        self.assertEqual(
-            scaling_cpu_check({"processor_raw": "PA-RISC7100"}, {"processor_raw": "100 MHz PA-RISC 7100LC"}),
-            "cpu_identity_conflict",
-        )
-        self.assertEqual(
-            scaling_cpu_check({"processor_raw": "Weitek"}, {"processor_raw": "CY7C601/TI390C602A"}), "cpu_identity_conflict"
-        )
-        self.assertEqual(
-            scaling_cpu_check({"processor_raw": "MIPS R3000"}, {"processor_raw": "33 MHz R3000"}), "cpu_identity_compatible"
-        )
-        self.assertEqual(scaling_cpu_check({"processor_raw": "SPARC"}, {"processor_raw": "CY7C601"}), "cpu_identity_unverified")
-
-    def test_preparation_rejects_processor_upgrade_scaling(self):
-        c = dict(
-            id="c",
-            system="HP 9000/715",
-            clock_mhz=33,
-            processor_raw="PA-RISC7100",
-            benchmark="Dhrystone",
-            metrics_raw={"v1.1_DMIPS": "10"},
-            source_url="source",
-            configuration_raw="",
-        )
-        spec = dict(
-            id="s",
-            system="HP 9000/715",
-            clock_mhz=100,
-            processor_raw="PA-RISC7100LC",
-            metrics_raw={"SPECrate_int92": "100"},
-            raw_record={},
-            cpu_count=1,
-        )
-        nodes, observations, audit, aliases = build({"c": c}, {"s": spec}, [dict(classic_id="c", spec_id="s")], [], [], [], True)
+    def test_processor_upgrade_is_not_clock_scaled_into_an_anchor(self):
+        target = result("s", "sys:hp715", {"SPECrate_int92": 100}, clock=100, entity="cpu:7100lc", scope="spec:cpu92")
+        c = result("c", "sys:hp715", {"Dhrystone:v1.1_DMIPS": 10}, clock=33, entity="cpu:7100")
+        nodes, _, audit = build([target, c], True)
         self.assertFalse(any(n["target_kind"] == "observed_rate" for n in nodes))
-        self.assertEqual(audit[0]["clock_policy"], "cpu_identity_conflict")
-        self.assertFalse(audit[0]["included"])
+        self.assertEqual(
+            audit,
+            [dict(target_result_id="s", classical_result_id="c", status="clock_conflict_processor_unverified", included=False)],
+        )
+        self.assertEqual([n["target_kind"] for n in nodes], ["unanchored"])
 
     def test_versions_share_family_weight(self):
         w = metric_weights(["Dhrystone:1", "Dhrystone:2", "Whetstone:SP", "Whetstone:DP", "LINPACK:100"])

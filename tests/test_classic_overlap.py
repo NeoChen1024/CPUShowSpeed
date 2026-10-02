@@ -8,7 +8,6 @@ from unittest.mock import patch
 
 import blake3
 from cpushowspeed.classic_overlap import (
-    compare,
     full_name,
     model_key,
     parse_dhrystone,
@@ -73,26 +72,6 @@ class OverlapTests(unittest.TestCase):
         self.assertEqual(relaxed_key("SPARCstation 2 (40)", 40), model_key("Sun SPARCstation 2"))
         self.assertNotEqual(relaxed_key("SPARCstation 2 (40)", 80), model_key("Sun SPARCstation 2"))
         self.assertEqual(relaxed_key("HP 9000 Series 700 Model 735/99", 99), model_key("HP 9000/735"))
-
-    def test_repeats_and_conflicts_remain_candidates(self):
-        cr, _ = parse_dhrystone(source("024 HP 9000/735            HP-UX 9.03   PA-RISC7150 125.0  224.5  189.2  64", 0))
-        s = {
-            "id": "one",
-            "system": "HP 9000/735",
-            "clock_mhz": 99,
-            "cohort": "SPEC92 rate Netlib",
-            "os_raw": "HP-UX",
-            "cpu_count": 1,
-            "processor_raw": "PA7100",
-            "source_url": "https://example.org/spec",
-            "evidence_class": "reported_measurement",
-        }
-        s2 = dict(s, id="two")
-        pairs = compare(cr, [s, s2])
-        self.assertEqual(len(pairs), 2)
-        self.assertTrue(all(p["clock_check"] == "conflict" and not p["fit_eligible"] for p in pairs))
-        cr[0]["identity_scope"] = "cpu_only"
-        self.assertFalse(compare(cr, [s]))
 
 
 if __name__ == "__main__":
