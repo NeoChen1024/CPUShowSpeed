@@ -13,7 +13,7 @@ from pathlib import Path
 import click
 from cpushowspeed.calibration import absolute_error_percent, quantile
 from cpushowspeed.curated import DATABASE
-from cpushowspeed.observation_store import connect, inputs_digest, spec_results
+from cpushowspeed.observation_store import connect, inputs_digest, result_pair_reviews, spec_results
 from cpushowspeed.spec_overlap import (
     INTERVAL_FIELDS,
     PAIR_FIELDS,
@@ -23,13 +23,14 @@ from cpushowspeed.spec_overlap import (
 )
 from cpushowspeed.spec_rate_fit import GENERATIONS, collect_rate
 
-METHOD_VERSION = "cpu92-cpu95-rate-fit-v5-resolved-identity"
+METHOD_VERSION = "cpu92-cpu95-rate-fit-v6-reviewed-pairs"
 VAX_RATE92_REFERENCE = 604800 / 25500
 FACTOR_FIELDS = (
     "method_version",
     "scenario",
     "mode",
     "candidate_pairings",
+    "unreviewed_hardware_near_pairings",
     "fit_pairings",
     "system_groups",
     "processor_configs",
@@ -47,6 +48,7 @@ FACTOR_FIELDS = (
 )
 
 FACTOR_FIELDS = (*FACTOR_FIELDS, "model_center_p95_percent")
+CPU92_PAIR_FIELDS = (*PAIR_FIELDS, "review_id", "review_decision")
 
 
 def _software_near(pair: dict[str, object]) -> bool:
@@ -55,8 +57,9 @@ def _software_near(pair: dict[str, object]) -> bool:
 
 
 def _selected(pairs: list[dict[str, object]], scenario: str) -> list[dict[str, object]]:
-    hardware = [row for row in pairs if row["match_tier"] == "hardware_near"]
-    return hardware if scenario == "hardware_near" else [row for row in hardware if _software_near(row)]
+    """Reviewed-accepted pairs (hardware_near), optionally restricted to a matching OS (same_os)."""
+    accepted = [row for row in pairs if row["review_decision"] == "accept"]
+    return accepted if scenario == "hardware_near" else [row for row in accepted if _software_near(row)]
 
 
 def _heldout_p95(pairs: list[dict[str, object]], mode: str) -> float | None:
@@ -92,7 +95,7 @@ def _plot(pairs: list[dict[str, object]], fits: dict[tuple[str, str], dict | Non
             ("same_os", "#d27136", "x", 38),
         ):
             if scenario == "name_only":
-                subset = [row for row in available if row["match_tier"] != "hardware_near"]
+                subset = [row for row in available if row["review_decision"] != "accept"]
             elif scenario == "same_os":
                 subset = _selected(available, "same_os")
             else:
@@ -183,15 +186,21 @@ def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path)
         results = collect_rate(db)
         results["cpu92"] = spec_results(db, "cpu92", "rate")
         digest = inputs_digest(db)
+        reviews = result_pair_reviews(db, "spec:cpu92:rate:", "spec:cpu95:rate:")
     pairs = _automatic_pairs(results, "cpu92", "cpu95")
     for pair in pairs:
         pair["source_check"] = "netlib_detail_and_summary_hash_checked__cpu95_bulk_hash_checked"
+        review_id, decision = reviews.get((pair["old_result_id"], pair["new_result_id"]), ("", "unreviewed"))
+        pair["review_id"], pair["review_decision"] = review_id, decision
+    unreviewed = sum(1 for row in pairs if row["match_tier"] == "hardware_near" and row["review_decision"] == "unreviewed")
+    if unreviewed:
+        click.echo(f"warning: {unreviewed} hardware-near CPU92/CPU95 rate pairs lack a review and are not fitted", err=True)
     pairs.sort(key=lambda row: (str(row["old_source_url"]), str(row["new_source_url"])))
     output_dir.mkdir(parents=True, exist_ok=True)
     research_dir.mkdir(parents=True, exist_ok=True)
     pair_path = output_dir / "cpu92-cpu95-rate-pairs.csv"
     with pair_path.open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=PAIR_FIELDS, lineterminator="\n")
+        writer = csv.DictWriter(stream, fieldnames=CPU92_PAIR_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(pairs)
     fits = {}
@@ -211,6 +220,7 @@ def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path)
                         "scenario": scenario,
                         "mode": mode,
                         "candidate_pairings": len(pairs),
+                        "unreviewed_hardware_near_pairings": unreviewed,
                         "fit_pairings": fit["candidate_pairings_used"] if fit else 0,
                         "system_groups": fit["system_groups"] if fit else 0,
                         "processor_configs": fit["processor_configs"] if fit else 0,
@@ -288,6 +298,7 @@ def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path)
         "cpu92_records": len(results["cpu92"]),
         "cpu95_records": len(results["cpu95"]),
         "candidate_pairings": len(pairs),
+        "unreviewed_hardware_near_pairings": unreviewed,
         "factor_csv": str(factor_path),
         "edge_intervals_csv": str(interval_path),
         "pair_csv": str(pair_path),
@@ -296,7 +307,7 @@ def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path)
         "vax_rate92_reference": VAX_RATE92_REFERENCE,
         "fits": {scenario: {mode: fits[scenario, mode] for mode in ("base", "peak")} for scenario in ("hardware_near", "same_os")},
         "limitations": [
-            "Hardware-near rows are automatic matches, not a complete per-pair compiler/tuning review.",
+            "Fitted pairs are reviewed for hardware configuration; OS, compiler, tuning and copy counts may differ and are recorded in each review.",
             "The VAX reference is CPU92 integer throughput, not CPU92 single-task speed.",
             "Downstream chain factors and their errors remain separate; no universal error band is implied.",
         ],

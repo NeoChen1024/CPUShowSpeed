@@ -3,7 +3,7 @@
   "$id": "https://github.com/NeoChen1024/CPUShowSpeed/data/curated/schema.json",
   "title": "CPUShowSpeed curated tables",
   "description": "Row schemas and table contracts for data/curated. Semantics are owned by docs/data-schema.md.",
-  "x-schema-version": "1.5.0",
+  "x-schema-version": "1.6.0",
   "x-tables": {
     "source": {
       "file": "source.jsonl",
@@ -807,8 +807,7 @@
         "target",
         "decision",
         "reason",
-        "reviewed_on",
-        "legacy_ids"
+        "reviewed_on"
       ],
       "properties": {
         "review_id": {
@@ -859,7 +858,8 @@
             "$ref": "#/$defs/text"
           },
           "minItems": 1,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Legacy registry keys a migrated review came from; absent for reviews made in this table."
         }
       },
       "allOf": [

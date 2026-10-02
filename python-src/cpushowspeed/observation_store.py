@@ -128,3 +128,16 @@ def result_dates(db: sqlite3.Connection, scope: str) -> dict[str, dict]:
         )
         for r in db.execute(query, (scope,))
     }
+
+
+def result_pair_reviews(db: sqlite3.Connection, left_prefix: str, right_prefix: str) -> dict[tuple[str, str], tuple[str, str]]:
+    """(left id, right id) without prefixes -> (review id, decision) for reviewed result pairs."""
+    sides = defaultdict(dict)
+    query = "SELECT review_id, side, decision, result_id FROM review_result WHERE target_kind = 'result_pair'"
+    for review_id, side, decision, result_id in db.execute(query):
+        sides[review_id, decision][side] = result_id
+    return {
+        (ids["left"].removeprefix(left_prefix), ids["right"].removeprefix(right_prefix)): (review_id, decision)
+        for (review_id, decision), ids in sides.items()
+        if ids.get("left", "").startswith(left_prefix) and ids.get("right", "").startswith(right_prefix)
+    }

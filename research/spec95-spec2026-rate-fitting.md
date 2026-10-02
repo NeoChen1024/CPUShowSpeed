@@ -89,6 +89,29 @@ OS strings to agree. The reported `UnixWare 2.0` and `UnixWare 2.0, SDK`
 strings count as equivalent. This tier does not establish identical compiler
 versions or tuning.
 
+### CPU92→CPU95 pair review
+
+The CPU92 anchor fits only pairs with an accepted `result_pair` row in
+[`review.jsonl`](../data/curated/review.jsonl); automatic hardware-near pairs
+without a review are counted (`unreviewed_hardware_near_pairings`), warned
+about and left out. On 2026-10-02 all 44 automatic hardware-near pairs were
+reviewed against both cached disclosures (the Netlib CPU92 rate notes page and
+the SPEC CPU95 rate result page): model, CPU and clock, CPU count, primary,
+secondary and other cache, and memory.
+
+- **42 accepted.** Each review records how OS release, compiler version and
+  per-benchmark copy counts differ. Most single-CPU HP CPU92 runs used two to
+  five copies per benchmark where CPU95 used one; the SNI multiprocessor runs
+  also differ in copies. These are run conditions of throughput, not hardware.
+- **2 rejected** as different configurations: the AlphaStation 250 4/266 CPU92
+  result (2 MB secondary cache) against CPU95 `res9509/p077` (512 KB), and the
+  AlphaStation 600 5/266 CPU92 result (2 MB off-chip cache) against CPU95
+  `res96q3/cpu95-960708-01025` (4 MB). The same AlphaStation 250 result remains
+  paired with CPU95 `res96q3/cpu95-960708-01042`, which reports 2 MB.
+
+Both rejected pairs already had different OS releases, so the same-OS fit is
+unchanged by the review.
+
 All candidate pairings and repeated submissions remain in the exported CSVs
 and figures. The current later-suite fit uses the hardware-near tier only.
 
@@ -105,25 +128,27 @@ and is **not** used as the conversion factor.
 
 | Edge and fit tier | Base `k` | Base configurations | Peak `k` | Peak configurations |
 | --- | ---: | ---: | ---: | ---: |
-| CPU92 → CPU95, hardware near | 98.172 | 24 | 108.897 | 24 |
-| CPU92 → CPU95, same OS | 97.914 | 14 | 110.370 | 14 |
+| CPU92 → CPU95, hardware near (reviewed) | 97.914 | 23 | 108.872 | 23 |
+| CPU92 → CPU95, same OS (reviewed) | 97.914 | 14 | 110.370 | 14 |
 | CPU95 → CPU2000, hardware near | 70.751 | 13 | 74.230 | 13 |
 | CPU2000 → CPU2006, hardware near | 1.999 | 60 | 1.868 | 50 |
 | CPU2006 → CPU2017, hardware near | 9.456 | 150 | 9.400 | 125 |
 | CPU2017 → CPU2026, hardware near | 2.331 | 78 | 2.452 | 38 |
 
 The CPU92→CPU95 search found **152** system/processor/chip candidate pairings.
-Of these, **44** satisfy hardware-near conditions, representing 34 systems and
-24 processor configurations; **23** satisfy the same-OS tier, representing
-23 systems and 14 configurations. Both modes have scores for all 44 or 23
-selected pairings. The CPU95–CPU2026 row counts, full-precision factors,
+Of these, **44** satisfy hardware-near conditions and **42** were accepted on
+review, representing 33 systems and 23 processor configurations; **23** of the
+accepted pairs satisfy the same-OS tier, representing 23 systems and 14
+configurations. Both modes have scores for all 42 or 23 fitted pairings. The
+hardware-near and same-OS base factors agree to three decimals (97.9145 and
+97.9142) by coincidence; the cohorts differ. The CPU95–CPU2026 row counts, full-precision factors,
 bootstrap ranges and source hashes are in the linked factor CSV. A large
 `k`, especially CPU95→CPU2000, reflects a change in suite score scale; it is
 not the performance gain of one machine.
 
 On the CPU92→CPU95 edge, leave one processor configuration out, refit on the
 others, then evaluate `abs(predicted/actual - 1)`. The linearly
-interpolated **p95 error** is 17.8% base / 16.7% peak for hardware-near
+interpolated **p95 error** is 17.5% base / 16.8% peak for hardware-near
 pairings and 17.9% base / 11.3% peak for same-OS pairings. This measures
 prediction within the selected cohort. The bootstrap 95% ranges in the CSVs
 resample configurations and likewise describe conditional sampling variation;
@@ -297,8 +322,11 @@ exact name matching but resolves to the same SKU. Name matching had also
 paired some different SKUs within one family (for example Itanium 2 9040 with
 9050); the `broad_family` rule excludes those.
 
-The accepted CPU92/CPU95 result pairs in `result_pair.jsonl` are speed pairs.
-No current fitter consumes them; the rate fit derives its own pairs.
+The 13 accepted CPU92/CPU95 speed pairs migrated in step 4 are integer-speed
+pairs and no current fitter consumes them. The rate pairs were reviewed
+separately ([pair review](#cpu92cpu95-pair-review)); that review moved the
+hardware-near factor by −0.26% base / −0.02% peak (24 → 23 configurations) and
+left the same-OS factor, the chain and every annual leader unchanged.
 
 ## Source checks and remaining limits
 

@@ -262,7 +262,7 @@ Implemented 2026-10-02 as `data/curated/review.jsonl`. Judgements that qualify
 | `target` | A result selector — `{result_id}` or `{scope, system}` (every result with that exact system text in one scope) — or `{left, right}` selectors; system links use `{scope, system}` on both sides |
 | `field` | `result_date` only: `hardware_availability`, `table_year`, `publication` or `test` |
 | `decision` | `accept`, `reject`, `needs_review` |
-| `reason`, provenance | Why; `source_id` and `locator` of the evidence when there is one; `reviewed_on`, `legacy_ids` |
+| `reason`, provenance | Why; `source_id` and `locator` of the evidence when there is one; `reviewed_on`; `legacy_ids` for rows migrated from a legacy registry (absent for reviews made in the table) |
 
 Selectors use source text and stable SPEC result IDs rather than derived
 `sys:`/`hw:` IDs, so a rule change cannot silently retarget a decision. `data build`
@@ -342,7 +342,7 @@ changed.
    the former timeline rather than held to parity: 50,298 of 58,813 SPEC records
    keep their year (most changes are CPU dating, one year earlier); 898 classical
    configurations are dated in both and 161 lose a year to unmatched spellings.
-4. **Reviews** (done 2026-10-02). 31 rows: 6 rejected result dates (one SPEC
+4. **Reviews** (done 2026-10-02). 31 migrated rows (44 rate-pair reviews followed in 5b): 6 rejected result dates (one SPEC
    hardware availability before its processor's launch; five Longbottom table
    years, two of them the CDC Cyber 73/74 rows dated with the 6400/6600), 13
    accepted CPU92–CPU95 speed pairs and 12 mix↔classical system links (11 awaiting
@@ -364,7 +364,10 @@ changed.
      same-OS base factor moved +2.10%, CPU2000→CPU2006 peak −4.80%, other edges
      within 1.4%; 71 of 72 annual leaders are unchanged. See the
      [rate audit](../research/spec95-spec2026-rate-fitting.md#changes-from-the-name-matched-fit).
-     The accepted CPU92–CPU95 result pairs are speed pairs and have no consumer.
+     The CPU92 anchor then fits only reviewed-accepted pairs: 44 `result_pair`
+     reviews of the automatic hardware-near CPU92/CPU95 rate pairs (42 accepted, 2
+     rejected for differing cache), which left the same-OS anchor unchanged. The 13
+     step-4 speed pairs have no consumer.
    - **5c**: classical, SPEC89 and mix fitters likewise; the duplicate
      `historical-spec:spec92-netlib` view of the Netlib CPU92 pages is dropped.
    - **5d**: the timeline reads `result_chronology`; the legacy date files, the

@@ -94,9 +94,15 @@ def analyze_chain(database: Path, research_dir: Path, fit_dir: Path) -> dict:
     centers = read_rate_factors(digest, research_dir, fit_dir)
     paths = [fit_dir / "cpu92-cpu95-rate-pairs.csv", fit_dir / "integer-rate-generation-pairs.csv"]
     pairs = _read(paths[0]) + _read(paths[1])
+    # The CPU92 anchor fits reviewed-accepted pairs; later edges fit automatic hardware-near pairs.
     cohorts = [
-        [row for row in pairs if (row["old_generation"], row["new_generation"]) == edge and row["match_tier"] == "hardware_near"]
-        for edge in EDGES
+        [
+            row
+            for row in pairs
+            if (row["old_generation"], row["new_generation"]) == edge
+            and (row["review_decision"] == "accept" if index == 0 else row["match_tier"] == "hardware_near")
+        ]
+        for index, edge in enumerate(EDGES)
     ]
     audit = audit_overlap(cohorts)
     if any(row["shared_configurations"] or row["shared_submission_urls"] for row in audit):
