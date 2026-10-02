@@ -568,7 +568,8 @@ def select(candidates):
 
 
 def build_chronology(db, tables):
-    """Write result_chronology: candidates of every kind and the selected year."""
+    """Write result_chronology: candidates of every kind, the selected year and the result's own
+    reported dates after reviewed rejections."""
     from cpushowspeed.curated_review import rejected_dates
 
     if not RESULTS.exists():
@@ -620,7 +621,8 @@ def build_chronology(db, tables):
 
     db.execute(
         "CREATE TABLE result_chronology (result_id TEXT PRIMARY KEY, scope TEXT, hardware_id TEXT, system_id TEXT, "
-        "processor_entity TEXT, date_kind TEXT, year INTEGER, year_low INTEGER, year_high INTEGER, basis TEXT, candidates TEXT)"
+        "processor_entity TEXT, date_kind TEXT, year INTEGER, year_low INTEGER, year_high INTEGER, basis TEXT, candidates TEXT, "
+        "hardware_availability TEXT, test TEXT, publication TEXT, table_year TEXT)"
     )
     kinds, bases = Counter(), Counter()
     for r in results:
@@ -658,7 +660,7 @@ def build_chronology(db, tables):
         kinds[chosen[0] or "unknown"] += r["observations"]
         bases[basis or "unknown"] += r["observations"]
         db.execute(
-            "INSERT INTO result_chronology VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO result_chronology VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 r["result_id"],
                 r["scope"],
@@ -671,6 +673,10 @@ def build_chronology(db, tables):
                 high,
                 basis,
                 json.dumps(cpu + [c for t in tiers for c in t] + fallback + submission + r["rejected"]),
+                r["hardware_availability"],
+                r["test"],
+                r["publication"],
+                r["table_year"],
             ),
         )
     findings = consistency_findings(db, by_subject)

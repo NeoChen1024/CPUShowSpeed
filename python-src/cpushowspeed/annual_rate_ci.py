@@ -11,6 +11,7 @@ from pathlib import Path
 import click
 import numpy as np
 from cpushowspeed.annual_rate import _annual, _sha256, _si, collect_annual_records
+from cpushowspeed.curated import DATABASE
 
 METHOD_VERSION = "annual-rate-combined-ci-v1"
 
@@ -152,14 +153,16 @@ def _plot(rows: list[dict], leaders: list[dict], stats: list[dict], mode: str, o
     return paths
 
 
-def analyze(raw_dir: Path, records_path: Path, research_dir: Path, fit_dir: Path, output_dir: Path, summary_dir: Path) -> dict:
-    records, provenance = collect_annual_records(raw_dir, records_path, research_dir, fit_dir)
+def analyze(database: Path, research_dir: Path, fit_dir: Path, output_dir: Path, summary_dir: Path) -> dict:
+    records, provenance = collect_annual_records(database, research_dir, fit_dir)
     leaders, _ = _annual(records, "same_os")
     metadata_path = fit_dir / "integer-rate-chain-bootstrap.json"
     metadata = json.loads(metadata_path.read_text())
     for path, digest in metadata["inputs_sha256"].items():
         if _sha256(Path(path)) != digest:
             raise ValueError(f"stale chain bootstrap input: {path}; rerun bootstrap-rate-chain")
+    if metadata["database_inputs_sha256"] != provenance["inputs_sha256"]:
+        raise ValueError("chain bootstrap used another database; rerun bootstrap-rate-chain")
     draws_path = fit_dir / "integer-rate-chain-bootstrap.npz"
     if _sha256(draws_path) != metadata["draws_sha256"]:
         raise ValueError("chain bootstrap array hash mismatch")
@@ -226,23 +229,15 @@ def analyze(raw_dir: Path, records_path: Path, research_dir: Path, fit_dir: Path
 
 
 @click.command("annual-rate-ci")
-@click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
-@click.option(
-    "--cpu92-records",
-    type=click.Path(path_type=Path),
-    default=Path("data/derived/spec/cpu92-rate/cpu92-rate-records.csv"),
-    show_default=True,
-)
+@click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=Path("research/data/spec/fitting"), show_default=True)
 @click.option("--fit-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/fitting"), show_default=True)
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/figures/annual-rate"), show_default=True)
 @click.option("--summary-dir", type=click.Path(path_type=Path), default=Path("research/data/spec"), show_default=True)
-def annual_rate_ci_command(
-    raw_dir: Path, cpu92_records: Path, research_dir: Path, fit_dir: Path, output_dir: Path, summary_dir: Path
-) -> None:
+def annual_rate_ci_command(database: Path, research_dir: Path, fit_dir: Path, output_dir: Path, summary_dir: Path) -> None:
     """Combine annual rate boxes, representative hardware and calibration CIs."""
     try:
-        result = analyze(raw_dir, cpu92_records, research_dir, fit_dir, output_dir, summary_dir)
+        result = analyze(database, research_dir, fit_dir, output_dir, summary_dir)
     except (OSError, ValueError, KeyError, IndexError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(json.dumps(result, sort_keys=True))

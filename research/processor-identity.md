@@ -3,8 +3,9 @@
 Reviewed: 2026-10-02. Status: **implemented** as step 2 of the
 [data schema](../docs/data-schema.md#migration-plan). Rules were designed afresh
 (user decision 2026-10-02); the previous matching code was used only for
-comparison, not as a parity target. No fitter or timeline consumes the
-resolution yet.
+comparison, not as a parity target. The SPEC rate fitters pair over this
+resolution (step 5b, see the [rate audit](spec95-spec2026-rate-fitting.md#matching-and-estimator));
+other fitters and the timeline do not consume it yet.
 
 ## Reproduce
 
@@ -45,22 +46,23 @@ detected by the ambiguity check and fixed with explicit families.
 ## Coverage
 
 3,951 distinct (scope, text, clock) mentions over 103,456 input observations:
-**74,178 SKU (71.7%), 20,923 family (20.2%), 5,955 unresolved and 2,400 without
-processor text**.
+**74,344 SKU (71.9%), 21,116 family (20.4%), 5,596 unresolved and 2,400 without
+processor text** (recounted 2026-10-02 from the built database, after the P5
+Pentium pattern alias below).
 
 | Scope | Observations | SKU | Family | Unresolved | Missing text |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `spec:cpu2006` | 47,553 | 43,506 | 911 | 3,136 | 0 |
-| `spec:cpu2017` | 40,075 | 27,772 | 11,903 | 400 | 0 |
+| `spec:cpu2017` | 40,075 | 27,824 | 11,851 | 400 | 0 |
 | `spec:cpu2000` | 7,402 | 2,695 | 4,166 | 541 | 0 |
-| `spec:cpu95` | 2,619 | 0 | 2,391 | 228 | 0 |
-| `spec:cpu92` | 989 | 0 | 699 | 290 | 0 |
+| `spec:cpu95` | 2,619 | 0 | 2,499 | 120 | 0 |
+| `spec:cpu92` | 989 | 0 | 752 | 237 | 0 |
 | `classical:longbottom-whetstone-history` | 862 | 0 | 84 | 746 | 32 |
 | `classical:netlib-linpack-report` | 815 | 0 | 0 | 0 | 815 |
 | `reviewed-vector:dec-n3909-1994` | 661 | 0 | 0 | 0 | 661 |
-| `historical-spec:spec89` | 653 | 0 | 53 | 97 | 503 |
-| `classical:netlib-dhrystone-results` | 542 | 0 | 145 | 397 | 0 |
-| `historical-spec:spec92-netlib` | 473 | 0 | 371 | 102 | 0 |
+| `historical-spec:spec89` | 653 | 7 | 53 | 90 | 503 |
+| `classical:netlib-dhrystone-results` | 542 | 107 | 195 | 240 | 0 |
+| `historical-spec:spec92-netlib` | 473 | 0 | 405 | 68 | 0 |
 | `spec:cpu2026` | 423 | 205 | 200 | 18 | 0 |
 | `mix:longbottom-cpumix` | 360 | 0 | 0 | 0 | 360 |
 | `historical-spec:spec89-throughput` | 20 | 0 | 0 | 0 | 20 |
@@ -90,6 +92,9 @@ pairing. Over 99,061 SPEC observations with processor text:
   Wikipedia SKU tables) resolve to family; Intel Core and Pentium (desktop) have
   no catalogue and are left unresolved, because a brand-level family would mix
   products a decade apart.
+  The exception is `alias:pattern/intel-pentium-p5`, which maps the exact form
+  `NNMHz Pentium Processor` to the P5 family (195 observations in the CPU92,
+  CPU95 and Netlib CPU92 scopes; added 2026-10-02 in step 5b); every chronology selection is unchanged by it.
 - **Ordering variants** such as "100MHz 604 PowerPC" do not match the
   "PowerPC 604" pattern.
 - System models, hardware configurations and date events are not yet resolved.

@@ -67,14 +67,19 @@ source evidence, not part of this official-submission fit.
 ## Reproduce the rate fits
 
 ```sh
+./.venv/bin/cpushowspeed data extract
+./.venv/bin/cpushowspeed data build
 ./.venv/bin/cpushowspeed bridge fit-rate-generations
 ./.venv/bin/cpushowspeed bridge fit-rate92-anchor
 ```
 
-The first command fits CPU95→CPU2026 adjacent integer-rate scores from
-hash-checked bulk exports. The second fits the recovered CPU92 rate records
-directly to CPU95 rate and extends the chain using the first command's strict
-factors, after checking source hashes. Both retain repeated submission
+Both fit commands read the built database (`--database`, default
+`data/derived/schema/cpushowspeed.sqlite`), whose observations come from the
+hash-checked bulk exports and parsed CPU92 rate records, and pair results over
+resolved system and processor identity. The first fits CPU95→CPU2026 adjacent
+integer-rate scores. The second fits CPU92 rate directly to CPU95 rate and
+extends the chain using the first command's strict factors, after checking
+that both were fitted from the same database inputs. Both retain repeated submission
 pairings in source-linked point exports while weighting processor
 configurations in the factor calculation. The [primary rate audit](../research/spec95-spec2026-rate-fitting.md)
 owns the methods, tables, scatterplots and limits. The VAXen chain is an
@@ -90,13 +95,12 @@ material. They do not enter these rate commands.
 ./.venv/bin/cpushowspeed plot annual-rate
 ```
 
-This uses the current hash-checked CPU92 records, official bulk exports, and
-tracked rate factors. It writes complete per-submission and undated CSVs plus
+This reads the built database (`--database`) and the tracked rate factors. It writes complete per-submission and undated CSVs plus
 PNG/SVG figures to `data/derived/figures/annual-rate/`; the compact
 [annual leaders](../research/data/spec/annual-rate-leaders.csv) and
 [statistics](../research/data/spec/annual-rate-statistics.csv) are tracked as
 research results. All positive scores with a parseable reported hardware month
-enter their year; no individual launch-date exclusion is applied. See the
+that no review rejects enter their year. See the
 [interpretation and limits](../research/annual-rate-vaxen.md).
 
 ## Whole-chain rate confidence intervals

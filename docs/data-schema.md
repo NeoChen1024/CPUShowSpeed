@@ -1,8 +1,8 @@
 # Data schema design
 
 Status: **steps 1 (sources), 2/2b (processor and system identity), 3 (dates), 4
-(reviews) and 5a (observations) implemented 2026-10-02; steps 5b–5d (fitters and
-timeline) not implemented.**
+(reviews), 5a (observations) and 5b (SPEC rate fitters) implemented 2026-10-02;
+steps 5c–5d (other fitters and timeline) not implemented.**
 This document owns the target
 data model and its migration plan. Until each step lands, the current formats in
 the [data contract](data-contract.md), [input catalog](input-catalog.md),
@@ -136,7 +136,7 @@ The command refuses to overwrite an existing `source.jsonl` without `--force`.
 
 | Table | Key | Main columns |
 | --- | --- | --- |
-| `processor_family` | `fam:` | vendor, name: the most specific processor line a text can identify (Intel Xeon, IBM POWER7, Alpha 21164) |
+| `processor_family` | `fam:` | vendor, name: the most specific processor line a text can identify (Intel Xeon, IBM POWER7, Alpha 21164); optional `clock_variants_only` marks a line whose members differ only in clock or cores, so family plus clock identifies the part for pairing |
 | `processor_sku` | `sku:` | family_id, vendor, model, rule match `keys`, every listed `base_clocks_mhz`, verbatim heading `sections` (generation/codename), source_ids |
 | `vendor` | `org:` | name, `model_prefixes`; only spellings of one legal entity merge |
 | `system_model` | `sys:` | name, vendor_ids; curated rows plus models derived by `spec-system-v1` and `name-system-v1` in one key space (key excludes the vendor, so lines that changed owner stay one model; RS/6000 530 and 530H stay separate). A curated row with a rule key's ID names that model |
@@ -280,7 +280,9 @@ recorded for the fitters (step 5); nothing reads them yet.
 
 - `resolution` — identity results described above.
 - `result_chronology` — per result, every candidate (CPU, hardware tiers,
-  fallbacks, publication) and the selected kind, year and range. The order is CPU
+  fallbacks, publication), the selected kind, year and range, and the result's
+  own reported hardware-availability, test and publication dates after review
+  rejections. The order is CPU
   release → hardware (own reported date, model events, own table year, model-level
   dates elsewhere) → reviewed fallbacks → publication.
 - `consistency_finding` — reported, not auto-corrected: a CPU release later than
@@ -352,9 +354,17 @@ changed.
      `observation` table and dataset sources for the SPEC bulk exports, the SPEC89
      package sources and the Netlib CPU92 pages. Extraction counts are unchanged
      (103,456 observations, 58,356 results) and so is every chronology selection.
-   - **5b**: SPEC rate fitters read the `observation` table and pair over resolved
-     system models and processors instead of private keys; accepted result pairs
-     feed the CPU92 fit.
+   - **5b** (done 2026-10-02): the SPEC rate fitters, chain bootstrap and annual
+     rate view read the built database (`--database`) and pair over resolved
+     `system_id` and processor identity instead of normalized names. The processor
+     key is the SKU, the family plus an uncatalogued model number, or a family the
+     curated `processor_family.clock_variants_only` flag marks as clock variants;
+     other family-level matches pair only on identical system text. Factor tables
+     record one `inputs_sha256` over the database's input hashes. The CPU92→CPU95
+     same-OS base factor moved +2.10%, CPU2000→CPU2006 peak −4.80%, other edges
+     within 1.4%; 71 of 72 annual leaders are unchanged. See the
+     [rate audit](../research/spec95-spec2026-rate-fitting.md#changes-from-the-name-matched-fit).
+     The accepted CPU92–CPU95 result pairs are speed pairs and have no consumer.
    - **5c**: classical, SPEC89 and mix fitters likewise; the duplicate
      `historical-spec:spec92-netlib` view of the Netlib CPU92 pages is dropped.
    - **5d**: the timeline reads `result_chronology`; the legacy date files, the

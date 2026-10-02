@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 import click
 from cpushowspeed.research_io import code_hashes, write_csv
 from cpushowspeed.spec import get_cached
+from cpushowspeed.spec_inputs import collect_integer
 from cpushowspeed.spec_overlap import (
     _checked_bulk,
     _frequency,
@@ -21,7 +22,6 @@ from cpushowspeed.spec_overlap import (
     _positive,
     _source_url,
 )
-from cpushowspeed.spec_rate_fit import collect_integer
 
 MEMORY = {"memory_unknown", "memory_mismatch"}
 ALIASES = {"system_name", "processor_label"}

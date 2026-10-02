@@ -13,12 +13,17 @@ from pathlib import Path
 
 import click
 import numpy as np
-from cpushowspeed.spec92_rate_fit import collect_cpu92_rate
-from cpushowspeed.spec_overlap import _checked_bulk, _source_url
-from cpushowspeed.spec_rate_fit import GENERATIONS, collect_rate
+from cpushowspeed.curated import DATABASE
+from cpushowspeed.observation_store import (
+    connect,
+    inputs_digest,
+    result_dates,
+    spec_results,
+)
+from cpushowspeed.spec_rate_fit import GENERATIONS
 from cpushowspeed.spec_rate_inputs import read_rate_factors
 
-METHOD_VERSION = "annual-integer-rate-v1"
+METHOD_VERSION = "annual-integer-rate-v2-database"
 MODES = ("base", "peak")
 SCENARIOS = ("same_os", "hardware_near")
 RECORD_FIELDS = (
@@ -108,13 +113,14 @@ def _record(
     processor: str,
     chips: int,
     hw_raw: str,
-    test_raw: str,
-    publication_raw: str,
+    dates: dict[str, str],
     source_url: str,
     source_hash: str,
     factors: dict[tuple[str, str, str], float],
 ) -> dict[str, object]:
-    hw_month = _month(hw_raw)
+    """`dates` are the result's reported months after reviewed rejections."""
+    hw_month = _month(dates["hardware_availability"])
+    rejected = "hardware_availability" in dates["rejected"]
     return {
         "method_version": METHOD_VERSION,
         "generation": generation,
@@ -128,96 +134,57 @@ def _record(
         "hardware_availability_raw": hw_raw,
         "hardware_availability_month": hw_month,
         "year": hw_month[:4] if hw_month else "",
-        "test_month": _month(test_raw),
-        "publication_month": _month(publication_raw),
+        "test_month": _month(dates["test"]),
+        "publication_month": _month(dates["publication"]),
         "source_url": source_url,
         "source_container_sha256": source_hash,
         "vaxen_same_os": score * factors["same_os", mode, generation],
         "vaxen_hardware_near": score * factors["hardware_near", mode, generation],
-        "date_status": "reported_hardware_availability" if hw_month else "missing_hardware_availability",
+        "date_status": (
+            "reported_hardware_availability" if hw_month else "rejected_by_review" if rejected else "missing_hardware_availability"
+        ),
         "reported_score_evidence_class": "reported_measurement",
         "vaxen_evidence_class": "normalized_estimate",
     }
 
 
-def collect_annual_records(
-    raw_dir: Path, cpu92_records: Path, research_dir: Path, fit_dir: Path
-) -> tuple[list[dict[str, object]], dict[str, object]]:
-    factors = read_rate_factors(raw_dir, cpu92_records, research_dir, fit_dir)
-    official = collect_rate(raw_dir)
-    old = collect_cpu92_rate(cpu92_records, raw_dir)
-    old_by_url = {item.source_url: item for item in old}
-    records = []
-    with cpu92_records.open(newline="", encoding="utf-8") as stream:
-        for row in csv.DictReader(stream):
-            item = old_by_url[row["source_url"]]
-            for mode in MODES:
-                score = item.base if mode == "base" else item.peak
-                if score is None:
-                    continue
-                records.append(
-                    _record(
-                        generation="cpu92",
-                        result_id=item.result_id,
-                        mode=mode,
-                        benchmark_id=row[f"{mode}_metric"],
-                        score=score,
-                        system=item.system,
-                        processor=item.processor,
-                        chips=item.chips,
-                        hw_raw=row["hardware_availability_month"],
-                        test_raw=row["test_month"],
-                        publication_raw=row["publication_month"],
-                        source_url=item.source_url,
-                        source_hash=item.source_container_sha256,
-                        factors=factors,
+def collect_annual_records(database: Path, research_dir: Path, fit_dir: Path) -> tuple[list[dict[str, object]], dict[str, object]]:
+    """Every positive integer-rate score in the built database with its reported, reviewed dates."""
+    with connect(database) as db:
+        digest = inputs_digest(db)
+        factors = read_rate_factors(digest, research_dir, fit_dir)
+        records = []
+        for generation in ("cpu92", *GENERATIONS):
+            dates = result_dates(db, f"spec:{generation}")
+            for item in spec_results(db, generation, "rate"):
+                raw = item.raw_fields
+                for mode in MODES:
+                    score = item.base if mode == "base" else item.peak
+                    if score is None:
+                        continue
+                    records.append(
+                        _record(
+                            generation=generation,
+                            result_id=item.result_id,
+                            mode=mode,
+                            benchmark_id=raw.get(f"{mode}_metric") or raw.get("Benchmark", ""),
+                            score=score,
+                            system=item.system,
+                            processor=item.processor,
+                            chips=item.chips,
+                            hw_raw=raw.get("HW Avail") or raw.get("hardware_availability_month") or "",
+                            dates=dates[f"spec:{generation}:rate:{item.result_id}"],
+                            source_url=item.source_url,
+                            source_hash=item.source_container_sha256,
+                            factors=factors,
+                        )
                     )
-                )
-    raw_hashes = {"cpu92_records": _sha256(cpu92_records)}
-    for generation in GENERATIONS:
-        rows, digest = _checked_bulk(raw_dir / generation / "bulk.csv")
-        raw_hashes[generation] = digest
-        selected = {item.source_url: item for item in official[generation]}
-        seen = set()
-        for row in rows:
-            if row["Benchmark"] != "CINT" + generation[3:] + "rate":
-                continue
-            source_url = _source_url(row["Disclosure"])
-            item = selected.get(source_url)
-            if item is None:
-                continue
-            if source_url in seen:
-                raise ValueError(f"duplicate selected rate disclosure: {source_url}")
-            seen.add(source_url)
-            for mode in MODES:
-                score = item.base if mode == "base" else item.peak
-                if score is None:
-                    continue
-                records.append(
-                    _record(
-                        generation=generation,
-                        result_id=item.result_id,
-                        mode=mode,
-                        benchmark_id=row["Benchmark"],
-                        score=score,
-                        system=item.system,
-                        processor=item.processor,
-                        chips=item.chips,
-                        hw_raw=row["HW Avail"],
-                        test_raw=row["Test Date"],
-                        publication_raw=row["Published"],
-                        source_url=source_url,
-                        source_hash=digest,
-                        factors=factors,
-                    )
-                )
-        if seen != selected.keys():
-            raise ValueError(f"rate disclosure join is incomplete for {generation}")
     records.sort(key=lambda row: (str(row["mode"]), str(row["year"]), str(row["generation"]), str(row["source_url"])))
     if len({(row["mode"], row["source_url"]) for row in records}) != len(records):
         raise ValueError("duplicate annual rate source/mode record")
     return records, {
-        "raw_input_sha256": raw_hashes,
+        "database": str(database),
+        "inputs_sha256": digest,
         "factor_chain_sha256": _sha256(research_dir / "integer-rate-cpu92-vaxen-chain.csv"),
     }
 
@@ -409,9 +376,9 @@ def _write_csv(path: Path, fields: tuple[str, ...], rows: list[dict[str, object]
 
 
 def analyze_annual_rate(
-    raw_dir: Path, cpu92_records: Path, research_dir: Path, fit_dir: Path, output_dir: Path, summary_dir: Path
+    database: Path, research_dir: Path, fit_dir: Path, output_dir: Path, summary_dir: Path
 ) -> dict[str, object]:
-    records, provenance = collect_annual_records(raw_dir, cpu92_records, research_dir, fit_dir)
+    records, provenance = collect_annual_records(database, research_dir, fit_dir)
     leaders, stats = _annual(records, "same_os")
     output_dir.mkdir(parents=True, exist_ok=True)
     summary_dir.mkdir(parents=True, exist_ok=True)
@@ -430,7 +397,7 @@ def analyze_annual_rate(
         "method_version": METHOD_VERSION,
         "calibration_scenario": "same_os",
         "year_event": "reported_configuration_hardware_availability",
-        "population_rule": "all positive integer-rate scores with a parseable reported hardware-availability month",
+        "population_rule": "all positive integer-rate scores with a parseable reported hardware-availability month not rejected by review",
         "per_mode_records": {mode: sum(row["mode"] == mode for row in records) for mode in MODES},
         "per_mode_dated": {mode: sum(row["mode"] == mode and bool(row["year"]) for row in records) for mode in MODES},
         "undated_records": len(undated),
@@ -461,23 +428,15 @@ def plot() -> None:
 
 
 @plot.command("annual-rate")
-@click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
-@click.option(
-    "--cpu92-records",
-    type=click.Path(path_type=Path),
-    default=Path("data/derived/spec/cpu92-rate/cpu92-rate-records.csv"),
-    show_default=True,
-)
+@click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=Path("research/data/spec/fitting"), show_default=True)
 @click.option("--fit-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/fitting"), show_default=True)
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/figures/annual-rate"), show_default=True)
 @click.option("--summary-dir", type=click.Path(path_type=Path), default=Path("research/data/spec"), show_default=True)
-def annual_rate_command(
-    raw_dir: Path, cpu92_records: Path, research_dir: Path, fit_dir: Path, output_dir: Path, summary_dir: Path
-) -> None:
+def annual_rate_command(database: Path, research_dir: Path, fit_dir: Path, output_dir: Path, summary_dir: Path) -> None:
     """Plot all dated rate submissions and each year's highest-scoring system."""
     try:
-        summary = analyze_annual_rate(raw_dir, cpu92_records, research_dir, fit_dir, output_dir, summary_dir)
+        summary = analyze_annual_rate(database, research_dir, fit_dir, output_dir, summary_dir)
     except (OSError, ValueError, KeyError, IndexError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(json.dumps({key: summary[key] for key in ("summary_file", "per_mode_dated", "leader_years")}, sort_keys=True))

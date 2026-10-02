@@ -50,7 +50,7 @@ scope and edge-independence assumptions in the [chain audit](spec95-spec2026-rat
 The CSV/HTML also supplies a **frontier interval** that allows the highest
 submission to change across replicates. Top retention counts a tied highest
 score as remaining at the top. The central **2018 base** representative stays
-at the top in **65.81%** of replicates; its plot label therefore notes the
+at the top in **87.57%** of replicates; its plot label therefore notes the
 retention rate. All other year/mode representatives remain co-highest in
 100% of these draws. That describes calibration sensitivity under this model,
 not certainty that those machines were historically the fastest.
@@ -58,9 +58,14 @@ not certainty that those machines were historically the fastest.
 ## Population and year definition
 
 The population is **every parsed SPEC integer-rate submission with a positive
-score in that mode and a parseable reported `HW Avail` month**. CPU92 comes
-from the 274 hash-checked Netlib rate disclosures; later generations come
-from the five hash-checked official bulk exports. Base has **32,025** dated
+score in that mode and a parseable reported `HW Avail` month that a
+[review](../data/curated/review.jsonl) has not rejected**. The command reads
+these from the built database's observation and result-chronology tables
+(`--database`). CPU92 comes from the 274 hash-checked Netlib rate
+disclosures; later generations come from the five hash-checked official bulk
+exports. A result whose availability date a review rejects is undated with
+status `rejected_by_review`; none of the current integer-rate leaders or
+undated rows have that status. Base has **32,025** dated
 submission scores and peak has **26,784**. Two CPU92 results lack hardware
 availability, yielding four mode-specific undated scores; they remain in the
 source export and are absent from annual groups. A missing or nonpositive
@@ -102,10 +107,10 @@ exploratory fitted conversions. `VAXen` labels here always mean
 | Hardware year | Base highest VAXen | Peak highest VAXen | Source pattern |
 | --- | ---: | ---: | --- |
 | 1992 | 766 | 809 | DEC 7000 Model 660, CPU92 rate |
-| 2000 | 137k | 175k | SGI Origin 3800, CPU2000 rate |
-| 2010 | 11.9M | 7.61M | Different base/peak leader submissions |
-| 2019 | 39.2M | 14.4M | Different CPU2017 rate submissions |
-| 2026 | 65.2M | 77.2M | HPE Compute Scale-up Server 3250, CPU2017 rate |
+| 2000 | 140k | 177k | SGI Origin 3800, CPU2000 rate |
+| 2010 | 12.0M | 7.29M | Different base/peak leader submissions |
+| 2019 | 39.2M | 13.8M | Different CPU2017 rate submissions |
+| 2026 | 65.2M | 74.0M | HPE Compute Scale-up Server 3250, CPU2017 rate |
 
 Rounded values are display examples; use the full-precision CSV for
 calculation. Base and peak yearly maxima can come from different submissions,

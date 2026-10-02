@@ -351,6 +351,10 @@
         "name": {
           "$ref": "#/$defs/text"
         },
+        "clock_variants_only": {
+          "description": "Every member is one processor design differing only in clock frequency or enabled cores, which disclosures report separately; a family-level match may then pair hardware. Absent means not established.",
+          "type": "boolean"
+        },
         "note": {
           "$ref": "#/$defs/text"
         },

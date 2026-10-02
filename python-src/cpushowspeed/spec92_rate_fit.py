@@ -9,24 +9,21 @@ import math
 import statistics
 from collections import defaultdict
 from pathlib import Path
-from urllib.parse import urlparse
 
 import click
 from cpushowspeed.calibration import absolute_error_percent, quantile
-from cpushowspeed.spec_inputs import collect_cpu92_rate
+from cpushowspeed.curated import DATABASE
+from cpushowspeed.observation_store import connect, inputs_digest, spec_results
 from cpushowspeed.spec_overlap import (
     INTERVAL_FIELDS,
     PAIR_FIELDS,
-    Result,
     _automatic_pairs,
-    _frequency,
     _normalized,
-    _processor_key,
     _statistics,
 )
 from cpushowspeed.spec_rate_fit import GENERATIONS, collect_rate
 
-METHOD_VERSION = "cpu92-cpu95-rate-fit-v4-relative-error"
+METHOD_VERSION = "cpu92-cpu95-rate-fit-v5-resolved-identity"
 VAX_RATE92_REFERENCE = 604800 / 25500
 FACTOR_FIELDS = (
     "method_version",
@@ -44,8 +41,7 @@ FACTOR_FIELDS = (
     "cluster_bootstrap_95_high",
     "config_ratio_min",
     "config_ratio_max",
-    "cpu92_records_sha256",
-    "cpu95_bulk_sha256",
+    "inputs_sha256",
     "pair_export_sha256",
     *INTERVAL_FIELDS,
 )
@@ -182,9 +178,11 @@ def _write_edge_intervals(research_dir: Path) -> Path:
     return path
 
 
-def analyze_cpu92_rate_fit(records_path: Path, raw_dir: Path, output_dir: Path, research_dir: Path) -> dict[str, object]:
-    results = collect_rate(raw_dir)
-    results["cpu92"] = collect_cpu92_rate(records_path, raw_dir)
+def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path) -> dict[str, object]:
+    with connect(database) as db:
+        results = collect_rate(db)
+        results["cpu92"] = spec_results(db, "cpu92", "rate")
+        digest = inputs_digest(db)
     pairs = _automatic_pairs(results, "cpu92", "cpu95")
     for pair in pairs:
         pair["source_check"] = "netlib_detail_and_summary_hash_checked__cpu95_bulk_hash_checked"
@@ -226,8 +224,7 @@ def analyze_cpu92_rate_fit(records_path: Path, raw_dir: Path, output_dir: Path, 
                         "cluster_bootstrap_95_high": fit["cluster_bootstrap_95_high"] if fit else "",
                         "config_ratio_min": fit["config_ratio_min"] if fit else "",
                         "config_ratio_max": fit["config_ratio_max"] if fit else "",
-                        "cpu92_records_sha256": hashlib.sha256(records_path.read_bytes()).hexdigest(),
-                        "cpu95_bulk_sha256": hashlib.sha256((raw_dir / "cpu95" / "bulk.csv").read_bytes()).hexdigest(),
+                        "inputs_sha256": digest,
                         "pair_export_sha256": hashlib.sha256(pair_path.read_bytes()).hexdigest(),
                     }
                 )
@@ -236,18 +233,8 @@ def analyze_cpu92_rate_fit(records_path: Path, raw_dir: Path, output_dir: Path, 
     downstream_factors = research_dir / "integer-rate-factors.csv"
     with downstream_factors.open(newline="") as stream:
         prior_rows = list(csv.DictReader(stream))
-    for generation in GENERATIONS:
-        expected = next(
-            (row["old_input_sha256"] for row in prior_rows if row["scenario"] == "strict" and row["old_generation"] == generation),
-            None,
-        )
-        if expected is None:
-            expected = next(
-                row["new_input_sha256"] for row in prior_rows if row["scenario"] == "strict" and row["new_generation"] == generation
-            )
-        actual = hashlib.sha256((raw_dir / generation / "bulk.csv").read_bytes()).hexdigest()
-        if expected != actual:
-            raise ValueError(f"downstream rate factors are stale for {generation}; rerun fit-rate-generations")
+    if any(row["inputs_sha256"] != digest for row in prior_rows):
+        raise ValueError("downstream rate factors were fitted on another database; rerun fit-rate-generations")
     with old_chain_path.open(newline="") as stream:
         old_chain = {(row["scenario"], row["mode"], row["generation"]): row for row in csv.DictReader(stream)}
     with chain_path.open("w", newline="", encoding="utf-8") as stream:
@@ -321,19 +308,13 @@ def analyze_cpu92_rate_fit(records_path: Path, raw_dir: Path, output_dir: Path, 
 
 
 @click.command("fit-rate92-anchor")
-@click.option(
-    "--records",
-    type=click.Path(path_type=Path),
-    default=Path("data/derived/spec/cpu92-rate/cpu92-rate-records.csv"),
-    show_default=True,
-)
-@click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
+@click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/fitting"), show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=Path("research/data/spec/fitting"), show_default=True)
-def fit_rate92_anchor_command(records: Path, raw_dir: Path, output_dir: Path, research_dir: Path) -> None:
-    """Fit CPU92 and CPU95 integer rate, then extend the exploratory rate chain."""
+def fit_rate92_anchor_command(database: Path, output_dir: Path, research_dir: Path) -> None:
+    """Fit CPU92 and CPU95 integer rate from the built database, then extend the exploratory rate chain."""
     try:
-        summary = analyze_cpu92_rate_fit(records, raw_dir, output_dir, research_dir)
+        summary = analyze_cpu92_rate_fit(database, output_dir, research_dir)
     except (OSError, ValueError, KeyError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(

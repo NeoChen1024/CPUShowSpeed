@@ -10,25 +10,19 @@ from dataclasses import asdict
 from pathlib import Path
 
 import click
-from cpushowspeed.spec_inputs import collect_integer
+from cpushowspeed.curated import DATABASE
+from cpushowspeed.observation_store import connect, inputs_digest, spec_results
 from cpushowspeed.spec_overlap import (
     INTERVAL_FIELDS,
     PAIR_FIELDS,
     Result,
     _automatic_pairs,
-    _checked_bulk,
-    _frequency,
-    _memory_mib,
-    _normalized,
-    _positive,
-    _processor_key,
-    _source_url,
     _statistics,
 )
 
 GENERATIONS = ("cpu95", "cpu2000", "cpu2006", "cpu2017", "cpu2026")
 MODES = ("base", "peak")
-METHOD_VERSION = "integer-rate-fit-v4-relative-error"
+METHOD_VERSION = "integer-rate-fit-v5-resolved-identity"
 POINT_FIELDS = (
     "mode",
     "old_generation",
@@ -65,8 +59,7 @@ FACTOR_FIELDS = (
     "config_ratio_max",
     "heldout_median_absolute_pct_error",
     "loglog_slope_diagnostic",
-    "old_input_sha256",
-    "new_input_sha256",
+    "inputs_sha256",
     "pair_export_sha256",
     "heldout_p95_absolute_pct_error",
     *INTERVAL_FIELDS,
@@ -75,8 +68,9 @@ FACTOR_FIELDS = (
 FACTOR_FIELDS = (*FACTOR_FIELDS, "model_center_p95_percent")
 
 
-def collect_rate(raw_dir: Path) -> dict[str, list[Result]]:
-    return collect_integer(raw_dir, "rate")
+def collect_rate(db) -> dict[str, list[Result]]:
+    """Integer-rate results per suite, keyed by resolved system model and processor entity."""
+    return {generation: spec_results(db, generation, "rate") for generation in GENERATIONS}
 
 
 def _fit_edges(results: dict[str, list[Result]]) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
@@ -171,8 +165,10 @@ def _plot(points: list[dict[str, object]], edges: list[dict[str, object]], outpu
     return paths
 
 
-def analyze_rate_generations(raw_dir: Path, output_dir: Path, research_dir: Path) -> dict[str, object]:
-    results = collect_rate(raw_dir)
+def analyze_rate_generations(database: Path, output_dir: Path, research_dir: Path) -> dict[str, object]:
+    with connect(database) as db:
+        results = collect_rate(db)
+        digest = inputs_digest(db)
     pairs, edges = _fit_edges(results)
     nonadjacent = []
     for old_index, old in enumerate(GENERATIONS):
@@ -236,7 +232,6 @@ def analyze_rate_generations(raw_dir: Path, output_dir: Path, research_dir: Path
         writer = csv.DictWriter(stream, fieldnames=POINT_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(points)
-    input_hashes = {gen: hashlib.sha256((raw_dir / gen / "bulk.csv").read_bytes()).hexdigest() for gen in GENERATIONS}
     pair_hash = hashlib.sha256(pair_path.read_bytes()).hexdigest()
     factor_path = research_dir / "integer-rate-factors.csv"
     with factor_path.open("w", newline="", encoding="utf-8") as stream:
@@ -264,8 +259,7 @@ def analyze_rate_generations(raw_dir: Path, output_dir: Path, research_dir: Path
                             name: fit.get(name, "")
                             for name in ("heldout_p95_absolute_pct_error", "model_center_p95_percent", *INTERVAL_FIELDS)
                         },
-                        "old_input_sha256": input_hashes[old],
-                        "new_input_sha256": input_hashes[new],
+                        "inputs_sha256": digest,
                         "pair_export_sha256": pair_hash,
                     }
                 )
@@ -295,7 +289,8 @@ def analyze_rate_generations(raw_dir: Path, output_dir: Path, research_dir: Path
         "method_version": METHOD_VERSION,
         "scope": "integer rate, CPU95 through CPU2026; dependent submission pairings retained",
         "source_records": {generation: len(results[generation]) for generation in GENERATIONS},
-        "input_sha256": input_hashes,
+        "database": str(database),
+        "inputs_sha256": digest,
         "pair_records": str(pair_path),
         "source_record_export": str(records_path),
         "scatter_points": str(point_path),
@@ -314,6 +309,7 @@ def analyze_rate_generations(raw_dir: Path, output_dir: Path, research_dir: Path
         "limitations": [
             "CPU95 rate is an internal reference; the separate CPU92 rate fit supplies the VAX throughput anchor",
             "rate copy counts are absent from bulk CSV and have not been checked against every per-result disclosure",
+            "pairs share a resolved system model, processor entity and chip count; a family-level processor needs the clock check",
             "hardware-near matches use bulk fields, not a full OS/compiler/tuning audit",
             "repeated submission pairings are dependent; processor-configuration medians limit their fit weight",
         ],
@@ -325,13 +321,13 @@ def analyze_rate_generations(raw_dir: Path, output_dir: Path, research_dir: Path
 
 
 @click.command("fit-rate-generations")
-@click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
+@click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/fitting"), show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=Path("research/data/spec/fitting"), show_default=True)
-def fit_rate_generations_command(raw_dir: Path, output_dir: Path, research_dir: Path) -> None:
-    """Fit CPU95–CPU2026 integer-rate overlaps and draw paired-score scatters."""
+def fit_rate_generations_command(database: Path, output_dir: Path, research_dir: Path) -> None:
+    """Fit CPU95–CPU2026 integer-rate overlaps from the built database and draw paired-score scatters."""
     try:
-        summary = analyze_rate_generations(raw_dir, output_dir, research_dir)
+        summary = analyze_rate_generations(database, output_dir, research_dir)
     except (OSError, ValueError, KeyError, IndexError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(json.dumps({"summary_file": summary["summary_file"], "source_records": summary["source_records"]}, sort_keys=True))

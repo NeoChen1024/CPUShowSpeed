@@ -49,6 +49,11 @@ not all the same kind of logic:
 | Pairing policy (which observations a fitter compares) | `spec_joint_tracks.match` (strict / ram-aliases / cpu-clock), `rate_convert._matching` | Stay in fitters as declared policies, re-expressed over `hw:` IDs and resolution fields |
 | Run-condition or text normalization | `classic_source_data.os_key`, `spec_disclosure.canonical` | Stay; feed the observation `run` object |
 
+Step 5b (2026-10-02) took the SPEC rate fitters off `spec_overlap._processor_key`
+and `_normalized` system matching; `spec_rate_chain.config_key` now groups resolved
+processor keys. `spec_inputs` still uses the private key for the speed overlap
+audit and timeline estimates until steps 5c–5d.
+
 Alias tables with their own formats (`classic/mix-candidate-aliases.csv`, SPEC89
 `aliases.csv`, `system_regex` in `timeline-year-overrides.csv` and
 `hardware-date-evidence.csv`) migrate to `alias`. The SPEC89 package keeps its

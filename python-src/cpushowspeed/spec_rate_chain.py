@@ -13,6 +13,8 @@ from pathlib import Path
 
 import click
 import numpy as np
+from cpushowspeed.curated import DATABASE
+from cpushowspeed.observation_store import connect, inputs_digest
 from cpushowspeed.spec92_rate_fit import VAX_RATE92_REFERENCE, _selected
 from cpushowspeed.spec_rate_fit import GENERATIONS as LATER_GENERATIONS
 from cpushowspeed.spec_rate_inputs import MODES, SCENARIOS, read_rate_factors
@@ -86,8 +88,10 @@ def propagate(edge_logs: np.ndarray) -> np.ndarray:
     return np.exp(np.column_stack((np.full(len(edge_logs), reference), reference + np.cumsum(edge_logs, axis=1))))
 
 
-def analyze_chain(raw_dir: Path, records: Path, research_dir: Path, fit_dir: Path) -> dict:
-    centers = read_rate_factors(raw_dir, records, research_dir, fit_dir)
+def analyze_chain(database: Path, research_dir: Path, fit_dir: Path) -> dict:
+    with connect(database) as db:
+        digest = inputs_digest(db)
+    centers = read_rate_factors(digest, research_dir, fit_dir)
     paths = [fit_dir / "cpu92-cpu95-rate-pairs.csv", fit_dir / "integer-rate-generation-pairs.csv"]
     pairs = _read(paths[0]) + _read(paths[1])
     cohorts = [
@@ -191,11 +195,11 @@ def analyze_chain(raw_dir: Path, records: Path, research_dir: Path, fit_dir: Pat
         "bootstrap_draws": str(draws_path),
         "draws_sha256": _hash(draws_path),
         "configuration_logs_csv": str(config_path),
+        "database_inputs_sha256": digest,
         "inputs_sha256": {
             str(path): _hash(path)
             for path in [
                 *paths,
-                records,
                 research_dir / "cpu92-cpu95-rate-direct-factors.csv",
                 research_dir / "integer-rate-factors.csv",
                 research_dir / "integer-rate-cpu92-vaxen-chain.csv",
@@ -205,7 +209,7 @@ def analyze_chain(raw_dir: Path, records: Path, research_dir: Path, fit_dir: Pat
         "within_chain_log_covariance": covariance,
         "limitations": [
             "Independence of disjoint observed cohorts is an assumption; shared workload/compiler biases remain unmodeled",
-            "Processor identities use the existing normalized processor/chip/clock key, not a globally audited hardware identity",
+            "Configurations are resolved processor entity, chips and clock from the built database; family-level entities are coarser than SKUs",
             "Base and peak are separately simulated; no joint base-peak or joint anchor-scenario inference is supplied",
             "Percentile intervals are pointwise for mean scale factors, not simultaneous bands or individual-machine prediction intervals",
         ],
@@ -216,19 +220,13 @@ def analyze_chain(raw_dir: Path, records: Path, research_dir: Path, fit_dir: Pat
 
 
 @click.command("bootstrap-rate-chain")
-@click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
-@click.option(
-    "--cpu92-records",
-    type=click.Path(path_type=Path),
-    default=Path("data/derived/spec/cpu92-rate/cpu92-rate-records.csv"),
-    show_default=True,
-)
+@click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=Path("research/data/spec/fitting"), show_default=True)
 @click.option("--fit-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/fitting"), show_default=True)
-def bootstrap_rate_chain_command(raw_dir: Path, cpu92_records: Path, research_dir: Path, fit_dir: Path) -> None:
+def bootstrap_rate_chain_command(database: Path, research_dir: Path, fit_dir: Path) -> None:
     """Bootstrap complete rate chains after checking cross-edge cluster overlap."""
     try:
-        result = analyze_chain(raw_dir, cpu92_records, research_dir, fit_dir)
+        result = analyze_chain(database, research_dir, fit_dir)
     except (OSError, ValueError, KeyError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(json.dumps(result, sort_keys=True))

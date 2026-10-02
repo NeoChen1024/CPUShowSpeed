@@ -1,9 +1,10 @@
 # Exploratory SPEC CPU92–CPU2026 integer-rate fitting
 
-**Full-disclosure update (2026-09-29):** [Resource refresh](spec-resource-field-audit.md#full-disclosure-refresh)
-records current runtime coverage and the count-aware refit. Numerical tables in
-this report's original narrative describe the preceding experiment; linked
-coefficient files now contain the refreshed results.
+**Resolved-identity refit (2026-10-02):** the fitters now read the built
+database (`data/derived/schema/cpushowspeed.sqlite`) and pair results over resolved
+system and processor identity instead of normalized names. The tables below
+are from this refit; [Changes from the name-matched fit](#changes-from-the-name-matched-fit)
+compares it with the 2026-09-29 [full-disclosure refit](spec-resource-field-audit.md#full-disclosure-refresh).
 
 Reviewed on 2026-09-26. This is the primary account of the project's
 **throughput/rate** reconstruction from SPEC CPU92 through CPU2026. The
@@ -17,9 +18,15 @@ From the repository root, using the uv-managed `.venv`:
 
 ```sh
 ./.venv/bin/cpushowspeed spec legacy92-rate-parse
+./.venv/bin/cpushowspeed data extract
+./.venv/bin/cpushowspeed data build
 ./.venv/bin/cpushowspeed bridge fit-rate-generations
 ./.venv/bin/cpushowspeed bridge fit-rate92-anchor
 ```
+
+Every fit command takes `--database` (default the built database). A factor
+table records `inputs_sha256`, one digest of the database's input hashes;
+downstream commands refuse factors whose digest differs from the database.
 
 The CPU92 [factor table](data/spec/fitting/cpu92-cpu95-rate-direct-factors.csv)
 and [source-linked pairings](../data/derived/spec/fitting/cpu92-cpu95-rate-pairs.csv)
@@ -56,8 +63,25 @@ core count.
 
 ## Matching and estimator
 
-For every adjacent suite pair, candidate submissions match normalized system
-name, processor name and chip count. The **hardware-near** tier further
+For every adjacent suite pair, candidate submissions match resolved system
+identity (`system_id`), resolved processor identity and chip count. The
+processor key depends on how far the [processor resolver](processor-identity.md)
+reached:
+
+- `sku`: the catalogued SKU;
+- `uncatalogued_model`: the family plus the model number the SKU rule parsed
+  but the catalogue lacks;
+- `clock_variants_only`: a family the curated
+  [processor family table](../data/curated/processor_family.jsonl) flags as
+  differing only in clock or core count, so family plus clock identifies the
+  part. The 19 flags are a pairing judgement from general architecture
+  knowledge, not source-checked per part; Pentium Pro and Pentium III are
+  deliberately unflagged;
+- `broad_family`: any other family. Such a pair counts as hardware near only
+  when both disclosures give the identical normalized system text;
+- unresolved: no key, never paired.
+
+The **hardware-near** tier further
 requires clock agreement within 1%, equal parsed RAM capacity, and no known
 core or enabled-thread contradiction. CPU92→CPU95 also has a **same-OS**
 sensitivity tier: apply the hardware-near conditions, then require normalized
@@ -81,17 +105,17 @@ and is **not** used as the conversion factor.
 
 | Edge and fit tier | Base `k` | Base configurations | Peak `k` | Peak configurations |
 | --- | ---: | ---: | ---: | ---: |
-| CPU92 → CPU95, hardware near | 97.713 | 19 | 109.210 | 19 |
-| CPU92 → CPU95, same OS | 95.900 | 11 | 109.107 | 11 |
-| CPU95 → CPU2000, hardware near | 70.751 | 13 | 74.599 | 13 |
-| CPU2000 → CPU2006, hardware near | 2.014 | 25 | 1.962 | 22 |
-| CPU2006 → CPU2017, hardware near | 9.586 | 150 | 9.403 | 124 |
-| CPU2017 → CPU2026, hardware near | 2.335 | 79 | 2.451 | 39 |
+| CPU92 → CPU95, hardware near | 98.172 | 24 | 108.897 | 24 |
+| CPU92 → CPU95, same OS | 97.914 | 14 | 110.370 | 14 |
+| CPU95 → CPU2000, hardware near | 70.751 | 13 | 74.230 | 13 |
+| CPU2000 → CPU2006, hardware near | 1.999 | 60 | 1.868 | 50 |
+| CPU2006 → CPU2017, hardware near | 9.456 | 150 | 9.400 | 125 |
+| CPU2017 → CPU2026, hardware near | 2.331 | 78 | 2.452 | 38 |
 
-The CPU92→CPU95 search found **60** name/processor/chip candidate pairings.
-Of these, **28** satisfy hardware-near conditions, representing 24 systems and
-19 processor configurations; **16** satisfy the same-OS tier, representing
-16 systems and 11 configurations. Both modes have scores for all 28 or 16
+The CPU92→CPU95 search found **152** system/processor/chip candidate pairings.
+Of these, **44** satisfy hardware-near conditions, representing 34 systems and
+24 processor configurations; **23** satisfy the same-OS tier, representing
+23 systems and 14 configurations. Both modes have scores for all 44 or 23
 selected pairings. The CPU95–CPU2026 row counts, full-precision factors,
 bootstrap ranges and source hashes are in the linked factor CSV. A large
 `k`, especially CPU95→CPU2000, reflects a change in suite score scale; it is
@@ -99,16 +123,18 @@ not the performance gain of one machine.
 
 On the CPU92→CPU95 edge, leave one processor configuration out, refit on the
 others, then evaluate `abs(predicted/actual - 1)`. The linearly
-interpolated **p95 error** is 18.3% base / 17.0% peak for hardware-near
-pairings and 16.9% base / 11.9% peak for same-OS pairings. This measures
+interpolated **p95 error** is 17.8% base / 16.7% peak for hardware-near
+pairings and 17.9% base / 11.3% peak for same-OS pairings. This measures
 prediction within the selected cohort. The bootstrap 95% ranges in the CSVs
 resample configurations and likewise describe conditional sampling variation;
 **neither is a full-chain 95% error band**. All five edges now export both held-out median and p95 errors using the same
 configuration-level definition.
 
-The same-OS CPU92→CPU95 peak center is 102.37 for six PA-RISC
-configurations and 117.78 for five Pentium configurations; base centers are
-85.81 and 109.58. The pooled factors therefore depend on architecture mix,
+In the same-OS CPU92→CPU95 cohort, PA-RISC configurations (PA-7100,
+PA-7100LC and four PA-7200) have peak centers 102.2–103.0 and base centers
+84.2–92.8. The three P5 Pentium configurations center at 120.09 peak /
+110.57 base and the four Pentium Pro configurations at 117.86 / 109.32; the
+single R4400 configuration gives 103.51 / 96.54. The pooled factors therefore depend on architecture mix,
 compiler and tuning choices. The broader hardware-near tier also contains
 Alpha systems with changed OS releases. These differences limit a single
 unqualified conversion, even though the two pooled peak factors happen to be
@@ -121,7 +147,7 @@ error consistently with classical models. Factors and CI95 did not change. See
 [before/after checks](calibration-cleanup.md). New factor CSVs also expose
 `model_center_p95_percent` in percent; the legacy error field remains a fraction.
 
-Recomputed on 2026-09-26. The [combined machine-readable table](data/spec/fitting/integer-rate-edge-intervals.csv)
+Recomputed on 2026-10-02. The [combined machine-readable table](data/spec/fitting/integer-rate-edge-intervals.csv)
 includes both CPU92 anchor scenarios and all four later edges, separately for
 base and peak. Each interval uses **10,000 bootstrap resamples of processor
 configurations**, seed `892026`, with sorted configuration keys for stable
@@ -140,16 +166,16 @@ fraction in the CSV and shown here as a percentage.
 
 | Edge | Mode | Configurations | k | 95% CI for k | Held-out p95 error |
 | --- | --- | ---: | ---: | --- | ---: |
-| CPU92 → CPU95 | base | 11 | 95.9 | 89.185–103.23 | 16.9% |
-| CPU92 → CPU95 | peak | 11 | 109.11 | 104.7–114.11 | 11.9% |
+| CPU92 → CPU95 | base | 14 | 97.914 | 91.825–104.32 | 17.9% |
+| CPU92 → CPU95 | peak | 14 | 110.37 | 105.97–114.94 | 11.3% |
 | CPU95 → CPU2000 | base | 13 | 70.751 | 66.344–75.099 | 20.3% |
-| CPU95 → CPU2000 | peak | 13 | 74.599 | 71.106–78.563 | 16.3% |
-| CPU2000 → CPU2006 | base | 25 | 2.0138 | 1.9108–2.1261 | 23.3% |
-| CPU2000 → CPU2006 | peak | 22 | 1.962 | 1.8604–2.0734 | 19.9% |
-| CPU2006 → CPU2017 | base | 150 | 9.5862 | 9.382–9.9087 | 17.8% |
-| CPU2006 → CPU2017 | peak | 124 | 9.4027 | 9.3152–9.4899 | 13.1% |
-| CPU2017 → CPU2026 | base | 79 | 2.3346 | 2.3072–2.3626 | 8.7% |
-| CPU2017 → CPU2026 | peak | 39 | 2.451 | 2.3995–2.5016 | 12.1% |
+| CPU95 → CPU2000 | peak | 13 | 74.23 | 70.798–78.192 | 16.1% |
+| CPU2000 → CPU2006 | base | 60 | 1.9993 | 1.9264–2.0743 | 26.6% |
+| CPU2000 → CPU2006 | peak | 50 | 1.8677 | 1.7974–1.9451 | 24.0% |
+| CPU2006 → CPU2017 | base | 150 | 9.4562 | 9.3563–9.5555 | 16.3% |
+| CPU2006 → CPU2017 | peak | 125 | 9.3999 | 9.3142–9.4879 | 13.1% |
+| CPU2017 → CPU2026 | base | 78 | 2.3314 | 2.3037–2.3604 | 8.8% |
+| CPU2017 → CPU2026 | peak | 38 | 2.4518 | 2.3985–2.5032 | 12.2% |
 
 These are **separate edge intervals**, not simultaneous 95% coverage for all
 edges. The whole-chain bootstrap below propagates draws rather than interval
@@ -172,17 +198,17 @@ single-task speed or assert that another suite used the same workloads.
 The first rate-chain output uses CPU95 rate score 1 as its bookkeeping unit.
 The VAXen chain divides the fitted CPU92→CPU95 factor by 23.717647… and
 multiplies it by the four strict later rate factors. The direct-anchor command
-checks that those later factors still correspond to the current bulk-file
-hashes before emitting the chain.
+checks that those later factors were fitted from the same database inputs
+before emitting the chain.
 
 | Generation | Same-OS base VAXen / rate point | Same-OS peak VAXen / rate point |
 | --- | ---: | ---: |
 | CPU92 | 0.04216 | 0.04216 |
-| CPU95 | 4.043 | 4.600 |
-| CPU2000 | 286.1 | 343.2 |
-| CPU2006 | 576.1 | 673.3 |
-| CPU2017 | 5,523 | 6,331 |
-| CPU2026 | 12,893 | 15,517 |
+| CPU95 | 4.128 | 4.653 |
+| CPU2000 | 292.1 | 345.4 |
+| CPU2006 | 584.0 | 645.2 |
+| CPU2017 | 5,522 | 6,064 |
+| CPU2026 | 12,874 | 14,869 |
 
 These are **scale factors per one reported score point**, not annual machine
 scores. The linked chain CSV also retains the hardware-near CPU92-anchor
@@ -201,7 +227,7 @@ within-chain log-scale covariance. Configuration log-ratio summaries are
 exported beside it for inspection.
 
 The audit compared all ten edge pairs in the broad hardware-near cohorts.
-It found **zero shared submission URLs and zero shared normalized
+It found **zero shared submission URLs and zero shared resolved
 processor/chip/clock configuration keys**. The calculation therefore assumes
 independent sampling of the five observed edge cohorts, conditional on those
 identities. This is not evidence that unobserved workload or compiler biases
@@ -222,11 +248,11 @@ anchor-scenario inference.
 | Generation | Base VAXen / point, 95% CI | Peak VAXen / point, 95% CI |
 | --- | ---: | ---: |
 | CPU92 | 0.0421627 [0.0421627, 0.0421627] | 0.0421627 [0.0421627, 0.0421627] |
-| CPU95 | 4.04341 [3.75303, 4.35005] | 4.60026 [4.40703, 4.81234] |
-| CPU2000 | 286.076 [259.727, 314.173] | 343.174 [321.622, 367.394] |
-| CPU2006 | 576.105 [514.02, 644.062] | 673.303 [618.992, 735.158] |
-| CPU2017 | 5522.64 [4918.43, 6188.31] | 6330.83 [5817.22, 6912.3] |
-| CPU2026 | 12893.1 [11481.5, 14435.5] | 15517 [14207.5, 16965.9] |
+| CPU95 | 4.12833 [3.86891, 4.3998] | 4.65348 [4.47035, 4.84655] |
+| CPU2000 | 292.084 [266.797, 318.676] | 345.428 [323.932, 368.657] |
+| CPU2006 | 583.977 [531.407, 641.955] | 645.165 [598.859, 697.113] |
+| CPU2017 | 5522.19 [5021.09, 6070.91] | 6064.48 [5626.23, 6556.14] |
+| CPU2026 | 12874.4 [11691.1, 14166] | 14868.7 [13750.4, 16136.5] |
 
 These are pointwise percentile 95% intervals for **mean calibration scales**,
 using the same-OS CPU92 anchor and strict later edges in the table. CPU92's
@@ -234,7 +260,7 @@ zero-width interval reflects a defined unit, not a claim of error-free
 measurements. Individual-machine prediction errors, identity mistakes,
 architecture coverage and systematic workload/compiler effects are outside
 these intervals. They are not simultaneous confidence bands over all years.
-Central factors and all pair cohorts are unchanged; no outliers were removed.
+No outliers were removed.
 
 For plotting, use `vaxen_per_rate_score[scenario, mode, replicate, generation]`
 from the NPZ. Multiply every submission of a given generation by that same
@@ -242,6 +268,37 @@ draw before recomputing yearly quartiles and maxima. This preserves the shared
 calibration error; independent per-submission jitter would destroy it. The
 [combined annual figures](annual-rate-vaxen.md#combined-distribution-hardware-and-confidence-figures)
 now use these vectors to recompute quartiles, fixed-leader scores and frontiers.
+
+## Changes from the name-matched fit
+
+Compared on 2026-10-02 with the 2026-09-29 name-matched outputs:
+
+| Edge, tier | Mode | Configurations before → after | `k` before → after | Change |
+| --- | --- | --- | --- | ---: |
+| CPU92 → CPU95, hardware near | base | 19 → 24 | 97.713 → 98.172 | +0.47% |
+| CPU92 → CPU95, hardware near | peak | 19 → 24 | 109.210 → 108.897 | −0.29% |
+| CPU92 → CPU95, same OS | base | 11 → 14 | 95.900 → 97.914 | +2.10% |
+| CPU92 → CPU95, same OS | peak | 11 → 14 | 109.107 → 110.370 | +1.16% |
+| CPU95 → CPU2000 | base | 13 → 13 | 70.751 → 70.751 | 0% |
+| CPU95 → CPU2000 | peak | 13 → 13 | 74.599 → 74.230 | −0.49% |
+| CPU2000 → CPU2006 | base | 25 → 60 | 2.014 → 1.999 | −0.72% |
+| CPU2000 → CPU2006 | peak | 22 → 50 | 1.962 → 1.868 | −4.80% |
+| CPU2006 → CPU2017 | base | 150 → 150 | 9.586 → 9.456 | −1.36% |
+| CPU2006 → CPU2017 | peak | 124 → 125 | 9.403 → 9.400 | −0.03% |
+| CPU2017 → CPU2026 | base | 79 → 78 | 2.335 → 2.331 | −0.14% |
+| CPU2017 → CPU2026 | peak | 39 → 38 | 2.451 → 2.452 | +0.03% |
+
+All 28 old CPU92→CPU95 hardware-near pairs remain. The 16 added pairs are
+12 P5 Pentium pairs (Dell Dimension XPS and XXpress Deskside systems whose CPU92 processor text `NNMHz Pentium Processor` was
+unresolved before a P5 pattern alias was added) and 4 R4400 pairs reached
+through the R4400 `clock_variants_only` flag. On CPU2000→CPU2006 the gain
+comes from disclosures whose processor text carries extra prose that defeated
+exact name matching but resolves to the same SKU. Name matching had also
+paired some different SKUs within one family (for example Itanium 2 9040 with
+9050); the `broad_family` rule excludes those.
+
+The accepted CPU92/CPU95 result pairs in `result_pair.jsonl` are speed pairs.
+No current fitter consumes them; the rate fit derives its own pairs.
 
 ## Source checks and remaining limits
 

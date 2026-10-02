@@ -16,7 +16,8 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def read_rate_factors(raw_dir: Path, cpu92_records: Path, research_dir: Path, fit_dir: Path) -> dict[tuple[str, str, str], float]:
+def read_rate_factors(digest: str, research_dir: Path, fit_dir: Path) -> dict[tuple[str, str, str], float]:
+    """Saved chain factors, refused unless every edge was fitted on the database with this input digest."""
     direct_path = research_dir / "cpu92-cpu95-rate-direct-factors.csv"
     later_path = research_dir / "integer-rate-factors.csv"
     chain_path = research_dir / "integer-rate-cpu92-vaxen-chain.csv"
@@ -30,10 +31,8 @@ def read_rate_factors(raw_dir: Path, cpu92_records: Path, research_dir: Path, fi
     if len(direct) != 4 or len(later) != 8 or len(chain) != 24:
         raise ValueError("rate factor tables have unexpected coverage; rerun the rate fits")
     for row in direct:
-        if row["cpu92_records_sha256"] != _sha256(cpu92_records):
+        if row["inputs_sha256"] != digest:
             raise ValueError("CPU92 direct fit is stale; rerun fit-rate92-anchor")
-        if row["cpu95_bulk_sha256"] != _sha256(raw_dir / "cpu95" / "bulk.csv"):
-            raise ValueError("CPU95 direct fit is stale; rerun fit-rate92-anchor")
         if row["pair_export_sha256"] != _sha256(pair_path):
             raise ValueError("CPU92 pair export differs from its factor table")
     edge = {}
@@ -42,10 +41,8 @@ def read_rate_factors(raw_dir: Path, cpu92_records: Path, research_dir: Path, fi
         old, new = row["old_generation"], row["new_generation"]
         if row["pair_export_sha256"] != later_pair_hash:
             raise ValueError("later rate pair export differs from its factor table")
-        if row["scenario"] != "strict" or row["old_input_sha256"] != _sha256(raw_dir / old / "bulk.csv"):
-            raise ValueError(f"stale or non-strict rate fit for {old}")
-        if row["new_input_sha256"] != _sha256(raw_dir / new / "bulk.csv"):
-            raise ValueError(f"stale rate fit for {new}")
+        if row["scenario"] != "strict" or row["inputs_sha256"] != digest:
+            raise ValueError(f"stale or non-strict rate fit for {old}-{new}; rerun fit-rate-generations")
         edge[old, new, row["mode"]] = float(row["factor_old_per_new"])
     factors = {}
     for row in direct:

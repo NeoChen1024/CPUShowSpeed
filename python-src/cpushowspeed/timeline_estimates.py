@@ -7,9 +7,8 @@ from pathlib import Path
 
 from cpushowspeed.annual_rate import _month
 from cpushowspeed.research_io import read_csv
-from cpushowspeed.spec_inputs import runtime_fingerprint
+from cpushowspeed.spec_inputs import collect_integer, runtime_fingerprint
 from cpushowspeed.spec_overlap import _checked_bulk, _source_url
-from cpushowspeed.spec_rate_fit import collect_integer
 from cpushowspeed.timeline_dates import candidate, select_date
 from cpushowspeed.timeline_resources import resource_fields
 

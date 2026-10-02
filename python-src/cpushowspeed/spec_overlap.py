@@ -62,6 +62,8 @@ PAIR_FIELDS = [
     "peak_execution_status",
     "base_unfiltered_ratio",
     "peak_unfiltered_ratio",
+    "old_processor_basis",
+    "new_processor_basis",
 ]
 
 
@@ -85,6 +87,8 @@ class Result:
     source_url: str
     source_container_sha256: str
     track: str = ""
+    # How processor_key was resolved; "broad_family" keys cannot pair hardware.
+    processor_basis: str = ""
     execution: dict = field(default_factory=dict, compare=False, hash=False)
     raw_fields: dict = field(default_factory=dict, compare=False, hash=False)
 
@@ -190,6 +194,8 @@ def _pair(old: Result, new: Result, tier: str, source_check: str = "bulk_hash_ch
         "old_source_container_sha256": old.source_container_sha256,
         "new_source_container_sha256": new.source_container_sha256,
         "source_check": source_check,
+        "old_processor_basis": old.processor_basis,
+        "new_processor_basis": new.processor_basis,
     }
 
     for mode in ("base", "peak"):
@@ -198,6 +204,10 @@ def _pair(old: Result, new: Result, tier: str, source_check: str = "bulk_hash_ch
         if row[mode + "_execution_status"] == "confirmed_count_conflict":
             row[mode + "_ratio"] = ""
     return row
+
+
+def _same_text(left: str, right: str) -> bool:
+    return " ".join(left.lower().split()) == " ".join(right.lower().split())
 
 
 def _automatic_pairs(results: dict[str, list[Result]], older: str, newer: str) -> list[dict[str, object]]:
@@ -221,9 +231,13 @@ def _automatic_pairs(results: dict[str, list[Result]], older: str, newer: str) -
                     or new.enabled_threads_per_core is None
                     or old.enabled_threads_per_core == new.enabled_threads_per_core
                 )
-                tier = (
-                    "hardware_near" if clock_agrees and memory_agrees and cores_agree and threads_agree else "name_cpu_chips_only"
+                # A family that spans distinct SKUs at one clock establishes equal hardware only
+                # when both disclosures name the system identically (e.g. "Alder System (200MHz, 256KB L2)").
+                processor_known = "broad_family" not in (old.processor_basis, new.processor_basis) or _same_text(
+                    old.system, new.system
                 )
+                near = clock_agrees and memory_agrees and cores_agree and threads_agree and processor_known
+                tier = "hardware_near" if near else "name_cpu_chips_only"
                 pairs.append(_pair(old, new, tier))
     return pairs
 
