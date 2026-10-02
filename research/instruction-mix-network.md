@@ -1,7 +1,8 @@
 # Gibson/ADP ratings in the classical network
 
-Reviewed: 2026-10-02. Status: implemented conditional fit on the schema database
-(`instruction-mix-joint-network-v2-resolved-systems`). It replaces the
+Reviewed: 2026-10-02; re-anchored to speed-VAXen 2026-10-03. Status:
+implemented conditional fit on the schema database
+(`instruction-mix-joint-network-v3-speed-anchor`). It replaces the
 name-matched mix network experiment removed on 2026-10-02, which remains in Git
 history. Source definitions and the pairing review queue are in the
 [instruction-mix bridge](instruction-mix-bridge.md).
@@ -10,7 +11,7 @@ history. Source definitions and the pairing review queue are in the
 
 `cpushowspeed classic mix-network-fit` extends the
 [classical network](classic-network-fitting.md) with CCTA Gibson and ADP ratings
-(KIPS).
+(KIPS). Like that network, it is calibrated in speed-VAXen (SPECint92 = 1).
 
 - **Attachment.** A rating attaches to every network node of its resolved system
   (`resolved_system`). In the `plus_pending_links` scenario it also attaches to
@@ -22,7 +23,7 @@ history. Source definitions and the pairing review queue are in the
   clusters.
 - **Fit.** The classical network's family-, variant-, node- and model-balanced log
   least squares. Gibson and ADP share one `InstructionMix` family weight. Every
-  scenario is fitted for both clock policies and both cohorts (`rate_only`,
+  scenario is fitted for both clock policies and both cohorts (`spec92_only`,
   `with_spec89`).
 - **Estimates.** Each rating is scaled by its coefficient. Each source table row
   also gets a combined estimate: the equal-log-weight mean of its available ratings.
@@ -39,20 +40,20 @@ under `resolved_system`. These are CDC 6600/7600, IBM 360/30, 360/50, 370/145,
 370/155 and 370/165, ICL 1906A/1906S, and PDP-8/E. Under `plus_pending_links`,
 36 ratings attach to 17 nodes in 15 clusters. No attached system has a SPEC
 target. Every mix coefficient therefore rests on classical scores alone, and
-there is no observed-rate holdout.
+there is no observed-SPEC holdout.
 
-VAXen per KIPS, `linear_clock / with_spec89`:
+Speed-VAXen per KIPS, `linear_clock / with_spec89`:
 
 | Links | Gibson | ADP |
 | --- | --- | --- |
-| `resolved_system` | 0.00043653 (0.00029911–0.00059303) | 0.00022795 (0.00011593–0.00035543) |
-| `plus_pending_links` | 0.00037246 (0.00025972–0.00050516) | 0.00018340 (0.00010649–0.00029672) |
+| `resolved_system` | 0.00044477 (0.00030618–0.00060098) | 0.00023247 (0.00011841–0.00036162) |
+| `plus_pending_links` | 0.00037966 (0.00026712–0.00051255) | 0.00018706 (0.00010934–0.00030171) |
 
 The whole-cluster holdout compares a mix-only prediction with the held-out
 node's classical-network prediction (a proxy, not a SPEC measurement). The
-model-center P95 is 194.8% for `resolved_system` (10 clusters) and 187.8% for
-`plus_pending_links` (15 clusters). On the 29 observed-rate models, adding the
-mixes changes the network's held-out P95 from 42.5% to 42.4% / 42.4%.
+model-center P95 is 194.5% for `resolved_system` (10 clusters) and 187.6% for
+`plus_pending_links` (15 clusters). On the 59 observed-SPECint92 models, adding
+the mixes changes the network's held-out P95 from 82.3% to 82.0% / 81.9%.
 
 The timeline uses `plus_pending_links / linear_clock / with_spec89`, as the
 former experiment used its unapproved name candidates. `resolved_system` is the
@@ -64,12 +65,19 @@ eight runs are saved in:
 - [mix-network-anchor-comparison.csv](data/classic/mix-network-anchor-comparison.csv)
 - [mix-network-audit.json](data/classic/mix-network-audit.json)
 
-## Changes from the name-matched experiment
+## Changes
+
+The 2026-10-03 re-anchoring to speed-VAXen raised the timeline run's
+coefficients by 1.9% (Gibson 0.00037246 → 0.00037966) and 2.0% (ADP
+0.00018340 → 0.00018706), following the classical coefficients they are
+calibrated through.
+
+### Name-matched experiment
 
 The former fit (2026-09-28) joined ratings through name-matched classical
 candidate pairs. Its `linear_clock / with_spec89` coefficients were Gibson
-0.00036847 and ADP 0.00018273 VAXen/KIPS. The timeline run now gives +1.1% and
-+0.4%, which every mix estimate inherits. Before the 2026-10-02 catalogue spelling
+0.00036847 and ADP 0.00018273 rate-VAXen/KIPS. The resolved-system,
+rate-anchored run gave +1.1% and +0.4%. Before the 2026-10-02 catalogue spelling
 merges it gave +9.5% and +7.1%; the merges lowered the classical coefficients the
 mixes are calibrated through (see
 [classical network](classic-network-fitting.md#pair-review-and-spelling-merges-2026-10-02)).

@@ -35,7 +35,7 @@ See the [overlap report](../../classic-spec-overlap.md) for coverage limits.
 `rate-composite-summary.csv`, `rate-composite-target-coverage.csv` and
 `rate-composite-audit.json` preserve the direct SPEC92 integer-rate experiment.
 Factors produce VAXen; base/peak and pair/triple variants remain separate.
-See [method and validation](../../classic-rate-composite-fitting.md).
+See [method and validation](../../classic-composite-fitting.md).
 
 ## SPEC89 to rate bridge experiment
 
@@ -44,7 +44,7 @@ See [method and validation](../../classic-rate-composite-fitting.md).
 retain the two-edge bridge and joint-model experiment. Estimate intervals cover
 coefficient uncertainty only; these rows are not historical rate measurements.
 The compact estimate table omits bulk raw provenance, retaining stable source
-record IDs and URLs. See [interpretation and reproduction](../../spec89-rate-bridge.md).
+record IDs and URLs. See [interpretation and reproduction](../../spec89-bridge.md).
 
 ## Sparse per-benchmark network
 

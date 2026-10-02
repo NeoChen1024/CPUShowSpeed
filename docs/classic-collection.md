@@ -167,12 +167,12 @@ cohorts and matched single-score baselines, in `same_result` and `same_system`
 cohorts. `--database`, `--output`, `--research-dir`, `--bootstrap` and `--seed`
 control inputs, outputs and resampling. It applies the rate-to-VAXen
 normalization once and excludes ordinary SPECint89/92 targets. See [results and
-validation](../research/classic-rate-composite-fitting.md).
+validation](../research/classic-composite-fitting.md).
 
 `uv run cpushowspeed classic spec89-rate-fit` audits direct SPECint89/rate hardware
 overlap, fits the observed two-edge native-integer/rate path, and evaluates joint
 classical models. `--database`, `--output`, `--research-dir`, `--bootstrap` and
-`--seed` select inputs and settings. See [bridge findings](../research/spec89-rate-bridge.md)
+`--seed` select inputs and settings. See [bridge findings](../research/spec89-bridge.md)
 for the absence of direct pairs, peak-only scope and separation of observed-rate
 validation from agreement with estimated targets.
 

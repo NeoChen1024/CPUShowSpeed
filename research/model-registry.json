@@ -1074,23 +1074,26 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec89-rate-bridge.md",
+      "owner": "research/spec89-bridge.md",
       "dataset_ids": [
         "spec89-native-bridge"
       ],
       "depends_on": [],
       "shared_evidence": "",
-      "command": "cpushowspeed classic spec89-rate-fit",
+      "command": "cpushowspeed classic spec89-fit",
       "outputs": [
         {
-          "path": "research/data/classic/spec89-rate-bridge-summary.csv",
+          "path": "research/data/classic/spec89-bridge-summary.csv",
           "optional": false
         }
-      ]
+      ],
+      "output_row_selection": {
+        "edge": "int89_to_int92"
+      }
     },
     {
       "id": "int92-rate-vaxen",
-      "title": "Same-column SPECint92 → rate-VAXen",
+      "title": "Same-column SPECint92 vs rate-VAXen (diagnostic)",
       "track": "spec89",
       "input_metrics": [
         "int92"
@@ -1101,20 +1104,20 @@
       "variants": [
         "peak"
       ],
-      "role": "primary",
+      "role": "diagnostic",
       "status": "implemented-conditional",
-      "owner": "research/spec89-rate-bridge.md",
+      "owner": "research/spec89-bridge.md",
       "dataset_ids": [
         "schema-database"
       ],
       "depends_on": [
         "rate92-unit"
       ],
-      "shared_evidence": "DEC columns also appear in classical training; holdout removes model from all edges",
-      "command": "cpushowspeed classic spec89-rate-fit",
+      "shared_evidence": "Diagnostic of speed versus rate on one-processor DEC columns; never chained into a speed or rate estimate",
+      "command": "cpushowspeed classic spec89-fit",
       "outputs": [
         {
-          "path": "research/data/classic/spec89-rate-bridge-summary.csv",
+          "path": "research/data/classic/spec89-bridge-summary.csv",
           "optional": false
         }
       ],
@@ -1123,38 +1126,38 @@
       }
     },
     {
-      "id": "int89-rate-vaxen",
-      "title": "Two-edge SPECint89 → rate-VAXen",
+      "id": "int89-speed-vaxen",
+      "title": "SPECint89 → speed-VAXen",
       "track": "spec89",
       "input_metrics": [
         "int89"
       ],
-      "target_metric": "vaxen",
+      "target_metric": "speed-vaxen",
       "relationship": "composition",
-      "formula": "product of two empirical factors; no direct 89/rate pairs in current inputs",
+      "formula": "SPECint92-equivalent = k*x; one SPECint92 point is one speed-VAXen",
       "variants": [
         "peak"
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec89-rate-bridge.md",
+      "owner": "research/spec89-bridge.md",
       "dataset_ids": [
         "spec89-snapshot"
       ],
       "depends_on": [
         "int89-int92",
-        "int92-rate-vaxen"
+        "int92-speed-vaxen"
       ],
-      "shared_evidence": "One shared bridge multiplier for all inferred 89 targets; these are not observed rate labels",
-      "command": "cpushowspeed classic spec89-rate-fit",
+      "shared_evidence": "One shared bridge multiplier for all inferred 89 targets; these are not observed SPECint92 labels",
+      "command": "cpushowspeed classic spec89-fit",
       "outputs": [
         {
-          "path": "research/data/classic/spec89-rate-bridge-summary.csv",
+          "path": "research/data/classic/spec89-bridge-summary.csv",
           "optional": false
         }
       ],
       "output_row_selection": {
-        "edge": "int89_to_rate92_chained"
+        "edge": "int89_to_int92"
       }
     },
     {
@@ -1185,13 +1188,13 @@
       "outputs": []
     },
     {
-      "id": "classical-direct-rate",
-      "title": "Direct classical → rate-VAXen",
+      "id": "classical-direct-speed",
+      "title": "Direct classical → speed-VAXen",
       "track": "classical",
       "input_metrics": [
         "composite"
       ],
-      "target_metric": "vaxen",
+      "target_metric": "speed-vaxen",
       "relationship": "empirical-fit",
       "formula": "y = k*x",
       "variants": [
@@ -1200,32 +1203,32 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/classic-rate-composite-fitting.md",
+      "owner": "research/classic-composite-fitting.md",
       "dataset_ids": [
         "schema-database",
         "classic-unit-policy"
       ],
       "depends_on": [
         "classical-composite",
-        "rate92-unit"
+        "int92-speed-vaxen"
       ],
       "shared_evidence": "Single-score baselines share identical tuples and folds; source stages reuse observations",
-      "command": "cpushowspeed classic rate-composite-fit",
+      "command": "cpushowspeed classic composite-fit",
       "outputs": [
         {
-          "path": "research/data/classic/rate-composite-summary.csv",
+          "path": "research/data/classic/composite-summary.csv",
           "optional": false
         }
       ]
     },
     {
       "id": "classical-via89",
-      "title": "Classical → SPECint89 → rate-VAXen",
+      "title": "Classical → SPECint89 → speed-VAXen",
       "track": "classical",
       "input_metrics": [
         "composite"
       ],
-      "target_metric": "vaxen",
+      "target_metric": "speed-vaxen",
       "relationship": "composition",
       "formula": "fit native89 log ratios then apply shared bridge; implemented as 89_only cohort",
       "variants": [
@@ -1233,19 +1236,19 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec89-rate-bridge.md",
+      "owner": "research/spec89-bridge.md",
       "dataset_ids": [
         "schema-database"
       ],
       "depends_on": [
         "classical-composite",
-        "int89-rate-vaxen"
+        "int89-speed-vaxen"
       ],
       "shared_evidence": "",
-      "command": "cpushowspeed classic spec89-rate-fit",
+      "command": "cpushowspeed classic spec89-fit",
       "outputs": [
         {
-          "path": "research/data/classic/spec89-rate-summary.csv",
+          "path": "research/data/classic/spec89-summary.csv",
           "optional": false
         }
       ]
@@ -1257,7 +1260,7 @@
       "input_metrics": [
         "composite"
       ],
-      "target_metric": "vaxen",
+      "target_metric": "speed-vaxen",
       "relationship": "joint-fit",
       "formula": "y = k*x",
       "variants": [
@@ -1265,20 +1268,20 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec89-rate-bridge.md",
+      "owner": "research/spec89-bridge.md",
       "dataset_ids": [
         "schema-database"
       ],
       "depends_on": [
         "classical-composite",
-        "rate92-unit",
-        "int89-rate-vaxen"
+        "int92-speed-vaxen",
+        "int89-speed-vaxen"
       ],
-      "shared_evidence": "Shared model keys resampled jointly across bridges and training; estimated-target errors separate from observed-rate holdouts",
-      "command": "cpushowspeed classic spec89-rate-fit",
+      "shared_evidence": "Shared model keys resampled jointly across the bridge and training; estimated-target errors separate from observed-SPECint92 holdouts",
+      "command": "cpushowspeed classic spec89-fit",
       "outputs": [
         {
-          "path": "research/data/classic/spec89-rate-summary.csv",
+          "path": "research/data/classic/spec89-summary.csv",
           "optional": false
         }
       ]
@@ -1320,11 +1323,11 @@
         "whet-dp",
         "linpack-100"
       ],
-      "target_metric": "vaxen",
+      "target_metric": "speed-vaxen",
       "relationship": "joint-fit",
       "formula": "family/node/model-balanced log WLS with eliminated latent unanchored targets; per-benchmark y=k_b*x_b",
       "variants": [
-        "peak; reported_clock/linear_clock; rate_only/with_spec89"
+        "peak; reported_clock/linear_clock; spec92_only/with_spec89"
       ],
       "role": "primary",
       "status": "implemented-conditional",
@@ -1335,10 +1338,10 @@
         "spec89-native-bridge"
       ],
       "depends_on": [
-        "rate92-unit",
-        "int89-rate-vaxen"
+        "int92-speed-vaxen",
+        "int89-speed-vaxen"
       ],
-      "shared_evidence": "Shared source IDs grouped under accepted alias closure; bridges and coefficients share model bootstrap weights; unknown targets not measured rate",
+      "shared_evidence": "Shared source IDs grouped under accepted alias closure; bridges and coefficients share model bootstrap weights; unknown targets not measured SPECint92",
       "command": "cpushowspeed classic network-fit",
       "outputs": [
         {
@@ -1354,12 +1357,12 @@
           "optional": true
         }
       ],
-      "prediction_command": "cpushowspeed classic predict-rate",
+      "prediction_command": "cpushowspeed classic predict-speed",
       "prediction_guide": "docs/classical-prediction.md"
     },
     {
       "id": "instruction-mix-joint-network",
-      "title": "Conditional Gibson/ADP joint classical-rate calibration",
+      "title": "Conditional Gibson/ADP joint classical-speed calibration",
       "track": "classical",
       "input_metrics": [
         "gibson",
@@ -1371,11 +1374,11 @@
         "whet-dp",
         "linpack-100"
       ],
-      "target_metric": "vaxen",
+      "target_metric": "speed-vaxen",
       "relationship": "joint-fit",
       "formula": "Classical sparse family/node/model-balanced log WLS; InstructionMix variants share a family; y=k_b*x_b",
       "variants": [
-        "CCTA/TSU only; peak; resolved_system/plus_pending_links; reported_clock/linear_clock; rate_only/with_spec89"
+        "CCTA/TSU only; peak; resolved_system/plus_pending_links; reported_clock/linear_clock; spec92_only/with_spec89"
       ],
       "role": "primary",
       "status": "implemented-conditional",
@@ -1388,8 +1391,8 @@
       ],
       "depends_on": [
         "classical-sparse-network",
-        "rate92-unit",
-        "int89-rate-vaxen"
+        "int92-speed-vaxen",
+        "int89-speed-vaxen"
       ],
       "shared_evidence": "Ratings attach by resolved system; nodes sharing a rating form one bootstrap/holdout cluster; proxy holdouts are not SPEC errors",
       "command": "cpushowspeed classic mix-network-fit",
@@ -2158,7 +2161,7 @@
       "purpose": "Three-source PDF extraction completed"
     },
     {
-      "path": "research/classic-rate-composite-fitting.md",
+      "path": "research/classic-composite-fitting.md",
       "title": "Direct classical composites to SPEC92 integer-rate VAXen",
       "role": "primary",
       "status": "current",
@@ -2305,7 +2308,7 @@
       "purpose": "Helman's 1991 SPEC89 worksheet derivative"
     },
     {
-      "path": "research/spec89-rate-bridge.md",
+      "path": "research/spec89-bridge.md",
       "title": "SPECint89 bridge to SPEC92 rate and joint classical fitting",
       "role": "primary",
       "status": "current",

@@ -17,17 +17,17 @@ from pathlib import Path
 
 import click
 import numpy as np
-from cpushowspeed.calibration import ANCHOR, error_summary
+from cpushowspeed.calibration import error_summary
 from cpushowspeed.classic_network import build, evaluate
 from cpushowspeed.classic_network_model import bootstrap, bridge_log, metric_weights, train
-from cpushowspeed.classical_fit import DERIVED, RESEARCH, bridge_evidence, centers
+from cpushowspeed.classical_fit import DERIVED, RESEARCH, bridge_evidence, speed_edges
 from cpushowspeed.classical_store import BRIDGE_SCOPE, SCOPES, family, results
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.mix_bridge import MIX_SCOPE, _rows, pending_links
 from cpushowspeed.observation_store import connect, inputs_digest
 from cpushowspeed.research_io import code_hashes, write_csv
 
-METHOD_VERSION = "instruction-mix-joint-network-v2-resolved-systems"
+METHOD_VERSION = "instruction-mix-joint-network-v3-speed-anchor"
 MIX_METRICS = ("InstructionMix:Gibson_KIPS", "InstructionMix:ADP_KIPS")
 LINKS = ("resolved_system", "plus_pending_links")
 TIMELINE_RUN = dict(links="plus_pending_links", scenario="linear_clock", cohort="with_spec89")
@@ -127,7 +127,7 @@ def holdouts(nodes, edges, enabled, context):
             if classical:
                 wc = metric_weights(classical)
                 references.append(("classical_proxy", sum(wc[m] * (v + held[m]) for m, v in classical.items())))
-            if n["target_kind"] == "observed_rate" or (enabled and n["target_kind"] == "estimated_89"):
+            if n["target_kind"] == "observed_speed" or (enabled and n["target_kind"] == "estimated_89"):
                 references.append(("observed_target", math.log(n["target"]) + (b if n["target_kind"] == "estimated_89" else 0)))
             for reference, y in references:
                 rows.append(
@@ -174,7 +174,6 @@ def _value(vaxen, logs, members):
         scores=json.dumps({m["metric"]: m["kips"] for m in members}, sort_keys=True),
         source_url=members[0]["source_url"],
         estimated_vaxen=vaxen,
-        estimated_rate=vaxen / ANCHOR,
         ci95_low=float(np.exp(np.quantile(logs, 0.025))),
         ci95_high=float(np.exp(np.quantile(logs, 0.975))),
         combination="equal_log_weight" if len(members) > 1 else "single_available",
@@ -188,13 +187,13 @@ def _value(vaxen, logs, members):
 @click.option("--bootstrap", "draws", type=click.IntRange(min=100), default=10000, show_default=True)
 @click.option("--seed", type=int, default=20260928, show_default=True)
 def mix_network_fit(database, output, research_dir, draws, seed):
-    """Jointly calibrate Gibson/ADP ratings with the classical network to SPEC92 integer-rate VAXen."""
+    """Jointly calibrate Gibson/ADP ratings with the classical network to speed-VAXen (SPECint92 = 1)."""
     with connect(database) as db:
         rows = results(db, SCOPES + (BRIDGE_SCOPE,))
         mixes = mix_results(db)
         links = pending_links(db)
         digest = inputs_digest(db)
-    edges = centers(bridge_evidence(rows))
+    edges = speed_edges(bridge_evidence(rows))
     coefficients, summary, held_rows, attach_rows, anchors, predictions, runs, arrays = [], [], [], [], [], [], [], {}
     for scaling in (False, True):
         scenario = "linear_clock" if scaling else "reported_clock"
@@ -204,7 +203,7 @@ def mix_network_fit(database, output, research_dir, draws, seed):
             if scaling:
                 attach_rows.extend(audit)
             for enabled in (False, True):
-                cohort = "with_spec89" if enabled else "rate_only"
+                cohort = "with_spec89" if enabled else "spec92_only"
                 context = dict(links=tier, scenario=scenario, cohort=cohort)
                 click.echo(f"Fitting {tier} / {scenario} / {cohort}", err=True)
                 alpha, grouped = train(extended, merged, enabled)
@@ -256,8 +255,8 @@ def mix_network_fit(database, output, research_dir, draws, seed):
                         informative_models=len(grouped),
                         mix_nodes=sum(bool(n["mix_metrics"]) for n in extended),
                         mix_models=len({n["model_key"] for n in extended if n["mix_metrics"]}),
-                        mix_nodes_with_observed_rate=sum(
-                            bool(n["mix_metrics"]) and n["target_kind"] == "observed_rate" for n in extended
+                        mix_nodes_with_observed_speed=sum(
+                            bool(n["mix_metrics"]) and n["target_kind"] == "observed_speed" for n in extended
                         ),
                         attached_ratings=sum(r["status"] == "attached" for r in audit),
                     )
@@ -284,7 +283,7 @@ def mix_network_fit(database, output, research_dir, draws, seed):
         timeline_run=TIMELINE_RUN,
         fit="classical network (family/variant/node/model balanced sparse log least squares) with Gibson/ADP sharing the InstructionMix family weight",
         attachment="a rating attaches to every node of its resolved system, or also of needs_review linked systems; nodes sharing a rating form one cluster",
-        target="SPECrate_int92 peak * 25500/604800",
+        target="speed-VAXen: SPECint92 peak (VAX-11/780 = 1); SPECint89 through the int89_to_int92 bridge",
         qualification="all system links unapproved; observed-target holdouts exist only where a mix system has a SPEC target; CI95 omits model discrepancy; no mix clock scaling",
         inputs_sha256=digest,
         code_sha256=code_hashes(Path(__file__)),

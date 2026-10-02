@@ -82,5 +82,5 @@ a coverage limitation rather than a negative research finding.
   exclusions were applied. Score columns remain source-specific.
 
 The pairings were reviewed by model, clock and processor on 2026-10-02; five
-`result_pair` reviews resulted ([SPEC89 bridge](spec89-rate-bridge.md#pair-review-and-spelling-merges-2026-10-02)).
+`result_pair` reviews resulted ([SPEC89 bridge](spec89-bridge.md#pair-review-and-spelling-merges-2026-10-02)).
 FPU/options, concurrency, software and reprint provenance remain unreviewed.

@@ -20,9 +20,7 @@ def supported_metrics(nodes, bridge_enabled, latent=True):
     groups = []
     for n in nodes:
         metrics = set(n["log_scores"])
-        anchored = n["target_kind"] in {"observed_rate", "observed_speed"} or (
-            bridge_enabled and n["target_kind"] == "estimated_89"
-        )
+        anchored = n["target_kind"] == "observed_speed" or (bridge_enabled and n["target_kind"] == "estimated_89")
         if anchored:
             supported |= metrics
         elif latent:
@@ -42,9 +40,7 @@ def matrices(nodes, metrics, bridge_enabled, latent=True):
     bymodel = defaultdict(list)
     for n in nodes:
         logs = {k: v for k, v in n["log_scores"].items() if k in index}
-        anchored = n["target_kind"] in {"observed_rate", "observed_speed"} or (
-            bridge_enabled and n["target_kind"] == "estimated_89"
-        )
+        anchored = n["target_kind"] == "observed_speed" or (bridge_enabled and n["target_kind"] == "estimated_89")
         if not logs or (not anchored and (not latent or len(logs) < 2)):
             continue
         w = metric_weights(logs)
@@ -71,9 +67,8 @@ def bridge_log(edges, exclude=None):
 
 
 def train(nodes, edges, bridge_enabled, exclude=None, latent=True):
-    kinds = {n["target_kind"] for n in nodes} & {"observed_rate", "observed_speed"}
-    if len(kinds) > 1:
-        raise ValueError("speed and rate anchors require separate fits")
+    if any(n["target_kind"] not in {"observed_speed", "estimated_89", "unanchored"} for n in nodes):
+        raise ValueError("the classical network anchors only on SPECint92 speed or bridged SPECint89")
     training = [n for n in nodes if n["model_key"] != exclude]
     metrics = supported_metrics(training, bridge_enabled, latent)
     if not metrics:

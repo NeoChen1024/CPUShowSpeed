@@ -133,9 +133,9 @@ scenario rather than an inferred OS/compiler correction.
 On 2026-09-27, the user selects **direct SPEC92 integer rate** as the primary
 classical target, with base and peak separate. Normalize the reported rate by
 `25500 / 604800` once, then fit the classical composite directly in VAXen.
-The implemented [rate composite experiment](../research/classic-rate-composite-fitting.md)
+The implemented [rate composite experiment](../research/classic-composite-fitting.md)
 provides pair/triple coefficients, model-bootstrap CI95 and matched single-score
-baselines. The subsequent [SPEC89 rate bridge experiment](../research/spec89-rate-bridge.md)
+baselines. The subsequent [SPEC89 rate bridge experiment](../research/spec89-bridge.md)
 adds explicitly estimated SPEC89 targets through two observed edges, native
 SPECint89→SPECint92 and same-column SPECint92→integer-rate VAXen. It propagates
 shared bridge uncertainty and separates holdout errors on observed rate from

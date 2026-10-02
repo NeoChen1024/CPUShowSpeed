@@ -84,28 +84,28 @@ flowchart TD
     int89_int92["int89-int92"]
     int92_rate_vaxen["int92-rate-vaxen"]
     rate92_unit --> int92_rate_vaxen
-    int89_rate_vaxen["int89-rate-vaxen"]
-    int89_int92 --> int89_rate_vaxen
-    int92_rate_vaxen --> int89_rate_vaxen
+    int89_speed_vaxen["int89-speed-vaxen"]
+    int89_int92 --> int89_speed_vaxen
+    int92_speed_vaxen --> int89_speed_vaxen
     classical_composite["classical-composite"]
-    classical_direct_rate["classical-direct-rate"]
-    classical_composite --> classical_direct_rate
-    rate92_unit --> classical_direct_rate
+    classical_direct_speed["classical-direct-speed"]
+    classical_composite --> classical_direct_speed
+    int92_speed_vaxen --> classical_direct_speed
     classical_via89["classical-via89"]
     classical_composite --> classical_via89
-    int89_rate_vaxen --> classical_via89
+    int89_speed_vaxen --> classical_via89
     classical_joint["classical-joint"]
     classical_composite --> classical_joint
-    rate92_unit --> classical_joint
-    int89_rate_vaxen --> classical_joint
+    int92_speed_vaxen --> classical_joint
+    int89_speed_vaxen --> classical_joint
     timing_reconstruction["timing-reconstruction"]
     classical_sparse_network["classical-sparse-network"]
-    rate92_unit --> classical_sparse_network
-    int89_rate_vaxen --> classical_sparse_network
+    int92_speed_vaxen --> classical_sparse_network
+    int89_speed_vaxen --> classical_sparse_network
     instruction_mix_joint_network["instruction-mix-joint-network"]
     classical_sparse_network --> instruction_mix_joint_network
-    rate92_unit --> instruction_mix_joint_network
-    int89_rate_vaxen --> instruction_mix_joint_network
+    int92_speed_vaxen --> instruction_mix_joint_network
+    int89_speed_vaxen --> instruction_mix_joint_network
     int92_speed_vaxen["int92-speed-vaxen"]
     speed_95_to_92["speed-95-to-92"]
     speed_95_vaxen["speed-95-vaxen"]
@@ -161,16 +161,16 @@ flowchart TD
 | [rate-2026-to-2017](../research/spec95-spec2026-rate-fitting.md) | rate-2026 → rate-2017 | empirical-fit; primary; implemented-conditional | none |
 | [rate-2026-vaxen](../research/spec95-spec2026-rate-fitting.md) | rate-2026 → vaxen | composition; primary; implemented-conditional | rate-2026-to-2017, rate-2017-vaxen |
 | [annual-rate](../research/annual-rate-vaxen.md) | rate-92, rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | aggregation; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen, rate-2026-vaxen |
-| [int89-int92](../research/spec89-rate-bridge.md) | int89 → int92 | empirical-fit; primary; implemented-conditional | none |
-| [int92-rate-vaxen](../research/spec89-rate-bridge.md) | int92 → vaxen | empirical-fit; primary; implemented-conditional | rate92-unit |
-| [int89-rate-vaxen](../research/spec89-rate-bridge.md) | int89 → vaxen | composition; primary; implemented-conditional | int89-int92, int92-rate-vaxen |
+| [int89-int92](../research/spec89-bridge.md) | int89 → int92 | empirical-fit; primary; implemented-conditional | none |
+| [int92-rate-vaxen](../research/spec89-bridge.md) | int92 → vaxen | empirical-fit; diagnostic; implemented-conditional | rate92-unit |
+| [int89-speed-vaxen](../research/spec89-bridge.md) | int89 → speed-vaxen | composition; primary; implemented-conditional | int89-int92, int92-speed-vaxen |
 | [classical-composite](../docs/methods.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → composite | definition; primary; defined | none |
-| [classical-direct-rate](../research/classic-rate-composite-fitting.md) | composite → vaxen | empirical-fit; primary; implemented-conditional | classical-composite, rate92-unit |
-| [classical-via89](../research/spec89-rate-bridge.md) | composite → vaxen | composition; primary; implemented-conditional | classical-composite, int89-rate-vaxen |
-| [classical-joint](../research/spec89-rate-bridge.md) | composite → vaxen | joint-fit; primary; implemented-conditional | classical-composite, rate92-unit, int89-rate-vaxen |
+| [classical-direct-speed](../research/classic-composite-fitting.md) | composite → speed-vaxen | empirical-fit; primary; implemented-conditional | classical-composite, int92-speed-vaxen |
+| [classical-via89](../research/spec89-bridge.md) | composite → speed-vaxen | composition; primary; implemented-conditional | classical-composite, int89-speed-vaxen |
+| [classical-joint](../research/spec89-bridge.md) | composite → speed-vaxen | joint-fit; primary; implemented-conditional | classical-composite, int92-speed-vaxen, int89-speed-vaxen |
 | [timing-reconstruction](../docs/methods.md) | gibson, adp, process-control, trace-timing → vaxen | planned; planned; planned | none |
-| [classical-sparse-network](../research/classic-network-fitting.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; primary; implemented-conditional | rate92-unit, int89-rate-vaxen |
-| [instruction-mix-joint-network](../research/instruction-mix-network.md) | gibson, adp, dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → vaxen | joint-fit; primary; implemented-conditional | classical-sparse-network, rate92-unit, int89-rate-vaxen |
+| [classical-sparse-network](../research/classic-network-fitting.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → speed-vaxen | joint-fit; primary; implemented-conditional | int92-speed-vaxen, int89-speed-vaxen |
+| [instruction-mix-joint-network](../research/instruction-mix-network.md) | gibson, adp, dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → speed-vaxen | joint-fit; primary; implemented-conditional | classical-sparse-network, int92-speed-vaxen, int89-speed-vaxen |
 | [int92-speed-vaxen](../research/spec-speed-chain.md) | int92 → speed-vaxen | definition; primary; defined | none |
 | [speed-95-to-92](../research/spec-speed-chain.md) | speed-95 → int92 | empirical-fit; primary; implemented-conditional | none |
 | [speed-95-vaxen](../research/spec-speed-chain.md) | speed-95 → speed-vaxen | composition; primary; implemented-conditional | speed-95-to-92, int92-speed-vaxen |
@@ -246,7 +246,7 @@ analysis from evidence, diagnostics and retired work.
 | [Chandra sample: *A General-Purpose Time-Sharing System*](../research/chandra-timesharing-sample.md) | evidence | current |
 | [Classic benchmark source acquisition](../research/classic-benchmark-collection.md) | evidence | current |
 | [Three-source PDF extraction completed](../research/classic-pdf-extraction.md) | evidence | current |
-| [Direct classical composites to SPEC92 integer-rate VAXen](../research/classic-rate-composite-fitting.md) | primary | current |
+| [Direct classical composites to SPEC92 integer-rate VAXen](../research/classic-composite-fitting.md) | primary | current |
 | [Additional classical/SPEC sources and prior work](../research/classic-spec-literature.md) | evidence | current |
 | [Classical benchmark / SPEC89-92 hardware overlap: first pass](../research/classic-spec-overlap.md) | diagnostic | current |
 | [CPU92–CPU95 integer-speed overlap audit](../research/cpu92-cpu95-bridge.md) | archive | retired |
@@ -267,7 +267,7 @@ analysis from evidence, diagnostics and retired work.
 | [Curated SPEC89 recovery snapshot](../research/spec89-curated-snapshot.md) | evidence | current |
 | [SPEC89 hardware introduction-year audit](../research/spec89-hardware-years.md) | evidence | current |
 | [Helman's 1991 SPEC89 worksheet derivative](../research/spec89-helman-worksheet.md) | evidence | current |
-| [SPECint89 bridge to SPEC92 rate and joint classical fitting](../research/spec89-rate-bridge.md) | primary | current |
+| [SPECint89 bridge to SPEC92 rate and joint classical fitting](../research/spec89-bridge.md) | primary | current |
 | [SPEC CPU92 integer-rate archive expansion](../research/spec92-archive-expansion.md) | evidence | current |
 | [First SPEC92 VAXen figure](../research/spec92-vaxen.md) | archive | retired |
 | [Exploratory SPEC CPU92–CPU2026 integer-rate fitting](../research/spec95-spec2026-rate-fitting.md) | primary | current |

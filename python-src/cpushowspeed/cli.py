@@ -11,8 +11,8 @@ from cpushowspeed.classic_mix import mix_inventory
 from cpushowspeed.classic_network import network_fit
 from cpushowspeed.classic_overlap import overlap_spec
 from cpushowspeed.classic_pdf import extract_pdf_tables
-from cpushowspeed.classic_predict import predict_rate
-from cpushowspeed.classical_fit import rate_composite_fit, spec89_rate_fit
+from cpushowspeed.classic_predict import predict_speed
+from cpushowspeed.classical_fit import composite_fit, spec89_fit
 from cpushowspeed.curated import data
 from cpushowspeed.curated_identity import extract_command
 from cpushowspeed.curated_system import import_vendors_command
@@ -45,7 +45,7 @@ def predict():
 
 
 predict.add_command(convert_rate_command, name="spec-rate")
-predict.add_command(predict_rate, name="classical")
+predict.add_command(predict_speed, name="classical")
 cli.add_command(predict)
 
 
@@ -75,11 +75,11 @@ cli.add_command(documents)
 classic.add_command(overlap_spec)
 classic.add_command(mix_inventory)
 classic.add_command(extract_pdf_tables)
-classic.add_command(rate_composite_fit)
-classic.add_command(spec89_rate_fit)
+classic.add_command(composite_fit)
+classic.add_command(spec89_fit)
 classic.add_command(network_fit)
 classic.add_command(mix_network_fit)
-classic.add_command(predict_rate)
+classic.add_command(predict_speed)
 classic.add_command(mix_evidence)
 classic.add_command(mix_bridge)
 cli.add_command(classic)

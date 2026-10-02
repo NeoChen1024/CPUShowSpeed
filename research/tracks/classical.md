@@ -1,7 +1,7 @@
 # Track 4 — Classical benchmarks and pre-SPEC extension
 
 The research goal is to obtain older hardware performance evidence and establish
-calibration pivots to the SPEC92 rate-VAXen scale. Benchmark publication date and
+calibration pivots to the speed-VAXen scale (SPECint92 = 1). Benchmark publication date and
 the age of tested hardware are distinct: classical workloads also ran on later
 machines, which provide overlap rather than pre-SPEC evidence by themselves.
 
@@ -9,9 +9,9 @@ machines, which provide overlap rather than pre-SPEC evidence by themselves.
 
 | Route | Owner | State |
 | --- | --- | --- |
-| Classical composite → observed SPEC92 rate | [Direct rate experiment](../classic-rate-composite-fitting.md) | Pairs/triples; base/peak separate |
-| Classical → SPECint89 → native SPECint92 → rate | [SPEC89 bridge experiment](../spec89-rate-bridge.md) | 89-only cohort; peak; sparse intersections |
-| Classical → observed plus inferred rate targets | [Joint experiment](../spec89-rate-bridge.md#joint-model-experiment) | Shared bridge uncertainty; separate validation by target class |
+| Classical composite → observed SPECint92 | [Direct composite experiment](../classic-composite-fitting.md) | Pairs/triples; base/peak separate |
+| Classical → SPECint89 → SPECint92 | [SPEC89 bridge experiment](../spec89-bridge.md) | 89-only cohort; peak; sparse intersections |
+| Classical → observed plus inferred SPECint92 targets | [Joint experiment](../spec89-bridge.md#joint-model-experiment) | Shared bridge uncertainty; separate validation by target class |
 
 Dhrystone 1.1/2.1, Whetstone native/SP/DP, and LINPACK n=100 are distinct inputs.
 Each pair/triple has fixed equal component weights and its own multiplier.

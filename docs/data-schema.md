@@ -388,8 +388,8 @@ changed.
      tracked snapshots are archived. Same-column cohorts and both SPEC89 bridge
      edges are unchanged; cross-source composites, the network (−8% to +4%) and the
      SPEC89 joint cohorts change. See the
-     [rate composites](../research/classic-rate-composite-fitting.md#changes-from-the-name-matched-fit-2026-10-02),
-     [SPEC89 bridge](../research/spec89-rate-bridge.md#changes-from-the-name-matched-run-2026-10-02)
+     [rate composites](../research/classic-composite-fitting.md#changes-from-the-name-matched-fit-2026-10-02),
+     [SPEC89 bridge](../research/spec89-bridge.md#changes-from-the-name-matched-run-2026-10-02)
      and [network](../research/classic-network-fitting.md#changes-from-the-name-matched-run-2026-10-02).
    - **5d** (done 2026-10-02): `plot timeline` (`vaxen-timeline-v3`) reads the
      database and takes every year from `result_chronology`. Its population is

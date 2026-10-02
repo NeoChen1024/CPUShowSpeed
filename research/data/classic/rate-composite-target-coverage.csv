@@ -1,5 +1,0 @@
-cohort,target,target_results,systems
-same_result,SPECrate_base_int92,0,0
-same_result,SPECrate_int92,48,24
-same_system,SPECrate_base_int92,14,13
-same_system,SPECrate_int92,70,25

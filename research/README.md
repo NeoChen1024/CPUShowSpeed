@@ -11,8 +11,8 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 | --- | --- | --- |
 | VAXen reference | [Unit and value types](tracks/vaxen.md) | [Methods](../docs/methods.md#vax-throughput-convention) |
 | SPEC92–2026 integer rate | [Modern chain](tracks/spec-rate.md) | [Rate calibration](spec95-spec2026-rate-fitting.md), [annual results](annual-rate-vaxen.md) |
-| SPEC89 scavenging | [Recovery and bridge](tracks/spec89.md) | [Two-edge bridge and joint fits](spec89-rate-bridge.md) |
-| Classical benchmarks | [Pre-SPEC extension](tracks/classical.md) | [Direct rate composites](classic-rate-composite-fitting.md), [indirect/joint experiment](spec89-rate-bridge.md) |
+| SPEC89 scavenging | [Recovery and bridge](tracks/spec89.md) | [Two-edge bridge and joint fits](spec89-bridge.md) |
+| Classical benchmarks | [Pre-SPEC extension](tracks/classical.md) | [Direct rate composites](classic-composite-fitting.md), [indirect/joint experiment](spec89-bridge.md) |
 
 ## Shared inputs and fitting update
 

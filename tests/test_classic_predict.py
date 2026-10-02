@@ -7,11 +7,10 @@ from pathlib import Path
 
 import numpy as np
 from click.testing import CliRunner
-from cpushowspeed.calibration import ANCHOR
 from cpushowspeed.classic_predict import (
     OPTIONS,
-    predict_rate,
     predict_scores,
+    predict_speed,
     write_prediction_manifest,
 )
 from cpushowspeed.research_io import write_csv
@@ -42,11 +41,11 @@ class PredictionTests(unittest.TestCase):
         write_csv(self.root / "coefficients.csv", rows)
         write_prediction_manifest(self.root, [dict(scenario="linear_clock", cohort="with_spec89", calibrated_metrics=self.metrics)])
 
-    def test_every_nonempty_subset_and_rate_unit(self):
+    def test_every_nonempty_subset_and_speed_unit(self):
         for n in range(1, 7):
             for subset in itertools.combinations(self.metrics, n):
                 r = predict_scores({m: 1.0 for m in subset}, self.root)
-                self.assertAlmostEqual(r["spec92_rate"] * ANCHOR, r["vaxen"])
+                self.assertEqual((r["target_metric"], r["unit"]), ("SPECint92", "speed-VAXen"))
                 self.assertAlmostEqual(sum(c["weight"] for c in r["components"]), 1)
                 self.assertEqual(len(r["components"]), n)
 
@@ -80,7 +79,7 @@ class PredictionTests(unittest.TestCase):
 
     def test_cli_raw_dhrystones_and_json(self):
         result = CliRunner().invoke(
-            predict_rate,
+            predict_speed,
             ["--dhrystone-1-1", "1757", "--dhrystone-unit", "dhrystones-per-second", "--calibration-dir", str(self.root)],
         )
         self.assertEqual(result.exit_code, 0, result.output)
@@ -90,7 +89,7 @@ class PredictionTests(unittest.TestCase):
         self.assertEqual(r["supplied_inputs"][0]["value"], 1757)
 
     def test_no_input_is_clean_cli_error(self):
-        result = CliRunner().invoke(predict_rate, ["--calibration-dir", str(self.root)])
+        result = CliRunner().invoke(predict_speed, ["--calibration-dir", str(self.root)])
         self.assertNotEqual(result.exit_code, 0)
         self.assertIn("at least one", result.output)
         self.assertNotIn("Traceback", result.output)

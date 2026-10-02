@@ -1,4 +1,4 @@
-"""Predict SPEC92 integer rate from arbitrary available classical measurements."""
+"""Predict speed-VAXen (SPECint92 peak) from arbitrary available classical measurements."""
 
 import hashlib
 import io
@@ -8,7 +8,6 @@ from pathlib import Path
 
 import click
 import numpy as np
-from cpushowspeed.calibration import ANCHOR
 from cpushowspeed.classic_network_model import metric_weights
 from cpushowspeed.rate_convert import _si
 
@@ -25,10 +24,10 @@ OPTIONS = {
 def write_prediction_manifest(output, runs):
     """Bind coefficient rows and draw column identities to their exact bytes."""
     manifest = dict(
-        schema_version=1,
-        target_metric="SPECrate_int92",
+        schema_version=2,
+        target_metric="SPECint92",
         mode="peak",
-        rate_to_vaxen=ANCHOR,
+        unit="speed-VAXen",
         files={
             name: hashlib.sha256((output / name).read_bytes()).hexdigest()
             for name in ("coefficients.csv", "coefficient-log-draws.npz")
@@ -66,12 +65,12 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
         raise ValueError("calibration bundle missing; run cpushowspeed classic network-fit first")
     manifest = json.loads(manifest_path.read_text())
     if (
-        manifest.get("schema_version") != 1
-        or manifest.get("target_metric") != "SPECrate_int92"
+        manifest.get("schema_version") != 2
+        or manifest.get("target_metric") != "SPECint92"
         or manifest.get("mode") != "peak"
-        or manifest.get("rate_to_vaxen") != ANCHOR
+        or manifest.get("unit") != "speed-VAXen"
     ):
-        raise ValueError("unsupported calibration bundle or rate normalization")
+        raise ValueError("unsupported calibration bundle; rebuild it with cpushowspeed classic network-fit")
     files = {}
     for name in ("coefficients.csv", "coefficient-log-draws.npz"):
         files[name] = (calibration_dir / name).read_bytes()
@@ -128,13 +127,11 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
     with np.errstate(over="raise", invalid="raise", under="ignore"):
         low, high = np.quantile(np.exp(draw_logs), [0.025, 0.975])
     low, high = positive(low, "CI lower bound"), positive(high, "CI upper bound")
-    rate = [positive(v / ANCHOR, "SPEC92 rate estimate") for v in (point, low, high)]
     return dict(
-        target_metric="SPECrate_int92",
+        target_metric="SPECint92",
         mode="peak",
+        unit="speed-VAXen",
         evidence_class="model_prediction_not_reported_SPEC_result",
-        spec92_rate=rate[0],
-        spec92_rate_ci95=dict(low=rate[1], high=rate[2]),
         vaxen=point,
         vaxen_ci95=dict(low=low, high=high),
         scenario=scenario,
@@ -150,7 +147,7 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
     )
 
 
-@click.command("predict-rate")
+@click.command("predict-speed")
 @click.option("--dhrystone-1-1", type=float, help="Dhrystone 1.1 score (DMIPS by default).")
 @click.option("--dhrystone-2-1", type=float, help="Dhrystone 2.1 score (DMIPS by default).")
 @click.option("--dhrystone-unit", type=click.Choice(["dmips", "dhrystones-per-second"]), default="dmips", show_default=True)
@@ -159,12 +156,12 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
 @click.option("--whetstone-native", type=float, help="Whetstone native precision in MWIPS.")
 @click.option("--linpack-100", type=float, help="LINPACK n=100 in MFLOPS.")
 @click.option("--scenario", type=click.Choice(["linear_clock", "reported_clock"]), default="linear_clock", show_default=True)
-@click.option("--cohort", type=click.Choice(["with_spec89", "rate_only"]), default="with_spec89", show_default=True)
+@click.option("--cohort", type=click.Choice(["with_spec89", "spec92_only"]), default="with_spec89", show_default=True)
 @click.option(
     "--calibration-dir", type=click.Path(path_type=Path), default=Path("data/derived/classic/network-fit"), show_default=True
 )
 @click.option("--format", "output_format", type=click.Choice(["json", "text"]), default="json", show_default=True)
-def predict_rate(
+def predict_speed(
     dhrystone_1_1,
     dhrystone_2_1,
     dhrystone_unit,
@@ -177,7 +174,7 @@ def predict_rate(
     calibration_dir,
     output_format,
 ):
-    """Predict peak SPEC92 integer rate and VAXen from any nonempty score subset.
+    """Predict speed-VAXen (SPECint92 peak, VAX-11/780 = 1) from any nonempty score subset.
 
     Inputs must describe the same target hardware/configuration. Native Whetstone
     is separate from SP. CI95 is shared calibration uncertainty, not an individual
@@ -201,11 +198,8 @@ def predict_rate(
     if output_format == "json":
         click.echo(json.dumps(result, sort_keys=True, allow_nan=False))
     else:
-        click.echo(f"Estimated SPECrate_int92 (peak): {result['spec92_rate']:.8g}")
-        ci = result["spec92_rate_ci95"]
-        click.echo(f"Calibration CI95: {ci['low']:.8g}–{ci['high']:.8g}")
         ci = result["vaxen_ci95"]
-        click.echo(f"Equivalent: {_si(result['vaxen'])} VAXen (CI95 {_si(ci['low'])}–{_si(ci['high'])})")
+        click.echo(f"Estimated SPECint92 (peak): {_si(result['vaxen'])} speed-VAXen (CI95 {_si(ci['low'])}–{_si(ci['high'])})")
         label = "metric" if len(scores) == 1 else "metrics"
         click.echo(f"Calibration: {scenario} / {cohort}; {len(scores)} {label}")
         click.echo("Conditional calibration CI95; not an individual-machine prediction interval.")

@@ -18,16 +18,16 @@ def node(key, scores, target=None, kind=None):
         model_key=key,
         log_scores={k: math.log(v) for k, v in scores.items()},
         target=target,
-        target_kind=kind or ("observed_rate" if target else "unanchored"),
+        target_kind=kind or ("observed_speed" if target else "unanchored"),
     )
 
 
 class NetworkTests(unittest.TestCase):
     def test_processor_upgrade_is_not_clock_scaled_into_an_anchor(self):
-        target = result("s", "sys:hp715", {"SPECrate_int92": 100}, clock=100, entity="cpu:7100lc", scope="spec:cpu92")
+        target = result("s", "sys:hp715", {"SPECint92": 100}, clock=100, entity="cpu:7100lc", scope="spec:cpu92")
         c = result("c", "sys:hp715", {"Dhrystone:v1.1_DMIPS": 10}, clock=33, entity="cpu:7100")
         nodes, _, audit = build([target, c], True)
-        self.assertFalse(any(n["target_kind"] == "observed_rate" for n in nodes))
+        self.assertFalse(any(n["target_kind"] == "observed_speed" for n in nodes))
         self.assertEqual(
             audit,
             [dict(target_result_id="s", classical_result_id="c", status="clock_conflict_processor_unverified", included=False)],

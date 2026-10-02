@@ -1,9 +1,15 @@
 # Sparse joint calibration of individual classical benchmarks
 
-Computed and reviewed: 2026-09-27; recomputed on resolved systems 2026-10-02
-(method `sparse-family-balanced-log-network-v2-resolved-systems`). This is an
-implemented **new experimental model**, alongside the earlier fixed-composite multiplier fits. It does not
-replace measured rate observations or the production SPEC rate converter.
+Computed and reviewed: 2026-09-27; recomputed on resolved systems 2026-10-02;
+re-anchored to speed-VAXen 2026-10-03 (method
+`sparse-family-balanced-log-network-v3-speed-anchor`). This is an implemented
+**experimental model**, alongside the fixed-composite multiplier fits. It does
+not replace measured SPEC observations or the SPEC chains.
+
+Its unit is **speed-VAXen**: one SPECint92 speed point, VAX-11/780 = 1 (see the
+[integer-speed chain](spec-speed-chain.md)). By the 2026-10-03 decision the
+historical routes are anchored to the single-job quantity; rate-VAXen is a
+separate quantity and is not an anchor here.
 
 ## Objective and model
 
@@ -18,9 +24,9 @@ For configuration node i and benchmark b, let `s_ib = ln(score_ib)` and
 
 `sum_i sum_b w_ib * (s_ib + alpha_b - theta_i)^2`.
 
-- Observed SPEC92 peak rate fixes theta to `ln(rate * 25500 / 604800)`.
+- Observed SPECint92 peak fixes theta to `ln(SPECint92)`.
 - In the SPEC89-enabled cohort, theta for an 89 node is the original log
-  SPECint89 plus the fitted two-edge bridge log multiplier.
+  SPECint89 plus the fitted int89_to_int92 bridge log multiplier.
 - A node without a target has a free theta, eliminated analytically as its
   weighted mean of `s + alpha`. Co-observations therefore constrain relative
   benchmark coefficients without inventing measured SPEC values.
@@ -42,7 +48,7 @@ vote. Source frequency and configuration ambiguity remain visible.
 
 For a target with available metrics A:
 
-`ln(estimated VAXen) = sum_b w_b * (ln(score_b) + alpha_b)`,
+`ln(estimated speed-VAXen) = sum_b w_b * (ln(score_b) + alpha_b)`,
 
 where weights sum to one, balancing families first. With one benchmark this
 reduces to `k_b * score_b`. With a missing or unidentifiable metric, a partial
@@ -51,9 +57,9 @@ prediction. Factor draws are combined jointly when calculating estimate CI95.
 
 ## Input construction and clock assumption
 
-The command reads the built database. Anchored nodes are target results: CPU92
-integer-rate results (Netlib, manufacturer and the reviewed DEC report columns)
-and, in the SPEC89-enabled cohort, SPECint89 results. A target's classical
+The command reads the built database. Anchored nodes are target results
+reporting SPECint92 peak (CPU92 disclosures, the reviewed DEC report columns and
+the SPEC89/92 bridge table) and, in the SPEC89-enabled cohort, SPECint89 results. A target's classical
 scores come from its own result (DEC columns) and from every classical result
 resolving to the same `system_id`; names are never compared. A single
 interpretable classical metric is enough for an anchor association.
@@ -61,9 +67,9 @@ interpretable classical metric is enough for an anchor association.
 Classical results not attached to any target become unanchored nodes, grouped by
 resolved system (or the result itself when unresolved), reported clock and
 explicit FPU-option labels. This grouping does not prove identical compiler,
-cache, memory or OS. Classical results reporting more than one CPU, rate values
-with a reported CPU count other than one, and reference-definition targets are
-excluded. Unknown same-column DEC concurrency is not invented as one. A result
+cache, memory or OS. Classical results reporting more than one CPU and reference-definition targets
+are excluded. A speed target is one job, so a multi-processor system's SPECint92
+remains an anchor. A result
 already attached to a target is not reused as an unanchored node. Holdout groups
 and bootstrap clusters are resolved systems, so all uses of one result share a fold.
 
@@ -83,16 +89,16 @@ necessary but does not establish equal cache, memory or compiler behavior.
 
 ### Clock decisions
 
-Of the 487 target/classical pairings, 48 are same-result, 132 clock-compatible,
-263 clock-unknown, 6 clock-conflicting and 21 reference-definition targets;
-reviews reject 14 and accept 3 unscaled (see
+Of the 590 target/classical pairings, 62 are same-result, 146 clock-compatible,
+322 clock-unknown, 18 clock-conflicting and 21 reference-definition targets;
+reviews reject 14 and accept 7 unscaled (see
 [pair review](#pair-review-and-spelling-merges-2026-10-02)). Under `linear_clock`,
-two conflicts are scaled and four stay excluded because the processors do not
+one conflict is scaled and 17 stay excluded because the processors do not
 resolve to one entity: processor changes such as PA-RISC 7100 versus 7150 or
-R4400 versus R10000 can no longer authorize scaling. The two scaled pairings are one Netlib Dhrystone row for the
-DEC 7000/610 at 182 MHz carried to two 200 MHz CPU92 rate results (factor 1.0989,
-four metric links). The two scenarios therefore differ by at most 0.03% in any
-coefficient. Every decision is recorded in `clock-audit.csv`.
+R4400 versus R10000 cannot authorize scaling. The scaled pairing is one Netlib
+Dhrystone row for the DEC 7000/610 at 182 MHz carried to a 200 MHz CPU92 result
+(factor 1.0989, two metric links). The two scenarios therefore differ by at
+most 0.01% in any coefficient. Every decision is recorded in `clock-audit.csv`.
 
 The earlier name-matched run scaled 25 metric links from 13 source rows with
 factors 0.6–1.3333. Most of those pairs relied on clock-suffixed model names or
@@ -109,82 +115,102 @@ sensitivity rule in this dataset. Full rows/qualifications are in
 
 ## Calibration, uncertainty and holdouts
 
-Both clock scenarios are fitted with rate targets only and with the additional
-SPEC89 estimated targets. The two-edge SPEC89 bridge is recomputed with the
-same system grouping and excluded-system rule. An `anchored_only` log-regression
+Both clock scenarios are fitted with SPECint92 targets only (`spec92_only`) and
+with the additional SPEC89 estimated targets (`with_spec89`). The SPEC89 bridge
+is recomputed with the same system grouping and excluded-system rule. An `anchored_only` log-regression
 control uses the same anchor population but omits unanchored coupling; it is
 not identical to the previous pair/triple model with a different cohort.
 
 10,000 bootstrap draws, seed 20260927, resample model groups jointly across the
 network and bridge edges. A shared model gets the same draw weight everywhere.
-Each draw refits both bridge factors and the network coefficients; rank-deficient
+Each draw refits the bridge factor and the network coefficients; rank-deficient
 draws are rejected and valid counts exported. CI95 is the linear percentile
 interval of coefficients or final VAXen estimates, not a prediction interval.
 It omits source bias, matching mistakes, within-model measurement uncertainty,
 unknown architecture transport error and uncertainty in the fixed clock exponent.
 
 All observations of each test model are removed from network training and from
-both bridge edges. Availability masks test each individual benchmark, each
+the bridge edge. Availability masks test each individual benchmark, each
 single family, each two-family subset and all available measurements. Observed
-rate errors are separate from agreement with inferred SPEC89 targets. The
+SPECint92 errors are separate from agreement with inferred SPEC89 targets. The
 primary statistic is the shared model-center relative-error P95.
 
 `complete_family_nodes` restricts comparisons to the same nodes containing all
 three families. Precision-specific single-benchmark masks can still have smaller
-coverage (native Whetstone has seven models, unlike the 19-model DP/SP cohort);
+coverage (native Whetstone has eight models, unlike the 32–33-model DP/SP cohort);
 counts accompany every row. Missing held-out coefficients and evaluated subset
 counts are recorded in `fold-coverage.csv`, not silently scored as success.
 
 ## Results
 
-Both scenarios identify all six coefficients. The rate-only network has 468
-informative systems; the SPEC89-enabled network has 486. These include
+Both scenarios identify all six coefficients. The SPECint92-only network has
+475 informative systems; the SPEC89-enabled network has 486. These include
 unanchored co-observations constraining relative scales and are **not** hundreds
-of measured SPEC anchor machines. The SPEC89-enabled run has 74 observed-rate
-nodes, 107 inferred-89 nodes and 1,151 unanchored nodes; one-metric unanchored
-nodes do not influence training.
+of measured SPEC anchor machines. The SPEC89-enabled run has 115 observed
+SPECint92 nodes, 107 inferred-89 nodes and 1,138 unanchored nodes; one-metric
+unanchored nodes do not influence training.
 
 For `linear_clock / with_spec89`:
 
-| Input metric | Score unit | VAXen coefficient k | Conditional factor CI95 |
+| Input metric | Score unit | speed-VAXen coefficient k | Conditional factor CI95 |
 | --- | --- | ---: | --- |
-| Dhrystone 1.1 | DMIPS | 0.63251 | 0.58505–0.68527 |
-| Dhrystone 2.1 | DMIPS | 0.67856 | 0.62928–0.73304 |
-| Whetstone native | MWIPS | 0.52517 | 0.42479–0.62905 |
-| Whetstone SP | MWIPS | 0.50084 | 0.42453–0.57576 |
-| Whetstone DP | MWIPS | 0.92958 | 0.76675–1.09691 |
-| LINPACK n=100 | MFLOPS | 3.01985 | 2.62306–3.50192 |
+| Dhrystone 1.1 | DMIPS | 0.64637 | 0.60166–0.69571 |
+| Dhrystone 2.1 | DMIPS | 0.69395 | 0.64729–0.74460 |
+| Whetstone native | MWIPS | 0.53598 | 0.43665–0.63815 |
+| Whetstone SP | MWIPS | 0.50932 | 0.43592–0.58183 |
+| Whetstone DP | MWIPS | 0.94877 | 0.78953–1.11298 |
+| LINPACK n=100 | MFLOPS | 3.06007 | 2.67257–3.52853 |
 
 For example, a Dhrystone **1.1** score of **10 DMIPS** maps to approximately
-6.325 VAXen using this experimental coefficient. Raw Dhrystones/second first
-need the declared /1757 DMIPS conversion; coefficients must not be applied to
-uninterpreted KIPS or printed unit labels with unresolved meaning.
+6.46 speed-VAXen (SPECint92 ≈ 6.5) using this experimental coefficient. Raw
+Dhrystones/second first need the declared /1757 DMIPS conversion; coefficients
+must not be applied to uninterpreted KIPS or printed unit labels with unresolved meaning.
 
-On the common 20-system, 59-node observed-rate holdout cohort with all three
+On the common 33-system, 78-node observed-SPECint92 holdout cohort with all three
 families (`linear_clock / with_spec89`):
 
 | Available inputs | Network P95 | Anchored-only control P95 |
 | --- | ---: | ---: |
-| Dhrystone 1.1 only | 21.75% | 18.92% |
-| Dhrystone 2.1 only | 37.00% | 29.48% |
-| Whetstone SP only (19 systems) | 39.45% | 27.54% |
-| Whetstone DP only | 57.72% | 48.11% |
-| LINPACK only | 23.27% | 25.76% |
-| Dhrystone + Whetstone families | 17.54% | 16.86% |
-| Dhrystone + LINPACK families | 15.59% | 17.47% |
-| Whetstone + LINPACK families | 18.07% | 12.36% |
-| All available measurements | 15.06% | 14.36% |
+| Dhrystone 1.1 only | 27.06% | 23.17% |
+| Dhrystone 2.1 only | 33.42% | 26.82% |
+| Whetstone SP only (32 systems) | 37.38% | 27.70% |
+| Whetstone DP only | 53.19% | 38.97% |
+| LINPACK only | 46.00% | 46.85% |
+| Dhrystone + Whetstone families | 23.68% | 22.59% |
+| Dhrystone + LINPACK families | 25.69% | 27.44% |
+| Whetstone + LINPACK families | 25.69% | 25.41% |
+| All available measurements | 17.07% | 20.55% |
 
 More available workloads do not guarantee a lower error, and the unanchored
 coupling does not uniformly beat the anchored-only control on this population.
 All combinations remain; the table is not a residual-based selection rule.
 
-The network emits full-availability estimates for **1,151 unanchored nodes on
-1,102 system keys** (an unresolved result counts as its own key). Of these, 1,116
-nodes have one benchmark family, 14 have two and 21 have three. They are not
-1,151 newly verified machines: configuration identity and source interpretation
-still need source-specific review. Their estimates are stored separately from
-observed SPEC targets.
+Over all 115 observed-SPECint92 nodes (59 systems), the all-available network
+P95 is 82.3%. On the 48 nodes that also carry a one-processor rate (the former
+anchor population) it is 31.5%; on 42 further DEC, multi-processor and
+speed-only nodes 37.8%; on the 25 bridge-table nodes 122.7%, dominated by IBM
+RS/6000 systems overpredicted by 78–129% because their LINPACK n=100 is high
+relative to integer speed, and by the HP 9000/J200 (−69%, see below).
+
+The network emits full-availability estimates for **1,138 unanchored nodes on
+1,091 system keys** (an unresolved result counts as its own key). Of these,
+1,113 nodes have one benchmark family, 12 have two and 13 have three. They are
+not 1,138 newly verified machines: configuration identity and source
+interpretation still need source-specific review. Their estimates are stored
+separately from observed SPEC targets.
+
+### Changes from the rate-anchored run (2026-10-03)
+
+The anchor changed from SPEC92 peak rate in rate-VAXen to SPECint92 peak in
+speed-VAXen, and the SPEC89 bridge from two edges (factor 0.95707) to one
+(0.96039). Observed anchors grew from 74 to 115 nodes (29 → 59 systems):
+SPECint92 is reported by DEC columns without a rate row, by multi-processor
+disclosures and by the bridge table. With SPEC89 targets, coefficients rise
+1.3–2.3% (Dhrystone 1.1 0.63251 → 0.64637, LINPACK 3.01985 → 3.06007); about
+0.35% of that is the removed rate edge. Without SPEC89 targets they fall
+1.0–2.2%, and LINPACK 12.7% (3.38392 → 2.95334), as the RS/6000 bridge-table
+results now anchor it. The inferred-89 nodes are unchanged (107 on 47 systems;
+P95 129.8% → 131.9%).
 
 ### Changes from the name-matched run (2026-10-02)
 
@@ -194,7 +220,7 @@ with_spec89` LINPACK 4.080 → 3.756, Dhrystone 1.1 0.647 → 0.660). Informativ
 groups rose from 457/467 to 466/475. Anchored rate systems fell from 32 to 28
 because names no longer link archive rate results to classical rows of other
 configurations, while SPEC89 anchors grew as in the
-[SPEC89 bridge](spec89-rate-bridge.md#changes-from-the-name-matched-run-2026-10-02).
+[SPEC89 bridge](spec89-bridge.md#changes-from-the-name-matched-run-2026-10-02).
 The all-available observed-rate holdout P95 improved (for example
 `reported_clock / rate_only` anchored-only 50.7% → 33.6%). Cohorts differ, so
 the improvement is not a controlled comparison.
@@ -207,7 +233,7 @@ merged duplicate systems (34 fewer system IDs), so IBM RS/6000 "RISC Sys/6000-NN
 and "Model NNN" rows, HP9000/J200 and others now pair with SPEC results of the
 same model. Five classical↔SPEC `result_pair` reviews reject the upgraded
 SPARCstation 2 Dhrystone rows and accept two clock-convention pairs unscaled
-(details in the [SPEC89 bridge](spec89-rate-bridge.md#pair-review-and-spelling-merges-2026-10-02)).
+(details in the [SPEC89 bridge](spec89-bridge.md#pair-review-and-spelling-merges-2026-10-02)).
 
 Nearly all of the change comes from the merges; the reviews move coefficients by
 at most 0.13%. With SPEC89 targets, coefficients fall 4–6% and LINPACK 19.6%
@@ -226,8 +252,8 @@ machine; both are source values and both remain.
 ## Predict from new measurements
 
 The [classical prediction CLI](../docs/classical-prediction.md) accepts any
-nonempty subset and uses joint coefficient draws to estimate peak SPEC92 rate
-and VAXen with conditional CI95. It does not refit the experiment per request.
+nonempty subset and uses joint coefficient draws to estimate speed-VAXen
+(SPECint92 peak) with conditional CI95. It does not refit the experiment per request.
 
 ## Reproduce and artifacts
 
@@ -247,7 +273,7 @@ select the built database, outputs and resampling. The default output is
 - `summary.csv`, `predictions.csv`, `fold-coverage.csv`: system-held-out masked
   evaluations; observed and inferred targets remain distinct.
 - `hardware-estimates.csv`: single, family, pair and available-input estimates
-  with conditional calibration intervals, never labelled measured rate scores.
+  with conditional calibration intervals, never labelled measured SPEC scores.
 - `coefficient-log-draws.npz`: correlated coefficient samples for combining inputs.
 - `availability-comparison.png/.svg`: joint/control errors on complete-family nodes.
 - `prediction-calibration.json`: hash-bound coefficient/draw bundle, with ordered metric columns for the predictor.
