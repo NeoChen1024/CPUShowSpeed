@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-29",
+  "updated": "2026-10-02",
   "path_base": "repository root",
   "conventions": {
     "fit": "y = k*x; zero intercept; grouped median log ratios then mean across groups",
@@ -567,6 +567,14 @@
       "owner": "research/hardware-year-evidence.md",
       "optional": false,
       "lineage": "Original bitsavers PDF pages plus identified trusted secondary web pages"
+    },
+    {
+      "id": "cpu-sku-chronology",
+      "path": "research/data/historical/cpu-sku-chronology.csv",
+      "kind": "secondary-date-catalog",
+      "owner": "research/cpu-sku-chronology.md",
+      "optional": false,
+      "lineage": "Cached Wikipedia Xeon/Opteron/Epyc table revisions; parsed SKU release dates with revision IDs and snapshot hashes"
     },
     {
       "id": "instruction-mix-study",
@@ -2253,6 +2261,13 @@
       "purpose": "Data contract"
     },
     {
+      "path": "docs/data-schema.md",
+      "title": "Data schema design",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Target data model design (not implemented): tables, identity resolution, date events, provenance and staged migration"
+    },
+    {
       "path": "docs/docir.md",
       "title": "Historical document IR (selected design)",
       "role": "guide",
@@ -2657,6 +2672,13 @@
       "role": "evidence",
       "status": "current",
       "purpose": "Candidate inventory, active OCR batch, source-checked date events and explicit unresolved dating"
+    },
+    {
+      "path": "research/cpu-sku-chronology.md",
+      "title": "CPU SKU release chronology",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Wikipedia SKU catalog for CPU-first timeline dates: matching rule, SPEC coverage, clock conflicts and spot checks"
     },
     {
       "path": "docs/timeline.md",

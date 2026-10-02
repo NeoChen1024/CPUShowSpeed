@@ -216,6 +216,7 @@ flowchart TD
 | maintenance-inventory | [guide](../research/cleanup-inventory.md) | `research/data/maintenance` | required in checkout |
 | historical-timeline-years | [guide](../research/historical-vaxen-timeline.md) | `research/data/historical/timeline-year-overrides.csv` | required in checkout |
 | hardware-date-events | [guide](../research/hardware-year-evidence.md) | `research/data/historical/hardware-date-evidence.csv` | required in checkout |
+| cpu-sku-chronology | [guide](../research/cpu-sku-chronology.md) | `research/data/historical/cpu-sku-chronology.csv` | required in checkout |
 | instruction-mix-study | [guide](../research/instruction-mix-bridge.md) | `research/data/classic/mix-study` | required in checkout |
 | dual-spec | [guide](../research/spec-dual-track.md) | `research/data/spec/dual-track` | required in checkout |
 | dual-classic | [guide](../research/spec-dual-track.md) | `research/data/classic/dual-track` | required in checkout |
@@ -236,6 +237,7 @@ analysis from evidence, diagnostics and retired work.
 | [Research roadmap](../docs/TODO.md) | guide | current |
 | [Classic benchmark source collection](../docs/classic-collection.md) | guide | current |
 | [Data contract](../docs/data-contract.md) | guide | current |
+| [Data schema design](../docs/data-schema.md) | guide | current |
 | [Historical document IR (selected design)](../docs/docir.md) | guide | current |
 | [Document extraction](../docs/document-extraction.md) | guide | current |
 | [Image Pool and captioning (selected design)](../docs/image-pool.md) | guide | current |
@@ -294,6 +296,7 @@ analysis from evidence, diagnostics and retired work.
 | [Predict SPEC92 integer rate from classical scores](../docs/classical-prediction.md) | guide | current |
 | [Classical and SPEC89 historical VAXen timeline](../research/historical-vaxen-timeline.md) | primary | current |
 | [Hardware-year evidence: bitsavers discovery and first review](../research/hardware-year-evidence.md) | evidence | current |
+| [CPU SKU release chronology](../research/cpu-sku-chronology.md) | evidence | current |
 | [Shared VAXen timeline](../docs/timeline.md) | guide | current |
 | [Unified historical and SPEC rate timeline](../research/unified-vaxen-timeline.md) | primary | current |
 | [Gibson and ADP evidence and calibration experiments](../research/instruction-mix-bridge.md) | primary | current |

@@ -8,6 +8,7 @@ or statistical methods as implemented results.
 - [Documentation index](docs/README.md) routes research and tool questions.
 - [Scope and metrics](docs/scope-and-metrics.md) defines the tracks and evidence classes.
 - [Data contract](docs/data-contract.md) defines how results and dates are interpreted.
+- [Data schema](docs/data-schema.md) owns the target data model and its migration.
 - [Methods](docs/methods.md) owns reconstruction and cross-benchmark methods.
 - [Sources](docs/sources.md) owns source selection and acquisition caveats.
 - [SPEC collection](docs/spec-collection.md) owns implemented result scraping commands.
@@ -25,9 +26,9 @@ or statistical methods as implemented results.
 - Keep stable data semantics, units, dates, assumptions, and limitations readable
   without inspecting code. Preserve per-result citations in data records.
 - Make source-checked archaeological performance values and related observations
-  script-readable when extraction begins. Defer the concrete schema and format
-  until historical PDF and KIPS work; Markdown findings provide context and
-  citations, not the sole canonical store for extracted numerical data.
+  script-readable. New tables follow the [data schema](docs/data-schema.md) design
+  rather than adding another per-pass layout; Markdown findings provide context
+  and citations, not the sole canonical store for extracted numerical data.
 - Record source-checked research findings in `research/`, with original
   document/page citations and the review date. Keep candidate leads in the
   watchlist and bulk OCR or debugging transcripts out of ordinary documents.

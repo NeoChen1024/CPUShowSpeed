@@ -103,6 +103,16 @@ Priority order:
 6. Build a machine/configuration-by-benchmark coverage table. Select calibration
    candidates and reconstruction targets from documented overlaps and gaps.
 
+Leads added 2026-10-02 (all unread; see the catalog's status and locator):
+VAX-relative ratings (DEC VUP via Datapro reports and a 1990 Digital RISC
+performance summary; AIM Suite III), dense vendor overlap tables (MIPS
+Performance Briefs), cross-vendor surveys in the local mirror (Auerbach 1966/1974,
+BRL Report 1115, Knight's Datamation index, Phister 1979), further mixes and
+multi-machine reports (Arbuckle, McMahon's Livermore report), and separate
+workload families (IBM LSPR, Khornerstone, MUSBUS). VUP, AIM and LSPR workloads
+are not SPEC92 rate; Nordhaus and Phister are external trend checks, not
+calibration targets.
+
 For each acquired file, retain retrieval date, original URL, immutable local
 path and hash; distinguish archive copies of one report from independent
 measurements. Capture publication date at its known precision. Archive.org,

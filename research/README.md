@@ -36,6 +36,7 @@ implementation stays archived; this experiment uses the current shared methods.
 - Classical: [source acquisition](classic-benchmark-collection.md),
   [prior work](classic-spec-literature.md), [DEC/SSCL/Tomari tables](classic-pdf-extraction.md),
   [initial hardware overlaps](classic-spec-overlap.md).
+- Chronology: [CPU SKU release catalog](cpu-sku-chronology.md) (built, not yet used by the timeline).
 - Earlier reconstruction: [mix/timing observations](early-benchmark-evidence.md),
   [OCR sample checks](chandra-timesharing-sample.md), [historical data contract](data/historical/README.md).
 

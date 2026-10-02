@@ -12,6 +12,7 @@ introduces the unit, zero-intercept fitting assumption and local setup.
 | [Scope and metrics](scope-and-metrics.md) | Speed/rate targets, historical routes and evidence classes |
 | [Shared input catalog](input-catalog.md) | Versioned JSONL, adapters and execution-count admission |
 | [Data contract](data-contract.md) | Identity, units, dates, validity and provenance |
+| [Data schema](data-schema.md) | Target tables, identity resolution and migration plan (design) |
 | [Methods](methods.md) | Estimation, normalization, uncertainty and research selection rules |
 | [Sources](sources.md) | Source selection, acquisition priorities and caveats |
 | [Machine watchlist](machine-watchlist.md) | Priority systems and variant-specific evidence needs |

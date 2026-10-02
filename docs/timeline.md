@@ -171,6 +171,8 @@ proxies and conservative exact CPU-text/clock matches from them. This establishe
 the precedence rule, not complete CPU chronology coverage. Unidentified CPU
 variants fall back to hardware/year evidence. Future reviewed entries can extend
 the mapping without modifying the scores or fitting.
+A parsed Wikipedia [CPU SKU catalog](../research/cpu-sku-chronology.md) exists but is
+not yet consulted; it will enter through the planned [data schema](data-schema.md).
 
 ## Measurement scope and uncertainty
 

@@ -1,7 +1,8 @@
 # Data contract
 
 This document defines interpretation requirements. Specific implemented formats are owned by the historical-observation contract
-and the [shared timeline schema](timeline.md#shared-record-contract).
+and the [shared timeline schema](timeline.md#shared-record-contract). The [data schema](data-schema.md)
+design defines where these interpretations will be stored as migration proceeds.
 
 The shared script input is the versioned JSONL [input catalog](input-catalog.md).
 Source-specific extraction formats remain provenance-bearing adapter inputs; they

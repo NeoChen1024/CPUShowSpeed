@@ -105,10 +105,19 @@ def historical_records(chronology):
     return rows
 
 
-def spec_records(chronology):
-    records, provenance = collect_annual_records(RAW, CPU92, CALIBRATION, FIT)
+def normalized_sources():
     normalized = {(item.generation, item.source_url): item for group in collect_integer(RAW, "rate").values() for item in group}
     normalized.update({("cpu92", item.source_url): item for item in collect_cpu92_rate(CPU92, RAW)})
+    return normalized
+
+
+def normalized_clocks():
+    return {k: item.clock_mhz for k, item in normalized_sources().items()}
+
+
+def spec_records(chronology):
+    records, provenance = collect_annual_records(RAW, CPU92, CALIBRATION, FIT)
+    normalized = normalized_sources()
 
     @lru_cache(None)
     def unit(gen, mode):

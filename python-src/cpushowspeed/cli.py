@@ -27,6 +27,7 @@ from cpushowspeed.classic_prepare import prepare_pairs, prepare_sources
 from cpushowspeed.classic_rate_composite import rate_composite_fit
 from cpushowspeed.classic_source_fit import source_pair_fit
 from cpushowspeed.classic_timeline import historical_timeline
+from cpushowspeed.cpu_chronology import cpu_chronology_command
 from cpushowspeed.documents import documents
 from cpushowspeed.factor_review import compare_factors
 from cpushowspeed.historical_candidates import year_candidates, year_evidence
@@ -71,6 +72,7 @@ cli.add_command(predict)
 
 
 spec.add_command(legacy92_rate_parse_command)
+research.add_command(cpu_chronology_command)
 cli.add_command(research)
 
 spec.add_command(audit_fields)
