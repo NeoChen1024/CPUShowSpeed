@@ -1,6 +1,7 @@
 # Data schema design
 
-Status: **design, 2026-10-02; not implemented.** This document owns the target
+Status: **step 1 (sources) implemented 2026-10-02; steps 2–5 designed, not implemented.**
+This document owns the target
 data model and its migration plan. Until each step lands, the current formats in
 the [data contract](data-contract.md), [input catalog](input-catalog.md),
 [timeline contract](timeline.md#shared-record-contract) and
@@ -60,9 +61,12 @@ All tables are declared in one JSON Schema file, `data/curated/schema.json`
 (columns, types, enums, required fields, foreign keys). Extracted tables use the same
 schemas and record their adapter code hash and raw input hash.
 
-Commands (planned): `cpushowspeed data validate` checks every curated and
-extracted table; `cpushowspeed data build` writes the SQLite database and
-materialized views; both are read-only with respect to curated data.
+`cpushowspeed data validate` checks every curated table against the schema, primary
+keys, sort order and date precision; `--check-local` also compares stored hashes
+with local stores and the document inventory. `cpushowspeed data build` validates
+and writes `data/derived/schema/cpushowspeed.sqlite` with a `_meta` table of schema
+and table hashes. Both are read-only with respect to curated data. Extracted
+tables and materialized views join them in later steps.
 
 ## Shared conventions
 
@@ -97,23 +101,34 @@ Empty means "not stated by the source". Where the reason matters, a sibling
 
 ### `source`
 
-One row per identified document, page revision or dataset snapshot.
+Implemented 2026-10-02 as `data/curated/source.jsonl`. One row per identified
+document, page revision or dataset snapshot; rows are sorted by `source_id`.
 
 | Column | Meaning |
 | --- | --- |
-| `source_id` | Primary key |
-| `kind` | `pdf`, `web_page`, `wiki_revision`, `spec_result`, `bulk_archive`, `usenet_post`, `book`, `dataset` |
-| `title`, `url`, `final_url` | Identity and retrieval address |
-| `local_path`, `hash_algo`, `hash` | Immutable local copy (BLAKE3 for mirror PDFs, SHA-256 for snapshots) |
-| `revision` | Wiki revision or document version |
-| `retrieved_on` | Retrieval date |
+| `source_id` | Primary key, `src:<slug>` |
+| `kind` | `pdf`, `postscript`, `web_page`, `wiki_revision`, `spec_result`, `text_file`, `program_source`, `archive_file`, `usenet_post`, `book`, `dataset` |
+| `title`, `url`, `final_url`, `alternate_urls` | Identity and retrieval addresses; `alternate_urls` keeps other spellings found in legacy registries |
+| `store`, `local_path` | Immutable local copy: `bitsavers_mirror` (relative to the document inventory root) or `repo` (relative to the repository) |
+| `hash_algo`, `hash` | BLAKE3 for mirror PDFs and classic blobs, SHA-256 for web snapshots and SPEC exports |
+| `revision`, `size_bytes`, `retrieved_on` | Wiki revision, byte size, retrieval date |
 | `date`, `date_precision` | Publication date of the source itself |
-| `provenance_class` | `primary_original`, `vendor`, `contemporary_secondary`, `modern_secondary`, `benchmark_org` |
-| `work_id` | Groups copies/reprints of one work, so they are not counted as independent |
-| `status` | `lead`, `acquired`, `partially_reviewed`, `reviewed` |
+| `provenance_class` | `primary_original`, `vendor`, `contemporary_secondary`, `modern_secondary`, `historical_museum`, `benchmark_org`, or `unclassified` when not established |
+| `provider`, `work_id`, `families`, `role` | Publisher, compilation lineage (so copies are not counted as independent), benchmark families, research role |
+| `acquisition_status` | `not_acquired`, `acquired`, `failed` |
+| `reviews` | List of `{status, scope, reviewed_on, origin}`; legacy review vocabularies are kept, not collapsed, because their scopes differ |
+| `note` | Next steps or limitations carried from legacy registries |
+| `legacy_ids` | `<registry>:<key>` identities the row was migrated from |
 
-The pre-SPEC lead catalog becomes `source` rows with `status = lead`; its
-`next_step` moves to a `note` column.
+`cpushowspeed data migrate-sources` performed the one-time migration from nine
+registries (classic acquisition/PDF/literature lists, the pre-SPEC lead catalog,
+the collect list, the CPU SKU sources, hardware date evidence, document reviews
+and historical observations), using archived web manifests only to add revision
+and cache paths. Claims merge on content hash or a shared legacy ID; a hashless
+claim joins the single hash group with its URL. Different hashes for one URL
+stay separate snapshots. Date evidence citing a SPEC bulk-export hash becomes one
+`dataset` source; its per-row disclosure URLs become date-event locators in step 3.
+The command refuses to overwrite an existing `source.jsonl` without `--force`.
 
 ### Entities
 
@@ -266,9 +281,12 @@ is removed. Parity means: identical fitted coefficients and intervals, identical
 timeline record IDs, VAXen values and selected years, unless a documented change
 is intended and listed in that step's report.
 
-1. **Sources and provenance.** Create `source`, convert all registries, add
-   `source_id` to existing curated rows. Parity: every old URL/hash maps to one
-   source; no product changes.
+1. **Sources and provenance** (done 2026-10-02). Create `source` and convert the
+   registries. Legacy rows are linked through `legacy_ids` rather than edited,
+   because later steps replace those tables. Parity checked: 925 legacy claims
+   map to 276 sources, each legacy ID to exactly one source, every legacy hash and
+   every cited URL is represented; 21 Wikipedia pages retrieved but never cited
+   (archived pass log) are intentionally not sources. No product changed.
 2. **Identity.** Create entity tables, `alias`, rule `sku-key-v1` and the
    `resolution` view. Port `cpu_key`, `_processor_key`/`_system_key`, regex
    overrides and mix aliases. Parity: current matches reproduced exactly; new
@@ -280,7 +298,7 @@ is intended and listed in that step's report.
 5. **Observations.** Emit `benchmark-observation-v2` with entity references; switch
    fitters and timeline to the built database; regenerate the input catalog from it.
 
-`data validate` and `data build` are implemented in step 1 and extended per step.
+`data validate` and `data build` were implemented in step 1 and are extended per step.
 
 The [schema cleanup inventory](../research/schema-cleanup-inventory.md) lists what
 each step retires and the order of independent cleanup.

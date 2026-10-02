@@ -11,3 +11,4 @@ markdownify==1.1.0
 python-dotenv>=1.1
 
 pyarrow>=18
+jsonschema>=4.18

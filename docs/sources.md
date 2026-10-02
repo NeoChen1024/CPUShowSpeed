@@ -63,7 +63,10 @@ integer rate; the historical source collection also retains floating-point and
 mixed workloads as context and possible validation evidence. Collection does not
 make them eligible for the integer-rate fit.
 
-The [script-readable source leads](data/early-benchmark-sources.csv) record
+Since 2026-10-02 the canonical source record is the curated
+[`source` table](../data/curated/source.jsonl) ([schema](data-schema.md#source));
+new leads are added there and the CSV below is frozen. The
+[script-readable source leads](data/early-benchmark-sources.csv) record
 source IDs, URLs, inspection status, locators and the next acquisition step.
 This is a discovery catalog, not a numerical performance dataset. `text_reviewed`
 means the web-accessible text was inspected; it does not mean a PDF was acquired,

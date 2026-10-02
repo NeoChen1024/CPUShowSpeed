@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NeoChen1024/CPUShowSpeed/data/curated/schema.json",
+  "title": "CPUShowSpeed curated tables",
+  "description": "Row schemas and table contracts for data/curated. Semantics are owned by docs/data-schema.md.",
+  "x-schema-version": "1.0.0",
+  "x-tables": {
+    "source": {
+      "file": "source.jsonl",
+      "row": "#/$defs/source",
+      "primary_key": "source_id",
+      "description": "One identified document, page revision or dataset snapshot."
+    }
+  },
+  "$defs": {
+    "iso_day": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    },
+    "partial_date": {
+      "description": "ISO text at its stated precision; quarters are YYYY-Qn.",
+      "type": "string",
+      "pattern": "^[0-9]{4}(-Q[1-4]|-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$"
+    },
+    "date_precision": {
+      "enum": [
+        "year",
+        "quarter",
+        "month",
+        "day"
+      ]
+    },
+    "hex64": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^src:[a-z0-9][a-z0-9._/@+-]*$"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "scope",
+        "origin"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "citation_only",
+            "search_excerpt_only",
+            "inventory_only",
+            "index_reviewed",
+            "text_reviewed",
+            "method_text_checked",
+            "thread_text_checked",
+            "relevant_section_checked",
+            "metadata_indexed_section_and_run_instructions_checked",
+            "selected_table_pages_rendered_and_layout_spot_checked",
+            "selected_pages_verified",
+            "date_scope_review_complete",
+            "machine_parsed_unreviewed"
+          ]
+        },
+        "scope": {
+          "description": "What the review covered, e.g. a page range, claim type or locator.",
+          "$ref": "#/$defs/text"
+        },
+        "reviewed_on": {
+          "$ref": "#/$defs/iso_day"
+        },
+        "origin": {
+          "description": "Legacy registry the review was migrated from.",
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "kind",
+        "provenance_class",
+        "acquisition_status",
+        "reviews",
+        "legacy_ids"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/source_id"
+        },
+        "kind": {
+          "enum": [
+            "pdf",
+            "postscript",
+            "web_page",
+            "wiki_revision",
+            "spec_result",
+            "text_file",
+            "program_source",
+            "archive_file",
+            "usenet_post",
+            "book",
+            "dataset"
+          ]
+        },
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "url": {
+          "$ref": "#/$defs/text"
+        },
+        "final_url": {
+          "$ref": "#/$defs/text"
+        },
+        "alternate_urls": {
+          "description": "Other spellings of the same source's address found in legacy registries.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "uniqueItems": true
+        },
+        "store": {
+          "description": "Root that local_path is relative to.",
+          "enum": [
+            "bitsavers_mirror",
+            "repo"
+          ]
+        },
+        "local_path": {
+          "$ref": "#/$defs/text"
+        },
+        "hash_algo": {
+          "enum": [
+            "blake3",
+            "sha256"
+          ]
+        },
+        "hash": {
+          "$ref": "#/$defs/hex64"
+        },
+        "revision": {
+          "$ref": "#/$defs/text"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retrieved_on": {
+          "$ref": "#/$defs/iso_day"
+        },
+        "date": {
+          "description": "Publication date of the source itself.",
+          "$ref": "#/$defs/partial_date"
+        },
+        "date_precision": {
+          "$ref": "#/$defs/date_precision"
+        },
+        "provenance_class": {
+          "enum": [
+            "primary_original",
+            "vendor",
+            "contemporary_secondary",
+            "modern_secondary",
+            "historical_museum",
+            "benchmark_org",
+            "unclassified"
+          ]
+        },
+        "provider": {
+          "$ref": "#/$defs/text"
+        },
+        "work_id": {
+          "description": "Groups sources from one work or compilation so they are not counted as independent.",
+          "$ref": "#/$defs/text"
+        },
+        "families": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "uniqueItems": true
+        },
+        "role": {
+          "$ref": "#/$defs/text"
+        },
+        "acquisition_status": {
+          "enum": [
+            "not_acquired",
+            "acquired",
+            "failed"
+          ]
+        },
+        "reviews": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/review"
+          }
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        },
+        "legacy_ids": {
+          "description": "Identities this row was migrated from, as <registry>:<key>.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "dependentRequired": {
+        "date": [
+          "date_precision"
+        ],
+        "date_precision": [
+          "date"
+        ],
+        "hash": [
+          "hash_algo"
+        ],
+        "hash_algo": [
+          "hash"
+        ],
+        "local_path": [
+          "store"
+        ],
+        "store": [
+          "local_path"
+        ]
+      }
+    }
+  }
+}

@@ -144,6 +144,7 @@ flowchart TD
 | historical-timeline-years | [guide](../research/historical-vaxen-timeline.md) | `research/data/historical/timeline-year-overrides.csv` | required in checkout |
 | hardware-date-events | [guide](../research/hardware-year-evidence.md) | `research/data/historical/hardware-date-evidence.csv` | required in checkout |
 | cpu-sku-chronology | [guide](../research/cpu-sku-chronology.md) | `research/data/historical/cpu-sku-chronology.csv` | required in checkout |
+| curated-sources | [guide](../docs/data-schema.md) | `data/curated/source.jsonl` | required in checkout |
 | instruction-mix-study | [guide](../research/instruction-mix-bridge.md) | `research/data/classic/mix-study` | required in checkout |
 | spec95-2000-overlap-audit | [guide](../research/spec95-spec2000-overlap-audit.md) | `research/data/spec/95-2000-audit` | required in checkout |
 

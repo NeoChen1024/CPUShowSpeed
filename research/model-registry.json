@@ -496,6 +496,14 @@
       "lineage": "Cached Wikipedia Xeon/Opteron/Epyc table revisions; parsed SKU release dates with revision IDs and snapshot hashes"
     },
     {
+      "id": "curated-sources",
+      "path": "data/curated/source.jsonl",
+      "kind": "curated-table",
+      "owner": "docs/data-schema.md",
+      "optional": false,
+      "lineage": "One-time merge of nine legacy source registries (2026-10-02); edited directly thereafter"
+    },
+    {
       "id": "instruction-mix-study",
       "path": "research/data/classic/mix-study",
       "kind": "reviewed-data",
