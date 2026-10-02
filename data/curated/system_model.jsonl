@@ -120,7 +120,6 @@
 {"system_id": "sys:cdc6600", "name": "CDC 6600", "vendor_ids": ["org:control-data"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:cdc6700", "name": "CDC 6700", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cdc7600", "name": "CDC 7600", "vendor_ids": ["org:control-data"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
-{"system_id": "sys:cdccyber74", "name": "CDC Cyber 74", "vendor_ids": ["org:control-data"], "note": "Curated 2026-10-02: a later, separately built version of the CDC 6600, kept apart from sys:cdc6600 (Museum Waalsdorp).", "source_ids": ["src:web/museumwaalsdorp.nl/en/museum-waalsdorp-2/history/comphistory/computer-history-th@87823e09"]}
 {"system_id": "sys:commodore64", "name": "Commodore 64", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cray2s", "name": "CRAY-2S", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cray3", "name": "Cray-3", "note": "Machine with curated date evidence; added 2026-10-02."}
@@ -135,8 +134,8 @@
 {"system_id": "sys:cyber1830", "name": "CDC Cyber 18-30", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cyber18family", "name": "CDC Cyber 18 family", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cyber72", "name": "CDC Cyber 72", "note": "Machine with curated date evidence; added 2026-10-02."}
-{"system_id": "sys:cyber73", "name": "CDC Cyber 73", "note": "Machine with curated date evidence; added 2026-10-02."}
-{"system_id": "sys:cyber74", "name": "CDC Cyber 74", "note": "Machine with curated date evidence; added 2026-10-02."}
+{"system_id": "sys:cyber73", "name": "CDC Cyber 73", "note": "Machine with curated date evidence; added 2026-10-02. An improved version of the CDC 6400 (Datapro 70C-263-11, July 1971), kept apart from sys:cdc6400.", "vendor_ids": ["org:control-data"], "source_ids": ["src:bitsavers/datapro/datapro_reports_70s-90s/cdc/70c-263-11_7107_cdc_cyber_70.pdf"]}
+{"system_id": "sys:cyber74", "name": "CDC Cyber 74", "note": "Machine with curated date evidence; added 2026-10-02. An improved version of the CDC 6600 (Datapro 70C-263-11, July 1971), kept apart from sys:cdc6600.", "vendor_ids": ["org:control-data"], "source_ids": ["src:bitsavers/datapro/datapro_reports_70s-90s/cdc/70c-263-11_7107_cdc_cyber_70.pdf", "src:web/museumwaalsdorp.nl/en/museum-waalsdorp-2/history/comphistory/computer-history-th@87823e09"]}
 {"system_id": "sys:cyber76", "name": "CDC Cyber 76", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cyber810a", "name": "CDC Cyber 810A", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cyber830a", "name": "CDC Cyber 830A", "note": "Machine with curated date evidence; added 2026-10-02."}

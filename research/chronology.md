@@ -119,6 +119,23 @@ result, the rate result of the same submission (`cpu2017-20211025-29879`), was n
 in the exclusion file; CPU dating already outranks its reported date, and it is
 listed as a `cpu_release_after_hardware_availability` finding.
 
+### CDC Cyber 73 and 74 (2026-10-02)
+
+Longbottom's Whetstone table labels two rows "Control Data 6400 (Cyber73)" and
+"Control Data 6600 (Cyber74)" with the year 1964. The system key dropped the
+parenthesis and merged them into the 6400 and 6600. They are now exact-text
+aliases of the separate models `sys:cyber73` and `sys:cyber74`. The
+[Datapro Cyber 70 report](https://bitsavers.org/pdf/datapro/datapro_reports_70s-90s/CDC/70C-263-11_7107_CDC_Cyber_70.pdf)
+(July 1971, PDF page 1, re-read 2026-10-02) says the Cyber 70 systems were
+"Introduced in March 1971" with deliveries scheduled for early 1972, and that
+Models 72, 73 and 74 are improved versions of the 6200, 6400 and 6600.
+[Museum Waalsdorp](https://www.museumwaalsdorp.nl/en/museum-waalsdorp-2/history/comphistory/computer-history-the-period-1978-1983/comp781e/)
+likewise calls the Cyber 74 a modern version of the 6600.
+
+The six results (Cyber 73: 2; Cyber 74: 4) move from 1964 to 1971 via the existing
+Datapro introduction events. Their 1964 table years are rejected in `review`, and
+the mix "CDC 6600" ↔ "6600 (Cyber74)" candidate link is rejected.
+
 ## Known gaps
 
 - LINPACK, Dhrystone, SPEC89 and DEC-report rows without a dated model stay unknown.
