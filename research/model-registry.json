@@ -2632,6 +2632,13 @@
       "purpose": "Static cleanup audit; no data removal or model changes"
     },
     {
+      "path": "research/schema-cleanup-inventory.md",
+      "title": "Schema-driven cleanup inventory",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Designs made obsolete by the data schema, their retirement steps and the port-or-freeze decision for diagnostics"
+    },
+    {
       "path": "research/data/maintenance/README.md",
       "title": "Maintenance inventory snapshot",
       "role": "diagnostic",

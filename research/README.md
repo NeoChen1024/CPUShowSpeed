@@ -79,6 +79,9 @@ not authorization to remove historical evidence.
 [Calibration cleanup implementation](calibration-cleanup.md) records the current
 shared statistics policy, preparation-only commands and parity checks.
 
+[Schema cleanup inventory](schema-cleanup-inventory.md) maps designs made obsolete
+by the [data schema](../docs/data-schema.md) to migration steps; nothing is removed by it.
+
 - [Unified historical and SPEC rate timeline](unified-vaxen-timeline.md): shared data and CPU-first interactive chronology.
 
 - [Gibson / ADP bridge preparation](instruction-mix-bridge.md): source definitions and classical-overlap review queue; no fitting yet.

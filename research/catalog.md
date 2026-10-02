@@ -290,6 +290,7 @@ analysis from evidence, diagnostics and retired work.
 | [Track 3 — SPEC89 scavenging and rate bridge](../research/tracks/spec89.md) | guide | current |
 | [Track 1 — VAXen reference and numeric types](../research/tracks/vaxen.md) | guide | current |
 | [Cleanup inventory](../research/cleanup-inventory.md) | diagnostic | current |
+| [Schema-driven cleanup inventory](../research/schema-cleanup-inventory.md) | evidence | current |
 | [Maintenance inventory snapshot](../research/data/maintenance/README.md) | diagnostic | current |
 | [Calibration cleanup and unified validation policy](../research/calibration-cleanup.md) | guide | current |
 | [Sparse joint calibration of individual classical benchmarks](../research/classic-network-fitting.md) | primary | current |

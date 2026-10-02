@@ -282,6 +282,9 @@ is intended and listed in that step's report.
 
 `data validate` and `data build` are implemented in step 1 and extended per step.
 
+The [schema cleanup inventory](../research/schema-cleanup-inventory.md) lists what
+each step retires and the order of independent cleanup.
+
 ## Decisions
 
 Decided 2026-10-02: curated tables live in `data/curated/`; the built database
