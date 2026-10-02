@@ -5,7 +5,6 @@ import json
 import os
 from pathlib import Path
 
-from cpushowspeed.classic_bridge_data import bridge_rows
 from cpushowspeed.research_io import read_csv
 
 
@@ -15,9 +14,9 @@ def build_lineage(output):
     models = {m["id"]: m for m in registry["models"]}
     edge_path = Path("research/data/spec/fitting/integer-rate-edge-intervals.csv")
     bridge_path = Path("research/data/classic/spec89-rate-bridge-summary.csv")
-    classic_path = Path("data/derived/classic/network-fit/coefficients.csv")
-    mix_path = Path("data/derived/classic/mix-network-fit/coefficients.csv")
-    inputs = [registry_path, edge_path, bridge_path, classic_path, mix_path]
+    evidence_path = Path("research/data/classic/spec89-rate-bridge-evidence.csv")
+    classic_path = Path("research/data/classic/network-coefficients.csv")
+    inputs = [registry_path, edge_path, bridge_path, evidence_path, classic_path]
     rates = read_csv(edge_path)
     bridge = read_csv(bridge_path)
     nodes = []
@@ -135,76 +134,37 @@ def build_lineage(output):
         details="Six metrics retain version, native/SP/DP precision and original units. Training uses measured rate anchors and optional SPEC89-derived anchors.",
     )
     node("classic-model", "Classical joint model", "Six per-benchmark coefficients", 465, 400, 275, 100, "model")
-    node(
-        "mixes",
-        "Gibson / ADP",
-        "CCTA/TSU KIPS · correlated inputs",
-        385,
-        645,
-        300,
-        75,
-        details="One InstructionMix family. Combined rows use equal log weights over available mixes; a single available score passes through.",
+    edge("classical-sparse-network", "classical", "classic-model", "Joint log fit", kind="joint")
+    edges[-1]["id"] = "classical-sparse-network:classical"
+    stats = [
+        dict(
+            metric=r["metric"],
+            factor=float(r["coefficient_vaxen_per_score"]),
+            low=float(r["factor_ci95_low"]),
+            high=float(r["factor_ci95_high"]),
+            unit="VAXen / " + r["score_unit"],
+        )
+        for r in read_csv(classic_path)
+        if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89"
+    ]
+    edge(
+        "classical-sparse-network",
+        "classic-model",
+        "vaxen",
+        "Weighted geometric estimate",
+        stats,
+        kind="joint",
+        details="linear_clock / with_spec89. Original classical observations and SPEC92 rate anchors are jointly fitted over resolved systems; predicted VAXen is not measured training evidence. CI95 retains shared draws and excludes model discrepancy.",
     )
-    node("mix-model", "Mix + classical joint model", "Shared model-bootstrap draws", 835, 535, 300, 105, "model")
-    for mid, src, dst, label in [
-        ("classical-sparse-network", "classical", "classic-model", "Joint log fit"),
-        ("instruction-mix-joint-network", "classical", "mix-model", "Classical evidence"),
-        ("instruction-mix-joint-network", "mixes", "mix-model", "Candidate links"),
-    ]:
-        edge(mid, src, dst, label, kind="candidate" if mid.startswith("instruction") else "joint")
-        edges[-1]["id"] = mid + ":" + src
-    for mid, nid, path in [
-        ("classical-sparse-network", "classic-model", classic_path),
-        ("instruction-mix-joint-network", "mix-model", mix_path),
-    ]:
-        stats = []
-        for r in read_csv(path):
-            if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89":
-                stats.append(
-                    dict(
-                        metric=r["metric"],
-                        factor=float(r["coefficient_vaxen_per_score"]),
-                        low=float(r.get("factor_ci95_low") or r["ci95_vaxen_low"]),
-                        high=float(r.get("factor_ci95_high") or r["ci95_vaxen_high"]),
-                        unit="VAXen / " + r["score_unit"],
-                    )
-                )
-        edge(
-            mid,
-            nid,
-            "vaxen",
-            "Weighted geometric estimate",
-            stats,
-            kind="joint",
-            details="linear_clock / with_spec89. Original classical observations and SPEC92 rate anchors are jointly fitted; predicted VAXen is not measured training evidence. CI95 retains shared draws and excludes model discrepancy.",
-        )
-    # Modern local predictors feed the older rate backbone, not their own rate node.
-    for n in nodes:
-        if n["y"] >= 240:
-            n["y"] += 100
-    for i, (new, old) in enumerate(zip(gens, gens[1:])):
-        nid = "predictor-" + new
-        node(nid, "Speed / joint", "SPEC" + new + " inputs", 25 + i * 190, 180, h=64, kind="predictor")
-        edges.append(
-            dict(
-                id=nid + "-to-rate",
-                source=nid,
-                target="rate-" + old,
-                label="Local predictor",
-                kind="fit",
-                stats=[],
-                formula="older rate = k × speed, or k × sqrt(speed × rate)",
-                status="conditional calibration",
-                details="Select this predictor to inspect speed-only, matched-cohort rate-only and joint models.",
-                owner=os.path.relpath(Path("research/spec-joint-tracks.md").resolve(), output.parent.resolve()),
-            )
-        )
     for n in nodes:
         touching = [e for e in edges if n["id"] in (e["source"], e["target"])]
         n["edge_ids"] = [e["id"] for e in touching]
-    legacy_path = Path("research/data/spec89/v2.0.0/csv/bridges89_92.csv")
-    inputs.append(legacy_path)
-    legacy = dict(rows=bridge_rows(legacy_path), fit=next(r for r in bridge if r["edge"] == "int89_to_int92"))
+    pairs = [
+        dict(model_key=r["model_key"], system=r["system"], SPECint89=r["x"], SPECint92=r["y_vaxen"], source_url=r["source_url"])
+        for r in read_csv(evidence_path)
+        if r["edge"] == "int89_to_int92"
+    ]
+    legacy = dict(rows=pairs, fit=next(r for r in bridge if r["edge"] == "int89_to_int92"))
     return dict(
         nodes=nodes,
         edges=edges,

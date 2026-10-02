@@ -1,14 +1,13 @@
 # Data schema design
 
 Status: **steps 1 (sources), 2/2b (processor and system identity), 3 (dates), 4
-(reviews), 5a (observations), 5b (SPEC rate fitters) and 5c (classical, SPEC89
-and mix fitters) implemented 2026-10-02; step 5d (timeline) not implemented.**
-This document owns the target
-data model and its migration plan. Until each step lands, the current formats in
-the [data contract](data-contract.md), [input catalog](input-catalog.md),
+(reviews), 5a (observations), 5b (SPEC rate fitters), 5c (classical, SPEC89
+and mix fitters) and 5d (timeline) implemented 2026-10-02.**
+This document owns the data model and its migration record. The
+[data contract](data-contract.md), [input catalog](input-catalog.md),
 [timeline contract](timeline.md#shared-record-contract) and
-[historical observation contract](../research/data/historical/README.md) remain
-authoritative. Interpretation rules (evidence classes, date meanings, parallelism
+[historical observation contract](../research/data/historical/README.md) own
+their remaining formats. Interpretation rules (evidence classes, date meanings, parallelism
 quantities) stay in the data contract; this document defines where they are stored.
 
 ## Why redesign
@@ -122,7 +121,7 @@ document, page revision or dataset snapshot; rows are sorted by `source_id`.
 | `note` | Next steps or limitations carried from legacy registries |
 | `legacy_ids` | `<registry>:<key>` identities the row was migrated from |
 
-`cpushowspeed data migrate-sources` performed the one-time migration from nine
+`cpushowspeed data migrate-sources` (removed in step 5d) performed the one-time migration from nine
 registries (classic acquisition/PDF/literature lists, the pre-SPEC lead catalog,
 the collect list, the CPU SKU sources, hardware date evidence, document reviews
 and historical observations), using archived web manifests only to add revision
@@ -304,9 +303,11 @@ The timeline and fitters then read these views instead of private lookups.
 | `submission-date-reviews.csv` | `review` (the file has no rows) |
 | `hardware-date-exclusions.csv` | `review` (`result_date` reject) + the conflicting launch date as a `date_event` |
 | `cpu92-cpu95-reviewed.csv` | `review` (`result_pair` accept) |
+| SPEC89 `hardware-introductions.csv` | `date_event` |
+| `year-document-reviews.csv` | `source` status |
 | `mix-candidate-aliases.csv` | `review` (`system_link` needs_review, one row per matched text pair) |
 | SPEC89 `aliases.csv` | `alias`, with the SPEC89 package adaptation in step 5 |
-| Input catalog `observations.jsonl` / `sources.jsonl` | Extracted `observation` v2 + `hardware_config` + SPEC date events |
+| Input catalog `observations.jsonl` / `sources.jsonl` (removed in step 5d) | Extracted `observation` v2 + `hardware_config` + SPEC date events |
 | `historical/observations.jsonl` | Curated `observation` v2 |
 | `year-*-changes.csv`, `*-targets.csv`, `*-open-leads.csv`, pass audits | Move to `research/data/archive/<pass>/` as historical pass logs |
 | Fit outputs, timeline Parquet | Unchanged products, gaining input-table hashes |
@@ -386,9 +387,19 @@ changed.
      [rate composites](../research/classic-rate-composite-fitting.md#changes-from-the-name-matched-fit-2026-10-02),
      [SPEC89 bridge](../research/spec89-rate-bridge.md#changes-from-the-name-matched-run-2026-10-02)
      and [network](../research/classic-network-fitting.md#changes-from-the-name-matched-run-2026-10-02).
-   - **5d**: the timeline reads `result_chronology`; the legacy date files, the
-     input catalog snapshot (`inputs build`, `--input-catalog`) and their readers
-     are deleted.
+   - **5d** (done 2026-10-02): `plot timeline` (`vaxen-timeline-v3`) reads the
+     database and takes every year from `result_chronology`. Its population is
+     SPEC92–2026 rate results through the saved rate chain, every one-processor
+     classical result through the saved network and the saved SPEC89 estimates:
+     60,633 records (58,813 / 1,641 / 179), of which 753 are undated. Mix rows,
+     speed/joint estimates and matching policies are dropped from the timeline. The
+     legacy date files above and the per-pass date tables are archived in
+     [`research/data/archive/legacy-dates/`](../research/data/archive/legacy-dates/README.md);
+     their readers (`cpu-chronology`, `documents year-candidates`/`year-evidence`,
+     `classic historical-timeline`), the one-time importers (`import-dates`,
+     `import-reviews`, `import-processors`, `migrate-sources`) and the input catalog
+     snapshot (`inputs build`, `--input-catalog`) are deleted. `data build` output
+     is unchanged by the deletion.
 
    By user decision (2026-10-02) step 5 is compared with the former products, not
    held to parity: identity and dates were redesigned in steps 2–4, so coefficients

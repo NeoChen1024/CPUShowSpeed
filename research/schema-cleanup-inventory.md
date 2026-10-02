@@ -60,6 +60,13 @@ stage: the classical, SPEC89 and mix fitters pair over resolved `system_id`
 (`classical_store`). `classic_overlap.model_key`/`relaxed_key` and
 `classic_timeline.date_key` remain only for the legacy timeline (step 5d).
 
+Step 5d (2026-10-02) deleted `classic_timeline` (with `date_key`),
+`timeline_dates`, `cpu_chronology` (its `sku_key` moved to `processor_keys`) and the
+speed-overlap timeline estimates. `spec_overlap._processor_key` (in the
+`spec_inputs` adapters and the CPU95/2000 audit) and `classic_overlap.model_key`
+(an extracted record field) remain as source-record fields, not as pairing or
+dating keys.
+
 Alias tables with their own formats (`classic/mix-candidate-aliases.csv`, SPEC89
 `aliases.csv`, `system_regex` in `timeline-year-overrides.csv` and
 `hardware-date-evidence.csv`) migrate to `alias`. The SPEC89 package keeps its
@@ -81,6 +88,8 @@ Status 2026-10-02: steps 3–4 converted all five, plus `spec/hardware-date-excl
 files are frozen (the curated tables are canonical) and are deleted with their
 readers when step 5 rebuilds the timeline and fitters; `mix-candidate-aliases.csv`
 was read by `classic_mix` until step 5c; now only the review import reads it.
+Step 5d (2026-10-02) removed those readers and the one-time importers and moved
+the date tables to [`data/archive/legacy-dates/`](data/archive/legacy-dates/README.md).
 
 ### 4. Date-pass logs (archive any time; no code consumer)
 
@@ -91,7 +100,8 @@ and `year-wikipedia-*`. No code reads them; only
 [hardware-year-evidence](hardware-year-evidence.md) and the
 [historical data README](data/historical/README.md) cite them. Moved on 2026-10-02 to
 `research/data/archive/date-passes/<pass>/`; both documents were updated.
-`year-document-reviews.csv` is excluded: `historical_candidates` reads it.
+`year-document-reviews.csv` was excluded while `historical_candidates` read it;
+it moved to `data/archive/legacy-dates/` with that module's removal in step 5d.
 
 ### 5. Observation formats (retire in step 5)
 
@@ -180,4 +190,4 @@ For every item:
 | Step 2 | Identity functions and alias tables; `spec_coverage` |
 | Steps 3–4 | Date tables and the four date-selection paths |
 | Steps 5a–5c, done 2026-10-02 | Observation table; SPEC rate, classical, SPEC89 and mix fitters on the database; name-pairing snapshots archived |
-| Step 5d | Timeline on `result_chronology`, historical aggregation, `--text-exports`, input catalog |
+| Step 5d, done 2026-10-02 | Timeline on `result_chronology`; historical aggregation, `--text-exports`, input catalog snapshot, date readers and importers removed; date tables archived |

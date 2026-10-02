@@ -1,37 +1,48 @@
 # Shared VAXen timeline
 
-**Status 2026-10-02: not reproducible.** `plot timeline` depends on the joint
-predictor, relaxed refit and instruction-mix network outputs, which were removed
-with the other diagnostic experiments. The timeline will be rebuilt on the
-[data schema](data-schema.md); until then this document describes the last
-working implementation, not current behavior.
+**Status 2026-10-02:** `plot timeline` is rebuilt on the built
+[data schema](data-schema.md) database (schema step 5d, `vaxen-timeline-v3`).
+The record population, chronology and reproduction steps below describe that
+current behavior. The page sections (interaction, pathway explorer, calculator)
+still describe the earlier page; parts depending on removed views are marked
+and may be broken until the frontend is reworked.
 
-Implemented on 2026-09-27. This document owns the combined view's data contract,
-date selection and interaction. It consumes saved calibration; it does not fit
-a new model. [Research results](../research/unified-vaxen-timeline.md) own the
-checked population and numerical comparisons.
+This document owns the combined view's data contract, date handling and
+interaction. It consumes saved calibration; it does not fit a model.
+[Research results](../research/unified-vaxen-timeline.md) own the checked
+population and numerical comparisons.
 
 ## Reproduce
 
 ```sh
-uv run cpushowspeed classic historical-timeline
-uv run cpushowspeed classic mix-network-fit
-uv run cpushowspeed bridge fit-joint-tracks
-uv run cpushowspeed bridge fit-joint-tracks --matching-policy ram-aliases
-uv run cpushowspeed bridge fit-joint-tracks --matching-policy cpu-clock
-uv run cpushowspeed bridge refit-95-2000
+uv run cpushowspeed data extract
+uv run cpushowspeed data build
+uv run cpushowspeed bridge fit-rate92-anchor
+uv run cpushowspeed bridge fit-rate-generations
+uv run cpushowspeed bridge bootstrap-rate-chain
+uv run cpushowspeed classic spec89-rate-fit
+uv run cpushowspeed classic network-fit
 uv run cpushowspeed plot timeline
 ```
 
-The first command regenerates the historical input from existing collected
-records and the saved classical prediction bundle. The second fits the separate
-mix experiment; it can be skipped when its saved inputs and outputs are current.
-Saved fitting bundles can be reused until their inputs or model code change.
-The timeline command validates the
-historical input hashes and modern factor provenance, imports the current
-SPEC92–SPEC2026 rate submissions, and applies saved `same_os` rate factors and
-pointwise calibration intervals. The timeline command performs no network
-collection or fitting.
+`data extract` and `data build` produce `data/derived/schema/cpushowspeed.sqlite`.
+The fitting commands regenerate the saved calibration the timeline reads; they
+can be skipped when their outputs are current (see each command's `--help`).
+`plot timeline --database PATH --output-dir DIR` reads only the database and
+saved calibration files, records their hashes in `audit.json`, and performs no
+network collection or fitting.
+
+The population is:
+
+| Route | Rows | Value |
+| --- | ---: | --- |
+| SPEC92–SPEC2026 integer rate | one per result and base/peak mode | Reported score × saved `same_os` rate-chain factor, with its pointwise CI95 |
+| Classical | one per one-processor (or unknown-count) classical result | Saved classical network prediction (`linear_clock / with_spec89`) |
+| SPEC89 | one per SPEC89 result in the saved estimates | Saved two-edge bridge estimate |
+
+On 2026-10-02 this gave 60,633 records: 58,813 SPEC rate, 1,641 classical and
+179 SPEC89. Instruction-mix rows, speed-derived and speed+rate joint estimates,
+and the selectable hardware-matching policies were removed in step 5d.
 
 ## Static website export
 
@@ -45,7 +56,7 @@ Initialize the pinned decoder once after cloning:
 
 ```sh
 git submodule update --init third-party/hyparquet third-party/fzstd
-uv run cpushowspeed --input-catalog data/derived/inputs plot timeline
+uv run cpushowspeed plot timeline
 darkhttpd . --addr 127.0.0.1 --port 8080 --hide-dotfiles
 # Open http://127.0.0.1:8080/data/derived/figures/timeline/vaxen-timeline.html
 ```
@@ -57,16 +68,13 @@ Outputs under `data/derived/figures/timeline/`:
 - `manifest.json`: `vaxen-web-parquet-v1`, artifact schemas, row counts, byte sizes,
   SHA-256 hashes (including inline code), decoder revisions and small lineage/calculator configuration.
 - `data/records.parquet`: complete shared research records, retaining the logical
-  `vaxen-timeline-v2` contract and all provenance.
+  `vaxen-timeline-v3` contract and all provenance.
 - `data/timeline.parquet`: the display projection used by the page.
 - Other `data/*.parquet`: large lineage/fit arrays and aligned calibration draws.
 - `audit.json`: population, date/mode/route counts, input/code hashes and the
   exported manifest hash.
 
-`--text-exports` additionally writes the legacy `records.jsonl` and `records.csv`.
-Without this flag, these two legacy files are removed from the output directory
-after a successful page export. Other research pipelines and immutable raw source
-JSON files are unchanged. Large derived outputs stay outside Git.
+JSONL/CSV text exports are no longer written. Large derived outputs stay outside Git.
 
 ### Parquet representation and loading
 
@@ -129,65 +137,52 @@ boxplot cohorts as CPU-year cohorts.
 
 ## Shared record contract
 
-Every record has `schema_version`, a unique `record_id`, and its original
-`configuration_id`. Modern IDs include generation, source result ID and mode;
-base and peak are separate rows. Different submissions are never deduplicated
-merely because system, CPU, year or scores agree.
+Every record has `schema_version`, a unique `record_id`, `result_id` (the
+database result) and `system_id` (the resolved system, when known). SPEC IDs are
+`spec:{generation}:{result}:{mode}`; base and peak are separate rows. Different
+submissions are never deduplicated merely because system, CPU, year or scores agree.
 
 | Fields | Meaning |
 | --- | --- |
 | `route`, `generation`, `mode` | Source/calibration route and original suite; historical estimates use `peak_proxy`, not an asserted peak measurement |
 | `system`, `cpu`, `clock_mhz`, `os`, `configuration` | Source identity; unknown fields remain empty |
-| `scores`, `reported_score`, `benchmark_id` | Original input scores; `scores` is an object in JSONL; historical composites have no single reported score |
-| `vaxen`, `ci95_low`, `ci95_high` | Existing estimate and conditional calibration interval, without per-core normalization |
+| `scores`, `reported_score`, `benchmark_id` | Original input scores; classical composites have no single reported score |
+| `vaxen`, `ci95_low`, `ci95_high` | Saved estimate and conditional calibration interval, without per-core normalization |
 | `calibration_route`, `calibration_scenario`, `uncertainty_scope` | How the estimate was obtained and what its interval covers |
-| `source_record_ids`, `benchmark_sources`, `source_url` | Original contributors and source links; historical repeated observations remain in their existing aggregation |
+| `source_record_ids`, `benchmark_sources`, `source_url` | Contributing observations and source links |
 | `observation_count`, `evidence_class` | Population meaning and evidence status |
 | `measurement_scope`, `chips`, `cores`, `threads_per_core`, `copies_min`, `copies_max`, `nodes` | Distinct reported quantities; unknown counts remain empty, never inferred from one another |
-| `date_candidates` | Array of typed CPU, hardware and result-publication chronology evidence, retaining date precision, source, method and notes |
-| `year`, `year_low`, `year_high`, `date_kind`, `date_method`, `date_sources`, `date_notes` | Selected display chronology and evidence span; unknown years are empty strings |
+| `year`, `year_low`, `year_high`, `date_kind`, `date_method`, `date_sources`, `date_candidates` | Copied from `result_chronology`; unknown years are empty strings |
+| `hardware_date`, `submission_date`, `test_date` | SPEC source months as reported, for display only |
 | `limitation` | Route-specific caveats, including sparse CPU2026 calibration |
 
-Some source-specific metadata fields are optional. Modern input-container hashes
-are retained; historical observations are recoverable from the original
-`observations.csv`, included in the unified audit's hashes. No benchmark score is
-changed when the date changes.
+No benchmark score is changed when a date changes.
 
-## CPU-first date selection
+## Date selection
 
-Selected research rule, 2026-09-27:
+The timeline selects no dates itself. Each row copies its result's
+`result_chronology` row from the database; the [data schema](data-schema.md)
+owns the precedence (reviewed CPU release, then hardware availability, then a
+reviewed fallback, then publication) and the [data contract](data-contract.md)
+owns date interpretation. `date_kind` is `cpu`, `hardware`, `fallback` or
+`unknown`; `date_method` is the chronology `basis`; `date_candidates` keeps every
+candidate event; and `date_sources` lists the URLs of the candidate events'
+sources. The year range is the evidence span, not a statistical interval.
 
-1. Reviewed CPU release year.
-2. Hardware model/configuration year if no CPU year is available.
-3. Submission-era year if neither is available **and it has not been rejected
-   as incompatible with the hardware's approximate era**. Current SPEC exports provide
-   result **publication** dates, which are explicitly marked as the proxy;
-   these are not claimed to be submission receipt dates.
-4. Unknown when none is supported.
-
-Keep every candidate, including the lower-priority hardware and publication
-alternatives. Within the selected kind, conflicting years retain their full
-range and use the integer-truncated median of distinct years for the display
-point. This range is not a statistical CI or a guaranteed configuration bound.
-A benchmark test date, article date, OCR date or download date does not silently
-become a submission date.
-
-The reviewed CPU mapping is currently limited to the existing 99 configuration
-proxies and conservative exact CPU-text/clock matches from them. This establishes
-the precedence rule, not complete CPU chronology coverage. Unidentified CPU
-variants fall back to hardware/year evidence. Future reviewed entries can extend
-the mapping without modifying the scores or fitting.
-A parsed Wikipedia [CPU SKU catalog](../research/cpu-sku-chronology.md) exists but is
-not yet consulted; it will enter through the planned [data schema](data-schema.md).
+On 2026-10-02: 44,899 rows were dated by CPU, 14,964 by hardware, 17 by a
+reviewed fallback and 753 were unknown. Unknown rows are concentrated in
+classical sources without model-year evidence (Netlib LINPACK alone has 573
+of its 815 rows unknown) and in SPEC89; they stay in the list but are not plotted.
+The former per-pass date tables are archived in
+[`research/data/archive/legacy-dates/`](../research/data/archive/legacy-dates/README.md).
 
 ## Measurement scope and uncertainty
 
 The research target is single-node / documented-system throughput, not single
 core. Preserve measured chip, core and copy counts separately. A historical
 one-processor calibration proxy does not turn into a newly measured multi-core
-result. The historical adapter retains its existing eligibility population;
-previously excluded multi-processor classical observations are not synthesized
-by this view.
+result. Classical results with a reported CPU count above one are excluded;
+the classical network is calibrated on one-processor targets.
 
 Some SPEC records name clusters. They remain included and source-linked; missing
 node counts are not guessed and these rows are not certified as single-node
@@ -195,7 +190,7 @@ measurements. No division by cores/chips/copies is performed.
 
 Each route retains its own CI95. CPU92 uses a defined reference scale; later
 SPEC modes use the corresponding saved chain interval. Classical and SPEC89
-proxies retain their saved intervals, both targeting the peak rate anchor.
+proxies use their saved intervals, both targeting the peak rate anchor.
 They appear when **Historical estimates** is selected, independently of the
 **SPEC Base** and **SPEC Peak** selections. All three score checkboxes default on.
 Intervals are not pooled across routes or advertised as machine prediction
@@ -219,12 +214,9 @@ intervals. CPU2026 remains explicitly exploratory.
   clicking outside, Close or Escape dismisses the selection.
 
 Offline JavaScript tests cover state transitions, sorting, scale-independent
-snapping, mode/route filters and time navigation. Full-population tests load actual Parquet through the pinned JavaScript decoder,
-including the 121,385-row display projection and unchanged 61,070-row baseline
-population. The 2026-09-29 migration was checked against the prior HTML payload,
-lineage and calculator values, and all complete records against the prior JSONL.
-The HTTP page was also loaded in the browser: the plot and 200-row first list page
-rendered successfully after Worker decoding.
+snapping, mode/route filters and time navigation. Full-population tests load actual Parquet through the pinned JavaScript decoder.
+Their hard-coded population counts (121,385 display rows, 61,070 baseline rows)
+predate step 5d and currently fail; they need updating with the frontend.
 
 ### Layout, numbers and overview brush
 
@@ -247,85 +239,25 @@ remains on the handles while drawing; arrow keys adjust them by one year.
 The former separate From/To range inputs have been removed. The implementation
 is local SVG/JavaScript; no pvvx script or external chart library is required.
 
-### Submission-era compatibility reviews
+### Removed views (2026-10-02)
 
-`research/data/historical/submission-date-reviews.csv` records per-result date
-reviews. Required fields are `record_id`, the exact `submission_date` being
-reviewed, `decision` (`accept`/`reject`), `reason`, evidence `source_url`, and
-`reviewed_on`. A stale date/identity or missing justification stops generation.
-A rejected submission candidate remains in `date_candidates` with `eligible=false`
-and its review; it cannot supply the plotted year. CPU and hardware dates retain
-priority. If no other date is usable, the result remains in the table as Unknown;
-its scores and calibration intervals are not removed or changed.
+Step 5d removed these views and their inputs; the page code that still expects
+them may be broken:
 
-No universal age-gap threshold has been selected. The veto is evidence-based
-and manually curated: e.g. a modern retrospective test cannot establish the
-introduction year of a machine known to belong to the 1960s. An absent review
-means unreviewed, not independently proven era compatibility. The initial review
-table is empty; this change introduces the gate without inventing exclusions.
-
-
-## Instruction-mix records
-
-The shared page also includes 360 positive CCTA/TSU source cells: 177 Gibson
-and 183 ADP. Each cell remains an individual comparison record with its original source ID; the
-routes `Gibson mix` and `ADP mix` can be independently filtered. Both use
-`generation=instruction_mix`, `mode=peak_proxy` and the saved
-`linear_clock/with_spec89` joint calibration. Other mix variants are not silently
-converted with these factors. Rebuilding the page does not fit a model.
-
-`reported_score`/`reported_unit` retain KIPS, `scores` identifies the exact metric,
-`mix_variant` identifies CCTA/TSU, and `estimated_specint92_rate` is explicitly a
-prediction. The usual VAXen/CI95, source, configuration and evidence fields use
-the shared contract. Word size, memory capacity and memory cycle are displayed
-as configuration details; memory-cycle time is not a CPU clock. Unknown CPU,
-processor count and software fields remain empty. Tooltip details identify the
-mix variant and conditional calibration; SI formatting applies to VAXen only.
-
-The adapter verifies upstream input hashes, exact source-score coverage and each
-prediction against the saved coefficient and joint draw intervals. It includes
-only one scenario, avoiding four copies of each observation. The original
-classical, SPEC89 and modern SPEC populations remain intact; mix estimates are
-correlated with the classical route and do not count as independent validation.
-
-CPU chronology keeps first priority. Reviewed matching hardware evidence and
-existing year overrides take precedence over the source's approximate model
-year. Superseded source dates remain in `date_candidates` with `eligible=false`;
-a reviewed unresolved-date rule does not silently restore that source year.
-There is no submission-date fallback for these source mix ratings. The current
-addition has 289 dated and 71 undated records, with earliest displayed year 1954.
-
-
-### Combined mix display (2026-09-28)
-
-The default visible mix route is `Combined mixes`: 186 source table rows,
-including 174 with both Gibson and ADP and 12 with only one positive rating.
-The individual Gibson/ADP routes remain available but are unchecked initially.
-Grouping uses source snapshot hash, source URL and original table-row identity,
-not machine name, so repeated model labels/configurations are not collapsed.
-
-For a two-mix row, `V = sqrt(k_G * G * k_A * A)`. Each aligned joint bootstrap
-replicate applies the same equal-log-weight formula, and its quantiles provide
-CI95. Independent resampling or multiplying marginal interval endpoints would
-lose the coefficient dependence and is not used. A single available rating
-passes through its original estimate and interval. This is display aggregation
-of the saved joint model, not another fit.
-
-Combined records retain both input scores and source IDs, `reported_score=null`
-and `mix_combination` describing the operation/fallback. There are 61,070 total
-exported view records: 60,524 original records, 360 individual mix views and 186
-combined views. With individual mix comparison routes disabled, 60,710 records
-are visible with all three score categories selected by default. These are
-view-record counts, not independent experiment counts. The combined route has
-149 dated and 37 undated rows.
-
+- Submission-era compatibility reviews: the review table is archived; reviewed
+  fallbacks now enter through the database chronology.
+- Instruction-mix records and the combined mix display: the mix network fit
+  and its timeline adapter were removed. The Gibson/ADP observations remain in
+  the database.
+- Selectable model estimates (From speed, From speed + rate) and the matching
+  policies (Strict, RAM + aliases, CPU + clock): the joint-track bundles they
+  read were removed earlier on 2026-10-02.
 
 ### Score selection and list navigation
 
 Scores uses independent SPEC Base, SPEC Peak and Historical estimates
 checkboxes, initially all selected. Clearing all three shows an empty view.
-Changes reset list pagination to the first page. Benchmark route defaults are
-unchanged: combined mixes on, individual mix comparison routes off.
+Changes reset list pagination to the first page.
 
 Both ends of the list use one List Browsing template and one shared event
 binding function. Each includes Sort list, Previous/Next, page/row counts and
@@ -345,17 +277,16 @@ an assumed CPU clock.
 
 The collapsed **How scores become VAXen** section contains an offline SVG graph
 and a details card. Nodes and edges use the model registry; saved rate edge
-intervals, SPEC89 bridge summaries and the two classical/mix coefficient bundles
-supply numerical details. Input hashes are recorded in the timeline audit.
+intervals, SPEC89 bridge summaries and the classical network coefficients supply numerical details. Input hashes are recorded in the timeline audit.
 The layout is fixed and scrolls horizontally on narrow screens; the information
 card moves below the graph. Arrow widths do not represent precision or sample
 size. Nodes/arrows support mouse clicks and Enter/Space activation.
 
-The SPEC rate chain displays the selected hardware-matching policy across all
-generations, with an additional `same_os` constraint for CPU95→92. The second SPEC89 edge already outputs
+The SPEC rate chain displays the saved rate-chain edges, with the `same_os`
+constraint for CPU95→92. The second SPEC89 edge already outputs
 VAXen (including rate normalization); no extra normalization is added visually.
-Classical and mix calibration occupy distinct joint-model blocks with shared
-classical inputs; they are not depicted as independent multiplier chains.
+Classical calibration is one network block; it is not depicted as an
+independent multiplier chain. Mix and speed-predictor nodes were removed in step 5d.
 
 Pin a timeline point, then choose **View calibration path**. Its route is
 highlighted, unrelated nodes fade, and the card shows the original input scores,
@@ -371,8 +302,8 @@ component intervals are not multiplied to reconstruct a record's interval;
 the trace shows the record's existing joint/chain interval. Research links are
 relative local paths; the explorer itself needs no network or external library.
 
-Validation covers complete-page route tracing for CPU2026, SPEC89, classical
-and combined mixes, metadata edge identities, path reset,
+Validation covers complete-page route tracing for CPU2026, SPEC89 and classical
+records (written before step 5d), metadata edge identities, path reset,
 existing timeline controls, and standalone SVG rendering. This is not a claim
 of full browser visual interaction verification.
 
@@ -385,73 +316,11 @@ graph. The VAXen node holds plural, SI-prefix and speed-versus-rate details.
 The main page keeps short scope, chronology and interaction hints; individual
 record qualifications remain in the tooltip and path details.
 
-## Selectable model estimates and matching (2026-09-29)
-
-The page has Estimates checkboxes: Rate baseline / historical (default),
-From speed, and From speed + rate. Matching is single-select: RAM + aliases
-(default), Strict, or CPU + clock (cross-platform). It applies across all five
-adjacent generation boundaries and within-generation predictor matching.
-RAM capacity may differ; reviewed lexical aliases are admitted without inventing
-new hardware equivalences. CPU + clock also permits different platforms at near-equal
-clocks; none of these policies scales scores by frequency. CPU/chip count, clock
-and known enabled-resource compatibility checks remain in force.
-The CPU92/95 rate backbone retains its same-OS admission rule. CPU92's defined
-scale and historical calibrations remain unchanged. Modern rate baselines use
-the saved whole-CPU-model bootstrap backbone for every policy. Full-route factors
-and CI95 change together. No fitting happens during timeline generation.
-
-All displayed values target rate-VAXen. From speed uses the throughput predictor,
-not the independent speed-to-speed SPECint92-equivalent series. Speed inputs
-cover available positive SPEC95–2026 published speed submissions; transfer beyond matched
-hardware remains unvalidated. Joint inputs are the admitted calibration-overlap
-speed/rate pairs, not every conceivable same-generation pair. Unsupported
-policy/generation combinations are hidden with an explicit unavailable count;
-there is no cross-policy fallback in the UI.
-
-Schema v2 adds `estimate_kind`, `variants` (policy to value/CI95 triple),
-`comparison_keys`, and, for joint estimates, `matched_rate_variants` and
-`input_configurations`. `value_scenario` identifies which saved variant supplies
-the exported scalar value: RAM + aliases when supported, otherwise an explicitly
-named available policy. The UI never falls back from an unavailable selection. Policies are alternative views of one record,
-not duplicate observations. All source IDs and raw scores remain available.
-
-A joint record is unique by speed source URL, rate source URL and base/peak mode.
-Multiple older calibration targets do not duplicate that record. Its date follows
-the rate input; both input configurations and dates remain in JSONL. Cross-platform
-pairs show both system names. The page separately counts unique source records,
-paired estimates and displayed points; the overview counts displayed points.
-
-Color retains the benchmark route. Circles indicate baseline, triangles speed
-predictions and diamonds joint predictions. Hover/pin shows related input
-estimates and highlights visible counterparts with connecting lines. The tooltip
-separately labels Rate-only — matched cohort, whose factor can differ from the
-full rate baseline. The compact tooltip lists up to eight related rows and
-reports when more exist; all observations remain available through the list.
-
-How scores become VAXen includes a generation-fit selector covering all five
-adjacent SPEC92–2026 bridges and the recovered SPEC89 → SPEC92 speed bridge.
-Modern views show the saved joint-experiment tuples with base/peak and predictor
-controls (speed, rate on the matched cohort, or their geometric mean), coefficient
-CI95, CPU/configuration counts and model-held-out P95. These matched-cohort plots
-are distinct from the full independent rate-chain fits shown in calibration details.
-SPEC89 uses its native integer-speed pairs and disables the inapplicable mode and
-predictor controls. Axes identify the actual native scores, not VAXen.
-Matching applies to every modern generation view. Coincident score tuples share
-a plotted mark with multiplicity in its title; source tuples remain in the raw
-evidence CSV and count toward the displayed tuple total. Unsupported fits retain their points without a fitted line.
-Selecting a generation arrow opens its comparison. Tracing speed/joint predictions
-also selects the corresponding generation, score mode and predictor, and highlights
-the local speed/joint node and its upstream rate path. The diagram includes a
-modern predictor row; the local input panel shows which speed/rate inputs are
-used, the local coefficient, and the full-route coefficient. Solid colors remain.
-
-Saved joint bundles must match their code, input and CSV hashes. `fit-joint-tracks`
-now exports `backbone-summary.csv` and coherent backbone draws for timeline use.
-Regenerate strict, RAM/alias and CPU-clock joint bundles before
-`plot timeline` when model code changes. Research scope and limits remain owned
-by the joint and relaxed fitting reports (removed 2026-10-02; see Git history).
-
 ## Offline VAXen calculator (2026-09-29)
+
+Since step 5d the calculator payload carries only the classical network; the
+Gibson/ADP inputs and the SPEC speed/joint predictors have no saved bundle and
+that part of the page is broken. The description below is the earlier behavior.
 
 The calculator sits after the timeline and before the list. Its form uses two
 columns with labels above controls, switching to one column when the calculator
@@ -517,20 +386,13 @@ pointer/parallel context is expandable. CPU92 uses a legacy CPU-count label.
 Topology conflicts are flagged without changing numbers. See the
 [source audit](../research/spec-resource-field-audit.md).
 
-### Shared inputs and execution guard
+### Shared inputs
 
-SPEC observations now use the shared input adapter or --input-catalog snapshot.
-The current fits exclude confirmed same-track constant-count conflicts by mode;
-unknown or nonuniform counts remain provisional. Source values are not rescaled.
-The resource-audit report describes the pre-guard snapshot; the
-[input/fitting review](../research/input-unification-fitting-review.md) owns active
-coefficient changes. Whole-route factors and intervals are regenerated together.
+SPEC and classical rows read the built database (`observation_store`,
+`classical_store`); the former input-catalog snapshot option was removed. Source
+values are not rescaled.
 
 Unparsed runtime declarations are displayed as their escaped source values
 (e.g. `64i`), rather than inferred integers or a missing-download label. The
 [data contract](data-contract.md#unparsed-runtime-declarations) defines these
 statuses and their conservative fitting treatment.
-
-The predictor input family uses one radio group: **Classical / Mixes** (default)
-and **SPEC speed / rate**. Changing the selection clears the previous prediction
-and marker while retaining entered scores; Reset retains the selected family.

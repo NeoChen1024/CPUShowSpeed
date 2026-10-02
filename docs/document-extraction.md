@@ -145,8 +145,9 @@ pages. All DocIR pages are published, and all 80 documents have completed the
 hardware-year review (full text screening plus 145 relevant original-page checks).
 This does not certify unrelated benchmark claims. Use `documents report` with
 `inventories/hardware-year-ocr.txt` for current completion.
-`documents year-candidates` selects candidates and `documents year-evidence`
-searches text layers and published DocIR for unreviewed date passages.
+The `documents year-candidates` and `year-evidence` helpers that selected and
+searched this batch read the former date tables and were removed on 2026-10-02;
+accepted results are date events in the [data schema](data-schema.md).
 
 The subsequent unknown-year expansion searches the other 545 candidate PDFs.
 `inventories/hardware-year-expansion-ocr.txt` selects 32 text-poor PDFs / 310 pages;

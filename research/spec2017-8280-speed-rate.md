@@ -40,7 +40,8 @@ The [SPEC CPU2017 result](https://www.spec.org/cpu2017/results/res2021q4/cpu2017
 for a Supermicro system with AMD EPYC 7313 reports `HW Avail = Aug-2019`, but
 [AMD dates the EPYC 7313 launch to 2021-03-15](https://www.amd.com/en/products/processors/server/epyc/7003-series/amd-epyc-7313.html).
 The tested configuration cannot have been generally available before its CPU.
-The [date audit row](data/spec/hardware-date-exclusions.csv) preserves both
+The [date audit row](data/archive/legacy-dates/spec/hardware-date-exclusions.csv)
+(archived 2026-10-02; now a `result_date` review) preserves both
 sources. The original SPEC scores and date remain in the derived per-result
 record CSV, marked `hardware_date_conflict`; that result is excluded from
 annual hardware-year boxes and leaders pending clarification. No replacement

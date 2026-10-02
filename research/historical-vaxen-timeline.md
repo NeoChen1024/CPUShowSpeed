@@ -1,15 +1,15 @@
 # Classical and SPEC89 historical VAXen timeline
 
-Reviewed: 2026-09-27. Status: implemented exploratory aggregation; hardware dating
-remains incomplete. This is the primary document for the combined historical plot.
+Reviewed: 2026-09-27. Status: **retired 2026-10-02** (schema step 5d). The
+`classic historical-timeline` command and its name-merged configurations were
+removed; `plot timeline` now emits one row per classical database result and
+takes dates from `result_chronology` (see the [timeline contract](../docs/timeline.md)).
+The dating evidence described here was converted into date events. Below is the
+2026-09-27 record of the former plot.
 
-## Reproduce
+## Former reproduction
 
-```sh
-uv run cpushowspeed classic historical-timeline
-```
-
-Requires the existing classical overlap records, source vectors, LINPACK text,
+The former command required the existing classical overlap records, source vectors, LINPACK text,
 SPEC89 bridge estimates, SPEC92/SPEC95 availability records and the verified
 `classic network-fit` prediction bundle. It performs no downloads or refitting.
 The output directory defaults to `data/derived/classic/historical-timeline/`.
@@ -29,7 +29,7 @@ Interactive exploration now uses only the [unified timeline](../docs/timeline.md
 generated with `cpushowspeed plot timeline`.
 
 Large outputs remain ignored. The small, reviewed dating rules are versioned in
-[data/historical/timeline-year-overrides.csv](data/historical/timeline-year-overrides.csv).
+[timeline-year-overrides.csv](data/archive/legacy-dates/historical/timeline-year-overrides.csv) (archived).
 
 ## Aggregation and numerical meaning
 

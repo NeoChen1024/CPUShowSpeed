@@ -11,7 +11,6 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from cpushowspeed import spec92_disclosure
-from cpushowspeed.input_context import ACTIVE_CATALOG, load_catalog
 from cpushowspeed.spec92_rate import BENCHMARKS, _checked
 from cpushowspeed.spec_disclosure import load_disclosure
 from cpushowspeed.spec_overlap import (
@@ -35,8 +34,6 @@ def _live_disclosure(raw_dir, url, generation, track):
 
 
 def disclosure(raw_dir, url, generation, track):
-    if ACTIVE_CATALOG.get() is not None:
-        return load_catalog(str(ACTIVE_CATALOG.get()))["_spec_index"][url, track]["execution"]
     return _live_disclosure(raw_dir, url, generation, track)
 
 
@@ -48,9 +45,6 @@ def enrich(result, raw_dir, track, raw_fields=None, execution=None):
 
 def collect_integer(raw_dir: Path, track: str) -> dict[str, list[Result]]:
     """Read either metric family without changing reported scores or rate defaults."""
-    if ACTIVE_CATALOG.get() is not None:
-        all_records = load_catalog(str(ACTIVE_CATALOG.get()))["spec"]
-        return {g: [Result(**r) for r in all_records if r["track"] == track and r["generation"] == g] for g in GENERATIONS}
     if track not in {"speed", "rate"}:
         raise ValueError(f"unknown SPEC track: {track}")
     results: dict[str, list[Result]] = {}
@@ -106,12 +100,6 @@ def collect_integer(raw_dir: Path, track: str) -> dict[str, list[Result]]:
 
 def collect_cpu92_rate(path: Path, raw_dir: Path | None = None) -> list[Result]:
     """Load checked Netlib-derived records, retaining each original detail URL/hash."""
-    if ACTIVE_CATALOG.get() is not None:
-        return [
-            Result(**r)
-            for r in load_catalog(str(ACTIVE_CATALOG.get()))["spec"]
-            if r["generation"] == "cpu92" and r["track"] == "rate"
-        ]
     results = []
     with path.open(newline="", encoding="utf-8") as stream:
         for row in csv.DictReader(stream):
@@ -227,16 +215,6 @@ def parse_speed92(document, url, digest):
 
 
 def collect_speed92(raw):
-    if ACTIVE_CATALOG.get() is not None:
-        records = [
-            Result(**r)
-            for r in load_catalog(str(ACTIVE_CATALOG.get()))["spec"]
-            if r["generation"] == "cpu92" and r["track"] == "speed"
-        ]
-        return records, [
-            dict(source_url=r.source_url, sha256=r.source_container_sha256, status="included", reason="validated_input_snapshot")
-            for r in records
-        ]
     records, audit = [], []
     summaries = {}
     for path in sorted((raw / "cpu92/netlib").glob("spec*.cint92.*.col0.html")):
@@ -277,8 +255,6 @@ def collect_speed92(raw):
 
 def runtime_fingerprint(raw):
     """Freeze discovery of missing as well as present detail files in a saved model."""
-    if ACTIVE_CATALOG.get() is not None:
-        return load_catalog(str(ACTIVE_CATALOG.get()))["_manifest"]["runtime_fingerprint"]
     entries = []
     for generation in (*GENERATIONS, "cpu92"):
         for path in sorted((Path(raw) / generation).rglob("*")):

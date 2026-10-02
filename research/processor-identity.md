@@ -16,8 +16,8 @@ uv run cpushowspeed data build              # adds processor_mention / processor
 
 `data import-processors` performed the one-time seed of `processor_family`,
 `processor_sku` and `alias` from the [CPU SKU catalogue](cpu-sku-chronology.md);
-the tables are curated data from then on and the command refuses to overwrite
-them without `--force`.
+the tables are curated data from then on. The command was removed on 2026-10-02
+(schema step 5d).
 
 ## Entities and rules
 

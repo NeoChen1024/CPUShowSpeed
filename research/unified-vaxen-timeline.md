@@ -1,14 +1,53 @@
 # Unified historical and SPEC rate timeline
 
-Reviewed: 2026-09-28. Status: implemented data adapters and offline interactive
-view; browser visual interaction not verified due to local-file navigation policy.
+Reviewed: 2026-10-02. Status: rebuilt on the schema database (step 5d,
+`vaxen-timeline-v3`); the page frontend was not updated and parts of it are
+broken (see below). Sections after the first describe earlier exports.
 
-The [shared contract and commands](../docs/timeline.md) combine existing historical
-estimates with the current eligible SPEC92–SPEC2026 integer-rate population.
-No fitting, score scaling by processor count, or residual-based source selection
-was performed.
+The [shared contract and commands](../docs/timeline.md) combine saved calibration
+with the database results. No fitting, score scaling by processor count, or
+residual-based source selection is performed.
 
-## Checked population
+## Database rebuild — 2026-10-02
+
+| Population | Records |
+| --- | ---: |
+| SPEC92–2026 rate, base | 32,027 |
+| SPEC92–2026 rate, peak | 26,786 |
+| Classical results (one processor or unknown count) | 1,641 |
+| SPEC89 bridge estimates | 179 |
+| **Total** | **60,633** |
+
+Dates come from `result_chronology`: 44,899 CPU, 14,964 hardware, 17 reviewed
+fallback and 753 unknown. The [compact audit](data/timeline/unified-audit.json)
+records the counts and input/code hashes.
+
+Checked against the 2026-09-29 export (121,365 records):
+
+- All 60,633 record IDs are unique; every VAXen value is positive and finite
+  and lies within its CI95.
+- The 58,813 SPEC rate record IDs and reported scores are identical. CPU92 VAXen
+  are identical; later generations change by one constant factor per generation
+  and mode (CPU95 +1.3%/+2.2%, CPU2000 +5.4%/+7.6%, CPU2006–2026 +2.0% to +6.5%,
+  peak/base), because the timeline now applies the saved
+  [integer rate chain](data/spec/fitting/integer-rate-chain-intervals.csv) instead
+  of the removed RAM + aliases joint-track backbone. 50,294 keep their year; the
+  moves are the CPU-first dating described in [chronology](chronology.md).
+- The 179 SPEC89 VAXen values are identical; 117 rows stay dated, 31 lose their
+  year and 31 remain undated. The losses are Longbottom catalogue spellings and
+  processor-family proxies that the step-3 chronology no longer matches
+  ([known gaps](chronology.md#known-gaps)).
+- Classical rows are now one per database result (1,641) instead of 1,532
+  configurations merged by source and name, so values are not compared row by
+  row; each is the saved network prediction for that result's scores.
+
+Removed from the export: 360 individual and 186 combined instruction-mix views,
+39,732 speed-derived and 20,584 speed+rate joint estimates, and the three matching
+policies. The page code still expects them; the offline JavaScript full-population
+test fails on its hard-coded counts, and the calculator's mix and SPEC
+speed/joint inputs have no saved bundle.
+
+## Checked population (2026-09-28)
 
 | Population | Records |
 | --- | ---: |
@@ -44,9 +83,8 @@ catalog is not yet complete. All alternate candidate dates are retained.
   populations, 200-row pagination, time zoom/reset, sorting and search. This is
   JavaScript state validation, not a substitute for browser rendering verification.
 
-Artifacts are under `data/derived/figures/timeline/`; the compact
-[checked audit snapshot](data/timeline/unified-audit.json) records the population
-and provenance. The full JSONL/CSV and offline HTML remain ignored generated files.
+Artifacts were under `data/derived/figures/timeline/`; the audit snapshot of this
+export was replaced on 2026-10-02. The full JSONL/CSV and offline HTML remain ignored generated files.
 
 Existing annual hardware-year statistics remain historical snapshots. Their
 cohorts should not be compared as if they already used the new CPU-first policy.
@@ -94,8 +132,8 @@ generation-arrow selection and the legacy controls. Other generation cohorts rem
 strict when SPEC95/CPU2000 matching is relaxed. Browser visual inspection remains unavailable: browser security policy
 rejects local file URLs. No alternate browser transport was used.
 
-The [timeline contract](../docs/timeline.md#selectable-model-estimates-and-matching-2026-09-29)
-owns the new schema and interaction details. Earlier counts above describe the
+These views were removed on 2026-10-02 (see the
+[timeline contract](../docs/timeline.md#removed-views-2026-10-02)). Earlier counts above describe the
 baseline population, which is still preserved.
 
 ## All-generation matching and calculator — 2026-09-29

@@ -132,7 +132,6 @@ flowchart TD
 | spec89-snapshot | [guide](../research/spec89-curated-snapshot.md) | `research/data/spec89/v2.0.0` | required in checkout |
 | spec89-native-bridge | [guide](../research/spec89-cpu92-scatter.md) | `research/data/spec89/v2.0.0/csv/bridges89_92.csv` | required in checkout |
 | spec89-supplement | [guide](../research/spec89-helman-worksheet.md) | `research/data/spec89/aggregate89-plus-helman.csv` | required in checkout |
-| spec89-years | [guide](../research/spec89-hardware-years.md) | `research/data/spec89/hardware-introductions.csv` | required in checkout |
 | classic-acquisition | [guide](../research/classic-benchmark-collection.md) | `research/data/classic/acquisition.csv` | required in checkout |
 | classic-pdf-tables | [guide](../research/classic-pdf-extraction.md) | `research/data/classic/pdf-extraction/tables.jsonl` | required in checkout |
 | classic-unit-policy | [guide](../docs/classic-collection.md) | `research/data/classic/pdf-extraction/interpretation-policy.json` | required in checkout |
@@ -140,9 +139,6 @@ flowchart TD
 | schema-database | [guide](../docs/data-schema.md) | `data/derived/schema/cpushowspeed.sqlite` | optional derived input |
 | historical-observations | [guide](../research/early-benchmark-evidence.md) | `research/data/historical` | required in checkout |
 | maintenance-inventory | [guide](../research/cleanup-inventory.md) | `research/data/maintenance` | required in checkout |
-| historical-timeline-years | [guide](../research/historical-vaxen-timeline.md) | `research/data/historical/timeline-year-overrides.csv` | required in checkout |
-| hardware-date-events | [guide](../research/hardware-year-evidence.md) | `research/data/historical/hardware-date-evidence.csv` | required in checkout |
-| cpu-sku-chronology | [guide](../research/cpu-sku-chronology.md) | `research/data/historical/cpu-sku-chronology.csv` | required in checkout |
 | curated-sources | [guide](../docs/data-schema.md) | `data/curated/source.jsonl` | required in checkout |
 | curated-processors | [guide](../research/processor-identity.md) | `data/curated/processor_sku.jsonl` | required in checkout |
 | processor-mentions | [guide](../research/processor-identity.md) | `data/derived/schema/processor-mentions.jsonl` | optional derived input |
@@ -193,6 +189,7 @@ analysis from evidence, diagnostics and retired work.
 | [Curated historical observations](../research/data/historical/README.md) | guide | current |
 | [Completed date-pass logs](../research/data/archive/date-passes/README.md) | archive | retired |
 | [Name-based classical/SPEC pairing snapshots](../research/data/archive/name-pairing/README.md) | archive | retired |
+| [Legacy date tables](../research/data/archive/legacy-dates/README.md) | archive | retired |
 | [Helman SPEC89 worksheet derivative (1991-03-31)](../research/data/spec89/helman-1991/README.md) | guide | current |
 | [SPEC89 recovered observations, curated v2.0.0 snapshot](../research/data/spec89/v2.0.0/README.md) | guide | current |
 | [First local early-benchmark evidence pass](../research/early-benchmark-evidence.md) | evidence | current |
@@ -218,7 +215,7 @@ analysis from evidence, diagnostics and retired work.
 | [Calibration cleanup and unified validation policy](../research/calibration-cleanup.md) | guide | current |
 | [Sparse joint calibration of individual classical benchmarks](../research/classic-network-fitting.md) | primary | current |
 | [Predict SPEC92 integer rate from classical scores](../docs/classical-prediction.md) | guide | current |
-| [Classical and SPEC89 historical VAXen timeline](../research/historical-vaxen-timeline.md) | primary | current |
+| [Classical and SPEC89 historical VAXen timeline](../research/historical-vaxen-timeline.md) | archive | retired |
 | [Hardware-year evidence: bitsavers discovery and first review](../research/hardware-year-evidence.md) | evidence | current |
 | [CPU SKU release chronology](../research/cpu-sku-chronology.md) | evidence | current |
 | [Processor identity resolution](../research/processor-identity.md) | evidence | current |

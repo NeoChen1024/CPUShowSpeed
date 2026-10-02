@@ -556,3 +556,4 @@ inventory**, while the classical route has data for conditional exploration.
 
 The joint mix → classical → SPEC92 rate network experiment (`classic mix-network-fit`)
 was removed on 2026-10-02 with the other diagnostic experiments; it remains in Git history.
+The timeline's mix rows, which used it, were removed in schema step 5d the same day.

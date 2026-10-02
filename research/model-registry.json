@@ -398,14 +398,6 @@
       "lineage": ""
     },
     {
-      "id": "spec89-years",
-      "path": "research/data/spec89/hardware-introductions.csv",
-      "kind": "reviewed-data",
-      "owner": "research/spec89-hardware-years.md",
-      "optional": false,
-      "lineage": ""
-    },
-    {
       "id": "classic-acquisition",
       "path": "research/data/classic/acquisition.csv",
       "kind": "manifest",
@@ -460,30 +452,6 @@
       "owner": "research/cleanup-inventory.md",
       "optional": false,
       "lineage": "Static inspection at d2e4329; not benchmark evidence"
-    },
-    {
-      "id": "historical-timeline-years",
-      "path": "research/data/historical/timeline-year-overrides.csv",
-      "kind": "reviewed-date-rules",
-      "owner": "research/historical-vaxen-timeline.md",
-      "optional": false,
-      "lineage": "Museum and manufacturer historical sources; model/family proxies explicitly qualified"
-    },
-    {
-      "id": "hardware-date-events",
-      "path": "research/data/historical/hardware-date-evidence.csv",
-      "kind": "reviewed-date-events",
-      "owner": "research/hardware-year-evidence.md",
-      "optional": false,
-      "lineage": "Original bitsavers PDF pages plus identified trusted secondary web pages"
-    },
-    {
-      "id": "cpu-sku-chronology",
-      "path": "research/data/historical/cpu-sku-chronology.csv",
-      "kind": "secondary-date-catalog",
-      "owner": "research/cpu-sku-chronology.md",
-      "optional": false,
-      "lineage": "Cached Wikipedia Xeon/Opteron/Epyc table revisions; parsed SKU release dates with revision IDs and snapshot hashes"
     },
     {
       "id": "curated-sources",
@@ -1544,6 +1512,13 @@
       "purpose": "Unchanged candidate-pair snapshots replaced by resolved-system pairing in schema step 5c; no code reads them"
     },
     {
+      "path": "research/data/archive/legacy-dates/README.md",
+      "title": "Legacy date tables",
+      "role": "archive",
+      "status": "retired",
+      "purpose": "Unchanged date tables converted into curated date events and reviews in schema steps 1–4; no code reads them"
+    },
+    {
       "path": "research/data/spec89/helman-1991/README.md",
       "title": "Helman SPEC89 worksheet derivative (1991-03-31)",
       "role": "guide",
@@ -1721,9 +1696,9 @@
     {
       "path": "research/historical-vaxen-timeline.md",
       "title": "Classical and SPEC89 historical VAXen timeline",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Source-preserving combined plot with estimated hardware years and unresolved-date queue"
+      "role": "archive",
+      "status": "retired",
+      "purpose": "Former combined classical/SPEC89 plot (retired 2026-10-02) and its dating notes"
     },
     {
       "path": "research/hardware-year-evidence.md",
@@ -1737,7 +1712,7 @@
       "title": "CPU SKU release chronology",
       "role": "evidence",
       "status": "current",
-      "purpose": "Wikipedia SKU catalog for CPU-first timeline dates: matching rule, SPEC coverage, clock conflicts and spot checks"
+      "purpose": "Wikipedia SKU catalog converted into processor_sku and date_event rows: matching rule, SPEC coverage, clock conflicts and spot checks"
     },
     {
       "path": "research/processor-identity.md",
@@ -1765,14 +1740,14 @@
       "title": "Shared VAXen timeline",
       "role": "guide",
       "status": "current",
-      "purpose": "Common records, CPU-first chronology, mode filters and time navigation"
+      "purpose": "Database-built timeline records, chronology from result_chronology, export and interaction"
     },
     {
       "path": "research/unified-vaxen-timeline.md",
       "title": "Unified historical and SPEC rate timeline",
       "role": "primary",
       "status": "current",
-      "purpose": "Checked merged population, route-specific CI and chronology coverage"
+      "purpose": "Database-built timeline population, comparison with the former export and removed views"
     },
     {
       "path": "research/instruction-mix-bridge.md",
@@ -1800,7 +1775,7 @@
       "title": "Shared benchmark input contract",
       "role": "guide",
       "status": "current",
-      "purpose": "Shared benchmark input contract"
+      "purpose": "Source adapters, the observation envelope and execution-count admission"
     },
     {
       "path": "research/input-unification-fitting-review.md",

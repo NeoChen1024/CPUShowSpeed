@@ -1,9 +1,10 @@
 # CPU SKU release chronology catalog
 
-Reviewed: 2026-10-02. Status: **catalog built and audited; not consulted by the
-timeline.** It will enter chronology selection through the
-[data schema](../docs/data-schema.md) migration (step 3), not through another
-private lookup. Current timeline years are unchanged.
+Reviewed: 2026-10-02. Status: **catalog built and audited; converted into
+`processor_sku` and `date_event` rows** of the [data schema](../docs/data-schema.md)
+(steps 2–3), through which the timeline now selects CPU release years. The
+generating command and its output files were retired on 2026-10-02 (step 5d);
+the sections below describe the catalog as built.
 
 ## Purpose
 
@@ -15,17 +16,13 @@ release dates for Intel Xeon, AMD Opteron and AMD Epyc, which together cover
 
 ## Reproduce
 
-```sh
-uv run cpushowspeed research cpu-chronology
-```
-
-Pages are fetched once through the Wikipedia API and cached with revision ID
+The former `research cpu-chronology` command (removed 2026-10-02) fetched pages once through the Wikipedia API and cached with revision ID
 and SHA-256 under `data/derived/documents/cpu-chronology/`; reruns parse the
-cache. `--refresh` refetches. The command writes the
-[catalog](data/historical/cpu-sku-chronology.csv),
-[source revisions](data/historical/cpu-sku-sources.json) and
-[audit](data/historical/cpu-sku-audit.json). Field definitions are in the
-[historical data README](data/historical/README.md#cpu-sku-chronology-catalog).
+cache. `--refresh` refetched. It wrote the
+[catalog](data/archive/legacy-dates/historical/cpu-sku-chronology.csv),
+[source revisions](data/archive/legacy-dates/historical/cpu-sku-sources.json) and
+[audit](data/archive/legacy-dates/historical/cpu-sku-audit.json), now archived. Field definitions are in the
+[archive README](data/archive/legacy-dates/README.md).
 
 Wikipedia is an accepted secondary source for model dates under the
 [hardware chronology policy](../docs/sources.md#hardware-chronology-sources).

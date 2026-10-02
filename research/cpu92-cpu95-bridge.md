@@ -3,7 +3,8 @@
 > Its fitting and plotting commands are retired; it is excluded from the active rate analysis.
 > Present-tense descriptions below refer to the original 2026-09-26 research snapshot.
 
-Reviewed on 2026-09-26. The [reviewed pair table](cpu92-cpu95-reviewed.csv)
+Reviewed on 2026-09-26. The [reviewed pair table](data/archive/legacy-dates/research/cpu92-cpu95-reviewed.csv)
+(archived 2026-10-02; now `result_pair` reviews)
 contains the original source URLs, published scores, and review notes in CSV.
 The reproducible audit command and its generated candidate table are documented
 in [SPEC collection](../docs/spec-collection.md). This is an overlap study, not

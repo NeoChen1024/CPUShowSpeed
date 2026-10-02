@@ -10,7 +10,7 @@ import click
 from blake3 import blake3
 from bs4 import BeautifulSoup
 from cpushowspeed.classic_values import numeric
-from cpushowspeed.research_io import code_hashes, read_csv, write_csv
+from cpushowspeed.research_io import code_hashes, write_csv
 
 RECORDS = Path("data/derived/classic/overlap-spec/classical-records.jsonl")
 SOURCE = Path("data/derived/classic/longbottom-cpumix-84dcf58a736b.json")

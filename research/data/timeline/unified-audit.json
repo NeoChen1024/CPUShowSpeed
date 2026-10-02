@@ -1,103 +1,92 @@
 {
-  "schema_version": "vaxen-timeline-v1",
+  "schema_version": "vaxen-timeline-v3",
+  "database": "data/derived/schema/cpushowspeed.sqlite",
+  "inputs_sha256": "5ce45f4059125f980a5e966edea8de8c3f5f84e961dfcde466596e149027fa7e",
+  "web_manifest_sha256": "c8e51bb6a26f6469d840896a198edb0917939edde0833ed45215299afe836996",
   "lineage_inputs_sha256": {
-    "research/model-registry.json": "b40b9c4d89017b1fab0fbe339573cdfaa73d29fba6d121a1e02691a3372e980d",
-    "research/data/spec/fitting/integer-rate-edge-intervals.csv": "c578227c262e91f7ad0c9e9a7b158c2209a7097b726f7e895ce65d95df89d2b1",
-    "research/data/classic/spec89-rate-bridge-summary.csv": "bdd910a163c71eff12b1aa90eef1e8b53bfe96e89846b9ef48c3d86726d26bc5",
-    "data/derived/classic/network-fit/coefficients.csv": "5b46d60fa8744c42b5edc261201eeeba0f544b75a38e11d4c4b3ff43b07d50c6",
-    "data/derived/classic/mix-network-fit/coefficients.csv": "2d80f5b5e5fc1cb3e85172f35b9eb238b0800442ebd3a060e599859e6a4b0d0f"
+    "research/model-registry.json": "5758b5cbb224258df75a199f0b779b26d973eff418fd3972f513e0fc45b2f0ce",
+    "research/data/spec/fitting/integer-rate-edge-intervals.csv": "da9bc031a120ff9f55fe945f012676310bd3b59a639f648c524b983ca6e01d51",
+    "research/data/classic/spec89-rate-bridge-summary.csv": "47944744b8b75370e9f096d221202f7cc6a0477b9f581407f7e24400098062bf",
+    "research/data/classic/spec89-rate-bridge-evidence.csv": "f3e19880479b4091041ae9be40729e202d15e5491993999bf5dec92de7a035de",
+    "research/data/classic/network-coefficients.csv": "42e98559ceb7f918aa8122a74daba3c1fe3f68eae2daaaabea942dc555fe480d",
+    "data/derived/classic/network-fit/coefficients.csv": "42e98559ceb7f918aa8122a74daba3c1fe3f68eae2daaaabea942dc555fe480d",
+    "data/derived/classic/network-fit/coefficient-log-draws.npz": "cbd165a078b3b58448d5e0db47e2367eb59d09fc9e2e8392b916bbd47cb60dbc",
+    "data/derived/classic/network-fit/prediction-calibration.json": "e1f4cbf87e263650a0d31ad9093fbf815db931b8c71d01de07f7e44d74ca34fc"
   },
-  "records": 61070,
-  "historical": 1711,
+  "records": 60633,
   "spec_rate": 58813,
-  "instruction_mix": 546,
-  "mix_provenance": {
-    "combined_records": 186,
-    "dual_mix_records": 174,
-    "records": 546,
-    "scenario": "linear_clock",
-    "cohort": "with_spec89",
-    "inputs_sha256": {
-      "data/derived/classic/mix-network-fit/audit.json": "cf1f24058c986f6212840f48d0d0e470b6335cf989d3e05e33afb42adbc32e2d",
-      "data/derived/classic/mix-network-fit/mix-estimates.csv": "7f37e0e8a6dc0b7f3f4ea5007d98e4b1dd37db7d5d624b271c7709cb8f8fa69b",
-      "data/derived/classic/mix-network-fit/coefficients.csv": "2d80f5b5e5fc1cb3e85172f35b9eb238b0800442ebd3a060e599859e6a4b0d0f",
-      "data/derived/classic/mix-network-fit/coefficient-log-draws.npz": "c424d93b883791ea0d0b840ddeef9835696918a01ae3335ccedac096aedfd543",
-      "data/derived/classic/mix-study/mix-records.csv": "cd19cc3b8d8d741322f0ae60ed03e8efee0251b4144122b7b7a6965042f55c10",
-      "research/data/historical/timeline-year-overrides.csv": "25608f53b10a5939a30f395dc41ca30c02abf5cf9078784ba2cc4a759c12facb",
-      "research/data/historical/hardware-date-evidence.csv": "7ededa97a53bb06e5455419cf7d1ea717e7cff813fc8b96e44676bc1e155492b"
-    }
-  },
+  "classical": 1641,
+  "spec89": 179,
   "dates": {
-    "hardware": 60439,
-    "cpu": 99,
-    "unknown": 528,
-    "submission": 4
+    "hardware": 14964,
+    "cpu": 44899,
+    "unknown": 753,
+    "fallback": 17
   },
   "routes": {
-    "classical": 1532,
-    "SPEC89": 179,
     "CPU92": 473,
     "CPU95": 1543,
-    "CPU2006": 29273,
     "CPU2000": 4787,
+    "CPU2006": 29273,
     "CPU2017": 22444,
     "CPU2026": 293,
-    "ADP mix": 183,
-    "Gibson mix": 177,
-    "Combined mixes": 186
+    "classical": 1641,
+    "SPEC89": 179
   },
   "modes": {
-    "peak_proxy": 2257,
     "base": 32027,
-    "peak": 26786
+    "peak": 26786,
+    "peak_proxy": 1820
   },
-  "year_priority": [
-    "cpu",
-    "hardware",
-    "submission",
-    "unknown"
-  ],
-  "submission_date_reviews": 0,
-  "rejected_submission_dates": 0,
-  "scenario": "same_os",
+  "chronology": "result_chronology: CPU release → hardware → reviewed fallback → publication",
+  "cpu92_anchor_software_policy": "same_os",
   "scope": "single-node/system throughput; no per-core normalization",
   "limitations": [
-    "Historical calibration remains one-processor-conditioned; excluded multi-processor historical scores were not synthesized.",
+    "Classical and SPEC89 rows are one-processor-conditioned estimates, not rate measurements.",
     "Reported cluster submissions retained; node count is not inferred from system name or chip count.",
-    "CPU chronology coverage is limited to reviewed identities. Copies missing from bulk remain blank."
+    "Copies missing from bulk exports remain blank."
   ],
-  "source_provenance": {
-    "raw_input_sha256": {
-      "cpu92_records": "4e51119deca48ac877be2589a2123c3b88edf7a9850425f6a6fa6829bfe2591a",
-      "cpu95": "7fe860a52e3f8c07939fc8f0bfd9b9a3783722ec00011fd4f692e05fccf013b9",
-      "cpu2000": "08d4487927f2c927ee25ad9ff0a7805af195d5a765ce00bd5c0602a79f43ca29",
-      "cpu2006": "b718ac9449e46ca74ae3074b2a289f04eda668583b9e81e4f0b9613a68c23822",
-      "cpu2017": "2fcc2fef3e589a8a7ffb813dabd7e41f60083940d85af8bc513becbbc6009c96",
-      "cpu2026": "65cd979b9bd348a0cbeb7a983b51fdba301411b61f6ccf0568c44d6a38602e58"
-    },
-    "factor_chain_sha256": "786985f31d26d900af95c199dea3c0a123cedcb184290e369a4bea2ca428bb92"
-  },
-  "inputs_sha256": {
-    "research/data/historical/cpu-release-proxies.csv": "c2425a7ecd2149b5e91d17de727e47a79c2b8d26c94c02c2ce6a23c8d5e841bc",
-    "research/data/historical/submission-date-reviews.csv": "3f2e179f7cb076780523808d12c88d674f5ffe70d152e30c0bfdb86d7a322005",
-    "data/derived/classic/historical-timeline/configurations.csv": "d370a0f727aa0479d4802892030e1628c28314a0aa7d4a6ec2b65d0bc8c0bf61",
-    "data/derived/classic/historical-timeline/observations.csv": "537dcd0579305e69044b5441f08322b2cbaa245909faa4b1a0e78a761683e8fd",
-    "research/data/spec/fitting/integer-rate-chain-intervals.csv": "8e26d7c9aee7e885be07df89a50683b4ccf36bc6ebe2fcf8cbfef2b50be90fb4",
-    "research/data/spec/fitting/integer-rate-cpu92-vaxen-chain.csv": "786985f31d26d900af95c199dea3c0a123cedcb184290e369a4bea2ca428bb92"
+  "inputs_file_sha256": {
+    "research/data/classic/spec89-rate-estimates.csv": "b0d62a16d02c10eaba06d559a23a0d400fd97d503c2948944f7154ad314f2880",
+    "data/derived/classic/network-fit/prediction-calibration.json": "e1f4cbf87e263650a0d31ad9093fbf815db931b8c71d01de07f7e44d74ca34fc",
+    "research/data/spec/fitting/integer-rate-chain-intervals.csv": "9223a0b85bb0e2f54bf87c2248ac96db03f214db8cc12ebfb868c6e2bdfb6723",
+    "research/data/spec/fitting/integer-rate-cpu92-vaxen-chain.csv": "bc84ae7bce141747a9f0438090c8ef98975fa2b12ce302d2e57ec56ff1fdc428"
   },
   "code_sha256": {
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/annual_rate.py": "f5b57c2714921e5779482a062f68119947f452c95e8b679432597500a1a0429a",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/annual_rate.py": "37573ec70d016b9ae1683d8c0ec864d35f98b35be87f499a0548043484a6e29c",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_timeline.py": "f1d96ad3264f4d15a17a4ab1a3b53abf31a81a3090c6c34ba1e0dfb553634c0a",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network_model.py": "27fd80246f3793ce68607c3880477ab175c5ec8813e8898e8cc5efd4fd93d384",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "169d21f7160d99a6b8414043ece5cf140c6861b7eda3ed89929792d1e11b7c9c",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pdf.py": "29e6cef097152568a8506667e8718fa35936ac37a9bbbf32198a8d99da5ef282",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_predict.py": "573f74c657e838807bd293b2adee2b21d78804407331ff6a8a922aa881655545",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_data.py": "0ac98d3fd4fe1e3c8abc2f4090205028dca534f18e78dc8ec520897361408d77",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "705524836fa50beeda35fb7da95c36ae1f3a9d8d35e2c5e519eb44735131f935",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated.py": "7c35f291c6a275114c1c1ed3c2ce7be017ab59692a1a94e4a5bdb214cddddfdb",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "660bbc0bb7c3cf04325e8feea3cec3446f0d271cb7db417038696115963e63f5",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_identity.py": "686c50a95e11fece1eba1410d399f073c988a43ab719f5a728702bd38b1de87c",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_observation.py": "2c5a6ea1276bddf0bb43b0458f1d4e7811fe7f3f2acf1ed608a7c9e2556699c3",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_review.py": "0c8578492eeee9982083ac4996dc18dd4bfef4932ddbc594a64e8ffbb76c9057",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_system.py": "94156a6b0aa461b1d9ed06be76cbdd5850de30b6aebea9097a437467be323e4d",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/execution_policy.py": "c482cf4e5cd22c52cb0246af192407851b48c3daec77cf2ec279175f9d65800d",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_catalog.py": "86f2bd98f3b5c8c6009452a5b0576d5cdf762ab91bff98569cc2d0cdd77d7712",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/observation_store.py": "ecc52313bb5b1975788ce07a30b3633aecaf8ce4a01b760bc903b345c1938347",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/processor_keys.py": "c3b6ec67bbf4df3abab32167ad8758882cef20eeb876152ab796daaa7907eb82",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/rate_convert.py": "68a78857870729098bd83715d9d3cab25b99364531a6e59ba7dbebac1c2740de",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/research_io.py": "7c5345d069e0b41d7bf28cee1efc517f2e804ebd910e1210de856822191cc4da",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec92_rate_fit.py": "8d0f7672460626985fa9b1f18d141231ff809dbeb29b2ae73f9057e6f8ca43b4",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_overlap.py": "7684f3ce543489dcddac0e3321a4c4ae82c5a4b8e449b04b542e9a1018578bab",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_fit.py": "ba701f040730cc262e45454217bf85b320d21a3a00813f2bf0c83cd16cee938b",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_inputs.py": "22258f1bda497f4c355e717512dbcbe5206228d6deb86d85273d30c1d1f5ce49",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_dates.py": "8475d39187e9fed08d4cba3fe10e3476d85b9d8c4ce6d37e80c922f1a2348dee",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_html.py": "40eddaf8cee527bfade2ac7bac56e877fe4ff3beaf32a87ef80b2cd30851553d",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_lineage.py": "38fca86c9fad12e4ac1434f31ed4b1c116a0dbc17585d0e70acd0d769698267f",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/unified_timeline.py": "22cebe3fc4f0b5d95ef141a4449a2a3d571cc7357f177ef3498deb857d8f08b8"
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec.py": "da3e5a3ba397edf740809d79a8c1708a4b16fc23b5032af17293c688b2f04fb1",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec92_rate.py": "3c71441f673f46596f15095446e809f4db780d86dc0771ebc5ab9468e30bde26",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec92_rate_fit.py": "833188b1bff2348505b28f9377987fc156d52e3352b8056c0254708db93641ef",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_disclosure.py": "3a763695dd4779c4d2d116046aae442566595af3b12cb9a7a76e22e39732a19c",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_inputs.py": "6b938a9992c75f6f1ad3eddb1e409f45d1a792b0dff111be334fb8590f09599e",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_overlap.py": "8b24a51786a8b239c62bfd54a7f3058b4dc38f50bd33f7508df94a2359eb0dea",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_fit.py": "6442ae290031fb6f4b271936671c5a539ebd413aeddae655ab3c8ec3ae422ff8",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/spec_rate_inputs.py": "59bacffa8dc665fffc8683efe96f300e9c541cbaf869ec1a1111efeebfbcc56e",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_calculator.py": "844dd5f0dbad74e6225b4170628f527aff5899905e075692751bd6bc59f0d05b",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_html.py": "b64175ac7e0fc8ed7a826e3e480837b3e680d296919b107d489dcceb3a56a56d",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_lineage.py": "74a731f0ac1bbe1536d66eafabb437e5f0508480fd09c322f6520dfa1eb438ea",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/timeline_storage.py": "7cce75ad1d0096cdb2efc3d6dd1653b36189716920e0d449a0629324fe6d9dcf",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/unified_timeline.py": "7a2cffdde85be18aa186f502b6c19c7dd8d2cc9c657e18bf7fbeb0201eb794cb"
   }
 }

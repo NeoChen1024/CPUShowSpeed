@@ -13,8 +13,9 @@ uv run cpushowspeed data build              # result_chronology and consistency_
 ```
 
 `data import-dates` performed the one-time conversion into `date_event.jsonl`
-(and the entities, aliases and sources it needs); it refuses to overwrite curated
-events without `--force`.
+(and the entities, aliases and sources it needs). The command was removed on
+2026-10-02 (schema step 5d) and its inputs archived in
+[`data/archive/legacy-dates/`](data/archive/legacy-dates/README.md).
 
 ## Date events
 

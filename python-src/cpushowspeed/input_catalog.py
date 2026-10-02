@@ -2,24 +2,20 @@
 
 import hashlib
 import json
-from dataclasses import asdict
 from pathlib import Path
 
 import click
 from cpushowspeed.benchmark_records import (
-    SCHEMA,
     classical_values,
     observation,
     spec_observations,
-    write_jsonl,
 )
 from cpushowspeed.classic_values import numeric
-from cpushowspeed.research_io import code_hashes, read_csv
+from cpushowspeed.research_io import read_csv
 from cpushowspeed.spec_inputs import (
     collect_cpu92_rate,
     collect_integer,
     collect_speed92,
-    runtime_fingerprint,
 )
 
 
@@ -169,49 +165,3 @@ def records(raw):
 @click.group("inputs")
 def inputs():
     """Shared source-normalization and input contracts."""
-
-
-@inputs.command("build")
-@click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
-@click.option("--output", type=click.Path(path_type=Path), default=Path("data/derived/inputs"), show_default=True)
-def build(raw_dir, output):
-    """Write one versioned JSONL observation format for active SPEC/classical/mix inputs."""
-    from cpushowspeed.input_context import ACTIVE_CATALOG
-
-    if ACTIVE_CATALOG.get() is not None:
-        raise click.ClickException("inputs build requires raw adapters, not --input-catalog")
-    count = write_jsonl(output / "observations.jsonl", records(raw_dir))
-    with (output / "sources.jsonl").open("w") as stream:
-
-        def emit(view, record):
-            stream.write(json.dumps(dict(schema_version="benchmark-source-v1", view=view, record=record), allow_nan=False) + "\n")
-
-        for track in ("rate", "speed"):
-            for group in collect_integer(raw_dir, track).values():
-                for r in group:
-                    emit("spec", asdict(r))
-        for r in collect_cpu92_rate(Path("data/derived/spec/cpu92-rate/cpu92-rate-records.csv"), raw_dir):
-            emit("spec", asdict(r))
-        for r in collect_speed92(raw_dir)[0]:
-            emit("spec", asdict(r))
-        for view, path in (
-            ("classical", "data/derived/classic/overlap-spec/classical-records.jsonl"),
-            ("historical-spec", "data/derived/classic/overlap-spec/spec-records.jsonl"),
-            ("vectors", "data/derived/classic/source-pair-fit/vectors.jsonl"),
-        ):
-            for line in Path(path).read_text().splitlines():
-                emit(view, json.loads(line))
-        for row in read_csv(Path("data/derived/classic/mix-study/mix-records.csv")):
-            emit("mixes", row)
-    audit = dict(
-        schema=SCHEMA,
-        runtime_fingerprint=runtime_fingerprint(raw_dir),
-        files_sha256={
-            name: hashlib.sha256((output / name).read_bytes()).hexdigest() for name in ("observations.jsonl", "sources.jsonl")
-        },
-        observations=count,
-        code_sha256=code_hashes(__file__),
-        qualification="Duplicate publications and source adapters remain distinct; do not pool blindly. Raw values retained; no fitting.",
-    )
-    (output / "audit.json").write_text(json.dumps(audit, indent=2) + "\n")
-    click.echo(json.dumps(dict(schema=SCHEMA, observations=count)))

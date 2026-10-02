@@ -9,135 +9,19 @@ A mention that fails a SKU rule keeps the failure reason even when a family
 pattern resolves it. Nothing is guessed beyond what the text supports.
 """
 
-import csv
 import fnmatch
 import json
 import re
 import sys
-from collections import Counter, defaultdict
-from datetime import date
+from collections import Counter
 from pathlib import Path
 
 import click
-from cpushowspeed.cpu_chronology import sku_key
-from cpushowspeed.curated import CURATED, read_table, sha256, validate, write_jsonl
+from cpushowspeed.curated import sha256, write_jsonl
+from cpushowspeed.processor_keys import sku_key
 
-CATALOG = Path("research/data/historical/cpu-sku-chronology.csv")
 MENTIONS = Path("data/derived/schema/processor-mentions.jsonl")
 RULES = {"sku-key-v1": sku_key}
-FAMILIES = {
-    "intel xeon": ("fam:intel-xeon", "Intel", "Xeon"),
-    "amd opteron": ("fam:amd-opteron", "AMD", "Opteron"),
-    "amd epyc": ("fam:amd-epyc", "AMD", "EPYC"),
-}
-# Family-level fallbacks seeded with the catalogue; further patterns are curated in alias.jsonl.
-FAMILY_PATTERNS = [
-    ("intel-xeon", "fam:intel-xeon", r"\bxeon\b"),
-    ("amd-opteron", "fam:amd-opteron", r"\bopteron\b"),
-    ("amd-epyc", "fam:amd-epyc", r"\bepyc\b"),
-]
-
-
-def slug(text):
-    return re.sub(r"-{2,}", "-", re.sub(r"[^a-z0-9.+]+", "-", text.lower())).strip("-")
-
-
-def display_model(key, family_name):
-    """'intel xeon gold 6130' -> 'Xeon Gold 6130'; model tokens keep their case."""
-    prefix = next(p for p in FAMILIES if key.startswith(p + " "))
-    rest = key[len(prefix) + 1 :].split(" ")
-    tokens = [
-        (
-            t.upper()
-            if t.isalpha() and len(t) <= 2
-            else t.capitalize() if t.isalpha() else t if re.fullmatch(r"v\d+", t) else t[:1].upper() + t[1:]
-        )
-        for t in rest
-    ]
-    return " ".join([family_name] + tokens)
-
-
-def seed_processors(source_rows):
-    by_legacy = {legacy: s["source_id"] for s in source_rows for legacy in s["legacy_ids"]}
-    with CATALOG.open(newline="") as f:
-        catalog = list(csv.DictReader(f))
-    groups = defaultdict(list)
-    for r in catalog:
-        groups[r["sku_key"]].append(r)
-    families, skus = {}, []
-    for key, rows in sorted(groups.items()):
-        prefix = next(p for p in FAMILIES if key.startswith(p + " "))
-        family_id, vendor, name = FAMILIES[prefix]
-        sources = sorted({by_legacy[f"historical/cpu-sku-sources:{r['source_title']}@{r['source_revision']}"] for r in rows})
-        families.setdefault(family_id, dict(family_id=family_id, vendor=vendor, name=name, source_ids=set()))
-        families[family_id]["source_ids"].update(sources)
-        sku = dict(
-            sku_id="sku:" + slug(key),
-            family_id=family_id,
-            vendor=vendor,
-            model=display_model(key, name),
-            keys=["sku-key-v1:" + key],
-        )
-        clocks = sorted({float(r["base_clock_mhz"]) for r in rows if r["base_clock_mhz"]})
-        if clocks:
-            sku["base_clocks_mhz"] = clocks
-        sku["sections"] = sorted({r["source_section"] for r in rows if r["source_section"]})
-        sku["source_ids"] = sources
-        skus.append(sku)
-    family_rows = [dict(f, source_ids=sorted(f["source_ids"])) for f in sorted(families.values(), key=lambda f: f["family_id"])]
-    skus.sort(key=lambda s: s["sku_id"])
-    today = date.today().isoformat()
-    aliases = [
-        dict(
-            alias_id="alias:rule/sku-key-v1",
-            entity_kind="processor_sku",
-            match_kind="rule",
-            rule_id="sku-key-v1",
-            scope="processor",
-            constraints=dict(clock_within=0.02),
-            status="accepted",
-            reviewed_on=today,
-            note="Exactly one Xeon/Opteron/EPYC SKU named in the text; tier words are part of the key. "
-            "A known nominal clock must lie within 2% of a listed base clock.",
-        )
-    ] + [
-        dict(
-            alias_id="alias:pattern/" + name,
-            entity_kind="processor_family",
-            entity_id=family,
-            match_kind="pattern",
-            pattern=pattern,
-            scope="processor",
-            status="accepted",
-            reviewed_on=today,
-            note="Family-level fallback when no single SKU resolves.",
-        )
-        for name, family, pattern in FAMILY_PATTERNS
-    ]
-    return family_rows, skus, sorted(aliases, key=lambda a: a["alias_id"])
-
-
-@click.command("import-processors")
-@click.option("--root", type=click.Path(path_type=Path, file_okay=False), default=CURATED, show_default=True)
-@click.option("--force", is_flag=True, help="Overwrite existing processor/alias tables, discarding curated edits.")
-def import_processors_command(root, force):
-    """One-time seed: processor families, SKUs and initial aliases from the parsed SKU catalogue."""
-    names = ["processor_family.jsonl", "processor_sku.jsonl", "alias.jsonl"]
-    if any((root / n).exists() for n in names) and not force:
-        raise click.ClickException("processor tables exist and are curated data; pass --force to reseed them")
-    try:
-        sources = read_table(root, dict(file="source.jsonl"))
-        for name, rows in zip(names, seed_processors(sources)):
-            write_jsonl(root / name, rows)
-        _, tables, errors, _ = validate(root)
-    except (OSError, ValueError, KeyError) as exc:
-        raise click.ClickException(str(exc)) from exc
-    for e in errors:
-        click.echo(e, err=True)
-    json.dump(dict(tables={k: len(v) for k, v in tables.items()}, errors=len(errors)), sys.stdout)
-    click.echo()
-    if errors:
-        sys.exit(1)
 
 
 @click.command("extract")

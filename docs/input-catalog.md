@@ -1,23 +1,19 @@
 # Shared benchmark input contract
 
-The implemented interchange format is versioned JSONL. Source adapters own parsing;
-fitters own matching, exclusions and estimation. Raw source documents are immutable.
+Source adapters (`input_catalog.records`) own parsing into one observation
+envelope, `benchmark-observation-v2`; fitters own matching, exclusions and
+estimation. Raw source documents are immutable.
 
 ## Files
 
-Generate the snapshot with:
+`cpushowspeed data extract` runs every adapter and writes the extracted
+observations, which `data build` loads into the database `observation` table.
+The [data schema](data-schema.md) owns that table and the built database. The
+former standalone snapshot (`inputs build`, `observations.jsonl`/`sources.jsonl`
+under `data/derived/inputs` and the global `--input-catalog` option) was removed
+on 2026-10-02 (schema step 5d).
 
-    uv run cpushowspeed inputs build
-
-The default directory is data/derived/inputs:
-
-| File | Purpose |
-| --- | --- |
-| observations.jsonl | benchmark-observation-v1: one positive metric/mode observation, normalized unit, hardware, execution evidence, source and raw record |
-| sources.jsonl | benchmark-source-v1: source views needed for identity, grouping and source-specific evidence, including rows without a usable score |
-| audit.json | Schema, file digests, adapter code digests, runtime-disclosure fingerprint and observation count |
-
-These are generated files, not new primary measurements. Multiple publications
+Extracted observations are generated data, not new primary measurements. Multiple publications
 and source views remain identifiable; concatenating them into a training set would
 double-count some evidence. A fitter must select its metric, source view and cohort.
 
@@ -30,9 +26,9 @@ An observation contains:
 - Explicit missing-status values. Observed worker count remains null.
 - Software context, evidence class, source URL/hash/locator, raw record and qualifications.
 
-Original dates remain in source fields at their stated precision. The timeline's
-shared chronology layer owns CPU/hardware/publication date selection; this catalog
-does not silently select a plotting year or relabel hardware availability as CPU release.
+Original dates remain in source fields at their stated precision. The database
+`result_chronology` view owns CPU/hardware/publication date selection; adapters
+do not select a plotting year or relabel hardware availability as CPU release.
 
 ## Consumers
 
@@ -47,16 +43,9 @@ stay separate. Reviewed PDF vectors and Gibson/ADP records use source-specific
 adapters into the common envelope. Unit conversion and frequency assumptions are
 not part of the generic JSONL reader.
 
-The SPEC fit readers and the classical network reader accept a shared frozen
-snapshot:
-
-    uv run cpushowspeed --input-catalog data/derived/inputs classic network-fit
-
-Without --input-catalog, the same adapters read their original cached sources.
-The snapshot is hash checked before use. Matching/review tables remain separate
-policy inputs; the snapshot is not a replacement for aliases, pairing approvals
-or a calibration bundle. Legacy diagnostic commands retain their documented
-source-native interfaces; they are not silently redirected by this option.
+The SPEC and classical fitters read the built database (`observation_store`,
+`classical_store`), not the adapters directly. Matching/review tables remain
+separate policy inputs in `data/curated/`.
 
 ## Execution-count admission
 
@@ -73,17 +62,13 @@ reject-known-uniform-count-conflicts-v1 separately to base and peak:
   minima/maxima as if they described equivalent workload vectors.
 - Different tracks/quantities: no copies-versus-threads equality test.
 
-For joint predictors, compare the older and newer rate inputs; a conflict removes
-that mode's tuple from all three predictor fits on the shared cohort. Never divide
-or multiply a measured SPEC score by copies or clock frequency.
-
-The runtime fingerprint detects newly collected as well as changed disclosures.
-A saved joint model is refused when its input fingerprint is stale. Unknown
-execution configurations and software/systematic differences remain outside CI95.
+Never divide or multiply a measured SPEC score by copies or clock frequency.
+Unknown execution configurations and software/systematic differences remain
+outside CI95.
 
 ## Migration verification
 
-The initial migration checked exact numeric/identity parity for 53,961 SPEC source
+Historical record (2026-09): the initial migration checked exact numeric/identity parity for 53,961 SPEC source
 records and 3,794 classical records before enabling the execution guard. The catalog
 contains 103,456 positive observations; source views preserve the other context.
 

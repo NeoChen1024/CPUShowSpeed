@@ -4,7 +4,8 @@ This document defines interpretation requirements. Specific implemented formats 
 and the [shared timeline schema](timeline.md#shared-record-contract). The [data schema](data-schema.md)
 design defines where these interpretations will be stored as migration proceeds.
 
-The shared script input is the versioned JSONL [input catalog](input-catalog.md).
+Source adapters write the shared observation envelope described in the
+[input catalog](input-catalog.md); the built database holds it.
 Source-specific extraction formats remain provenance-bearing adapter inputs; they
 are not competing fitting contracts. Historical numerical observations also retain
 their source-owned observation format. No raw source is overwritten by normalization.

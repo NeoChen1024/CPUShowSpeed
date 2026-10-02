@@ -11,8 +11,6 @@ from cpushowspeed.classic_predict import OPTIONS, predict_scores
 from cpushowspeed.research_io import read_csv
 
 HISTORICAL_INPUTS = [
-    ("gibson", "InstructionMix:Gibson_KIPS", "Gibson Mix", "KIPS"),
-    ("adp", "InstructionMix:ADP_KIPS", "ADP Mix", "KIPS"),
     *[
         (
             key,
@@ -35,19 +33,15 @@ HISTORICAL_INPUTS = [
 def calculator_payload(bundles):
     """Keep exact draw alignment. Never combine marginal interval endpoints."""
     networks, hashes = {}, {}
-    for name, root in (
-        ("classical", Path("data/derived/classic/network-fit")),
-        ("mixes", Path("data/derived/classic/mix-network-fit")),
-    ):
+    for name, root in (("classical", Path("data/derived/classic/network-fit")),):
         paths = [root / "coefficients.csv", root / "coefficient-log-draws.npz"]
-        metadata = root / ("prediction-calibration.json" if name == "classical" else "audit.json")
+        metadata = root / "prediction-calibration.json"
         paths.append(metadata)
         info = json.loads(metadata.read_text())
         run = next(r for r in info["runs"] if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89")
         metrics = run["metrics"]
-        if name == "classical":
-            # Validate the existing CLI bundle contract before embedding its bytes.
-            predict_scores({metrics[0]: 1}, root)
+        # Validate the existing CLI bundle contract before embedding its bytes.
+        predict_scores({metrics[0]: 1}, root)
         rows = [r for r in read_csv(paths[0]) if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89"]
         coefficients = {r["metric"]: float(r["coefficient_vaxen_per_score"]) for r in rows}
         with np.load(paths[1], allow_pickle=False) as archive:
@@ -58,9 +52,7 @@ def calculator_payload(bundles):
             or not np.isfinite(draws).all()
         ):
             raise ValueError("inconsistent historical predictor bundle: " + name)
-        low_key, high_key = (
-            ("factor_ci95_low", "factor_ci95_high") if name == "classical" else ("ci95_vaxen_low", "ci95_vaxen_high")
-        )
+        low_key, high_key = "factor_ci95_low", "factor_ci95_high"
         by_metric = {r["metric"]: r for r in rows}
         for i, metric in enumerate(metrics):
             low, high = np.quantile(np.exp(draws[:, i]), [0.025, 0.975])

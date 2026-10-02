@@ -1,8 +1,12 @@
 # Hardware-year evidence: archive and web research
 
-Reviewed: 2026-09-27. Current date catalog: **593 events**. Current chronology precedence is defined
-by the [shared timeline](../docs/timeline.md): CPU → hardware → submission-era.
-The pass-specific counts and earlier fallback rules below are historical snapshots.
+Reviewed: 2026-09-27. Date catalog at that review: **593 events**. These events
+were converted into `date_event` rows of the [data schema](../docs/data-schema.md),
+whose `result_chronology` view now owns precedence (CPU → hardware → reviewed
+fallback → publication). The `documents year-candidates`/`year-evidence` commands
+and the CSV tables cited below were retired on 2026-10-02 (schema step 5d); the
+tables are archived unchanged. The pass-specific counts and earlier fallback
+rules below are historical snapshots.
 
 ## Completed first batch
 
@@ -30,14 +34,9 @@ model-number hits, 4–30 pages and BLAKE3 deduplication within the OCR batch.
 Duplicate mirrors and longer documents remain visible in the candidate CSV.
 This is not an exhaustive full-text search of the entire mirror.
 
-```sh
-uv run cpushowspeed documents year-candidates
-```
-
-The default uses the current undated queue. To reproduce the initial selection,
-use `--targets data/derived/documents/year-evidence/targets-at-selection.csv`.
+The selection was made by the former `documents year-candidates` command. Its default used the current undated queue. To reproduce the initial selection, it took `--targets data/derived/documents/year-evidence/targets-at-selection.csv`.
 That snapshot's SHA-256 matches the original target hash in the search metadata.
-The command rewrites candidate and batch inventories, so preserve an active batch
+The command rewrote candidate and batch inventories, so preserve an active batch
 before intentionally generating a new selection.
 
 ## OCR and discovery
@@ -62,19 +61,18 @@ first pages have completed. Check actual completion with:
 uv run cpushowspeed documents report \
   --output-root data/derived/documents/chandra-ocr \
   --file-list inventories/hardware-year-ocr.txt
-uv run cpushowspeed documents year-evidence
 ```
 
-The second command searches PDF text layers and whatever DocIR documents are
-already published. It saves unreviewed passages to
+The former `documents year-evidence` command searched PDF text layers and whatever DocIR documents are
+already published. It saved unreviewed passages to
 `data/derived/documents/year-evidence/date-hits.jsonl`, with PDF page numbers and
-source hashes, plus `search-audit.json`. It can be rerun after more OCR completes.
+source hashes, plus `search-audit.json`. 
 Text-layer extraction remains useful while OCR runs, but neither is verified
 historical evidence until checked against original pages.
 
 ## Completed date-scope review
 
-[Document review ledger](data/historical/year-document-reviews.csv) has one entry
+[Document review ledger](data/archive/legacy-dates/historical/year-document-reviews.csv) has one entry
 for every batch PDF, including source BLAKE3, total/text-screened pages, original
 pages visually checked, reused prior checks, disposition, event IDs and notes.
 All 80 original PDF hashes were rechecked against the mirror on 2026-09-27.
@@ -96,14 +94,14 @@ it is not proof that no date could ever be recovered. OCR search still contains
 641 candidate passages/blocks, including duplicates and unrelated dates.
 
 [Batch review index](data/archive/date-passes/review-batch1/year-review-batch1.csv) is the refreshed
-snapshot of `documents year-evidence` output. That command preserves completed
+snapshot of `documents year-evidence` output. That command preserved completed
 manual dispositions only when source hash and page coverage match the ledger.
 OCR completion or the presence of a curated event alone does not imply completed
 source review.
 
 ## Curated events and interpretation
 
-[hardware-date-evidence.csv](data/historical/hardware-date-evidence.csv) contains
+[hardware-date-evidence.csv](data/archive/legacy-dates/historical/hardware-date-evidence.csv) contains
 **337 events at first-batch completion**: **332 original-PDF-checked entries** and **5 previously checked
 web announcement dates**. This full-batch pass adds **265 events** to the previous
 72. The entries cover 54 PDFs; the other 26 documents have explicit non-event
@@ -322,7 +320,7 @@ use the CPU's release year as a hardware-era estimate without requiring the
 original PC model's launch documentation. This supplements the model chronology;
 it does not relabel CPU introduction as system availability.
 
-[CPU proxy mappings](data/historical/cpu-release-proxies.csv) add dates to **99
+[CPU proxy mappings](data/archive/legacy-dates/historical/cpu-release-proxies.csv) add dates to **99
 rows**, yielding **1,291 dated / 420 undated** configurations and a **1963–2006**
 point-year range. The 593 model-date events remain unchanged. All earlier dated
 rows keep their years; all 1,711 numeric results, input scores, observation counts

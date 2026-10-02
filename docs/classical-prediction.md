@@ -131,6 +131,7 @@ normalization, raw Dhrystone units, invalid values and stale calibration files.
 
 ## Batch historical plot
 
-`cpushowspeed classic historical-timeline` applies this prediction contract to
-existing source configurations and combines them with SPEC89 bridge estimates.
-See the [timeline method and outputs](../research/historical-vaxen-timeline.md).
+`cpushowspeed plot timeline` applies this prediction contract to every
+one-processor classical result in the built database and adds the saved SPEC89
+bridge estimates; see the [timeline contract](timeline.md). The former
+`classic historical-timeline` command was removed on 2026-10-02.

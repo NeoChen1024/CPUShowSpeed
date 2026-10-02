@@ -4,7 +4,8 @@ Reviewed on 2026-09-26. The immutable [curated SPEC89 aggregate](data/spec89/v2.
 contains 381 source observations. The [combined aggregate](data/spec89/aggregate89-plus-helman.csv)
 adds 40 Helman worksheet observations for 421 total and still has 160 distinct
 `system_normalized` labels.
-The [hardware introduction catalog](data/spec89/hardware-introductions.csv)
+The [hardware introduction catalog](data/archive/legacy-dates/spec89/hardware-introductions.csv)
+(archived 2026-10-02; its years are now `date_event` rows)
 has exactly one row for every label. It currently provides a source-checked
 year for 26 labels, covering 99 combined observations; the other 134 labels
 and 322 observations remain undated. Blank years mean unresolved evidence, not zero or
