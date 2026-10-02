@@ -120,6 +120,7 @@
 {"system_id": "sys:cdc6600", "name": "CDC 6600", "vendor_ids": ["org:control-data"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
 {"system_id": "sys:cdc6700", "name": "CDC 6700", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cdc7600", "name": "CDC 7600", "vendor_ids": ["org:control-data"], "note": "Canonical name curated 2026-10-02; records merge by rule key."}
+{"system_id": "sys:cdccyber74", "name": "CDC Cyber 74", "vendor_ids": ["org:control-data"], "note": "Curated 2026-10-02: a later, separately built version of the CDC 6600, kept apart from sys:cdc6600 (Museum Waalsdorp).", "source_ids": ["src:web/museumwaalsdorp.nl/en/museum-waalsdorp-2/history/comphistory/computer-history-th@87823e09"]}
 {"system_id": "sys:commodore64", "name": "Commodore 64", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cray2s", "name": "CRAY-2S", "note": "Machine with curated date evidence; added 2026-10-02."}
 {"system_id": "sys:cray3", "name": "Cray-3", "note": "Machine with curated date evidence; added 2026-10-02."}
