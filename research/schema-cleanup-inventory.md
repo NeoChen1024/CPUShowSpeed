@@ -64,6 +64,13 @@ code: `classic_timeline`, `mix_timeline`, `unified_timeline` and
 `chronology_selected` view. `apply_cpu_release_proxy` and `CPUChronology` are
 removed once the timeline reads that view with year parity.
 
+Status 2026-10-02: steps 3–4 converted all five, plus `spec/hardware-date-exclusions.csv`,
+`cpu92-cpu95-reviewed.csv` and `classic/mix-candidate-aliases.csv`, into curated
+`date_event` and `review` rows; the built view is `result_chronology`. The legacy
+files are frozen (the curated tables are canonical) and are deleted with their
+readers when step 5 rebuilds the timeline and fitters; `mix-candidate-aliases.csv`
+is still read by `classic_mix`.
+
 ### 4. Date-pass logs (archive any time; no code consumer)
 
 Fifteen former `research/data/historical/year-*` files (about 0.6 MiB), now in

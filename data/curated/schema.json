@@ -3,7 +3,7 @@
   "$id": "https://github.com/NeoChen1024/CPUShowSpeed/data/curated/schema.json",
   "title": "CPUShowSpeed curated tables",
   "description": "Row schemas and table contracts for data/curated. Semantics are owned by docs/data-schema.md.",
-  "x-schema-version": "1.3.0",
+  "x-schema-version": "1.4.0",
   "x-tables": {
     "source": {
       "file": "source.jsonl",
@@ -65,6 +65,15 @@
         "source_id": "source"
       },
       "description": "Something that happened to a processor or system model on a date, according to one source."
+    },
+    "review": {
+      "file": "review.jsonl",
+      "row": "#/$defs/review_row",
+      "primary_key": "review_id",
+      "foreign_keys": {
+        "source_id": "source"
+      },
+      "description": "Judgements qualifying extracted evidence: rejected result dates, accepted result pairs, identity links awaiting review."
     }
   },
   "$defs": {
@@ -719,6 +728,211 @@
           "uniqueItems": true
         }
       }
+    },
+    "review_id": {
+      "type": "string",
+      "pattern": "^rev:[a-z0-9][a-z0-9./+@-]*$"
+    },
+    "result_selector": {
+      "description": "One extracted result by ID, or every result whose exact system text appears in one scope.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "result_id"
+          ],
+          "properties": {
+            "result_id": {
+              "$ref": "#/$defs/text"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "scope",
+            "system"
+          ],
+          "properties": {
+            "scope": {
+              "$ref": "#/$defs/text"
+            },
+            "system": {
+              "$ref": "#/$defs/text"
+            }
+          }
+        }
+      ]
+    },
+    "system_selector": {
+      "description": "Hardware records with this exact system text in one scope.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "system"
+      ],
+      "properties": {
+        "scope": {
+          "$ref": "#/$defs/text"
+        },
+        "system": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "review_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_id",
+        "target_kind",
+        "target",
+        "decision",
+        "reason",
+        "reviewed_on",
+        "legacy_ids"
+      ],
+      "properties": {
+        "review_id": {
+          "$ref": "#/$defs/review_id"
+        },
+        "target_kind": {
+          "description": "result_date: one date a result reports; result_pair: two results treated as one configuration; system_link: two source system texts that may denote one machine.",
+          "enum": [
+            "result_date",
+            "result_pair",
+            "system_link"
+          ]
+        },
+        "target": {
+          "type": "object"
+        },
+        "field": {
+          "description": "result_date only: which reported date.",
+          "enum": [
+            "hardware_availability",
+            "table_year",
+            "publication",
+            "test"
+          ]
+        },
+        "decision": {
+          "enum": [
+            "accept",
+            "reject",
+            "needs_review"
+          ]
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        },
+        "source_id": {
+          "$ref": "#/$defs/source_id"
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "reviewed_on": {
+          "$ref": "#/$defs/iso_day"
+        },
+        "legacy_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "target_kind": {
+                "const": "result_date"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "field"
+            ],
+            "properties": {
+              "target": {
+                "$ref": "#/$defs/result_selector"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "field"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "target_kind": {
+                "const": "result_pair"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "target": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "left",
+                  "right"
+                ],
+                "properties": {
+                  "left": {
+                    "$ref": "#/$defs/result_selector"
+                  },
+                  "right": {
+                    "$ref": "#/$defs/result_selector"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "target_kind": {
+                "const": "system_link"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "target": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "left",
+                  "right"
+                ],
+                "properties": {
+                  "left": {
+                    "$ref": "#/$defs/system_selector"
+                  },
+                  "right": {
+                    "$ref": "#/$defs/system_selector"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

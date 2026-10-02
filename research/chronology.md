@@ -46,11 +46,12 @@ excluded events never select.
 | Selected kind | Observations |
 | --- | ---: |
 | CPU release | 74,513 |
-| Hardware | 27,525 |
+| Hardware | 27,472 |
 | Fallback proxy | 86 |
-| Unknown | 1,332 |
+| Unknown | 1,333 |
 
-Counts are after the 2026-10-02 CPU92 speed adapter rewrite (below).
+Counts are after the 2026-10-02 CPU92 speed adapter rewrite and the step-4 reviews
+(both below).
 
 ## Comparison with the former timeline
 
@@ -97,9 +98,28 @@ system and processor, 104 availability months agree and 8 differ: two rate pages
 print `######` and six are disclosures that state different months (Bull Escala
 1994-12 versus 1995-04).
 
+## Reviews
+
+Step 4 moved four date decisions into `data/curated/review.jsonl`:
+
+| Result | Rejected date | Now selected |
+| --- | --- | --- |
+| SPEC CPU2017 speed `res2021q4/cpu2017-20211025-29885` (Supermicro A+ Server 2124BT-HTR, EPYC 7313) | hardware availability 2019-08 | CPU release 2021 |
+| Longbottom Whetstone "Ferranti Argus 700G swf" | table year 1963 | model event 1973 (unchanged) |
+| Longbottom Whetstone "GEC Elliott 903C" | table year 1963 | model event 1965 (unchanged) |
+| Longbottom Whetstone "GEC Elliott 905" | table year 1963 | unknown (was 1963) |
+
+The EPYC 7313 exclusion cited AMD's launch date (2021-03-15); that date is now a
+release event of a new `sku:amd-epyc-7313`, which moves all 26 EPYC 7313 results
+(52 observations) from hardware to CPU dating. 24 of them reported 2021
+availability and keep their year; the two that reported 2019-08 move to 2021.
+Rejecting the hardware date alone would have left 2019: other configurations of
+the same system model carry Rome processors available in 2019. The second 2019-08
+result, the rate result of the same submission (`cpu2017-20211025-29879`), was not
+in the exclusion file; CPU dating already outranks its reported date, and it is
+listed as a `cpu_release_after_hardware_availability` finding.
+
 ## Known gaps
 
 - LINPACK, Dhrystone, SPEC89 and DEC-report rows without a dated model stay unknown.
-- The Elliott 905 rule rejects a compilation year rather than giving one; it waits
-  for the step-4 `review` table and is not applied.
 - Catalogue spelling variants need exact-text aliases to recover the 161 losses.

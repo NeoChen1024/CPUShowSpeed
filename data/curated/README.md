@@ -13,6 +13,7 @@ row schema; tables are JSONL, one row per line, sorted by primary key.
 | `vendor.jsonl` | `vendor`: hardware vendors and their model prefixes | 2026-10-02 |
 | `system_model.jsonl` | `system_model`: curated machines and canonical names; other models are rule-derived | 2026-10-02 |
 | `date_event.jsonl` | `date_event`: dated events of processors and system models | 2026-10-02 |
+| `review.jsonl` | `review`: rejected result dates, accepted result pairs, identity links awaiting review | 2026-10-02 |
 
 Edit rows directly, then run:
 

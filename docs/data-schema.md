@@ -1,7 +1,7 @@
 # Data schema design
 
-Status: **steps 1 (sources), 2/2b (processor and system identity) and 3 (dates) implemented
-2026-10-02; steps 4–5 designed, not implemented.**
+Status: **steps 1 (sources), 2/2b (processor and system identity), 3 (dates) and 4
+(reviews) implemented 2026-10-02; step 5 designed, not implemented.**
 This document owns the target
 data model and its migration plan. Until each step lands, the current formats in
 the [data contract](data-contract.md), [input catalog](input-catalog.md),
@@ -238,15 +238,28 @@ order is implemented in `data build`; see [chronology](../research/chronology.md
 
 ### `review`
 
+Implemented 2026-10-02 as `data/curated/review.jsonl`. Judgements that qualify
+*extracted* evidence; aliases and date events carry their own `status` and
+`chronology` and need no review row.
+
 | Column | Meaning |
 | --- | --- |
-| `review_id` | Primary key |
-| `target_kind`, `target_id` | `alias`, `date_event`, `observation`, `pair` |
+| `review_id` | Primary key, `rev:<origin>/…` |
+| `target_kind` | `result_date` (one date a result reports), `result_pair` (two results treated as one configuration), `system_link` (two source system texts that may denote one machine) |
+| `target` | A result selector — `{result_id}` or `{scope, system}` (every result with that exact system text in one scope) — or `{left, right}` selectors; system links use `{scope, system}` on both sides |
+| `field` | `result_date` only: `hardware_availability`, `table_year`, `publication` or `test` |
 | `decision` | `accept`, `reject`, `needs_review` |
-| `reason`, provenance | Why, and on what evidence |
+| `reason`, provenance | Why; `source_id` and `locator` of the evidence when there is one; `reviewed_on`, `legacy_ids` |
 
-Replaces `submission-date-reviews.csv`, pair approvals and rejected-date notes.
-A rejection never deletes evidence; selection views read decisions.
+Selectors use source text and stable SPEC result IDs rather than derived
+`sys:`/`hw:` IDs, so a rule change cannot silently retarget a decision. `data build`
+resolves them into `review_result` (one row per matched result and side) and
+`review_system_link` (both sides' current system models), and reports in
+`review_finding` any selector that matches nothing and any unreviewed link the
+identity rules already merge. A rejected result date leaves every chronology use
+(own tier and model-level dates for other results) and is kept in the candidates
+as `rejected_<field>`; the extracted record is unchanged. Accepted pairs are
+recorded for the fitters (step 5); nothing reads them yet.
 
 ## Built views and consistency checks
 
@@ -271,9 +284,12 @@ The timeline and fitters then read these views instead of private lookups.
 | `cpu-release-proxies.csv` | `processor_sku` + `alias` (exact text) + `date_event` (`release`) |
 | `cpu-sku-chronology.csv` | `processor_sku` + `alias` (`sku-key-v1`) + `date_event` (`release`, `parsed_unreviewed`) |
 | `hardware-date-evidence.csv` | `system_model` + `alias` + `date_event` |
-| `timeline-year-overrides.csv` | `alias` (regex rule) + `date_event` (`inferred_proxy`) + `review` (rejected table years) |
-| `submission-date-reviews.csv` | `review` |
-| `mix-candidate-aliases.csv`, SPEC89 `aliases.csv` | `alias` (`candidate` / `accepted`) |
+| `timeline-year-overrides.csv` | `date_event` (`inferred_proxy`) on the matched models + `review` (rejected table years) |
+| `submission-date-reviews.csv` | `review` (the file has no rows) |
+| `hardware-date-exclusions.csv` | `review` (`result_date` reject) + the conflicting launch date as a `date_event` |
+| `cpu92-cpu95-reviewed.csv` | `review` (`result_pair` accept) |
+| `mix-candidate-aliases.csv` | `review` (`system_link` needs_review, one row per matched text pair) |
+| SPEC89 `aliases.csv` | `alias`, with the SPEC89 package adaptation in step 5 |
 | Input catalog `observations.jsonl` / `sources.jsonl` | Extracted `observation` v2 + `hardware_config` + SPEC date events |
 | `historical/observations.jsonl` | Curated `observation` v2 |
 | `year-*-changes.csv`, `*-targets.csv`, `*-open-leads.csv`, pass audits | Move to `research/data/archive/<pass>/` as historical pass logs |
@@ -310,7 +326,12 @@ is intended and listed in that step's report.
    the former timeline rather than held to parity: 50,298 of 58,813 SPEC records
    keep their year (most changes are CPU dating, one year earlier); 898 classical
    configurations are dated in both and 161 lose a year to unmatched spellings.
-4. **Reviews.** Convert submission/date/pair decisions into `review`.
+4. **Reviews** (done 2026-10-02). 29 rows: 4 rejected result dates (one SPEC
+   hardware availability before its processor's launch; three Longbottom table
+   years), 13 accepted CPU92–CPU95 speed pairs and 12 mix↔classical system links
+   awaiting review. The EPYC 7313 launch date that justified the exclusion became a
+   SKU release event, so all 26 EPYC 7313 results are CPU-dated (2021), including
+   the two that reported 2019 availability. See [chronology](../research/chronology.md#reviews).
 5. **Observations.** Emit `benchmark-observation-v2` with entity references; switch
    fitters and timeline to the built database; regenerate the input catalog from it.
 
@@ -324,6 +345,11 @@ each step retires and the order of independent cleanup.
 Decided 2026-10-02: curated tables live in `data/curated/`; the built database
 is standard-library SQLite; all table schemas are kept in one
 `data/curated/schema.json`.
+
+Also decided 2026-10-02 (step 4): review targets are selectors over source text and
+result IDs, not `target_id` foreign keys, and cover only extracted evidence; the
+mix candidates became `system_link` reviews rather than `candidate` aliases because
+they pair two source texts, not a text and an entity.
 
 Also decided 2026-10-02: hardware identity and run conditions are separated as
 described under [hardware identity versus run conditions](#hardware-identity-versus-run-conditions).

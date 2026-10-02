@@ -183,6 +183,9 @@ def build(root=CURATED, database=DATABASE):
         meta.update(build_resolution(db, tables))
         meta.update(build_systems(db, tables))
         from cpushowspeed.curated_dates import build_chronology
+        from cpushowspeed.curated_review import build_reviews
+
+        meta.update(build_reviews(db, tables))
 
         meta.update(build_chronology(db, tables))
         db.executemany("INSERT INTO _meta VALUES (?, ?)", sorted(meta.items()))

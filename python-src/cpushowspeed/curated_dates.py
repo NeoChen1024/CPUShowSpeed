@@ -568,6 +568,8 @@ def select(candidates):
 
 def build_chronology(db, tables):
     """Write result_chronology: candidates of every kind and the selected year."""
+    from cpushowspeed.curated_review import rejected_dates
+
     if not RESULTS.exists():
         return {"chronology": "skipped: run `cpushowspeed data extract-mentions`"}
     usable = [e for e in tables["date_event"] if e["chronology"] != "excluded" and e["claim_status"] not in UNCONFIRMED]
@@ -580,6 +582,16 @@ def build_chronology(db, tables):
     for row in db.execute(f"SELECT {cols}, hardware_id, system_id, processor_entity FROM hardware_record"):
         hw[tuple(row[:9])] = row[9:]
     results = [json.loads(line) for line in RESULTS.read_text().splitlines()]
+    # Reviewed rejections remove a reported date from every use; it stays in the candidates as rejected.
+    rejected = defaultdict(list)
+    for (rid, field), review_id in rejected_dates(db).items():
+        rejected[rid].append((field, review_id))
+    for r in results:
+        r["rejected"] = [
+            dict(kind="rejected_" + f, date=r[f], review_id=rev) for f, rev in rejected.get(r["result_id"], []) if r[f]
+        ]
+        for f, _ in rejected.get(r["result_id"], []):
+            r[f] = None
     # Model-level dates reported elsewhere for the same system model: compilation table and
     # catalogue years, and SPEC hardware availability of other configurations of that model.
     model_dates = defaultdict(list)
@@ -657,7 +669,7 @@ def build_chronology(db, tables):
                 low,
                 high,
                 basis,
-                json.dumps(cpu + [c for t in tiers for c in t] + fallback + submission),
+                json.dumps(cpu + [c for t in tiers for c in t] + fallback + submission + r["rejected"]),
             ),
         )
     findings = consistency_findings(db, by_subject)
