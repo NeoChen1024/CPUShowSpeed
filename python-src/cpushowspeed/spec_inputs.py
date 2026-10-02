@@ -10,8 +10,9 @@ from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urlparse
 
+from cpushowspeed import spec92_disclosure
 from cpushowspeed.input_context import ACTIVE_CATALOG, load_catalog
-from cpushowspeed.spec92_rate import BENCHMARKS, _checked, _optional, _required, _text
+from cpushowspeed.spec92_rate import BENCHMARKS, _checked
 from cpushowspeed.spec_disclosure import load_disclosure
 from cpushowspeed.spec_overlap import (
     Result,
@@ -162,23 +163,19 @@ def collect_cpu92_rate(path: Path, raw_dir: Path | None = None) -> list[Result]:
 
 
 def parse_speed92(document, url, digest):
-    """Check six reported ratios before accepting a CPU92 integer speed result."""
-    if "SPECrate_int92" in document:
-        raise ValueError("rate disclosure passed to speed parser")
-    headings = re.findall(r"<H3>(.*?)</H3>", document, re.I | re.S)
-    if len(headings) < 2:
-        raise ValueError("missing vendor/system headings")
-    system = _text(headings[1])
-    peak_text = _required(document, r"(?:<DD>SPECint92:|Geometric Mean\s*\(SPECint92\):)\s*([\d.]+|-)", "peak")
-    peak = None if peak_text == "-" else float(peak_text)
-    base_text = _optional(document, r"<DD>SPECbase_int92:\s*([\d.]+)")
-    base = float(base_text) if base_text else None
+    """Check six reported ratios before accepting a CPU92 integer speed result; keep every disclosed field."""
+    page = spec92_disclosure.parse(document)
+    if page["metric_heading"] != "SPECint92":
+        raise ValueError(f"not an integer speed disclosure: {page['metric_heading']}")
+    means = page["reported_means"]
+    peak = None if means.get("SPECint92", "-") == "-" else float(means["SPECint92"])
+    base = float(means["SPECbase_int92"]) if means.get("SPECbase_int92", "-") != "-" else None
+    rows = {row[0]: row[1:] for row in page["table"]}
+    if sorted(rows) != sorted(BENCHMARKS) or len(page["table"]) != len(BENCHMARKS):
+        raise ValueError("benchmark rows missing or repeated")
     ratios = []
     for name in BENCHMARKS:
-        matches = re.findall(r"^\s*" + re.escape(name) + r"\s+([0-9-][0-9\s.\-]*)$", document, re.M)
-        if len(matches) != 1:
-            raise ValueError(f"missing or repeated benchmark {name}")
-        values = [None if x == "-" else float(x) for x in matches[0].split()]
+        values = [None if x == "-" else float(x) for x in rows[name]]
         if len(values) not in ((4,) if base is not None else (2, 3)) or any(x is not None and x <= 0 for x in values):
             raise ValueError(f"invalid speed columns: {name}")
         ratios.append(values[-2:] if base is not None else [values[-1], None])
@@ -187,8 +184,24 @@ def parse_speed92(document, url, digest):
             raise ValueError(f"{mode} summary/benchmark availability mismatch")
         if score is not None and abs(statistics.geometric_mean(r[index] for r in ratios) - score) > 0.2:
             raise ValueError(f"{mode} summary disagrees with six rounded ratios")
-    processor = _required(document, r"<DD>CPU:\s*([^<\r\n]+)", "CPU")
-    chips = int(_required(document, r"<DD>Number of CPUs:\s*(\d+)", "CPU count"))
+    fields = page["fields"]
+    system, processor = page["system"], fields["CPU"]
+    chips = re.match(r"\d+", fields["Number of CPUs"])
+    if chips is None:
+        raise ValueError("missing CPU count")
+    raw = dict(
+        company=page["company"],
+        volume=page["volume"],
+        issue=page["issue"],
+        publication_month=page["publication_month"],
+        hardware_availability_month=page["hardware_availability_month"],
+        software_availability_month=page["software_availability_month"],
+        test_month=page["test_month"],
+        reported_means=means,
+        table=page["table"],
+        notes=page["notes"],
+        **fields,
+    )
     return Result(
         "cpu92",
         url.rsplit("/", 1)[-1],
@@ -196,19 +209,20 @@ def parse_speed92(document, url, digest):
         _normalized(system),
         processor,
         _processor_key(processor),
-        chips,
+        int(chips[0]),
         None,
         None,
         _frequency({"System": system}, processor),
-        _memory_mib(_optional(document, r"<DD>Memory:\s*([^<\r\n]+)")),
-        _optional(document, r"<DD>O/S & Version:\s*([^<\r\n]+)"),
-        _optional(document, r"<DD>Compilers & Version:\s*([^<\r\n]+)"),
+        _memory_mib(fields["Memory"]),
+        fields["O/S & Version"],
+        fields["Compilers & Version"],
         peak,
         base,
         url,
         digest,
         track="speed",
         execution=dict(status="parsed", modes={m: dict(quantity="threads", status="not_reported_in_parsed_table") for m in MODES}),
+        raw_fields=raw,
     )
 
 

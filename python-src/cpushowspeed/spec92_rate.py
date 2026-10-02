@@ -9,15 +9,15 @@ import math
 import re
 import statistics
 from collections import Counter, defaultdict
-from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
 import click
+from cpushowspeed import spec92_disclosure
 from cpushowspeed.spec import links
 from cpushowspeed.spec_overlap import _memory_mib
 
-METHOD_VERSION = "netlib-cpu92-rate-v2"
+METHOD_VERSION = "netlib-cpu92-rate-v3"
 BENCHMARKS = ("008.espresso", "022.li", "023.eqntott", "026.compress", "072.sc", "085.gcc")
 DETAIL_FIELDS = (
     "method_version",
@@ -38,6 +38,7 @@ DETAIL_FIELDS = (
     "os",
     "compiler",
     "hardware_availability_month",
+    "software_availability_month",
     "test_month",
     "publication_month",
     "peak_metric",
@@ -71,31 +72,6 @@ def _checked(path: Path, expected_url: str) -> tuple[str, str]:
     return body.decode("latin1"), digest
 
 
-def _text(value: str) -> str:
-    return " ".join(re.sub(r"<[^>]+>", " ", value).split())
-
-
-def _required(document: str, pattern: str, field: str) -> str:
-    match = re.search(pattern, document, re.I | re.S)
-    if match is None:
-        raise ValueError(f"missing {field}")
-    return _text(match.group(1))
-
-
-def _optional(document: str, pattern: str) -> str:
-    match = re.search(pattern, document, re.I)
-    return _text(match.group(1)) if match else ""
-
-
-def _month(text: str, fmt: str) -> str:
-    return datetime.strptime(text, fmt).strftime("%Y-%m")
-
-
-def _optional_month(document: str, pattern: str) -> str:
-    match = re.search(pattern, document, re.I)
-    return _month(match.group(1), "%b-%y") if match else ""
-
-
 def _summary_score(path: Path, url: str, detail_name: str) -> tuple[float, str]:
     body, digest = _checked(path, url)
     match = re.search(re.escape(detail_name) + r"[^>]*>.*?</A>\s*([0-9]+(?:\.[0-9]+)?)", body, re.I | re.S)
@@ -105,22 +81,20 @@ def _summary_score(path: Path, url: str, detail_name: str) -> tuple[float, str]:
 
 
 def _detail(document: str, url: str, digest: str, summary: dict[str, tuple[str, Path]]) -> tuple[dict, list[dict]]:
-    if "SPECrate_int92" not in document:
+    page = spec92_disclosure.parse(document)
+    if page["metric_heading"] != "SPECrate_int92":
         raise ValueError(f"not an integer-rate disclosure: {url}")
-    issue = _required(document, r"<H2>\s*SPECrate_int92\s*\(Volume\s+\d+,\s*Issue\s+\d+,\s*([A-Za-z]+\s+\d{4})\)</H2>", "issue")
-    company, system = re.findall(r"<H3>(.*?)</H3>", document, re.I | re.S)[:2]
-    company, system = _text(company), _text(system)
-    peak_score = float(
-        _required(document, r"(?:Geometric Mean\s*\(SPECrate_int92\):|<DD>SPECrate_int92:)\s*([0-9]+(?:\.[0-9]+)?)", "peak score")
-    )
-    base_match = re.search(r"<DD>SPECrate_base_int92:\s*([0-9]+(?:\.[0-9]+)?)", document, re.I)
-    base_score = float(base_match.group(1)) if base_match else None
+    means = page["reported_means"]
+    if means.get("SPECrate_int92", "-") == "-":
+        raise ValueError(f"missing peak score: {url}")
+    peak_score = float(means["SPECrate_int92"])
+    base_score = float(means["SPECrate_base_int92"]) if means.get("SPECrate_base_int92", "-") != "-" else None
+    rows = {row[0]: row[1:] for row in page["table"]}
+    if sorted(rows) != sorted(BENCHMARKS) or len(page["table"]) != len(BENCHMARKS):
+        raise ValueError(f"benchmark row missing or repeated: {url}")
     benchmark_rows = []
     for name in BENCHMARKS:
-        values = re.findall(r"^\s*" + re.escape(name) + r"\s+([0-9][0-9\s.]*)$", document, re.M)
-        if len(values) != 1:
-            raise ValueError(f"benchmark row missing or repeated: {name} {url}")
-        numbers = values[0].split()
+        numbers = rows[name]
         if len(numbers) == 3:
             peak_copies, peak_seconds, peak_rate = numbers
             base_copies = base_seconds = base_rate = ""
@@ -159,8 +133,11 @@ def _detail(document: str, url: str, digest: str, summary: dict[str, tuple[str, 
         published_base, base_summary_sha = _summary_score(base_summary_path, base_summary_url, detail_name)
         if base_score is None or published_base != base_score:
             raise ValueError(f"base rate detail and issue summary disagree: {url}")
-    memory = _optional(document, r"<DD>Memory:\s*([^<\r\n]+)")
-    parsed_memory = _memory_mib(memory)
+    fields = page["fields"]
+    cpu_count = re.match(r"\d+", fields["Number of CPUs"])
+    if cpu_count is None or not fields["CPU"] or not fields["O/S & Version"] or page["test_month"] is None:
+        raise ValueError(f"missing CPU, CPU count, OS or test date: {url}")
+    parsed_memory = _memory_mib(fields["Memory"])
     return (
         {
             "method_version": METHOD_VERSION,
@@ -170,19 +147,20 @@ def _detail(document: str, url: str, digest: str, summary: dict[str, tuple[str, 
             "summary_sha256": peak_summary_sha,
             "base_summary_url": base_summary_url,
             "base_summary_sha256": base_summary_sha,
-            "company": company,
-            "system": system,
-            "processor": _required(document, r"<DD>CPU:\s*([^<\r\n]+)", "CPU"),
-            "cpu_count": int(_required(document, r"Number of CPUs:\s*(\d+)", "CPU count")),
-            "memory": memory,
+            "company": page["company"],
+            "system": page["system"],
+            "processor": fields["CPU"],
+            "cpu_count": int(cpu_count[0]),
+            "memory": fields["Memory"],
             "memory_mib": parsed_memory if parsed_memory is not None else "",
-            "primary_cache": _optional(document, r"<DD>Primary Cache:\s*([^<\r\n]+)"),
-            "secondary_cache": _optional(document, r"<DD>Secondary Cache:\s*([^<\r\n]+)"),
-            "os": _required(document, r"<DD>O/S\s*&\s*Version:\s*([^<\r\n]+)", "OS"),
-            "compiler": _optional(document, r"<DD>Compilers\s*&\s*Version:\s*([^<\r\n]+)"),
-            "hardware_availability_month": _optional_month(document, r"<DT>Hardware Availability:\s*([A-Za-z]+-\d{2})"),
-            "test_month": _month(_required(document, r"<DT>Tested\s*:\s*([A-Za-z]+-\d{2})", "test date"), "%b-%y"),
-            "publication_month": _month(issue, "%B %Y"),
+            "primary_cache": fields["Primary Cache"],
+            "secondary_cache": fields["Secondary Cache"],
+            "os": fields["O/S & Version"],
+            "compiler": fields["Compilers & Version"],
+            "hardware_availability_month": page["hardware_availability_month"] or "",
+            "software_availability_month": page["software_availability_month"] or "",
+            "test_month": page["test_month"],
+            "publication_month": page["publication_month"],
             "peak_metric": "SPECrate_int92",
             "peak_score": peak_score,
             "base_metric": "SPECrate_base_int92" if base_score is not None else "",

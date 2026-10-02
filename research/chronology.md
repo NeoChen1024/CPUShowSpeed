@@ -46,9 +46,11 @@ excluded events never select.
 | Selected kind | Observations |
 | --- | ---: |
 | CPU release | 74,513 |
-| Hardware | 27,302 |
+| Hardware | 27,525 |
 | Fallback proxy | 86 |
-| Unknown | 1,555 |
+| Unknown | 1,332 |
+
+Counts are after the 2026-10-02 CPU92 speed adapter rewrite (below).
 
 ## Comparison with the former timeline
 
@@ -76,10 +78,27 @@ Reported, never resolved:
 - 8 subjects whose primary event years are more than one year apart (Opteron 1xx
   revisions; Amdahl 5870/5880 announcement versus delivery).
 
+## CPU92 speed adapter rewrite (2026-10-02)
+
+The first selection left all 139 CPU92 speed results undated because the speed
+adapter kept only scores and a few hardware fields. Speed and rate disclosures now
+share one parser that keeps every labelled field and the issue month
+([SPEC collection](../docs/spec-collection.md#recovered-netlib-cpu92-integer-rate-results)).
+Scores, identities and benchmark rows are unchanged (305 speed results; 274 rate
+records whose benchmark and exclusion CSVs are byte-identical); 18 speed and 11 rate
+compiler fields gained their second line.
+
+After rebuilding, all 139 results have a year (hardware tier); 28 speed results that
+had borrowed a model-level date now use their own reported availability (HP 9000
+735/125: 1992 from the 735 → 1994); 15 SPEC89, Netlib SPEC92 and Dhrystone results
+moved one year as model-level ranges gained the speed dates, and 5 Dhrystone/LINPACK
+results became dated. Where a speed and a rate disclosure name the same vendor,
+system and processor, 104 availability months agree and 8 differ: two rate pages
+print `######` and six are disclosures that state different months (Bull Escala
+1994-12 versus 1995-04).
+
 ## Known gaps
 
-- CPU92 **speed** results in the input catalogue carry no date fields (139 results
-  unknown); the adapter dropped them.
 - LINPACK, Dhrystone, SPEC89 and DEC-report rows without a dated model stay unknown.
 - The Elliott 905 rule rejects a compilation year rather than giving one; it waits
   for the step-4 `review` table and is not applied.

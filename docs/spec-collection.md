@@ -49,6 +49,16 @@ per-benchmark rate rows:
 
 The parser writes [result records](../data/derived/spec/cpu92-rate/cpu92-rate-records.csv)
 and [per-benchmark copy counts and timings](../data/derived/spec/cpu92-rate/cpu92-rate-benchmarks.csv).
+Netlib's 305 CINT92 speed disclosures (`data/raw/spec/cpu92/netlib/details/`) are read
+by the input catalogue directly, with each composite checked against its six ratios
+and the issue summaries. Both tracks use one page parser
+(`cpushowspeed.spec92_disclosure`) that keeps all 21 labelled fields of the fixed PDS
+layout verbatim, the issue (volume, number, month), the result table, the reported
+means and the tuning notes; hardware availability, software availability and test
+months are normalized to `YYYY-MM` and an unreadable value (two rate pages print
+`######`) stays empty. A second compiler line (often the Fortran compiler) is joined
+with `; `. The same parser reads all 232 CFP92 pages, which no adapter consumes.
+
 Netlib's combined rate list omits one detail linked from an issue summary;
 the [source audit](../research/spec92-archive-expansion.md) identifies it and
 preserves the issue-linked result. The separate 1992 Digital vendor brief is
