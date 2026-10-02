@@ -50,14 +50,14 @@ comparatively sound; the redesign extends them rather than replacing them.
 | Layer | Contents | Location | In Git |
 | --- | --- | --- | --- |
 | Raw | Downloaded PDFs, SPEC caches, web snapshots | Existing raw stores and mirror | No |
-| Curated | Hand-reviewed or small parsed tables: sources, entities, aliases, date events, reviews, curated observations | `research/data/schema/` | Yes |
+| Curated | Hand-reviewed or small parsed tables: sources, entities, aliases, date events, reviews, curated observations | `data/curated/` | Yes |
 | Extracted | Deterministic adapter output from raw (for example ~100k SPEC observations) | `data/derived/schema/` | No |
 | Built | SQLite database joining curated + extracted, plus resolution and selection views | `data/derived/schema/cpushowspeed.sqlite` | No |
 | Products | Fits, estimates, timeline projection | Existing derived paths | Small audits only |
 
 Curated tables are CSV when flat and JSONL when a row needs nested conditions.
-Each table has a declared schema (`research/data/schema/schema.json`: columns,
-types, enums, required fields, foreign keys). Extracted tables use the same
+All tables are declared in one JSON Schema file, `data/curated/schema.json`
+(columns, types, enums, required fields, foreign keys). Extracted tables use the same
 schemas and record their adapter code hash and raw input hash.
 
 Commands (planned): `cpushowspeed data validate` checks every curated and
@@ -121,13 +121,49 @@ The pre-SPEC lead catalog becomes `source` rows with `status = lead`; its
 | --- | --- | --- |
 | `processor_family` | `fam:` | vendor, family, generation/codename |
 | `processor_sku` | `sku:` | family_id, vendor, model, variant suffix, base_clock_mhz |
-| `system_model` | `sys:` | vendor, family, model |
-| `configuration` | `cfg:` | system_id, processor ref (sku or family), chips, cores, threads/core, clock, memory, with `*_status` |
+| `system_model` | `sys:` | vendor, family, model (model variants such as RS/6000 530 and 530H are separate) |
+| `hardware_config` | `hw:` | system_id, processor ref (sku or family), clock, hardware options (FPU/FPA, vector unit), chips, cores, threads/core, memory, each with `*_status` |
 
 A processor reference may stop at the family when the source names only a family
 ("Intel Itanium 2", "SPARC64 V"). Family-level date events are family launches
-and are never presented as SKU releases. Configurations are extracted per source
-record; two configurations are not merged by name similarity.
+and are never presented as SKU releases.
+
+#### Hardware identity versus run conditions
+
+Selected 2026-10-02 (option B of three considered). Each observation links to
+the most specific hardware it can be shown to describe; everything about how the
+benchmark was run stays on the observation.
+
+1. **Hardware identity** (`hardware_config`): system model, processor, clock,
+   hardware options, chip/core/thread counts and memory. Observations from
+   different sources share one `hw:` only through an accepted `alias`; name
+   similarity alone never merges them.
+2. **Run conditions** (observation `run` object): language, compiler and flags,
+   OS, optimization level, scalar/vector mode, precision and copies/threads.
+   Structured where parseable, always with the original text.
+3. **Partial resolution**: when a source omits a hardware fact, the observation
+   resolves only as far as is certain (a `system_model`, a `processor_sku` or a
+   `processor_family`) and `resolution` records what is missing (for example
+   `fpu: unknown`). Nothing is guessed to complete a configuration.
+
+Source row numbers and source-internal codes (Netlib Dhrystone "reference 108",
+Longbottom "P8") are locators or raw fields, never identity. Examples from the
+current classical data:
+
+| Source row | Hardware resolution | Run conditions |
+| --- | --- | --- |
+| Longbottom Whetstone "DEC VAX 11/780 FPA", For, No | `hw:dec-vax-11-780+fpa` | Fortran, unoptimized |
+| Netlib LINPACK "VAX 11/780 FPA" | the same `hw:` after alias review | LINPACK n=100 |
+| Netlib Dhrystone "VAX 11/780", UNIX 5.0.1 | `sys:dec-vax-11-780` only; FPA unknown | UNIX 5.0.1 |
+| Longbottom "Cray Y-MP1" 90% Vector / P4 Scalar | one `hw:cray-y-mp1` | vector mode differs |
+| Netlib Dhrystone "486DX2/66" (no vendor) | `sku:intel-486dx2-66`; system unknown | MS-DOS 6.2 |
+| Netlib Dhrystone "Gateway 486DX2/66" | `sys:gateway-486dx2-66` with the same SKU | Linux 0.99 |
+
+SPEC disclosures are complete enough to derive `hw:` deterministically from
+system model, SKU, chip/core/thread counts and memory. Fitter grouping by
+"system and processor configuration" then uses these IDs instead of private keys.
+Software entities (OS releases, compiler versions) are not modelled: classical
+sources rarely identify them beyond "For", "Opt" or a product name.
 
 ### `alias`
 
@@ -152,7 +188,8 @@ consumer reads `resolution`; none re-implements matching. Ambiguous text
 ### `observation`
 
 `benchmark-observation-v2` = the current v1 envelope plus `source_id`,
-`configuration_id`, `metric_id` and `verification`. Values, units, raw records,
+`hardware_ref` (the most specific resolved entity), a structured `run` object,
+`metric_id` and `verification`. Values, units, raw records,
 execution vectors and software context are unchanged. SPEC observations are
 extracted; curated historical observations (`observations.jsonl`) and future
 KIPS/Auerbach/VUP values are curated rows of the same schema. A `metric` table
@@ -164,7 +201,7 @@ merges registry metrics with the input-catalog metric strings
 | Column | Meaning |
 | --- | --- |
 | `event_id` | Primary key |
-| `subject_kind`, `subject_id` | `processor_sku`, `processor_family`, `system_model`, `configuration` or `observation` |
+| `subject_kind`, `subject_id` | `processor_sku`, `processor_family`, `system_model`, `hardware_config` or `observation` |
 | `event_type` | `announcement`, `release`, `first_delivery`, `availability`, `hardware_availability`, `software_availability`, `test`, `publication`, `withdrawal` |
 | `date`, `date_precision`, `date_raw` | As above |
 | `claim_status` | `reported`, `announced_future`, `inferred_proxy` |
@@ -173,7 +210,7 @@ merges registry metrics with the input-catalog metric strings
 This single table replaces `cpu-release-proxies.csv`, `cpu-sku-chronology.csv`,
 `hardware-date-evidence.csv` and the year rules in `timeline-year-overrides.csv`.
 SPEC's HW Avail, Test Date and Published fields become extracted events on the
-observation's configuration. Announced future dates (for example a
+observation's hardware configuration. Announced future dates (for example a
 "Q4 2026" SKU in a 2026-10 page revision) are `announced_future`, not releases.
 
 ### `review`
@@ -194,11 +231,11 @@ A rejection never deletes evidence; selection views read decisions.
 
 - `resolution` — identity results described above.
 - `chronology_candidates` — every date event reachable from an observation
-  (observation → configuration → SKU/family/system) with its kind.
+  (observation → hardware config → SKU/family/system) with its kind.
 - `chronology_selected` — the CPU → hardware → submission-era selection owned by
   the [timeline contract](timeline.md#cpu-first-date-selection), as a query.
 - `consistency_findings` — reported, not auto-corrected: a SKU release later than
-  a configuration's hardware availability; one SKU with release years more than
+  a hardware configuration's availability; one SKU with release years more than
   one year apart; alias collisions; events outside the subject's plausible era.
 
 The timeline and fitters then read these views instead of private lookups.
@@ -214,7 +251,7 @@ The timeline and fitters then read these views instead of private lookups.
 | `timeline-year-overrides.csv` | `alias` (regex rule) + `date_event` (`inferred_proxy`) + `review` (rejected table years) |
 | `submission-date-reviews.csv` | `review` |
 | `mix-candidate-aliases.csv`, SPEC89 `aliases.csv` | `alias` (`candidate` / `accepted`) |
-| Input catalog `observations.jsonl` / `sources.jsonl` | Extracted `observation` v2 + `configuration` + SPEC date events |
+| Input catalog `observations.jsonl` / `sources.jsonl` | Extracted `observation` v2 + `hardware_config` + SPEC date events |
 | `historical/observations.jsonl` | Curated `observation` v2 |
 | `year-*-changes.csv`, `*-targets.csv`, `*-open-leads.csv`, pass audits | Move to `research/data/archive/<pass>/` as historical pass logs |
 | Fit outputs, timeline Parquet | Unchanged products, gaining input-table hashes |
@@ -245,12 +282,11 @@ is intended and listed in that step's report.
 
 `data validate` and `data build` are implemented in step 1 and extended per step.
 
-## Open decisions
+## Decisions
 
-- Curated location: `research/data/schema/` (proposed) versus a new top-level
-  `data/curated/`.
-- Database: SQLite (standard library, proposed) versus DuckDB (faster analytical
-  queries, new dependency).
-- Whether to keep per-table JSON Schema files or one combined `schema.json`.
-- How strictly to normalize `configuration` for classical sources whose rows
-  mix system, board and compiler identity.
+Decided 2026-10-02: curated tables live in `data/curated/`; the built database
+is standard-library SQLite; all table schemas are kept in one
+`data/curated/schema.json`.
+
+Also decided 2026-10-02: hardware identity and run conditions are separated as
+described under [hardware identity versus run conditions](#hardware-identity-versus-run-conditions).
