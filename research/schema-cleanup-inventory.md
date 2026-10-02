@@ -66,12 +66,13 @@ removed once the timeline reads that view with year parity.
 
 ### 4. Date-pass logs (archive any time; no code consumer)
 
-Fifteen `research/data/historical/year-*` files (about 0.6 MiB) are records of
+Fifteen former `research/data/historical/year-*` files (about 0.6 MiB), now in
+[`data/archive/date-passes/`](data/archive/date-passes/README.md), are records of
 completed review passes: `year-cpu-*`, `year-expansion-*`, `year-review-batch1*`
 and `year-wikipedia-*`. No code reads them; only
 [hardware-year-evidence](hardware-year-evidence.md) and the
-[historical data README](data/historical/README.md) cite them. Proposed: move to
-`research/data/archive/date-passes/<pass>/` and update those two documents.
+[historical data README](data/historical/README.md) cite them. Moved on 2026-10-02 to
+`research/data/archive/date-passes/<pass>/`; both documents were updated.
 `year-document-reviews.csv` is excluded: `historical_candidates` reads it.
 
 ### 5. Observation formats (retire in step 5)
@@ -100,9 +101,11 @@ readers to the built database, not only the modules that already accept
 
 ### 6. Already obsolete regardless of the schema
 
-- **Duplicate I/O helpers**: `read_csv`/`write_csv` remain in `classic_overlap`
-  and `spec89_build` beside the shared `research_io`; `unified_timeline.sha`
-  duplicates other hash helpers (listed as P1/P3 in the earlier inventory).
+- **I/O helpers** (checked 2026-10-02): `classic_overlap.read_csv`/`write_csv`
+  already delegate to `research_io` with explicit encoding/newline policies.
+  `spec89_build` keeps its own writer because it emits UTF-8 with BOM for the
+  versioned SPEC89 package; replacing it would change tracked bytes. Both are
+  left for the pipeline rewrite rather than changed now.
 - **Legacy timeline text exports**: `plot timeline --text-exports` writes the
   pre-Parquet JSONL/CSV; no current reader was found.
 - **Ad hoc coverage audit**: `cpu_chronology.spec_coverage` reimplements record
@@ -144,7 +147,7 @@ For every item:
 
 | When | Item |
 | --- | --- |
-| Now (independent) | Archive the 15 date-pass logs; remove the duplicate I/O helpers |
+| Done 2026-10-02 | Date-pass logs archived to `research/data/archive/date-passes/` |
 | Step 1 | Source registries |
 | Step 2 | Identity functions and alias tables; `spec_coverage` |
 | Steps 3–4 | Date tables and the four date-selection paths |

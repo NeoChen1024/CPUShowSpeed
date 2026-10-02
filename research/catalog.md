@@ -185,6 +185,7 @@ analysis from evidence, diagnostics and retired work.
 | [Classic collection and overlap snapshots](../research/data/classic/README.md) | guide | current |
 | [DEC, SSCL and Tomari/Hiraki table extraction](../research/data/classic/pdf-extraction/README.md) | guide | current |
 | [Curated historical observations](../research/data/historical/README.md) | guide | current |
+| [Completed date-pass logs](../research/data/archive/date-passes/README.md) | archive | retired |
 | [Helman SPEC89 worksheet derivative (1991-03-31)](../research/data/spec89/helman-1991/README.md) | guide | current |
 | [SPEC89 recovered observations, curated v2.0.0 snapshot](../research/data/spec89/v2.0.0/README.md) | guide | current |
 | [First local early-benchmark evidence pass](../research/early-benchmark-evidence.md) | evidence | current |

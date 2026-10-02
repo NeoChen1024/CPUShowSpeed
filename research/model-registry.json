@@ -1484,6 +1484,13 @@
       "purpose": "Curated historical observations"
     },
     {
+      "path": "research/data/archive/date-passes/README.md",
+      "title": "Completed date-pass logs",
+      "role": "archive",
+      "status": "retired",
+      "purpose": "Unchanged records of finished hardware-date review passes; no code reads them"
+    },
+    {
       "path": "research/data/spec89/helman-1991/README.md",
       "title": "Helman SPEC89 worksheet derivative (1991-03-31)",
       "role": "guide",

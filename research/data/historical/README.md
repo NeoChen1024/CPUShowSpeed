@@ -49,6 +49,11 @@ conflict overrides. Announcement and delivery are distinct; quarter precision
 uses a year-valued `date` plus `quarter`, and prospective events cannot establish
 actual shipment. See [hardware-year evidence](../../hardware-year-evidence.md).
 
+The completed date-pass logs described below (`year-review-batch1*`,
+`year-expansion-*`, `year-wikipedia-*`, `year-cpu-*`) moved to
+[../archive/date-passes/](../archive/date-passes/README.md) on 2026-10-02; no code reads them.
+`year-document-reviews.csv` stays here because `documents year-evidence` reads it.
+
 `year-review-batch1.csv` distinguishes completed OCR from source-checked date
 events across all 80 PDFs. `year-review-batch1-changes.csv` records the resulting
 point-year and evidence-span changes; benchmark scores and CIs are unchanged.
