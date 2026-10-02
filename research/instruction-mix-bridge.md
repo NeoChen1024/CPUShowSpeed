@@ -321,9 +321,12 @@ numeric evidence review below does not certify every OCR page.
 
 The [eight-document review ledger](data/classic/mix-study/ocr-review-ledger.csv)
 distinguishes published OCR screening, embedded-text fallback and original-page
-checks. The current search covers 920 published pages with 16 keyword-hit pages;
-the 651-page AFIPS embedded text was searched separately while its one failed
-OCR page prevents full-document publication.
+checks. The current search covers all eight documents' 1,571 published pages
+with 25 keyword-hit pages. AFIPS SJCC 1971 was published on 2026-10-03, after
+its last failed page (a memory dump with long rows of zero cells) was accepted by
+the corrected repeat check. Its OCR finds the same eight Gibson pages as the
+earlier embedded-text search, plus page 626, where ADP means automatic data
+processing.
 
 `uv run cpushowspeed classic mix-evidence` reproducibly screens the eight selected
 documents' **published** DocIR, including structured table cells. It writes

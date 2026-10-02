@@ -95,6 +95,15 @@ class OCRTests(unittest.TestCase):
         self.assertTrue(_has_bad_repeat(long_run))
         self.assertTrue(_has_bad_repeat("<div>" + ("loop " * 400) + "</div>"))
 
+    def test_blank_or_zero_columns_in_a_finished_table_are_not_repetition(self):
+        def row(label, cell, n):
+            return f"<tr>\n<td>{label}</td>\n" + f"<td>{cell}</td>\n" * n + "</tr>\n"
+
+        table = '<div data-label="Table"><table>\n' + row("1.", "", 19) + row("2.", "0", 15) + "<tr><td>3.</td><td>7</td></tr>\n"
+        self.assertFalse(_has_bad_repeat(table + "</table>\n</div>"))
+        self.assertTrue(_has_bad_repeat(table + row("4.", "0", 120) + "</table>\n</div>"))
+        self.assertTrue(_has_bad_repeat('<div data-label="Table"><table>\n' + row("x", "", 3) * 40 + "</table>\n</div>"))
+
     def test_visual_and_table_keep_chunk_positions(self):
         raw = (
             '<div data-label="Text" data-bbox="0 0 200 100">Intro</div>'

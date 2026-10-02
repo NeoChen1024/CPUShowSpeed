@@ -91,9 +91,16 @@ def repeat_tail(raw: str, trim: int = 0) -> bool:
     return False
 
 
+_CELL_RUN = re.compile(r"(<td(?:\s[^>]*)?>[^<]{0,16}</td>\s*)\1{1,63}(?!\1)")
+
+
 def has_repeat(raw: str) -> bool:
     if repeat_tail(raw):
         return True
+    if raw.rstrip().endswith("</div>"):
+        # A finished table row may hold many identical short cells (blank or zero
+        # columns); one row is at most 64 columns, so a longer run is still a loop.
+        raw = _CELL_RUN.sub(r"\1", raw)
     if len(raw) <= 50 or not repeat_tail(raw, 50):
         return False
     cell = re.search(r"<td(?:\s[^>]*)?>([01\s]+)$", raw[:-50])
