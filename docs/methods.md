@@ -18,6 +18,11 @@ adjacent suites, x is the newer score and y the older score. For classical
 models, x is a declared score/composite and y the documented target. Figures
 and data must retain this direction.
 
+Classical-to-speed calibrations are the exception (decision 2026-10-03): they
+fit power laws through the VAX-11/780, `log y = b × (log x − log x₇₈₀)`, where
+x₇₈₀ is the 780's own measured score or composite. SPEC-to-SPEC edges, including
+the SPECint89 bridge, stay proportional.
+
 ## Adjacent benchmark generations
 
 Match published rate submissions from adjacent SPEC suites using system and
@@ -83,22 +88,26 @@ error or shared systematic bias. `plot annual-rate-ci` propagates those shared v
 representative scores; its pale box envelopes and fixed-leader intervals
 retain that conditional, pointwise interpretation.
 
-## Classical model-median ratio estimator
+## Classical power law through the VAX-11/780
 
 Classical fits pair an original classical score or composite `x` with a target
-`y` (for the primary route, `SPECrate_int92 × 25500 / 604800` or its base
-counterpart). Dhrystone versions, Whetstone native/SP/DP columns and LINPACK
+`y` in speed-VAXen (SPECint92 or SPECbase_int92; one point is one speed-VAXen). Dhrystone versions, Whetstone native/SP/DP columns and LINPACK
 problem sizes stay separate; Whetstone's main MWIPS column must not be labelled
 universally single precision. All source rows and pair exclusions are retained;
 no score/residual threshold selects measurements. Repeated submissions remain
 observations.
 
-Within each normalized model group, take the median of `ln(y/x)`. The overall
-factor is `exp(mean(model medians))`, so each model has equal total weight. This
-is a unit-slope log-space ratio fit, not a freely estimated power-law conversion.
+The anchor `log x₇₈₀` is the median of the 780's distinct runs of each metric,
+averaged over a composite's members. With `dx = ln x − ln x₇₈₀`, the exponent is
+the anchored least-squares slope `b = Σ w·dx·ln y / Σ w·dx²`, where each model
+weighs 1 and each of its observations 1/n. The 780 thus predicts exactly one
+speed-VAXen; the unanchored slope of model medians is reported only as a
+diagnostic.
 
-Resample model medians with replacement 10,000 times (default seed 20260926) and
-report the 2.5/97.5 percentiles of the factor as conditional CI95. At least two
+Resample models with replacement 10,000 times (default seed 20260926), redraw
+the 780's log anchors from a normal distribution with their run-spread
+standard error, and report the 2.5/97.5 percentiles of the exponent as
+conditional CI95. At least two
 model groups are required; small-cohort intervals are fragile. The CI excludes
 mismatching configurations, source bias, unknown concurrency and workload
 transfer uncertainty; it is not a prediction interval.
@@ -117,8 +126,9 @@ SPEC target** as the primary classical bridge research method. No environment
 correction is applied to the primary estimates.
 
 For a declared set B of two or three distinct benchmark families, calculate
-`C_B = exp(mean(log(score_b / unit_b)))` and fit `y = k_B,target × C_B` using
-the existing model-balanced log-ratio estimator. Keep Dhrystone versions,
+`C_B = exp(mean(log(score_b / unit_b)))` and fit
+`log y = b_B,target × (log C_B − log C_B,780)` with the model-balanced
+estimator above (proportional `y = k × C_B` until 2026-10-03). Keep Dhrystone versions,
 Whetstone precision variants and LINPACK matrix sizes explicit. Pair and triple
 formulas have different coefficients; do not silently change the input set of
 a single composite when measurements are missing.
@@ -142,6 +152,9 @@ shared bridge uncertainty and separates holdout errors on observed rate from
 agreement with inferred targets. These estimates are not observed rate scores.
 The direct experiment shares the modern chain's rate unit; promoting its
 classical coefficients into a general historical converter remains separate.
+On 2026-10-03 the target became SPECint92 speed (speed-VAXen), the SPEC89 route
+became the single SPECint89 → SPECint92 edge, and the fits became power laws
+through the VAX-11/780.
 
 Report both factor uncertainty and held-out observation spread. Architecture,
 software and workload sensitivity remain part of the observed discrepancy;
@@ -201,9 +214,10 @@ The [network experiment](../research/classic-network-fitting.md) jointly fits
 power laws (Dhrystone versions share an exponent, each Whetstone precision has
 its own, LINPACK has one; intercepts tied to the
 VAX-11/780's measured scores) and latent unanchored configuration values.
-Targets fix observed speed-VAXen or qualified SPEC89-derived values. Unanchored
-co-observations constrain exponents and intercepts; disconnected metrics remain
-unidentified. Era drift between classical scores and SPEC is a documented
+Targets fix observed speed-VAXen or qualified SPEC89-derived values. Exponents
+come from anchored nodes and unanchored co-observations spanning at least two
+families; single-family unanchored nodes inform only free intercepts and
+predictions. Disconnected metrics remain unidentified. Era drift between classical scores and SPEC is a documented
 limitation, not a model term. This new experimental log-weighted-least-squares estimator is
 distinct from the ordinary model-median ratio fit above. Weight is equal per
 informative model, then per node, family and variant; repeated observations

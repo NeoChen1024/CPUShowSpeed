@@ -14,7 +14,8 @@ from collections import defaultdict
 from pathlib import Path
 
 import click
-from cpushowspeed.calibration import ANCHOR, fit, quantile
+import numpy as np
+from cpushowspeed.calibration import ANCHOR, error_summary, fit, quantile
 from cpushowspeed.calibration_edges import bridge_log, coefficient, joint_bootstrap
 from cpushowspeed.classical_store import (
     BRIDGE_SCOPE,
@@ -25,6 +26,7 @@ from cpushowspeed.classical_store import (
     recovered_int89,
     results,
     target_value,
+    vax780_anchor,
 )
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import connect, inputs_digest
@@ -105,20 +107,64 @@ def _audit(path, **content):
     path.write_text(json.dumps(dict(content, shared_code_sha256=code_hashes(Path(__file__))), indent=2) + "\n")
 
 
-def _predictor_rows(data, pattern, predictor):
+def anchor_draws(anchor, anchor_sd, draws, seed):
+    """Normal draws of each metric's 780 log anchor, shared by every fit that uses the metric."""
+    rng = np.random.default_rng([seed, 780])
+    return {m: rng.normal(anchor[m], anchor_sd[m], draws) for m in sorted(anchor)}
+
+
+def _predictor_rows(data, pattern, predictor, log_y):
+    """Rows with the predictor's log score `lx` (the equal-weight composite or one member) and log target `ly`."""
     for r in data:
         x = r["x"] if predictor == "equal_weight" else json.loads(r["member_values"])[pattern.split("+").index(predictor)]
-        yield dict(r, x=x)
+        yield dict(r, x=x, lx=math.log(x), ly=math.log(r[log_y]))
 
 
-def composite_calculate(rows, bootstrap, seed):
+def predictor_anchor(pattern, predictor, anchor, draws):
+    """The 780's log composite c and its draws for a predictor, or None when a member lacks a 780 anchor."""
+    members = pattern.split("+") if predictor == "equal_weight" else [predictor]
+    if any(m not in anchor for m in members):
+        return None
+    return statistics.fmean(anchor[m] for m in members), np.mean([draws[m] for m in members], axis=0)
+
+
+def anchored_summary(beta, beta_draws, c):
+    return dict(
+        vax780_anchor_score=math.exp(c),
+        exponent=beta,
+        exponent_ci95_low=float(np.quantile(beta_draws, 0.025)),
+        exponent_ci95_high=float(np.quantile(beta_draws, 0.975)),
+        vaxen_at_unit_score=math.exp(-beta * c),
+        valid_bootstrap_draws=len(beta_draws),
+    )
+
+
+def free_slope(rows):
+    """Unanchored diagnostic: slope of the model-median log target on the model-median log score."""
+    groups = defaultdict(list)
+    for r in rows:
+        groups[r["model_key"]].append(r)
+    xs = [statistics.median(r["lx"] for r in g) for _, g in sorted(groups.items())]
+    ys = [statistics.median(r["ly"] for r in g) for _, g in sorted(groups.items())]
+    if len(xs) >= 3 and max(xs) - min(xs) > 1e-8:
+        return dict(free_loglog_slope_diagnostic=statistics.linear_regression(xs, ys).slope)
+    return {}
+
+
+def composite_calculate(rows, anchor, anchor_sd, bootstrap, seed):
+    """Anchored power laws per cohort, target, pattern and predictor, with model leave-one-out predictions.
+
+    Returns the summaries, the held-out predictions and, per fitted summary, the kept
+    (exponent, anchor) draw pairs for drawing calibration bands.
+    """
     groups = defaultdict(list)
     for r in rows:
         groups[r["cohort"], r["target"], r["pattern"]].append(r)
-    summaries, predictions = [], []
+    c_draws = anchor_draws(anchor, anchor_sd, bootstrap, seed)
+    summaries, predictions, curves = [], [], {}
     for (cohort, target, pattern), data in sorted(groups.items()):
         for predictor in ["equal_weight"] + pattern.split("+"):
-            prepared = list(_predictor_rows(data, pattern, predictor))
+            prepared = list(_predictor_rows(data, pattern, predictor, "y_vaxen"))
             context = dict(
                 cohort=cohort,
                 target=target,
@@ -127,16 +173,26 @@ def composite_calculate(rows, bootstrap, seed):
                 predictor=predictor,
                 target_unit="speed-VAXen (SPECint92 = 1)",
             )
-            summaries.append(dict(context, **fit(prepared, bootstrap, seed)))
-            by_model = defaultdict(list)
-            for r in prepared:
-                by_model[r["model_key"]].append(r)
-            centers = {k: statistics.median(math.log(r["y_vaxen"] / r["x"]) for r in group) for k, group in by_model.items()}
-            if len(centers) < 2:
+            models = sorted({r["model_key"] for r in prepared})
+            result = dict(pairs=len(prepared), models=len(models), status="insufficient_models")
+            anchored = predictor_anchor(pattern, predictor, anchor, c_draws)
+            if anchored is None:
+                result["status"] = "no_vax780_anchor"
+            if len(models) < 2 or anchored is None:
+                summaries.append(dict(context, **result))
                 continue
-            for model, group in sorted(by_model.items()):
-                k = math.exp(statistics.mean(v for key, v in centers.items() if key != model))
-                for r in group:
+            c, cs = anchored
+            beta, _ = coefficient(prepared, {}, c)
+            beta_draws, _, valid = joint_bootstrap(prepared, {}, bootstrap, seed, cs)
+            curves[cohort, target, pattern, predictor] = (beta_draws, cs[valid])
+            residuals = []
+            for model in models:
+                held, _ = coefficient(prepared, {}, c, exclude=model)
+                for r in prepared:
+                    if r["model_key"] != model:
+                        continue
+                    log_error = held * (r["lx"] - c) - r["ly"]
+                    residuals.append(dict(model_key=model, log_error=log_error))
                     predictions.append(
                         dict(
                             context,
@@ -144,15 +200,35 @@ def composite_calculate(rows, bootstrap, seed):
                             spec_id=r["spec_id"],
                             member_ids=r["member_ids"],
                             observed_vaxen=r["y_vaxen"],
-                            predicted_vaxen=k * r["x"],
-                            training_factor=k,
-                            signed_error_percent=100 * (k * r["x"] / r["y_vaxen"] - 1),
+                            predicted_vaxen=math.exp(held * (r["lx"] - c)),
+                            training_exponent=held,
+                            signed_error_percent=100 * math.expm1(log_error),
                         )
                     )
-    return summaries, predictions
+            result.update(status="exploratory_vax780_anchored_power_law", **anchored_summary(beta, beta_draws, c))
+            result.update(holdout_summary(residuals), **free_slope(prepared))
+            summaries.append(dict(context, **result))
+    return summaries, predictions, curves
 
 
-def composite_plot(output, rows, summaries):
+def holdout_summary(residuals):
+    stats = error_summary(residuals)
+    return dict(
+        loo_model_p95_percent=stats["model_center_p95_percent"],
+        loo_model_balanced_observation_p95_percent=stats["model_balanced_observation_p95_percent"],
+        loo_within_model_p95_max_percent=stats["within_model_p95_max_percent"],
+        statistics_policy=stats["statistics_policy"],
+    )
+
+
+def band(curve, xx):
+    """CI95 of the calibrated speed-VAXen at each composite score in xx, from kept (exponent, anchor) draws."""
+    beta, cs = curve
+    logs = beta[:, None] * (np.log(xx)[None, :] - cs[:, None])
+    return np.exp(np.quantile(logs, [0.025, 0.975], axis=0))
+
+
+def composite_plot(output, rows, summaries, curves):
     import matplotlib
 
     matplotlib.use("Agg")
@@ -180,16 +256,12 @@ def composite_plot(output, rows, summaries):
             for group, color, label in ((same, "#167eaf", "same report column"), (other, "#d67c24", "same system, other source")):
                 if group:
                     ax.scatter([r["x"] for r in group], [r["y_vaxen"] for r in group], s=18, alpha=0.55, label=label, color=color)
-            if "factor" in result:
-                xx = [min(r["x"] for r in data) * 0.85, max(r["x"] for r in data) * 1.15]
-                ax.plot(xx, [x * result["factor"] for x in xx], color="black")
-                ax.fill_between(
-                    xx,
-                    [x * result["factor_ci95_low"] for x in xx],
-                    [x * result["factor_ci95_high"] for x in xx],
-                    color="gray",
-                    alpha=0.2,
-                )
+            if "exponent" in result:
+                xx = np.geomspace(min(r["x"] for r in data) * 0.85, max(r["x"] for r in data) * 1.15, 40)
+                c = math.log(result["vax780_anchor_score"])
+                ax.plot(xx, np.exp(result["exponent"] * (np.log(xx) - c)), color="black")
+                low, high = band(curves["same_system", target, pattern, "equal_weight"], xx)
+                ax.fill_between(xx, low, high, color="gray", alpha=0.2)
             title = pattern.replace("Dhrystone:", "D ").replace("Whetstone:", "W ").replace("LINPACK:", "L ").replace("+", " +\n")
             ax.set(
                 xscale="log",
@@ -210,7 +282,7 @@ def composite_plot(output, rows, summaries):
         variant = "base" if target == SPEED_TARGETS[0] else "peak"
         fig.suptitle(
             f"Classical composites → SPECint92 speed — {variant}\n"
-            "Paired by resolved system; shading: factor CI95, not prediction interval"
+            "Power laws through the VAX-11/780; paired by resolved system; shading: calibration CI95, not prediction interval"
         )
         fig.tight_layout(rect=(0, 0, 1, 0.95))
         save_figure(fig, output, f"composite-{variant}")
@@ -224,13 +296,17 @@ def composite_plot(output, rows, summaries):
 @click.option("--bootstrap", type=click.IntRange(min=100), default=10000, show_default=True)
 @click.option("--seed", type=int, default=20260926, show_default=True)
 def composite_fit(database, output, research_dir, bootstrap, seed):
-    """Fit two/three classical families directly to speed-VAXen (SPECint92), base and peak separately."""
+    """Fit two/three classical families directly to speed-VAXen (SPECint92) as power laws through the VAX-11/780.
+
+    Base and peak are fitted separately; the 780 scores one speed-VAXen in both.
+    """
     rows_, digest = _load(database)
+    anchor, anchor_sd, anchor_rows = vax780_anchor(rows_)
     rows = composite_rows(rows_, SPEED_TARGETS)
     for r in rows:
         r["y_vaxen"] = r.pop("y")
         r["variant"] = "base" if r["target"] == SPEED_TARGETS[0] else "peak"
-    summaries, predictions = composite_calculate(rows, bootstrap, seed)
+    summaries, predictions, curves = composite_calculate(rows, anchor, anchor_sd, bootstrap, seed)
     coverage = [
         dict(
             cohort=cohort,
@@ -247,10 +323,11 @@ def composite_fit(database, output, research_dir, bootstrap, seed):
         write_csv(output / (name + ".csv"), data)
     write_csv(research_dir / "composite-summary.csv", summaries)
     write_csv(research_dir / "composite-target-coverage.csv", coverage)
-    composite_plot(output, rows, summaries)
+    composite_plot(output, rows, summaries, curves)
     _audit(
         research_dir / "composite-audit.json",
-        method="classic-direct-speed-composites-v3-resolved-systems",
+        method="classic-direct-speed-composites-v4-power-law-vax780",
+        form="log speed-VAXen = exponent * (log composite - log VAX-11/780 composite)",
         bootstrap=bootstrap,
         seed=seed,
         primary_cohort="same_system",
@@ -260,7 +337,8 @@ def composite_fit(database, output, research_dir, bootstrap, seed):
         inputs_sha256=digest,
         target_rows=len(rows),
         comparisons=len(summaries),
-        uncertainty="system-cluster bootstrap; conditional on sources, system resolution, configurations and unit interpretation",
+        vax780_anchor=anchor_rows,
+        uncertainty="system-cluster bootstrap with normal VAX-11/780 anchor draws; conditional on sources, system resolution, configurations and unit interpretation",
     )
     click.echo(json.dumps(dict(output=str(output), comparisons=len(summaries), rows=len(rows))))
 
@@ -310,7 +388,12 @@ def speed_edges(evidence):
     return {SPEED_EDGE: edges[SPEED_EDGE]}
 
 
-def evaluate(rows, edges, draws, seed):
+def evaluate(rows, edges, c, c_draws, draws, seed):
+    """Anchored power law on SPECint92 and bridged SPECint89 targets, with model leave-one-out predictions.
+
+    Rows carry lx (log score) and ly (log reported target); a held-out model leaves the bridge
+    edges and the fit. Returns the summary, the held-out predictions and the kept draw pairs.
+    """
     models = sorted({r["model_key"] for r in rows})
     result = dict(
         models=len(models),
@@ -320,51 +403,45 @@ def evaluate(rows, edges, draws, seed):
         status="insufficient_models",
     )
     if len(models) < 2:
-        return result, []
-    k, b = coefficient(rows, edges)
-    samples, _ = joint_bootstrap(rows, edges, draws, seed)
+        return result, [], None
+    beta, b = coefficient(rows, edges, c)
+    beta_draws, _, valid = joint_bootstrap(rows, edges, draws, seed, c_draws)
     predictions = []
     errors = defaultdict(lambda: defaultdict(list))
     for model in models:
-        fk, fb = coefficient(rows, edges, exclude=model)
+        held, fb = coefficient(rows, edges, c, exclude=model)
         for r in rows:
             if r["model_key"] != model:
                 continue
-            y = r["raw_target"] * math.exp(fb if r["generation"] == "89" else 0)
-            pred = r["x"] * math.exp(fk)
+            target = r["ly"] + (fb if r["generation"] == "89" else 0)
+            pred = held * (r["lx"] - c)
             kind = "estimated_89_target" if r["generation"] == "89" else "observed_speed_target"
-            errors[kind][model].append(math.log(pred / y))
+            errors[kind][model].append(pred - target)
             predictions.append(
                 dict(
                     model_key=model,
                     spec_id=r["spec_id"],
                     member_ids=r["member_ids"],
                     target_kind=kind,
-                    evaluation_target_vaxen=y,
-                    predicted_vaxen=pred,
+                    evaluation_target_vaxen=math.exp(target),
+                    predicted_vaxen=math.exp(pred),
                     training_bridge_factor=math.exp(fb),
-                    training_factor=math.exp(fk),
-                    signed_error_percent=100 * math.expm1(math.log(pred / y)),
+                    training_exponent=held,
+                    signed_error_percent=100 * math.expm1(pred - target),
                 )
             )
-    result.update(
-        status="conditional_one_edge_bridge",
-        factor=math.exp(k),
-        bridge_factor=math.exp(b),
-        factor_ci95_low=quantile(samples, 0.025),
-        factor_ci95_high=quantile(samples, 0.975),
-        valid_bootstrap_draws=len(samples),
-    )
+    result.update(status="conditional_one_edge_bridge_vax780_power_law", bridge_factor=math.exp(b))
+    result.update(anchored_summary(beta, beta_draws, c))
     for kind, groups in errors.items():
         result[kind + "_models"] = len(groups)
         result[kind + "_p95_percent"] = quantile([100 * abs(math.expm1(statistics.median(v))) for v in groups.values()], 0.95)
         result[kind + "_within_model_p95_max_percent"] = max(
             quantile([100 * abs(math.expm1(e)) for e in v], 0.95) for v in groups.values()
         )
-    return result, predictions
+    return result, predictions, (beta_draws, c_draws[valid])
 
 
-def spec89_plot(output, rows, summary, b):
+def spec89_plot(output, rows, summary, curves, b):
     import matplotlib
 
     matplotlib.use("Agg")
@@ -390,18 +467,14 @@ def spec89_plot(output, rows, summary, b):
                 )
         for cohort, color in [("spec92_only", "#167eaf"), ("joint", "#222222")]:
             result = next(r for r in summary if r["pattern"] == p and r["cohort"] == cohort and r["predictor"] == "equal_weight")
-            if "factor" not in result:
+            if "exponent" not in result:
                 continue
-            xx = [min(r["x"] for r in group) * 0.9, max(r["x"] for r in group) * 1.1]
-            ax.plot(xx, [x * result["factor"] for x in xx], color=color, label=cohort)
+            xx = np.geomspace(min(r["x"] for r in group) * 0.9, max(r["x"] for r in group) * 1.1, 40)
+            c = math.log(result["vax780_anchor_score"])
+            ax.plot(xx, np.exp(result["exponent"] * (np.log(xx) - c)), color=color, label=cohort)
             if cohort == "joint":
-                ax.fill_between(
-                    xx,
-                    [x * result["factor_ci95_low"] for x in xx],
-                    [x * result["factor_ci95_high"] for x in xx],
-                    color=color,
-                    alpha=0.12,
-                )
+                low, high = band(curves[p, cohort, "equal_weight"], xx)
+                ax.fill_between(xx, low, high, color=color, alpha=0.12)
         ax.set(
             xscale="log",
             yscale="log",
@@ -414,8 +487,8 @@ def spec89_plot(output, rows, summary, b):
     for ax in list(axes.flat)[len(patterns) :]:
         ax.axis("off")
     fig.suptitle(
-        "SPECint89 bridge + direct SPECint92: joint classical fits\n"
-        "Triangles are estimated targets; shading is factor CI95, not prediction interval"
+        "SPECint89 bridge + direct SPECint92: joint power laws through the VAX-11/780\n"
+        "Triangles are estimated targets; shading is calibration CI95, not prediction interval"
     )
     fig.tight_layout(rect=(0, 0, 1, 0.94))
     save_figure(fig, output, "joint-scatter")
@@ -431,25 +504,26 @@ def spec89_plot(output, rows, summary, b):
 def spec89_fit(database, output, research_dir, bootstrap, seed):
     """Estimate the SPECint89→SPECint92 speed bridge and test joint composites in speed-VAXen."""
     rows_, digest = _load(database)
+    anchor, anchor_sd, anchor_rows = vax780_anchor(rows_)
+    c_draws = anchor_draws(anchor, anchor_sd, bootstrap, seed)
     ev = bridge_evidence(rows_)
     try:
         edges = speed_edges(ev)
     except ValueError as exc:
         raise click.ClickException(str(exc)) from exc
     b = bridge_log(edges)
-    _, bridge_samples = joint_bootstrap([], edges, bootstrap, seed)
+    _, bridge_samples, _ = joint_bootstrap([], edges, bootstrap, seed)
     # The rate edge is reported beside the bridge as a diagnostic of speed versus rate.
     bridge_results = [
         dict(edge=edge, role="speed_bridge" if edge == SPEED_EDGE else "diagnostic_not_chained", **fit(group, bootstrap, seed))
         for edge in sorted({r["edge"] for r in ev})
         for group in [[r for r in ev if r["edge"] == edge]]
     ]
-    low, high = quantile(bridge_samples, 0.025), quantile(bridge_samples, 0.975)
+    low, high = (float(q) for q in np.quantile(bridge_samples, [0.025, 0.975]))
     rows = composite_rows(rows_, ("SPECint89", "SPECint92"), cohorts=("same_system",))
     for r in rows:
         r["raw_target"] = r.pop("y")
-        r["z"] = math.log(r["raw_target"] / r["x"])
-    summaries, predictions = [], []
+    summaries, predictions, curves = [], [], {}
     for p in sorted({r["pattern"] for r in rows}):
         for cohort in ("spec92_only", "89_only", "joint"):
             selected = [
@@ -458,11 +532,16 @@ def spec89_fit(database, output, research_dir, bootstrap, seed):
                 if r["pattern"] == p and (cohort == "joint" or r["generation"] == ("89" if cohort == "89_only" else "92"))
             ]
             for predictor in ["equal_weight"] + p.split("+"):
-                prepared = [dict(r, z=math.log(r["raw_target"] / r["x"])) for r in _predictor_rows(selected, p, predictor)]
                 context = dict(pattern=p, cohort=cohort, predictor=predictor)
-                result, heldout = evaluate(prepared, edges, bootstrap, seed)
+                anchored = predictor_anchor(p, predictor, anchor, c_draws)
+                if anchored is None:
+                    summaries.append(dict(context, status="no_vax780_anchor"))
+                    continue
+                prepared = list(_predictor_rows(selected, p, predictor, "raw_target"))
+                result, heldout, curve = evaluate(prepared, edges, *anchored, bootstrap, seed)
                 summaries.append(dict(context, **result))
                 predictions.extend(dict(context, **r) for r in heldout)
+                curves[p, cohort, predictor] = curve
     for r in rows:
         r["target_kind"] = "estimated_89_target" if r["generation"] == "89" else "observed_speed_target"
         r["assigned_target_vaxen"] = r["raw_target"] * (math.exp(b) if r["generation"] == "89" else 1)
@@ -501,10 +580,11 @@ def spec89_fit(database, output, research_dir, bootstrap, seed):
         ("spec89-estimates", estimates),
     ]:
         write_csv(research_dir / (name + ".csv"), data)
-    spec89_plot(output, rows, summaries, b)
+    spec89_plot(output, rows, summaries, curves, b)
     _audit(
         research_dir / "spec89-audit.json",
-        method="spec89-one-edge-speed-joint-v3-resolved-systems",
+        method="spec89-one-edge-speed-joint-v4-power-law-vax780",
+        form="log speed-VAXen = exponent * (log composite - log VAX-11/780 composite); SPECint89 targets times the bridge factor",
         bootstrap=bootstrap,
         seed=seed,
         route=["SPECint89", "SPECint92 = speed-VAXen"],
@@ -518,6 +598,7 @@ def spec89_fit(database, output, research_dir, bootstrap, seed):
         estimate_systems=len({r["system_id"] for r in estimates}),
         comparisons=len(summaries),
         inputs_sha256=digest,
-        uncertainty="joint system-cluster bootstrap across the bridge edge and classical fit; estimates are not observed SPECint92 scores",
+        vax780_anchor=anchor_rows,
+        uncertainty="joint system-cluster bootstrap across the bridge edge and classical fit, with normal VAX-11/780 anchor draws; estimates are not observed SPECint92 scores",
     )
     click.echo(json.dumps(dict(output=str(output), bridge=bridge_results, estimates=len(estimates))))

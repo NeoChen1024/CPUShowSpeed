@@ -32,12 +32,12 @@ from cpushowspeed.classical_fit import DERIVED, RESEARCH, bridge_evidence, speed
 from cpushowspeed.classical_store import (
     BRIDGE_SCOPE,
     SCOPES,
-    VAX780,
     family,
     pairings,
     recovered_int89,
     results,
     target_value,
+    vax780_anchor,
 )
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import connect, inputs_digest
@@ -53,46 +53,6 @@ def ci95(log_draws, chunk=1000):
         q = np.quantile(np.exp(np.array(log_draws[i : i + chunk])), [0.025, 0.975], axis=1)
         out.extend(zip(q[0].tolist(), q[1].tolist()))
     return out
-
-
-def vax780_anchor(rows):
-    """The 780's median log score per metric, and the standard error of that median's run sample.
-
-    Run-to-run spread is the pooled variance of distinct classical results of one system at one
-    reported clock (compiler, OS and option differences included); the anchor's standard error
-    is that spread over the 780's run count.
-    """
-    runs, groups = defaultdict(list), defaultdict(lambda: defaultdict(list))
-    for r in rows:
-        if not r.classical or r.cpu_count not in (None, 1) or not r.system_id:
-            continue
-        for metric, score in r.classical.items():
-            groups[metric][r.system_id, r.clock_mhz].append(math.log(score))
-            if r.system_id == VAX780:
-                runs[metric].append(math.log(score))
-    anchor, sd, audit = {}, {}, []
-    for metric, logs in sorted(runs.items()):
-        ss, df = 0.0, 0
-        for values in groups[metric].values():
-            if len(values) > 1:
-                mean = statistics.fmean(values)
-                ss += sum((v - mean) ** 2 for v in values)
-                df += len(values) - 1
-        variance = ss / df if df else 0.0
-        anchor[metric] = statistics.median(logs)
-        sd[metric] = math.sqrt(variance / len(logs))
-        audit.append(
-            dict(
-                metric=metric,
-                vax780_runs=len(logs),
-                vax780_median_score=math.exp(anchor[metric]),
-                vax780_run_scores=";".join(f"{math.exp(v):.4g}" for v in sorted(logs)),
-                run_log_variance=variance,
-                run_variance_df=df,
-                anchor_log_sd=sd[metric],
-            )
-        )
-    return anchor, sd, audit
 
 
 def build(rows, scaling):

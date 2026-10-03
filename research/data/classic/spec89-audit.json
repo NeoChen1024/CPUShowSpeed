@@ -1,5 +1,6 @@
 {
-  "method": "spec89-one-edge-speed-joint-v3-resolved-systems",
+  "method": "spec89-one-edge-speed-joint-v4-power-law-vax780",
+  "form": "log speed-VAXen = exponent * (log composite - log VAX-11/780 composite); SPECint89 targets times the bridge factor",
   "bootstrap": 10000,
   "seed": 20260926,
   "route": [
@@ -33,15 +34,71 @@
   "estimate_systems": 95,
   "comparisons": 171,
   "inputs_sha256": "75aa169072fada7dd0f9302bfe13ac3f167ac2856a385c393b448618f49ff9f7",
-  "uncertainty": "joint system-cluster bootstrap across the bridge edge and classical fit; estimates are not observed SPECint92 scores",
+  "vax780_anchor": [
+    {
+      "metric": "Dhrystone:v1.1_DMIPS",
+      "vax780_runs": 8,
+      "vax780_median_score": 0.8783327456414349,
+      "vax780_run_scores": "0.7439;0.8201;0.8367;0.8668;0.89;0.8941;0.93;0.9334",
+      "run_log_variance": 0.04887030696309193,
+      "run_variance_df": 253,
+      "anchor_log_sd": 0.07815873828553331
+    },
+    {
+      "metric": "Dhrystone:v2.1_DMIPS",
+      "vax780_runs": 2,
+      "vax780_median_score": 0.834755221537501,
+      "vax780_run_scores": "0.8071;0.8634",
+      "run_log_variance": 0.04561254955152806,
+      "run_variance_df": 281,
+      "anchor_log_sd": 0.1510174651348778
+    },
+    {
+      "metric": "LINPACK:n100_MFLOPS",
+      "vax780_runs": 3,
+      "vax780_median_score": 0.14,
+      "vax780_run_scores": "0.11;0.14;0.14",
+      "run_log_variance": 0.062435791938811915,
+      "run_variance_df": 111,
+      "anchor_log_sd": 0.14426340716297614
+    },
+    {
+      "metric": "Whetstone:MWIPS",
+      "vax780_runs": 3,
+      "vax780_median_score": 1.02,
+      "vax780_run_scores": "0.494;1.02;1.18",
+      "run_log_variance": 0.9453931802413975,
+      "run_variance_df": 130,
+      "anchor_log_sd": 0.561365353473534
+    },
+    {
+      "metric": "Whetstone:MWIPS_DP",
+      "vax780_runs": 3,
+      "vax780_median_score": 0.715,
+      "vax780_run_scores": "0.41;0.715;0.76",
+      "run_log_variance": 0.2776090368263866,
+      "run_variance_df": 71,
+      "anchor_log_sd": 0.3041978724593509
+    },
+    {
+      "metric": "Whetstone:MWIPS_SP",
+      "vax780_runs": 2,
+      "vax780_median_score": 0.7358668357794091,
+      "vax780_run_scores": "0.5;1.083",
+      "run_log_variance": 0.030844056992182133,
+      "run_variance_df": 17,
+      "anchor_log_sd": 0.12418546008326042
+    }
+  ],
+  "uncertainty": "joint system-cluster bootstrap across the bridge edge and classical fit, with normal VAX-11/780 anchor draws; estimates are not observed SPECint92 scores",
   "shared_code_sha256": {
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration_edges.py": "b6e4cbe854b1fa3b36f9490ed8f253af05899c826a658726b5c4b9a441a785d6",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration_edges.py": "cf0c8220725f81448437d41d45451d7b800c7edf69a066f7e0cc7a6dbff5440d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "169d21f7160d99a6b8414043ece5cf140c6861b7eda3ed89929792d1e11b7c9c",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_fit.py": "c2f7f6fd48bd5e5ada5bf17bf3c80d67a9cc432b476ccb33397e4c2e200a5157",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "73f1ed829be9ec19a33c9d15524414309a41180e9da8cc755de767ee49674541",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_fit.py": "47a407fb9765ed0fbe760cfa44f73b3dd5488314d1230fe90e485628ff16485f",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "19a65ef781cb711ae406f16141d79819d0621646ce4420aecbc77bd95f9f4902",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated.py": "7c35f291c6a275114c1c1ed3c2ce7be017ab59692a1a94e4a5bdb214cddddfdb",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "481fc3b5d600caf5b76209672a6ccdeb1a3c64b37a51f915204de173cfa336f9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_identity.py": "eed4556830b8ef426e0279682b16d6fa2848ade3194c758bd07bd1fbe3386ee0",

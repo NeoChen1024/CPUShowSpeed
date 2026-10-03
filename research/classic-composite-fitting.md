@@ -1,7 +1,8 @@
 # Direct classical composites to speed-VAXen
 
 Computed and reviewed: 2026-09-27. Recomputed on resolved systems: 2026-10-02.
-Re-anchored to speed-VAXen: 2026-10-03 (method `classic-direct-speed-composites-v3-resolved-systems`).
+Re-anchored to speed-VAXen: 2026-10-03. Power laws through the VAX-11/780: 2026-10-03
+(method `classic-direct-speed-composites-v4-power-law-vax780`).
 
 ## Target
 
@@ -18,7 +19,14 @@ For each declared pair or triple of distinct classical benchmark families:
 
 `C = exp(mean(log(component score / component unit)))`
 
-`estimated speed-VAXen = k × C`.
+`log(estimated speed-VAXen) = b × (log C − log C₇₈₀)`,
+
+so the VAX-11/780, scoring C₇₈₀, is one speed-VAXen for any exponent b. C₇₈₀ is
+the same composite of the 780's own measured scores: each metric's median over
+the 780's distinct classical runs, as in the
+[network anchor](classic-network-fitting.md); a single-component baseline uses
+that metric's anchor alone. One exponent b is fitted per cohort, variant,
+combination and predictor.
 
 Units are 1 DMIPS, 1 MWIPS and 1 MFLOPS. Dhrystone versions, Whetstone
 native/SP/DP and LINPACK n=100 remain explicit. No environmental correction,
@@ -50,17 +58,22 @@ benchmark is imputed. `member_ids` lists the classical results behind each compo
 
 ## Estimation and evaluation
 
-A "model" in the statistics below is a resolved system (`system_id`). Each
-system's median `log(y/C)` is computed over all its observations; the
-exponential mean of system centers gives k. Every system has equal fit weight.
-The conditional factor CI95 uses 10,000 system-cluster bootstrap draws with
-seed 20260926.
+A "model" in the statistics below is a resolved system (`system_id`). The
+exponent is the anchored least-squares slope with every system weighing 1 and
+each of its observations 1/n: `b = Σ w·dx·log y / Σ w·dx²`, where
+`dx = log C − log C₇₈₀`. The conditional exponent CI95 uses 10,000
+system-cluster bootstrap draws with seed 20260926; each draw also redraws the
+780's log anchors from a normal distribution with the network's run-spread
+standard error. `free_loglog_slope_diagnostic` is the unanchored slope of system
+medians, reported only as a check on the anchored exponent.
 
-Leave-one-model-out excludes all observations of the test system from fitting.
+Leave-one-model-out excludes all observations of the test system from fitting
+the exponent; the anchor stays fixed.
 Single-component baselines use the same tuple multiset and folds as their
 composite. The main P95 statistic is the interpolated 95th percentile of the
-absolute model-center percentage errors; the maximum within-model observation
-P95 is also retained. The shaded CI95 is not a prediction interval for an old
+absolute model-center percentage errors; the model-balanced observation P95
+and the maximum within-model observation P95 are also retained. The shaded
+CI95 (exponent and anchor draws) is not a prediction interval for an old
 machine. Source selection, configuration mismatch, shared lineage and earlier
 architecture extrapolation are not covered by the bootstrap.
 
@@ -73,27 +86,34 @@ are not counts of independent benchmark runs. Peak targets cover 98 results on
 
 ### Peak
 
-| Composite | Systems / tuples | k | Factor CI95 | LOMO model-center P95 |
-| --- | ---: | ---: | --- | ---: |
-| Dhrystone 1.1 + LINPACK | 42 / 95 | 1.42549 | 1.34418–1.50950 | 39.91% |
-| Dhrystone 2.1 + LINPACK | 43 / 96 | 1.45531 | 1.36185–1.55279 | 43.54% |
-| Whetstone DP + LINPACK | 35 / 80 | 1.68628 | 1.61037–1.76541 | 28.27% |
-| Dhrystone 1.1 + Whetstone DP + LINPACK | 34 / 79 | 1.21596 | 1.17236–1.26019 | 23.10% |
-| Dhrystone 2.1 + Whetstone DP + LINPACK | 34 / 79 | 1.24659 | 1.19736–1.29733 | 26.12% |
+| Composite | Systems / tuples | C₇₈₀ | Exponent b | Exponent CI95 | LOMO model-center P95 |
+| --- | ---: | ---: | ---: | --- | ---: |
+| Dhrystone 1.1 + LINPACK | 42 / 95 | 0.3507 | 0.8506 | 0.8222–0.8817 | 34.61% |
+| Dhrystone 2.1 + LINPACK | 43 / 96 | 0.3419 | 0.8484 | 0.8128–0.8871 | 31.63% |
+| Whetstone DP + LINPACK | 35 / 80 | 0.3164 | 0.8610 | 0.8056–0.9240 | 20.95% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 34 / 79 | 0.4447 | 0.8646 | 0.8250–0.9074 | 21.10% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 34 / 79 | 0.4372 | 0.8652 | 0.8240–0.9119 | 19.15% |
 
 ### Base
 
-| Composite | Systems / tuples | k | Factor CI95 | LOMO model-center P95 |
+| Composite | Systems / tuples | Exponent b | Exponent CI95 | LOMO model-center P95 |
 | --- | ---: | ---: | --- | ---: |
-| Dhrystone 1.1 + LINPACK | 13 / 31 | 1.37919 | 1.32939–1.43293 | 11.62% |
-| Dhrystone 2.1 + LINPACK | 13 / 31 | 1.38729 | 1.33553–1.43896 | 11.17% |
-| Whetstone DP + LINPACK | 13 / 31 | 1.51546 | 1.46194–1.56930 | 13.07% |
-| Dhrystone 1.1 + Whetstone DP + LINPACK | 13 / 31 | 1.11684 | 1.07485–1.15880 | 13.64% |
-| Dhrystone 2.1 + Whetstone DP + LINPACK | 13 / 31 | 1.12121 | 1.07519–1.16670 | 14.15% |
+| Dhrystone 1.1 + LINPACK | 13 / 31 | 0.8607 | 0.8352–0.8883 | 16.94% |
+| Dhrystone 2.1 + LINPACK | 13 / 31 | 0.8576 | 0.8266–0.8916 | 13.80% |
+| Whetstone DP + LINPACK | 13 / 31 | 0.8593 | 0.8106–0.9145 | 15.30% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 13 / 31 | 0.8649 | 0.8299–0.9029 | 15.70% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 13 / 31 | 0.8627 | 0.8263–0.9037 | 15.63% |
 
 The `same_result` cohort covers 62 peak targets on 38 systems; for example
-Dhrystone 1.1 + LINPACK gives 1.36335 (P95 28.20%) and the Dhrystone 1.1 +
-Whetstone DP + LINPACK triple 1.13282 (32 systems, P95 20.29%).
+Dhrystone 1.1 + LINPACK gives b 0.8478 (P95 20.78%) and the Dhrystone 1.1 +
+Whetstone DP + LINPACK triple 0.8571 (32 systems, P95 17.35%).
+
+Every fitted exponent lies between 0.85 and 0.92, below one: a proportional
+factor fitted to fast systems overstates slow ones. The anchored exponents sit
+below the unanchored free slopes (for example 0.8646 against 0.956 for the peak
+Dhrystone 1.1 + DP + LINPACK triple), so the 780 lies above the free line
+extrapolated from 1990s systems. This is the same era effect the
+[network report](classic-network-fitting.md) lists as a limitation.
 
 The [full summary](data/classic/composite-summary.csv) includes all 17
 combinations per variant in the main cohort, with native/SP Whetstone and every
@@ -101,9 +121,9 @@ single-component baseline. No combination was removed because its error was
 high. These tables do not select a universal winning estimator.
 
 For the 34-system peak Dhrystone 1.1/DP/LINPACK triple cohort, single
-Dhrystone, Whetstone and LINPACK P95 values are 22.02%, 30.27% and 46.16%,
-versus 23.10% for the composite: on this cohort the composite does not beat
-Dhrystone alone. Its maximum within-system observation P95 is 56.62%.
+Dhrystone, Whetstone and LINPACK P95 values are 25.70%, 26.09% and 25.89%,
+versus 21.10% for the composite. Its maximum within-system observation P95 is
+42.45%.
 
 Base's smaller errors do not establish that base is intrinsically more
 predictable: its source and hardware cohorts differ from peak. Pair and triple
@@ -111,6 +131,29 @@ rows above are not controlled same-machine comparisons; the matched
 single-score comparisons are controlled at the tuple/fold level.
 
 ## Changes
+
+### Power laws through the VAX-11/780 (2026-10-03)
+
+The proportional factor `y = k × C` is replaced by the anchored power law above,
+matching the [network](classic-network-fitting.md). Tuples and cohorts are
+unchanged; all 194 comparison rows are fitted. Across the 114 `same_system`
+rows with a holdout P95 in both versions, the median P95 is 22.7% → 22.6% (65
+lower); across the 80 `same_result` rows, 22.0% → 19.4% (55 lower).
+
+| Peak composite (`same_system`) | k / P95, proportional | b / P95, power law |
+| --- | --- | --- |
+| Dhrystone 1.1 + LINPACK | 1.42549 / 39.91% | 0.8506 / 34.61% |
+| Dhrystone 2.1 + LINPACK | 1.45531 / 43.54% | 0.8484 / 31.63% |
+| Whetstone DP + LINPACK | 1.68628 / 28.27% | 0.8610 / 20.95% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 1.21596 / 23.10% | 0.8646 / 21.10% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 1.24659 / 26.12% | 0.8652 / 19.15% |
+
+Base is worse: the Dhrystone 1.1 + LINPACK P95 rises 11.62% → 16.94% and the
+triple 13.64% → 15.70%. The 13 base systems span a narrow range far from the
+780, so one anchored exponent cannot also match their local slope (free slopes
+1.00–1.06). For the peak triple cohort, the single-component baselines change from
+22.02%, 30.27% and 46.16% (Dhrystone, Whetstone, LINPACK) to 25.70%, 26.09% and
+25.89%, so the composite now beats each one.
 
 ### HP 9000/720 1996 pairing rejected (2026-10-03)
 

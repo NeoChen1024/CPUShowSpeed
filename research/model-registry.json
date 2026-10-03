@@ -1197,7 +1197,7 @@
       ],
       "target_metric": "speed-vaxen",
       "relationship": "empirical-fit",
-      "formula": "y = k*x",
+      "formula": "log y = b*(log x - log x_780); the VAX-11/780 scores 1",
       "variants": [
         "base",
         "peak"
@@ -1231,7 +1231,7 @@
       ],
       "target_metric": "speed-vaxen",
       "relationship": "composition",
-      "formula": "fit native89 log ratios then apply shared bridge; implemented as 89_only cohort",
+      "formula": "log(SPECint89 * bridge) = b*(log x - log x_780); implemented as 89_only cohort",
       "variants": [
         "peak; 89_only cohort"
       ],
@@ -1263,7 +1263,7 @@
       ],
       "target_metric": "speed-vaxen",
       "relationship": "joint-fit",
-      "formula": "y = k*x",
+      "formula": "log y = b*(log x - log x_780); SPECint89 targets times the bridge",
       "variants": [
         "peak; joint cohort"
       ],

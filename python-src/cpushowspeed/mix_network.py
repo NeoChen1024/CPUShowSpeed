@@ -20,7 +20,7 @@ from pathlib import Path
 import click
 import numpy as np
 from cpushowspeed.calibration import error_summary
-from cpushowspeed.classic_network import build, evaluate, vax780_anchor
+from cpushowspeed.classic_network import build, evaluate
 from cpushowspeed.classic_network_model import (
     bootstrap,
     bridge_log,
@@ -28,7 +28,13 @@ from cpushowspeed.classic_network_model import (
     train,
 )
 from cpushowspeed.classical_fit import DERIVED, RESEARCH, bridge_evidence, speed_edges
-from cpushowspeed.classical_store import BRIDGE_SCOPE, SCOPES, family, results
+from cpushowspeed.classical_store import (
+    BRIDGE_SCOPE,
+    SCOPES,
+    family,
+    results,
+    vax780_anchor,
+)
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.mix_bridge import MIX_SCOPE, _rows, pending_links
 from cpushowspeed.observation_store import connect, inputs_digest

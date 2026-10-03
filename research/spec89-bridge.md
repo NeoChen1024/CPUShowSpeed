@@ -1,7 +1,8 @@
 # SPECint89 bridge to speed-VAXen and joint classical fitting
 
 Computed and reviewed: 2026-09-27. Recomputed on resolved systems: 2026-10-02.
-Re-anchored to speed-VAXen: 2026-10-03 (method `spec89-one-edge-speed-joint-v3-resolved-systems`).
+Re-anchored to speed-VAXen: 2026-10-03. Power laws through the VAX-11/780: 2026-10-03
+(method `spec89-one-edge-speed-joint-v4-power-law-vax780`).
 
 ## Evidence path
 
@@ -25,7 +26,8 @@ as bridge evidence.
 | SPECint89 → SPECint92 | speed bridge | 15 / 17 | **0.9603866** | 0.943053–0.979110 (joint) | 8.61% |
 | SPECint92 → rate-VAXen | diagnostic, not chained | 24 / 48 | 0.9965475 | 0.992201–1.000572 | 1.86% |
 
-Thus `estimated speed-VAXen = 0.9603866 × SPECint89`. The interval quantifies
+Thus `estimated speed-VAXen = 0.9603866 × SPECint89`. The bridge stays
+proportional: both sides are SPEC integer suites on the same reference machine. The interval quantifies
 fitted-factor uncertainty, not a 95% prediction interval for an individual old
 machine. Transporting the bridge to earlier architectures remains an assumption.
 There is no base-variant bridge, so the route is peak-only.
@@ -42,8 +44,10 @@ reached rate-VAXen through both edges, factor 0.9570709).
 The joint model adds the SPECint89 classical pairs after translating their
 targets through the bridge, beside directly observed SPECint92 targets. It uses
 the `same_system` cohort (resolved system, no clock scaling), fixed
-equal-weight geometric composites and the model-balanced log-ratio estimator of
-the [direct composite experiment](classic-composite-fitting.md). Dhrystone
+equal-weight geometric composites and the model-balanced power law through the
+VAX-11/780 of the [direct composite experiment](classic-composite-fitting.md):
+`log(target) = b × (log C − log C₇₈₀)`, where a SPEC89 target is
+`SPECint89 × bridge`. Dhrystone
 versions, Whetstone precision and LINPACK n=100 remain distinct. No residual
 threshold removes a source or machine. A result that reports SPECint92 is used
 through that value, not also through its SPECint89 estimate.
@@ -54,9 +58,10 @@ labels its target `observed_speed_target` or `estimated_89_target`.
 
 CI95 uses 10,000 draws (seed 20260926) that jointly resample resolved systems
 from the union of the bridge edge and the classical cohort; a system present in
-both receives one weight. Each draw refits the bridge and the classical factor
-and applies one shared bridge multiplier to every SPEC89 target, so repeated
-converted observations do not shrink the common uncertainty.
+both receives one weight. Each draw refits the bridge and the classical
+exponent, redraws the 780's log anchors, and applies one shared bridge
+multiplier to every SPEC89 target, so repeated converted observations do not
+shrink the common uncertainty.
 
 Leave-one-model-out removes the test system from the bridge and the classical
 fit. Errors against observed SPECint92 are reported separately from agreement
@@ -68,23 +73,48 @@ Equal-weight composites, `same_system`. P95 is the leave-one-system-out
 model-center error on observed SPECint92 targets; the last column is agreement
 with the converted SPEC89 targets.
 
-| Composite | SPEC92-only → joint systems | SPEC92-only P95 | Joint P95, observed | Joint P95, SPEC89 |
-| --- | ---: | ---: | ---: | ---: |
-| Dhrystone 1.1 + LINPACK | 42 → 61 | 39.91% | 50.72% | 78.17% |
-| Dhrystone 2.1 + LINPACK | 43 → 56 | 43.54% | 51.40% | 75.49% |
-| Whetstone native + LINPACK | 9 → 12 | 22.14% | 32.04% | 49.20% |
-| Whetstone DP + LINPACK | 35 → 52 | 28.27% | 48.17% | 49.48% |
-| Whetstone SP + LINPACK | 33 → 49 | 23.57% | 38.31% | 45.93% |
-| Dhrystone 1.1 + Whetstone DP | 35 → 51 | 26.93% | 37.41% | 30.65% |
-| Dhrystone 1.1 + Whetstone DP + LINPACK | 34 → 49 | 23.10% | 36.35% | 33.08% |
-| Dhrystone 2.1 + Whetstone DP + LINPACK | 34 → 43 | 26.12% | 36.65% | 37.03% |
-| Dhrystone 1.1 + Whetstone SP + LINPACK | 33 → 48 | 21.79% | 32.94% | 30.07% |
+| Composite | SPEC92-only → joint systems | SPEC92-only b / P95 | Joint b | Joint P95, observed | Joint P95, SPEC89 |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Dhrystone 1.1 + LINPACK | 42 → 61 | 0.8506 / 34.61% | 0.8483 | 33.10% | 70.26% |
+| Dhrystone 2.1 + LINPACK | 43 → 56 | 0.8484 / 31.63% | 0.8472 | 30.71% | 76.17% |
+| Whetstone native + LINPACK | 9 → 12 | 0.8823 / 26.46% | 0.8843 | 27.40% | 47.67% |
+| Whetstone DP + LINPACK | 35 → 52 | 0.8610 / 20.95% | 0.8685 | 22.19% | 45.68% |
+| Whetstone SP + LINPACK | 33 → 49 | 0.8483 / 22.98% | 0.8510 | 24.20% | 28.69% |
+| Dhrystone 1.1 + Whetstone DP | 35 → 51 | 0.8734 / 26.84% | 0.8752 | 27.80% | 25.85% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 34 → 49 | 0.8646 / 21.10% | 0.8679 | 21.33% | 17.35% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 34 → 43 | 0.8652 / 19.15% | 0.8692 | 18.26% | 19.88% |
+| Dhrystone 1.1 + Whetstone SP + LINPACK | 33 → 48 | 0.8550 / 24.06% | 0.8559 | 23.54% | 20.63% |
 
 Full results and baselines are in the
 [machine-readable summary](data/classic/spec89-summary.csv). For Dhrystone 1.1 +
-LINPACK the joint factor is 1.537157 (CI95 1.439097–1.640840). The largest
-SPEC89 misses remain the IBM RS/6000 systems, whose LINPACK n=100 results are
-high relative to their integer speed; one shared composite factor cannot follow them.
+LINPACK the joint exponent is 0.8483 (CI95 0.8175–0.8815). Adding the SPEC89
+systems moves each exponent by at most 0.008 and the observed-target P95 by at
+most 1.5 points: the SPEC89 and SPEC92 targets lie on one power law through the
+780. The largest SPEC89 misses remain the IBM RS/6000 systems (Dhrystone 1.1 +
+LINPACK: the RS/6000 530, 550 and 320 overpredicted by 67–85%), whose LINPACK
+n=100 results are high relative to their integer speed.
+
+### Power laws through the VAX-11/780 (2026-10-03)
+
+The proportional factor is replaced by the anchored power law above; tuples,
+cohorts and the bridge are unchanged. Across the 114 rows with each P95 in both
+versions, the median observed-target P95 falls 33.6% → 27.8% (93 lower) and the
+median SPEC89-target P95 42.0% → 32.8% (86 lower). The joint cohorts gain most.
+Under the proportional factor, the 1987–90 SPEC89 systems lay below the line
+fitted to 1990s systems, so joining them pulled the factor up and raised the
+observed-target P95 by 10–20 points; a slope below one removes most of that
+conflict.
+
+| Composite | Joint P95 observed / SPEC89, proportional | Power law |
+| --- | --- | --- |
+| Dhrystone 1.1 + LINPACK | 50.72% / 78.17% | 33.10% / 70.26% |
+| Whetstone DP + LINPACK | 48.17% / 49.48% | 22.19% / 45.68% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 36.35% / 33.08% | 21.33% / 17.35% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 36.65% / 37.03% | 18.26% / 19.88% |
+
+SPEC92-only Whetstone native + LINPACK (9 systems) worsens 22.14% → 26.46%
+and Dhrystone 1.1 + Whetstone SP + LINPACK 21.79% → 24.06%. The SPECint89
+estimates and the bridge summary are unchanged.
 
 ### HP 9000/720 1996 pairing rejected (2026-10-03)
 
