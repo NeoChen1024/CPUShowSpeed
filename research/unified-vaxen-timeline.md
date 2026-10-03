@@ -174,6 +174,18 @@ changes in the [network report](classic-network-fitting.md#changes-from-the-1990
 SPEC rows and SPEC89 bridge estimates are unchanged. The full-population Node
 test passed (2026-10-03).
 
+## Printed SPEC89 means — 2026-10-03
+
+The [printed SPECint89 values](usenet-result-lists.md#printed-spec89-means-19901991)
+add nine SPEC89 records: 102,025 → 102,034 records (SPEC89 179 → 188; speed
+43,212 → 43,221; hardware-dated 26,381 → 26,386, unknown 1,152 → 1,156). The
+Data General AV/6200, Motorola 8612 and both Motorola 8864SP rows have no curated
+year. Each is its SPECint89 times the int89_to_int92 bridge factor, 10.85
+(Data General AV/410) to 43.99 (CDC 4680 and MIPS RC6280) speed-VAXen. The
+refit moved the classical and mix rows by the coefficient changes in the
+[network report](classic-network-fitting.md#changes-from-the-printed-spec89-means-2026-10-03).
+SPEC rows are unchanged. The full-population Node test passed.
+
 ## Smaller Usenet result posts — 2026-10-03
 
 The [SSBA and Nefzger LINPACK posts](usenet-result-lists.md#smaller-result-posts-19901991)

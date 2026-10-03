@@ -30,6 +30,7 @@ from cpushowspeed.classical_store import (
     SCOPES,
     family,
     pairings,
+    recovered_int89,
     results,
     target_value,
 )
@@ -65,7 +66,7 @@ def build(rows, scaling):
     for p in pairings(rows, scaling):
         t, c = p["target"], p["classical"]
         speed = target_value(t, "SPECint92")
-        old = t.values.get("SPECint89") if t.scope == "historical-spec:spec89" else None
+        old = recovered_int89(t)
         if not speed and not old:
             continue
         audit.append(

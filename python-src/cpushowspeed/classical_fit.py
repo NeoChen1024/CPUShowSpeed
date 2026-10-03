@@ -22,6 +22,7 @@ from cpushowspeed.classical_store import (
     family,
     node_scores,
     pairings,
+    recovered_int89,
     results,
     target_value,
 )
@@ -478,7 +479,7 @@ def spec89_fit(database, output, research_dir, bootstrap, seed):
             source_url=r.source_url,
         )
         for r in rows_
-        if r.scope == "historical-spec:spec89" and r.values.get("SPECint89") and not r.reference
+        if recovered_int89(r)
     ]
     old = {r.system_id for r in rows_ if r.system_id and r.values.get("SPECint89") and not r.reference}
     new = {r.system_id for r in rows_ if r.system_id and r.values.get("SPECint92") and r.scope != BRIDGE_SCOPE}

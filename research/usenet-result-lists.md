@@ -4,7 +4,8 @@ Reviewed: 2026-10-03. Status: Rick Richardson's Dhrystone lists are parsed from
 the stored postings by
 [`usenet_results.py`](../python-src/cpushowspeed/usenet_results.py) and used by the
 classical network. Smaller result posts (SSBA, SPARC LINPACK, Livermore kernels)
-are hand-transcribed as curated observations. All posts here come from the UTZOO archive
+and printed SPEC89 means missing from the SPEC89 package are hand-transcribed as
+curated observations. All posts here come from the UTZOO archive
 ([sources](../docs/sources.md#utzoo-usenet-archive)); each one used is stored as a
 raw blob and cited by message ID, tape and member path in
 [`data/curated/source.jsonl`](../data/curated/source.jsonl).
@@ -172,6 +173,75 @@ Details are in the [network](classic-network-fitting.md#changes-from-the-smaller
 [SPEC89 bridge](spec89-bridge.md#changes-from-the-smaller-usenet-result-posts-2026-10-03)
 and [timeline](unified-vaxen-timeline.md#smaller-usenet-result-posts--2026-10-03)
 reports.
+
+## Printed SPEC89 means, 1990–1991
+
+About 850 UTZOO posts mention SPEC results. Their integer-mean lines were
+extracted and compared with the [SPEC89 package plus the Helman
+supplement](data/spec89/aggregate89-plus-helman.csv). Four posts print means
+the package lacks. They are transcribed into
+[`data/curated/observation.jsonl`](../data/curated/observation.jsonl)
+(`usenet_text_checked`): SPECint89 as a calibration input, SPECfp89 and
+SPECmark89 as context. SPECint89 is the only SPEC89 target the classical
+network and SPEC89 bridge use.
+
+| Source | Systems | SPECint89 / SPECfp89 / SPECmark89 | Basis |
+| --- | --- | --- | --- |
+| `src:mashey-ymmv-88k-1990`: John Mashey (MIPS), "Re: Fastest 88k", comp.arch `<42586@mips.mips.COM>`, 1990-10-31 | Data General AV/410, 20 MHz | 11.3 / 8.3 / 9.4 | SPEC newsletter, Spring 1990 |
+| | Data General AV/6200, 25 MHz | 15.3 / 11.3 / 12.7 | Winter 1990 |
+| | Motorola 8864SP, 20 MHz | 14.6 / 10.8 / 12.2 | Winter 1990 |
+| | Motorola 8864SP, 25 MHz | 18.3 / 13.5 / 15.2 | Winter 1990 |
+| | Motorola 8612, 33 MHz | 21.4 / 15.8 / 17.8 | Winter 1990 |
+| | MIPS Magnum (RC3230), 25 MHz | 19.4 / 16.8 / 17.8 | Summer 1990 |
+| `src:ragan-cdc4680-spec-1991`: Rich Ragan (Control Data), "Compilers & SPECmarks...", comp.arch `<32097@shamash.cdc.com>`, 1991-04-08 | MIPS RC6280 | 45.8 / 45.6 / 45.7 | Control Data's run, MIPS 2.20 compilers |
+| | CDC 4680 | 45.8 / 63.5 / 55.7 | Same hardware, CDC/KAI FORTRAN; submitted to SPEC |
+| `src:mashey-rc3360-spec-1991`: John Mashey, "Re: r4000", comp.arch `<46252@mips.mips.COM>`, 1991-02-27 | MIPS RC3360, 33 MHz | 27.1 / 26.2 / 26.5 | Vendor statement |
+| `src:torrie-harris-nighthawk-spec-1991`: Evan Torrie, "Re: RISC vs. CISC -- SPECmarks", comp.sys.next `<1991Apr27.004627.27205@neon.Stanford.EDU>`, 1991-04-27 | Harris Night Hawk, 25 MHz 88000 | 20.02 / 15.73 / 17.32 | Unattributed; all three are context |
+
+Mashey's table is an extract from MIPS's *Your Mileage May Vary* issue 2.0.
+Its two Motorola MPC rows are Mashey's estimates and are not transcribed; its
+"published mips" column is a vendor rating, not a measurement. The DG
+AV/6200 and Motorola 8612 SPECmark89 values equal the package's. The Night Hawk
+result has no stated source, model number or compiler, and Harris's own
+1990-10-31 post ran in-house development compilers, so it is context only.
+
+SPECint89 targets formerly came only from the SPEC89 package; since this
+change, the network and SPEC89 bridge take them from any source except the
+SPEC89/92 bridge table and reference definitions. The nine SPECint89 rows add
+nine SPEC89 timeline records (10.85 to 43.99 speed-VAXen). Four pair with
+classical results and become inferred-89 network nodes (122 → 126): CDC 4680
+(Whetstone) and MIPS RC3360 (LINPACK) are new SPEC89 systems, and MIPS RC6280 and
+RC3230 gain a second node. All four are underpredicted (for example CDC 4680
+25.4 vs 44.0 speed-VAXen), so `linear_clock / with_spec89` coefficients rise:
+Whetstone native +3.32%, DP +3.13%, LINPACK +1.53%, Dhrystone +0.33–0.38%. The
+all-available observed P95 rises 85.1% → 87.9%. The 88k systems have no
+classical results and the Night Hawk rows are context, so they do not affect
+the fit. Details are in the [network](classic-network-fitting.md#changes-from-the-printed-spec89-means-2026-10-03)
+and [timeline](unified-vaxen-timeline.md#printed-spec89-means--2026-10-03) reports.
+
+The CDC 4680's Whetstone results resolve to `sys:cdc4680` and its LINPACK
+result to `sys:cyber4680`; the alias is not reviewed, so the LINPACK result
+does not pair with the SPECint89 target.
+
+Posts that only repeat package values or lack a printed mean:
+
+- Michael Slater, "Re: 68040 Status - SPEC table with missing line added",
+  comp.arch `<39825@cup.portal.com>`, 1991-03-04. Per-benchmark ratios and means
+  for eight systems. The HP 425t/425s, 486, SPARCstation 330, RC3240 and RS/6000
+  530 means are in the package, and the Motorola 8864SP mean is Mashey's. The
+  Intel-published i860 add-in board (16.4) has no classical results and is not
+  transcribed.
+- Mashey, "Re: 80486 v Sparc [and other good numbers]", comp.arch
+  `<42280@mips.mips.COM>`, 1990-10-22. All five systems' means are in the package.
+- Alan Lovejoy, "Latest SPECmarks", comp.arch `<7377@pdn.paradyne.com>`,
+  1990-02-12, and Frederic Despoix, "DG's use of m88k", comp.sys.m88k
+  `<7521@imag.imag.fr>`, 1990-02-20. Per-benchmark ratios from the
+  1990-02-07 Microprocessor Report, with SPECmark89 but no integer mean. The
+  VAX 6000 Model 410 and 450 rows print identical gcc, espresso, li and eqntott
+  ratios (one is evidently copied), so no mean is computed from them.
+- Tom Horsley (Harris), "Re: Fastest 88k", comp.sys.m88k, 1990-10-31.
+  Per-benchmark ratios for the Night Hawk with unreleased compilers and no
+  integer mean.
 
 ## Posts examined and not transcribed
 

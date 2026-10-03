@@ -2103,7 +2103,7 @@
       "title": "Usenet result lists",
       "role": "evidence",
       "status": "current",
-      "purpose": "Richardson's Dhrystone lists parsed from UTZOO postings; SSBA, SPARC LINPACK and Livermore posts transcribed as curated observations"
+      "purpose": "Richardson's Dhrystone lists parsed from UTZOO postings; SSBA, SPARC LINPACK and Livermore posts and printed SPEC89 means missing from the SPEC89 package transcribed as curated observations"
     },
     {
       "path": "research/overview.md",

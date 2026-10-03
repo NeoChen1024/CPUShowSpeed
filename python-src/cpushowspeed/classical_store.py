@@ -115,6 +115,11 @@ def results(db, scopes=SCOPES) -> list[Result]:
     return [found[k] for k in sorted(found)]
 
 
+def recovered_int89(r: Result) -> float | None:
+    """A SPECint89 target from any source but the SPEC89/SPEC92 bridge table (the bridge's own evidence) or a reference definition."""
+    return None if r.scope == BRIDGE_SCOPE or r.reference else r.values.get("SPECint89")
+
+
 def reviewed_pairs(db) -> dict[tuple[str, str], str]:
     """(target, classical) result IDs -> accept or reject, from `result_pair` reviews; a selector may match several results."""
     sides, decisions = defaultdict(lambda: defaultdict(set)), {}

@@ -181,8 +181,11 @@ targets worsened (37.45% → 67.09%) on the RS/6000s.
 
 ## SPEC89-only hardware estimates
 
-The bridge produces **179 source-record estimates on 90 resolved systems**
-from `historical-spec:spec89`, independently of classical availability.
+The bridge produces **188 source-record estimates on 95 resolved systems**
+from SPECint89 results of the SPEC89 package and curated observations (179 on 90
+before the [printed SPEC89 means](usenet-result-lists.md#printed-spec89-means-19901991)
+of 2026-10-03), independently of classical availability. Bridge-table rows are
+the bridge's own evidence and are not estimated.
 Reference-definition rows are excluded. Each record preserves its reported
 SPECint89, record ID and source URL and is labelled `one_edge_estimate`.
 

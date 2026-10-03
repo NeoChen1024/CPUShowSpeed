@@ -6,7 +6,7 @@
     {
       "scenario": "reported_clock",
       "cohort": "spec92_only",
-      "nodes": 1657,
+      "nodes": 1659,
       "informative_models": 505,
       "calibrated_metrics": [
         "Dhrystone:v1.1_DMIPS",
@@ -17,13 +17,13 @@
         "Whetstone:MWIPS_SP"
       ],
       "anchored_nodes": 115,
-      "unknown_target_nodes": 1420
+      "unknown_target_nodes": 1418
     },
     {
       "scenario": "reported_clock",
       "cohort": "with_spec89",
-      "nodes": 1657,
-      "informative_models": 515,
+      "nodes": 1659,
+      "informative_models": 516,
       "calibrated_metrics": [
         "Dhrystone:v1.1_DMIPS",
         "Dhrystone:v2.1_DMIPS",
@@ -32,13 +32,13 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "anchored_nodes": 237,
-      "unknown_target_nodes": 1420
+      "anchored_nodes": 241,
+      "unknown_target_nodes": 1418
     },
     {
       "scenario": "linear_clock",
       "cohort": "spec92_only",
-      "nodes": 1657,
+      "nodes": 1659,
       "informative_models": 505,
       "calibrated_metrics": [
         "Dhrystone:v1.1_DMIPS",
@@ -49,13 +49,13 @@
         "Whetstone:MWIPS_SP"
       ],
       "anchored_nodes": 115,
-      "unknown_target_nodes": 1420
+      "unknown_target_nodes": 1418
     },
     {
       "scenario": "linear_clock",
       "cohort": "with_spec89",
-      "nodes": 1657,
-      "informative_models": 515,
+      "nodes": 1659,
+      "informative_models": 516,
       "calibrated_metrics": [
         "Dhrystone:v1.1_DMIPS",
         "Dhrystone:v2.1_DMIPS",
@@ -64,8 +64,8 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "anchored_nodes": 237,
-      "unknown_target_nodes": 1420
+      "anchored_nodes": 241,
+      "unknown_target_nodes": 1418
     }
   ],
   "frequency_check_rows": 27,
@@ -74,20 +74,20 @@
   "clock_assumption": "linear_clock scales Dhrystone/Whetstone to the target clock only when both results resolve to one processor; unknown clocks unscaled; LINPACK never scaled",
   "fit": "family/variant/node/model balanced log least squares; unanchored node values eliminated analytically",
   "qualification": "hardware/clock/FPU/cache/software equivalence unverified across sources; coefficient intervals omit model discrepancy and scaling exponent uncertainty",
-  "inputs_sha256": "be9e26da29a88ac3c0bb2f86856046b639da9f919d2eb6256c50c7504303be10",
+  "inputs_sha256": "7999db1c03ee32e6f0b2d71308d2d82084ee1cc38ddfbd50e73a8c710048f1ab",
   "shared_code_sha256": {
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration_edges.py": "b6e4cbe854b1fa3b36f9490ed8f253af05899c826a658726b5c4b9a441a785d6",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network.py": "4d1aa27f7e1217d2958023d66300320e497b9b83cd2e2ad33e90b396433b2717",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network.py": "7526a8ec3cb59675834b4012fddcad3937648433df3a00bc69235b803525733a",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network_model.py": "fb7d44cb1d2b67df3d0a686a578dbe1ffc5e754d29fd05e8f24ceed95cb8c9d0",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "169d21f7160d99a6b8414043ece5cf140c6861b7eda3ed89929792d1e11b7c9c",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pdf.py": "29e6cef097152568a8506667e8718fa35936ac37a9bbbf32198a8d99da5ef282",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_predict.py": "977dc8a668ca44453597f0ae6641a4b05a38a56f511aa5db91d646afdf4b89ff",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_data.py": "0ac98d3fd4fe1e3c8abc2f4090205028dca534f18e78dc8ec520897361408d77",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_fit.py": "2ac96c1d52a912d628dd360df9d95f81f0ef76296442d88ee3f2a363d0546684",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "639a54857f479e3e3d7156f33a0a1f0254d4a27f860a005b4973f52269d12b60",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_fit.py": "c2f7f6fd48bd5e5ada5bf17bf3c80d67a9cc432b476ccb33397e4c2e200a5157",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "28ad13427f9fa4c23319fa0facab13518c52ba06d1168f7f172df14055008dba",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated.py": "7c35f291c6a275114c1c1ed3c2ce7be017ab59692a1a94e4a5bdb214cddddfdb",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "481fc3b5d600caf5b76209672a6ccdeb1a3c64b37a51f915204de173cfa336f9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_identity.py": "686c50a95e11fece1eba1410d399f073c988a43ab719f5a728702bd38b1de87c",

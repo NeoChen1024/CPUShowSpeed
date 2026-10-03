@@ -59,7 +59,8 @@ prediction. Factor draws are combined jointly when calculating estimate CI95.
 
 The command reads the built database. Anchored nodes are target results
 reporting SPECint92 peak (CPU92 disclosures, the reviewed DEC report columns and
-the SPEC89/92 bridge table) and, in the SPEC89-enabled cohort, SPECint89 results. A target's classical
+the SPEC89/92 bridge table) and, in the SPEC89-enabled cohort, SPECint89 results from any
+source except the bridge table (the SPEC89 package and curated observations). A target's classical
 scores come from its own result (DEC columns) and from every classical result
 resolving to the same `system_id`; names are never compared. A single
 interpretable classical metric is enough for an anchor association.
@@ -144,25 +145,25 @@ counts are recorded in `fold-coverage.csv`, not silently scored as success.
 ## Results
 
 Both scenarios identify all six coefficients. The SPECint92-only network has
-505 informative systems; the SPEC89-enabled network has 515. These include
+505 informative systems; the SPEC89-enabled network has 516. These include
 unanchored co-observations constraining relative scales and are **not** hundreds
 of measured SPEC anchor machines. The SPEC89-enabled run has 115 observed
-SPECint92 nodes, 122 inferred-89 nodes and 1,420 unanchored nodes; one-metric
+SPECint92 nodes, 126 inferred-89 nodes and 1,418 unanchored nodes; one-metric
 unanchored nodes do not influence training.
 
 For `linear_clock / with_spec89`:
 
 | Input metric | Score unit | speed-VAXen coefficient k | Conditional factor CI95 |
 | --- | --- | ---: | --- |
-| Dhrystone 1.1 | DMIPS | 0.64515 | 0.60039–0.69353 |
-| Dhrystone 2.1 | DMIPS | 0.68424 | 0.63335–0.73805 |
-| Whetstone native | MWIPS | 0.53870 | 0.45779–0.62680 |
-| Whetstone SP | MWIPS | 0.59767 | 0.52016–0.67364 |
-| Whetstone DP | MWIPS | 0.95903 | 0.83128–1.09194 |
-| LINPACK n=100 | MFLOPS | 3.13484 | 2.75594–3.59550 |
+| Dhrystone 1.1 | DMIPS | 0.64760 | 0.60326–0.69634 |
+| Dhrystone 2.1 | DMIPS | 0.68647 | 0.63505–0.74249 |
+| Whetstone native | MWIPS | 0.55658 | 0.47115–0.64650 |
+| Whetstone SP | MWIPS | 0.59968 | 0.52356–0.67620 |
+| Whetstone DP | MWIPS | 0.98906 | 0.85499–1.12873 |
+| LINPACK n=100 | MFLOPS | 3.18267 | 2.79283–3.66229 |
 
 For example, a Dhrystone **1.1** score of **10 DMIPS** maps to approximately
-6.45 speed-VAXen (SPECint92 ≈ 6.5) using this experimental coefficient. Raw
+6.48 speed-VAXen (SPECint92 ≈ 6.5) using this experimental coefficient. Raw
 Dhrystones/second first need the declared /1757 DMIPS conversion; coefficients
 must not be applied to uninterpreted KIPS or printed unit labels with unresolved meaning.
 
@@ -171,34 +172,51 @@ families (`linear_clock / with_spec89`):
 
 | Available inputs | Network P95 | Anchored-only control P95 |
 | --- | ---: | ---: |
-| Dhrystone 1.1 only | 28.62% | 26.24% |
-| Dhrystone 2.1 only | 34.61% | 33.15% |
-| Whetstone SP only (34 systems) | 39.55% | 38.82% |
-| Whetstone DP only | 54.55% | 49.33% |
-| LINPACK only | 44.86% | 46.74% |
-| Dhrystone + Whetstone families | 28.65% | 29.62% |
-| Dhrystone + LINPACK families | 28.99% | 30.73% |
-| Whetstone + LINPACK families | 25.52% | 25.90% |
-| All available measurements | 20.17% | 24.12% |
+| Dhrystone 1.1 only | 29.11% | 26.23% |
+| Dhrystone 2.1 only | 35.06% | 33.14% |
+| Whetstone SP only (34 systems) | 39.34% | 38.82% |
+| Whetstone DP only | 59.40% | 51.11% |
+| LINPACK only | 44.00% | 45.85% |
+| Dhrystone + Whetstone families | 29.99% | 30.26% |
+| Dhrystone + LINPACK families | 29.49% | 30.15% |
+| Whetstone + LINPACK families | 24.29% | 26.98% |
+| All available measurements | 20.89% | 25.25% |
 
 More available workloads do not guarantee a lower error, and the unanchored
 coupling does not uniformly beat the anchored-only control on this population.
 All combinations remain; the table is not a residual-based selection rule.
 
 Over all 115 observed-SPECint92 nodes (59 systems), the all-available network
-P95 is 85.1% (84.4% before the smaller Usenet posts, 83.5% before Richardson's lists). Before the 2026-10-03
+P95 is 87.9% (85.1% before the printed SPEC89 means, 84.4% before the smaller
+Usenet posts, 83.5% before Richardson's lists). Before the 2026-10-03
 vendor-report rows (82.3%), on the 48 nodes that also carry a one-processor rate (the former
 anchor population) it is 31.5%; on 42 further DEC, multi-processor and
 speed-only nodes 37.8%; on the 25 bridge-table nodes 122.7%, dominated by IBM
 RS/6000 systems overpredicted by 78–129% because their LINPACK n=100 is high
 relative to integer speed, and by the HP 9000/J200 (−69%, see below).
 
-The network emits full-availability estimates for **1,420 unanchored nodes on
-1,322 system keys** (an unresolved result counts as its own key). Of these,
-1,376 nodes have one benchmark family, 28 have two and 16 have three. They are
-not 1,420 newly verified machines: configuration identity and source
+The network emits full-availability estimates for **1,418 unanchored nodes on
+1,320 system keys** (an unresolved result counts as its own key). Of these,
+1,374 nodes have one benchmark family, 28 have two and 16 have three. They are
+not 1,418 newly verified machines: configuration identity and source
 interpretation still need source-specific review. Their estimates are stored
 separately from observed SPEC targets.
+
+### Changes from the printed SPEC89 means (2026-10-03)
+
+[Printed SPECint89 values from four Usenet posts](usenet-result-lists.md#printed-spec89-means-19901991)
+are curated observations. SPECint89 targets formerly came only from the SPEC89
+package scope; they now come from any source except the SPEC89/92 bridge table and
+reference definitions, so these rows are used. Four of them pair with classical
+results: CDC 4680 (Whetstone) and MIPS RC3360 (LINPACK) become new SPEC89 systems,
+and MIPS RC6280 and RC3230 gain a second inferred-89 node. Inferred-89 nodes rise
+122 → 126 (53 → 55 systems), unanchored nodes fall 1,420 → 1,418, and
+`with_spec89` informative systems rise 515 → 516. All four are underpredicted
+(CDC 4680 25.4 vs 44.0, RC3360 14.1 vs 26.0, RC6280 31.6 vs 44.0, RC3230 15.5 vs
+18.6 speed-VAXen), so `linear_clock / with_spec89` coefficients rise: Whetstone
+native +3.32%, DP +3.13%, LINPACK +1.53%, Dhrystone +0.33–0.38%, Whetstone SP
++0.34%. `spec92_only` is unchanged. All-available observed P95: 85.1% → 87.9%;
+common-cohort all-available 20.17% → 20.89%, Whetstone DP alone 54.55% → 59.40%.
 
 ### Changes from the smaller Usenet result posts (2026-10-03)
 

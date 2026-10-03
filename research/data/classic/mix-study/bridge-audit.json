@@ -14,7 +14,7 @@
   "pairing": "same resolved system_id; plus_pending_links adds system links a review leaves open (needs_review); rejected links never pair",
   "weighting": "Median log ratio per classical system; geometric mean across systems.",
   "uncertainty": "Conditional system bootstrap CI95; not configuration-validation uncertainty or chained VAXen CI.",
-  "inputs_sha256": "be9e26da29a88ac3c0bb2f86856046b639da9f919d2eb6256c50c7504303be10",
+  "inputs_sha256": "7999db1c03ee32e6f0b2d71308d2d82084ee1cc38ddfbd50e73a8c710048f1ab",
   "shared_code_sha256": {
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
@@ -22,7 +22,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_pdf.py": "29e6cef097152568a8506667e8718fa35936ac37a9bbbf32198a8d99da5ef282",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_source_data.py": "0ac98d3fd4fe1e3c8abc2f4090205028dca534f18e78dc8ec520897361408d77",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "639a54857f479e3e3d7156f33a0a1f0254d4a27f860a005b4973f52269d12b60",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "28ad13427f9fa4c23319fa0facab13518c52ba06d1168f7f172df14055008dba",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated.py": "7c35f291c6a275114c1c1ed3c2ce7be017ab59692a1a94e4a5bdb214cddddfdb",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "481fc3b5d600caf5b76209672a6ccdeb1a3c64b37a51f915204de173cfa336f9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_identity.py": "686c50a95e11fece1eba1410d399f073c988a43ab719f5a728702bd38b1de87c",

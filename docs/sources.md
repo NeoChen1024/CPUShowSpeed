@@ -53,6 +53,22 @@ preserves a separate source-verified 40-row worksheet derivative. Its
 [combined CSV](../research/data/spec89/aggregate89-plus-helman.csv) adds the
 rows as source observations without changing the versioned snapshot.
 
+Printed SPEC89 means from Usenet posts that the package lacks are curated
+observations (`SPECint89` calibration inputs; SPECfp89 and SPECmark89 context),
+not package rows. A 2026-10-03 search for more SPEC89 sources found:
+
+- **UTZOO (1989–1991-06).** See the UTZOO section below.
+- **DECstation/DECsystem Performance Summary v2.0 (1991-11)**, at
+  `web-docs.gsi.de/~kraemer/COLLECTION/DEC/decstation-Dec-91.pdf`. The package
+  uses v2.1 (1992-04). Not acquired.
+- **Microprocessor Report** article PDFs from 1992 on, at
+  `www.cecs.uci.edu/~papers/mpr/MPR/ARTICLES/` (about 650 files). They may carry
+  SPEC89 tables for 1992 systems. Not acquired: bulk download needs approval.
+- **Datapro reports in the local mirror (1989–1993)** print SPECmark89 and VUPs
+  only, with no SPECint89.
+- No SPEC Newsletter issue is in the local inventory, and the Mashey SPEC
+  pages on yarchive.net discuss SPEC without result tables.
+
 ## Pre-SPEC collection phase
 
 Discovery review: 2026-09-26. Start with the existing local PDF mirror and
@@ -164,8 +180,12 @@ Located on 2026-10-03; transcribed only where noted:
 - SSBA results for about 110 systems in Tribunix (AFUU newsletter, issues
   27–35, 1989–1990) and IX Magazine (1990), listed by Nhuan Doduc in 1991. Not
   acquired.
-- About 850 posts mention SPEC results. They are reserved for the SPEC89 source
-  search.
+- About 850 posts mention SPEC results (searched 2026-10-03). Printed SPEC89
+  means not already in the SPEC89 package are transcribed from four posts (Mashey's
+  YMMV 2.0 extract, Control Data's 4680/6280 runs, Mashey's RC3360 figure and
+  a Harris Night Hawk result); see
+  [Usenet result lists](../research/usenet-result-lists.md#printed-spec89-means-19901991).
+  The other posts repeat package values or give per-benchmark ratios only.
 
 ## Local PDF mirror and discovery inventory
 

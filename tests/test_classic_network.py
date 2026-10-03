@@ -34,6 +34,15 @@ class NetworkTests(unittest.TestCase):
         )
         self.assertEqual([n["target_kind"] for n in nodes], ["unanchored"])
 
+    def test_specint89_targets_come_from_any_source_but_the_bridge_table(self):
+        c = result("c", "sys:rc3360", {"LINPACK:n100_MFLOPS": 5})
+        curated = result("t", "sys:rc3360", {"SPECint89": 27.1}, scope="reviewed-vector:mashey")
+        bridge = result("b", "sys:rc3360", {"SPECint89": 27.1}, scope="historical-spec:spec89-bridge")
+        nodes, _, _ = build([c, curated], True)
+        self.assertEqual([(n["node_id"], n["target_kind"], n["target"]) for n in nodes], [("t", "estimated_89", 27.1)])
+        nodes, _, _ = build([c, bridge], True)
+        self.assertEqual([n["target_kind"] for n in nodes], ["unanchored"])
+
     def test_versions_share_family_weight(self):
         w = metric_weights(["Dhrystone:1", "Dhrystone:2", "Whetstone:SP", "Whetstone:DP", "LINPACK:100"])
         self.assertAlmostEqual(w["Dhrystone:1"] + w["Dhrystone:2"], 1 / 3)

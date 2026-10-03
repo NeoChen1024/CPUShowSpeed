@@ -61,7 +61,7 @@ uv run --no-sync cpushowspeed classic predict-speed \
 ```
 
 With the current default calibration (2026-10-03), this produces approximately
-6.45154 speed-VAXen (SPECint92), CI95 6.00389–6.93525.
+6.47601 speed-VAXen (SPECint92), CI95 6.03256–6.96339.
 
 Multiple families:
 
@@ -70,7 +70,7 @@ uv run --no-sync cpushowspeed classic predict-speed \
   --dhrystone-1-1 10 --whetstone-dp 8 --linpack-100 2 --format text
 ```
 
-This example produces approximately 6.77033 speed-VAXen, CI95 6.26982–7.31113.
+This example produces approximately 6.88359 speed-VAXen, CI95 6.36600–7.44626.
 It is a hypothetical input example, not an additional historical measurement.
 
 Both Dhrystone versions, with scores supplied as iterations per second:

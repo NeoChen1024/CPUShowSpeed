@@ -46,14 +46,14 @@ Speed-VAXen per KIPS, `linear_clock / with_spec89`:
 
 | Links | Gibson | ADP |
 | --- | --- | --- |
-| `resolved_system` | 0.00044915 (0.00031524–0.00060436) | 0.00023417 (0.00012352–0.00036026) |
-| `plus_pending_links` | 0.00038310 (0.00027259–0.00051701) | 0.00018844 (0.00011041–0.00029591) |
+| `resolved_system` | 0.00046192 (0.00032202–0.00061512) | 0.00024136 (0.00012298–0.00037037) |
+| `plus_pending_links` | 0.00039425 (0.00028095–0.00052303) | 0.00019421 (0.00011428–0.00030504) |
 
 The whole-cluster holdout compares a mix-only prediction with the held-out
 node's classical-network prediction (a proxy, not a SPEC measurement). The
-model-center P95 is 195.7% for `resolved_system` (10 clusters) and 188.2% for
+model-center P95 is 194.9% for `resolved_system` (10 clusters) and 187.7% for
 `plus_pending_links` (15 clusters). On the 59 observed-SPECint92 models, adding
-the mixes changes the network's held-out P95 from 85.1% to 84.6% / 84.4%.
+the mixes changes the network's held-out P95 from 87.9% to 87.4% / 87.2%.
 
 The timeline uses `plus_pending_links / linear_clock / with_spec89`, as the
 former experiment used its unapproved name candidates. `resolved_system` is the
@@ -77,7 +77,10 @@ raised them a further 1.5% (Gibson 0.00037966 → 0.00038447 → 0.00038526, ADP
 lists](usenet-result-lists.md) then lowered them 0.7% and 0.9% (Gibson →
 0.00038253, ADP → 0.00018819), following the lower Dhrystone coefficients.
 The [smaller Usenet result posts](usenet-result-lists.md#smaller-result-posts-19901991)
-raised them 0.15% and 0.13% (Gibson → 0.00038310, ADP → 0.00018844).
+raised them 0.15% and 0.13% (Gibson → 0.00038310, ADP → 0.00018844), and the
+[printed SPEC89 means](usenet-result-lists.md#printed-spec89-means-19901991) a further
+2.9% and 3.1% (Gibson → 0.00039425, ADP → 0.00019421), following the higher
+Whetstone and LINPACK coefficients.
 
 ### Name-matched experiment
 

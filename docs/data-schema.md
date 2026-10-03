@@ -225,9 +225,9 @@ source block, raw record, qualification) plus
 `source_id` (by content hash, then a registry key the adapter cites such as a
 SPEC89 package source ID, then an address claimed by one source, then a dataset's
 `member_url_prefix`), the result's `hardware_id`, `system_id` and
-`processor_entity`, and its selected chronology year. All 103,773 observations
-(57,136 results, after the 2026-10-03 vendor-report rows, Richardson's
-Dhrystone lists and the smaller Usenet result posts) resolve to a source.
+`processor_entity`, and its selected chronology year. All 103,782 observations
+(57,145 results, after the 2026-10-03 vendor-report rows, Richardson's
+Dhrystone lists, the smaller Usenet result posts and printed SPEC89 means) resolve to a source.
 
 ### `curated_observation`
 
@@ -446,7 +446,9 @@ changed.
      [Richardson's Dhrystone lists](../research/usenet-result-lists.md) then gave
      103,762 observations, 57,131 results and 102,020 records; the smaller
      [Usenet result posts](../research/usenet-result-lists.md#smaller-result-posts-19901991)
-     then gave 103,773 observations, 57,136 results and 102,025 records.
+     then gave 103,773 observations, 57,136 results and 102,025 records, and the
+     [printed SPEC89 means](../research/usenet-result-lists.md#printed-spec89-means-19901991)
+     103,782 observations, 57,145 results and 102,034 records.
 
    By user decision (2026-10-02) step 5 is compared with the former products, not
    held to parity: identity and dates were redesigned in steps 2–4, so coefficients
