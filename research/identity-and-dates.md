@@ -188,8 +188,7 @@ Escala 1994-12 versus 1995-04).
 that date is a release event of `sku:amd-epyc-7313`, which moves all 26 EPYC 7313
 results to CPU dating (24 already reported 2021). Rejecting the hardware date
 alone would have left 2019, because other configurations of the same system
-carry Rome processors available in 2019. The annual rate view, which reads
-reported availability, is unchanged. The Argus 700 family launch is reported in
+carry Rome processors available in 2019. The Argus 700 family launch is reported in
 *Computer Weekly*, 1973-06-14, p. 12, via
 [TNMOC](https://www.tnmoc.org/notes-from-the-museum/2023/6/1/fifty-years-ago-from-the-pages-of-computer-weekly)
 (a family proxy for the 700G); the [Elliott 903 museum record](https://www.computinghistory.org.uk/det/32480/Elliott-903/)

@@ -89,20 +89,6 @@ VAX or a validated general conversion.
 The preserved SPEC89 source snapshot and historical documents are archival
 material. They do not enter these rate commands.
 
-## Annual integer-rate view
-
-```sh
-./.venv/bin/cpushowspeed plot annual-rate
-```
-
-This reads the built database (`--database`) and the tracked rate factors. It writes complete per-submission and undated CSVs plus
-PNG/SVG figures to `data/derived/figures/annual-rate/`; the compact
-[annual leaders](../research/data/spec/annual-rate-leaders.csv) and
-[statistics](../research/data/spec/annual-rate-statistics.csv) are tracked as
-research results. All positive scores with a parseable reported hardware month
-that no review rejects enter their year. See the
-[interpretation and limits](../research/spec-chains.md#annual-rate-view).
-
 ## Whole-chain rate confidence intervals
 
 ```sh
@@ -114,22 +100,7 @@ precede resampling. The command writes the compact
 [chain CI table](../research/data/spec/fitting/integer-rate-chain-intervals.csv)
 and ignored NPZ replicate arrays and JSON diagnostics under
 `data/derived/spec/fitting/`. See the rate audit for the independence assumption
-and uncertainty scope before using the draws in yearly plots.
-
-## Combined annual confidence figures
-
-```sh
-./.venv/bin/cpushowspeed bridge bootstrap-rate-chain
-./.venv/bin/cpushowspeed plot annual-rate-ci
-```
-
-The second command checks bootstrap-array and input hashes, then uses complete
-replicate vectors to recompute yearly quartiles, fixed representative scores
-and the annual frontier. It produces combined hardware/boxplot PNG and SVG
-under `data/derived/figures/annual-rate/`, and the compact
-[confidence table](../research/data/spec/annual-rate-confidence.csv).
-See the [annual figure note](../research/spec-chains.md#annual-rate-view) for the meaning
-of the pale envelopes and top-retention statistic.
+and uncertainty scope before propagating the draws.
 
 ## SPEC95/CPU2000 overlap-loss audit
 

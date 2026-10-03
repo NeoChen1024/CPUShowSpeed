@@ -11,7 +11,7 @@ history.
 
 | Report | Owns |
 | --- | --- |
-| [SPEC chains](spec-chains.md) | CPU92–CPU2026 integer rate and speed chains, the VAX rate constant, chain intervals and the annual rate view |
+| [SPEC chains](spec-chains.md) | CPU92–CPU2026 integer rate and speed chains, the VAX rate constant and chain intervals |
 | [SPEC sources and audits](spec-sources.md) | Early SPEC archives, the CPU92 rate archive, source-field and execution-resource audits, CPU95/CPU2000 overlap |
 | [SPEC89](spec89.md) | Recovered SPEC89 evidence, the SPECint89 → SPECint92 bridge, the joint classical experiment and SPEC89 estimates |
 | [Classical fits](classical-fits.md) | Classical/SPEC hardware overlap, direct composites, the sparse network and the power-law sensitivity study |

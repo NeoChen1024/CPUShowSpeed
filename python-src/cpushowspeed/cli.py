@@ -1,8 +1,6 @@
 """Command-line entry point for CPUShowSpeed."""
 
 import click
-from cpushowspeed.annual_rate import plot
-from cpushowspeed.annual_rate_ci import annual_rate_ci_command
 from cpushowspeed.bridge import bridge
 from cpushowspeed.caption import caption_command
 from cpushowspeed.caption_backfill import backfill_captions_command
@@ -38,6 +36,11 @@ def cli() -> None:
     """Collect and analyze historical CPU performance evidence."""
 
 
+@click.group()
+def plot() -> None:
+    """Render the combined VAXen timeline."""
+
+
 spec.add_command(legacy92_rate_parse_command)
 cli.add_command(research)
 data.add_command(extract_command)
@@ -51,7 +54,6 @@ inputs.add_command(compare_factors)
 cli.add_command(inputs)
 cli.add_command(spec89)
 cli.add_command(bridge)
-plot.add_command(annual_rate_ci_command)
 plot.add_command(timeline_command)
 cli.add_command(plot)
 documents.add_command(ocr_command)

@@ -47,11 +47,6 @@ speed-VAXen proxies, all with CPU-first dating. It keeps
 source scope and node-count uncertainty visible; reported cluster results are
 not silently certified as single-node measurements.
 
-The earlier [annual integer-rate view](../research/spec-chains.md#annual-rate-view) now groups
-all positive dated submissions by their **reported configuration hardware
-availability** and shows the highest score per year plus the submission
-distribution. Its frontier is exploratory and not a model-launch history.
-
 ## Historical extension
 
 The project may extend machine-capacity evidence earlier than SPEC CPU92 by

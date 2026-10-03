@@ -11,12 +11,13 @@ quantities are never combined. Every row takes its year from
 
 import hashlib
 import json
+import re
 from collections import Counter
+from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
 
 import click
-from cpushowspeed.annual_rate import _month
 from cpushowspeed.classic_predict import predict_scores
 from cpushowspeed.classical_store import results as classical_results
 from cpushowspeed.curated import DATABASE
@@ -36,6 +37,19 @@ SCHEMA = "vaxen-timeline-v4"
 CALIBRATION = Path("research/data/spec/fitting")
 NETWORK = Path("data/derived/classic/network-fit")
 SPEC89_ESTIMATES = Path("research/data/classic/spec89-estimates.csv")
+
+
+def _month(value: str) -> str:
+    """Keep the source's month precision and refuse guessed dates."""
+    value = value.strip()
+    if not value:
+        return ""
+    if re.fullmatch(r"\d{4}-\d{2}", value):
+        datetime.strptime(value, "%Y-%m")
+        return value
+    return datetime.strptime(value, "%b-%Y").strftime("%Y-%m")
+
+
 CLASSICAL_SCOPES = ("classical:%", "reviewed-vector:%")
 CONTEXT_KEYS = (
     "Memory",

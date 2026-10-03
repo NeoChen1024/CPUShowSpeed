@@ -1,7 +1,6 @@
 # SPEC92–2026 integer rate and speed chains
 
-Reviewed: 2026-10-03. This report owns the two modern calibration chains and the
-annual rate view:
+Reviewed: 2026-10-03. This report owns the two modern calibration chains:
 
 - **rate-VAXen** (throughput): CPU2026 rate → … → `SPECrate_int92`, then the
   defined CPU92 VAX factor.
@@ -156,7 +155,7 @@ linearly interpolated 2.5th/97.5th percentiles; within-configuration medians are
 held fixed. These are percentile intervals conditional on treating the selected
 configuration summaries as exchangeable. They do not cover matching errors,
 unseen architectures or arbitrary individual machines. The table follows the
-annual view's same-OS CPU92 anchor and the later hardware-near edges; `k`
+timeline's same-OS CPU92 anchor and the later hardware-near edges; `k`
 multiplies a newer-suite score into older-suite units.
 
 | Edge | Mode | Configurations | k | 95% CI for k | Held-out p95 error |
@@ -226,8 +225,8 @@ separately; this does not support joint base/peak inference.
 | CPU2026 | 12874.4 [11691.1, 14166] | 14868.7 [13750.4, 16136.5] |
 
 These are pointwise percentile intervals for **mean calibration scales per
-reported score point** (same-OS anchor), not annual machine scores and not
-simultaneous bands over all years. CPU92's zero width reflects a defined unit.
+reported score point** (same-OS anchor), not individual machine scores and not
+simultaneous bands over all generations. CPU92's zero width reflects a defined unit.
 Individual-machine prediction errors, identity mistakes, architecture coverage
 and systematic workload/compiler effects are outside them. To propagate them,
 multiply every submission of a generation by the same draw
@@ -311,85 +310,6 @@ not "one thread". CPU2026 speed has sparse overlap (59% / 45% P95). Transfer
 beyond the overlap hardware is unvalidated, and CI95 covers mean scale factors,
 not individual prediction error.
 
-## Annual rate view
-
-`plot annual-rate` and `plot annual-rate-ci` (after the chain bootstrap) group
-every rate submission by its reported hardware year. Small results are tracked:
-[leaders](data/spec/annual-rate-leaders.csv),
-[annual statistics](data/spec/annual-rate-statistics.csv) and
-[annual confidence](data/spec/annual-rate-confidence.csv) (all 72 year/mode
-results at full precision). Per-submission records, undated records, the
-input-hash summary and the distribution, leader and combined figures (PNG and
-SVG) are generated under `data/derived/figures/annual-rate/`. Interactive
-exploration uses the [shared timeline](../docs/timeline.md).
-
-### Population and year
-
-The population is **every parsed SPEC integer-rate submission with a positive
-score in that mode and a parseable reported `HW Avail` month that a
-[review](../data/curated/review.jsonl) has not rejected**, read from the built
-database. Base has **32,025** dated scores and peak **26,784**. Two CPU92
-results lack hardware availability (four mode-specific undated scores). A
-missing base or peak score is not replaced with the other mode. Repeated
-submissions, large configurations and cluster submissions are retained; no
-result is removed because its date disagrees with an external launch date.
-
-The year is the disclosure's **availability of the tested hardware
-configuration**, at month precision in the records. It is not necessarily the
-introduction year of the named CPU or system: a benchmark published years later
-can enter an earlier year, so the view describes published submissions *grouped
-by reported hardware availability*, not performance measured during each year.
-The [shared timeline](../docs/timeline.md) instead selects CPU release first.
-
-Each value multiplies the original score by its generation's **same-OS CPU92
-anchor + later-edge** factor, separately for base and peak. The hardware-near
-anchor is stored as `alternate_vaxen` / `vaxen_hardware_near`; the two are
-sensitivity choices, not a confidence interval.
-
-### Leaders and intervals
-
-For each year and mode, the **representative** is the submission with the
-highest VAXen; ties choose the lexicographically first source URL and the CSV
-records the tie count. There are **36** leaders per mode from **1991–2026**; the
-1991 groups each have one submission.
-
-| Hardware year | Base highest VAXen | Peak highest VAXen | Source pattern |
-| --- | ---: | ---: | --- |
-| 1992 | 766 | 809 | DEC 7000 Model 660, CPU92 rate |
-| 2000 | 140k | 177k | SGI Origin 3800, CPU2000 rate |
-| 2010 | 12.0M | 7.29M | Different base/peak leader submissions |
-| 2019 | 39.2M | 13.8M | Different CPU2017 rate submissions |
-| 2026 | 65.2M | 74.0M | HPE Compute Scale-up Server 3250, CPU2017 rate |
-
-Rounded values are display examples. Base and peak maxima can come from
-different submissions. The 2026 leader is a CPU2017 submission on hardware
-available in 2026; the smaller CPU2026 cohort does not force the latest year to
-use the latest suite.
-
-Each of the 10,000 chain replicates supplies one multiplier per generation, and
-Q1, median, Q3 and maximum are recomputed from the complete vector (batched in
-128 replicates). The combined figures show the Q1–Q3 box with 1.5-IQR whiskers,
-a pale envelope from Q1's lower to Q3's upper 95% limit (not an interval for all
-observations), separate Q1/median/Q3 intervals and the fixed leader's
-conditional calibration interval. A separate **frontier interval** lets the
-highest submission change across replicates: the central 2018 base leader stays
-on top in **87.57%** of replicates; every other representative in 100%.
-
-### Checks and limits
-
-The [1991-year HP 9000 720/50 CPU95 rate disclosure](https://www.spec.org/cpu95/results/res96q1/cpu95-960131-00125.html)
-reports base and peak 14.1, hardware availability 1991-03 and a 1996-01 test,
-which shows why its plot year is not its measurement year. The [2026-year HPE
-Compute Scale-up Server 3250 CPU2017 rate disclosure](https://www.spec.org/cpu2017/results/res2026q2/cpu2017-20260323-51229.html)
-reports base 11,800, peak 12,200, availability 2026-04, 16 chips / 1,376
-enabled cores and 2,752 copies. Other leaders rely on the hash-checked bulk
-exports and still merit per-result review.
-
-Boxes contain submissions rather than independent machine models. The intervals
-include calibration sampling only, not individual prediction error or
-systematic calibration bias. The sparse first year and changing suite coverage
-make the leader curve unsuitable as a claim of uninterrupted annual progress.
-
 ## Prior work on chaining SPEC generations
 
 - [Danowitz et al., *CPU DB* (2012)](https://web.engr.oregonstate.edu/~mjb/cs475/CPU-DB.pdf),
@@ -430,3 +350,7 @@ CPU92↔CPU95 conversion.
   left the same-OS factor, the chain and every annual leader unchanged.
 - 2026-10-03: the integer-speed chain replaced the former speed, rate-matched
   and joint speed/rate predictors (in Git history).
+- 2026-10-03: the annual rate view (`plot annual-rate`, `plot annual-rate-ci`,
+  its leader, statistics and confidence tables and figures) was removed; the
+  [timeline](../docs/timeline.md) shows every rate result by year. It is in Git
+  history.

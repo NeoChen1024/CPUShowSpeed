@@ -96,5 +96,4 @@ describes its classical route.
   Initialize the `third-party/` submodules (decoder and theme sources) with `git submodule update --init`, then serve the Parquet-backed export over HTTP; no npm build is required.
 - [Documentation index](docs/README.md): contracts, methods and acquisition tools.
 - [Research index](research/README.md): current analyses, source evidence and diagnostics.
-- [Annual rate results](research/spec-chains.md#annual-rate-view): configuration-year views.
 - [Roadmap](docs/TODO.md): remaining evidence and validation work.

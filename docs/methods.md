@@ -84,9 +84,7 @@ vectors under a disjoint-cohort independence assumption. The
 [rate audit](../research/spec-chains.md#conditional-whole-chain-confidence-intervals)
 defines its pointwise CI scope and the stored replicate arrays. These quantify
 conditional calibration sampling variation, not individual-machine prediction
-error or shared systematic bias. `plot annual-rate-ci` propagates those shared vectors to yearly quartiles and
-representative scores; its pale box envelopes and fixed-leader intervals
-retain that conditional, pointwise interpretation.
+error or shared systematic bias.
 
 ## Classical power law through the VAX-11/780
 

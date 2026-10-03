@@ -75,13 +75,6 @@ flowchart TD
     rate_2026_vaxen["rate-2026-vaxen"]
     rate_2026_to_2017 --> rate_2026_vaxen
     rate_2017_vaxen --> rate_2026_vaxen
-    annual_rate["annual-rate"]
-    rate92_unit --> annual_rate
-    rate_95_vaxen --> annual_rate
-    rate_2000_vaxen --> annual_rate
-    rate_2006_vaxen --> annual_rate
-    rate_2017_vaxen --> annual_rate
-    rate_2026_vaxen --> annual_rate
     int89_int92["int89-int92"]
     int92_rate_vaxen["int92-rate-vaxen"]
     rate92_unit --> int92_rate_vaxen
@@ -146,7 +139,6 @@ flowchart TD
 | [rate-2017-vaxen](../research/spec-chains.md) | rate-2017 → vaxen | composition; primary; implemented-conditional | rate-2017-to-2006, rate-2006-vaxen |
 | [rate-2026-to-2017](../research/spec-chains.md) | rate-2026 → rate-2017 | empirical-fit; primary; implemented-conditional | none |
 | [rate-2026-vaxen](../research/spec-chains.md) | rate-2026 → vaxen | composition; primary; implemented-conditional | rate-2026-to-2017, rate-2017-vaxen |
-| [annual-rate](../research/spec-chains.md) | rate-92, rate-95, rate-2000, rate-2006, rate-2017, rate-2026 → vaxen | aggregation; primary; implemented-conditional | rate92-unit, rate-95-vaxen, rate-2000-vaxen, rate-2006-vaxen, rate-2017-vaxen, rate-2026-vaxen |
 | [int89-int92](../research/spec89.md) | int89 → int92 | empirical-fit; primary; implemented-conditional | none |
 | [int92-rate-vaxen](../research/spec89.md) | int92 → vaxen | empirical-fit; diagnostic; implemented-conditional | rate92-unit |
 | [int89-speed-vaxen](../research/spec89.md) | int89 → speed-vaxen | composition; primary; implemented-conditional | int89-int92, int92-speed-vaxen |

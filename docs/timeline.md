@@ -141,11 +141,6 @@ either decoder requires rebuilding the bundle and rerunning the cross-language
 checks; see its README.
 
 
-The earlier annual-rate PNG/SVG reports and their hardware-year statistical
-summaries remain reproducible snapshots. The shared timeline is the new
-interactive entry point; it does not silently reinterpret those earlier annual
-boxplot cohorts as CPU-year cohorts.
-
 ## Shared record contract
 
 Every record has `schema_version`, a unique `record_id`, `result_id` (the

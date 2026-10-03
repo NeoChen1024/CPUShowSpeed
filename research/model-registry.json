@@ -1011,48 +1011,6 @@
       }
     },
     {
-      "id": "annual-rate",
-      "title": "Annual distributions and leaders",
-      "track": "spec-rate",
-      "input_metrics": [
-        "rate-92",
-        "rate-95",
-        "rate-2000",
-        "rate-2006",
-        "rate-2017",
-        "rate-2026"
-      ],
-      "target_metric": "vaxen",
-      "relationship": "aggregation",
-      "formula": "group by reported configuration availability year; share calibration draws across scores",
-      "variants": [
-        "base",
-        "peak"
-      ],
-      "role": "primary",
-      "status": "implemented-conditional",
-      "owner": "research/spec-chains.md",
-      "dataset_ids": [
-        "modern-rate-inputs"
-      ],
-      "depends_on": [
-        "rate92-unit",
-        "rate-95-vaxen",
-        "rate-2000-vaxen",
-        "rate-2006-vaxen",
-        "rate-2017-vaxen",
-        "rate-2026-vaxen"
-      ],
-      "shared_evidence": "",
-      "command": "cpushowspeed plot annual-rate-ci",
-      "outputs": [
-        {
-          "path": "research/data/spec/annual-rate-confidence.csv",
-          "optional": false
-        }
-      ]
-    },
-    {
       "id": "int89-int92",
       "title": "SPECint89 → SPECint92",
       "track": "spec89",
@@ -2013,7 +1971,7 @@
       "title": "SPEC92–2026 integer rate and speed chains",
       "role": "primary",
       "status": "current",
-      "purpose": "Adjacent-suite rate and speed fits, VAX rate constant, chain intervals and annual rate view"
+      "purpose": "Adjacent-suite rate and speed fits, VAX rate constant and chain intervals"
     },
     {
       "path": "research/spec-sources.md",

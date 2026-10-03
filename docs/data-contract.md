@@ -52,8 +52,7 @@ SPEC result-publication date is an explicitly labelled submission-era proxy,
 not a known submission receipt date. Reject its use for chronology when
 source evidence places the hardware in a substantially different era; retain
 the benchmark record and the exclusion reason. Test, document and retrieval dates remain
-separate. Earlier annual reports grouped by hardware availability; those are
-snapshots of the earlier policy, not retroactively CPU-year statistics.
+separate.
 
 Hardware availability in SPEC means when the last required hardware component
 became available; it can be later than the CPU or system model introduction.

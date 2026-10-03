@@ -8,12 +8,8 @@ owning document as work lands; remove superseded items.
 - [ ] Refit the CPU2026 edge as its published integer-rate cohort grows, and
       seek independent nonadjacent or three-suite overlaps for a cycle check.
 - [ ] Assess systematic calibration bias separately from the implemented
-      conditional annual bootstrap intervals before treating the result as a
+      conditional chain bootstrap intervals before treating the result as a
       public historical performance index.
-- [ ] Review annual rate leaders against their detailed disclosures, including
-      copy counts, clusters, unusual configuration dates, and source-year
-      coverage. Compare systematic date-quality rules in a separate sensitivity
-      view before adopting one for publication.
 - [ ] Search original early SPEC newsletters for additional CPU92 rate
       disclosures, especially before the 1993 Netlib coverage; keep the 1992
       Digital manufacturer brief separate from official submissions.
