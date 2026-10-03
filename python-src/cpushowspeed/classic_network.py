@@ -41,8 +41,18 @@ from cpushowspeed.classical_store import (
 )
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import connect, inputs_digest
+from cpushowspeed.parallel import jobs_option, pmap
 from cpushowspeed.research_io import code_hashes, write_csv
 from cpushowspeed.research_plot import save_figure
+
+
+def ci95(log_draws, chunk=1000):
+    """Percentile CI95 of exp(draws) for each row of draws, computed in row blocks."""
+    out = []
+    for i in range(0, len(log_draws), chunk):
+        q = np.quantile(np.exp(np.array(log_draws[i : i + chunk])), [0.025, 0.975], axis=1)
+        out.extend(zip(q[0].tolist(), q[1].tolist()))
+    return out
 
 
 def vax780_anchor(rows):
@@ -225,11 +235,12 @@ def evaluate(nodes, edges, enabled, anchor, methods=METHODS):
     )
     predictions = []
     coverage = []
+    cache = {}
     for model in models:
         for method, latent, tie in [("network", True, anchor), ("anchored_only", False, anchor), ("free_intercept", True, {})]:
             if method not in methods:
                 continue
-            calib, _ = train(nodes, edges, enabled, tie, exclude=model, latent=latent)
+            calib, _ = train(nodes, edges, enabled, tie, exclude=model, latent=latent, cache=cache)
             b = bridge_log(edges, exclude=model) if enabled else 0.0
             for n in nodes:
                 if n["model_key"] != model or n["target"] is None:
@@ -349,13 +360,94 @@ def plot(output, summary):
     plt.close(fig)
 
 
+def fit_run(task):
+    """One scenario/cohort fit: coefficients, holdouts, hardware estimates and bootstrap arrays."""
+    rows, edges, anchor, anchor_sd, scaling, enabled, draws, seed = task
+    scenario = "linear_clock" if scaling else "reported_clock"
+    cohort = "with_spec89" if enabled else "spec92_only"
+    nodes, _, _ = build(rows, scaling)
+    coefficients, summary, predictions, coverage, hardware, bootstrap_arrays = [], [], [], [], [], {}
+    context = dict(scenario=scenario, cohort=cohort)
+    click.echo("Fitting " + scenario + " / " + cohort, err=True)
+    calib, grouped = train(nodes, edges, enabled, anchor)
+    metrics, intercepts, exponents = bootstrap(nodes, edges, enabled, anchor, anchor_sd, draws, seed)
+    bootstrap_arrays[scenario + "__" + cohort + "__intercept"] = intercepts
+    bootstrap_arrays[scenario + "__" + cohort + "__exponent"] = exponents
+    for i, m in enumerate(metrics):
+        coefficients.append(
+            dict(
+                context,
+                metric=m,
+                family=family(m),
+                exponent_group=exponent_group(m),
+                score_unit="DMIPS" if family(m) == "Dhrystone" else "MWIPS" if family(m) == "Whetstone" else "MFLOPS",
+                exponent=calib[m][1],
+                exponent_ci95_low=float(np.quantile(exponents[:, i], 0.025)),
+                exponent_ci95_high=float(np.quantile(exponents[:, i], 0.975)),
+                vaxen_at_unit_score=math.exp(calib[m][0]),
+                unit_score_ci95_low=float(np.exp(np.quantile(intercepts[:, i], 0.025))),
+                unit_score_ci95_high=float(np.exp(np.quantile(intercepts[:, i], 0.975))),
+                vax780_anchor_score=math.exp(anchor[m]) if m in anchor else "",
+                valid_bootstrap_draws=len(intercepts),
+                informative_models=len(grouped),
+            )
+        )
+    sm, pr, cv = evaluate(nodes, edges, enabled, anchor)
+    summary.extend(dict(context, **r) for r in sm)
+    predictions.extend(dict(context, **r) for r in pr)
+    coverage.extend(dict(context, **r) for r in cv)
+    estimate_rows, boots = [], []
+    for n in nodes:
+        for estimate in estimates(n, calib):
+            members = estimate["metrics"].split(";")
+            w = metric_weights(members)
+            boots.append(
+                sum(w[m] * (intercepts[:, metrics.index(m)] + exponents[:, metrics.index(m)] * n["log_scores"][m]) for m in members)
+            )
+            estimate_rows.append(
+                dict(
+                    context,
+                    node_id=n["node_id"],
+                    model_key=n["model_key"],
+                    system=n["system"],
+                    target_kind=n["target_kind"],
+                    subset=estimate["subset"],
+                    metrics=estimate["metrics"],
+                    estimated_vaxen=math.exp(estimate["predicted_log"]),
+                    calibration_ci95_low=None,
+                    calibration_ci95_high=None,
+                    evidence_class="fitted_estimate_not_spec_measurement",
+                )
+            )
+    for row, (low, high) in zip(estimate_rows, ci95(boots)):
+        hardware.append(dict(row, calibration_ci95_low=low, calibration_ci95_high=high))
+    run = dict(
+        context,
+        nodes=len(nodes),
+        informative_models=len(grouped),
+        calibrated_metrics=metrics,
+        anchored_nodes=sum(n["target_kind"] == "observed_speed" or (enabled and n["target_kind"] == "estimated_89") for n in nodes),
+        unknown_target_nodes=sum(n["target_kind"] == "unanchored" for n in nodes),
+    )
+    return dict(
+        coefficients=coefficients,
+        summary=summary,
+        predictions=predictions,
+        coverage=coverage,
+        hardware=hardware,
+        arrays=bootstrap_arrays,
+        run=run,
+    )
+
+
 @click.command("network-fit")
 @click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--output", type=click.Path(path_type=Path), default=DERIVED / "network-fit", show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=RESEARCH, show_default=True)
 @click.option("--bootstrap", "draws", type=click.IntRange(min=100), default=10000, show_default=True)
 @click.option("--seed", type=int, default=20260927, show_default=True)
-def network_fit(database, output, research_dir, draws, seed):
+@jobs_option
+def network_fit(database, output, research_dir, draws, seed, jobs):
     """Calibrate per-family power laws through the VAX-11/780 jointly with missing measurements."""
     with connect(database) as db:
         rows = results(db, SCOPES + (BRIDGE_SCOPE,))
@@ -399,72 +491,18 @@ def network_fit(database, output, research_dir, draws, seed):
             )
             for n in nodes
         )
-        for enabled in (False, True):
-            cohort = "with_spec89" if enabled else "spec92_only"
-            context = dict(scenario=scenario, cohort=cohort)
-            click.echo("Fitting " + scenario + " / " + cohort, err=True)
-            calib, grouped = train(nodes, edges, enabled, anchor)
-            metrics, intercepts, exponents = bootstrap(nodes, edges, enabled, anchor, anchor_sd, draws, seed)
-            bootstrap_arrays[scenario + "__" + cohort + "__intercept"] = intercepts
-            bootstrap_arrays[scenario + "__" + cohort + "__exponent"] = exponents
-            for i, m in enumerate(metrics):
-                coefficients.append(
-                    dict(
-                        context,
-                        metric=m,
-                        family=family(m),
-                        exponent_group=exponent_group(m),
-                        score_unit="DMIPS" if family(m) == "Dhrystone" else "MWIPS" if family(m) == "Whetstone" else "MFLOPS",
-                        exponent=calib[m][1],
-                        exponent_ci95_low=float(np.quantile(exponents[:, i], 0.025)),
-                        exponent_ci95_high=float(np.quantile(exponents[:, i], 0.975)),
-                        vaxen_at_unit_score=math.exp(calib[m][0]),
-                        unit_score_ci95_low=float(np.exp(np.quantile(intercepts[:, i], 0.025))),
-                        unit_score_ci95_high=float(np.exp(np.quantile(intercepts[:, i], 0.975))),
-                        vax780_anchor_score=math.exp(anchor[m]) if m in anchor else "",
-                        valid_bootstrap_draws=len(intercepts),
-                        informative_models=len(grouped),
-                    )
-                )
-            sm, pr, cv = evaluate(nodes, edges, enabled, anchor)
-            summary.extend(dict(context, **r) for r in sm)
-            predictions.extend(dict(context, **r) for r in pr)
-            coverage.extend(dict(context, **r) for r in cv)
-            for n in nodes:
-                for estimate in estimates(n, calib):
-                    members = estimate["metrics"].split(";")
-                    w = metric_weights(members)
-                    boot = sum(
-                        w[m] * (intercepts[:, metrics.index(m)] + exponents[:, metrics.index(m)] * n["log_scores"][m])
-                        for m in members
-                    )
-                    hardware.append(
-                        dict(
-                            context,
-                            node_id=n["node_id"],
-                            model_key=n["model_key"],
-                            system=n["system"],
-                            target_kind=n["target_kind"],
-                            subset=estimate["subset"],
-                            metrics=estimate["metrics"],
-                            estimated_vaxen=math.exp(estimate["predicted_log"]),
-                            calibration_ci95_low=float(np.quantile(np.exp(boot), 0.025)),
-                            calibration_ci95_high=float(np.quantile(np.exp(boot), 0.975)),
-                            evidence_class="fitted_estimate_not_spec_measurement",
-                        )
-                    )
-            runs.append(
-                dict(
-                    context,
-                    nodes=len(nodes),
-                    informative_models=len(grouped),
-                    calibrated_metrics=metrics,
-                    anchored_nodes=sum(
-                        n["target_kind"] == "observed_speed" or (enabled and n["target_kind"] == "estimated_89") for n in nodes
-                    ),
-                    unknown_target_nodes=sum(n["target_kind"] == "unanchored" for n in nodes),
-                )
-            )
+    # The four scenario/cohort fits are independent; run them in parallel and merge in order.
+    tasks = [
+        (rows, edges, anchor, anchor_sd, scaling, enabled, draws, seed) for scaling in (False, True) for enabled in (False, True)
+    ]
+    for result in pmap(fit_run, tasks, jobs):
+        coefficients.extend(result["coefficients"])
+        summary.extend(result["summary"])
+        predictions.extend(result["predictions"])
+        coverage.extend(result["coverage"])
+        hardware.extend(result["hardware"])
+        bootstrap_arrays.update(result["arrays"])
+        runs.append(result["run"])
     for name, data in [
         ("coefficients", coefficients),
         ("summary", summary),

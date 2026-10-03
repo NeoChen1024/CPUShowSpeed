@@ -4,6 +4,7 @@ import hashlib
 import io
 import json
 import math
+import os
 from pathlib import Path
 
 import click
@@ -54,17 +55,23 @@ def positive(value, name):
     return value
 
 
-def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="with_spec89"):
-    """Inputs are already expressed in their named units at the target clock."""
-    if not scores:
-        raise ValueError("provide at least one classical benchmark score")
-    known = {metric for metric, unit in OPTIONS.values()}
-    if set(scores) - known:
-        raise ValueError("unsupported metric: " + ", ".join(sorted(set(scores) - known)))
-    scores = {m: positive(v, m) for m, v in scores.items()}
+# Validated bundles keyed by directory, run and the files' stat signatures, so a changed file is reread and rechecked.
+_BUNDLES = {}
+BUNDLE_FILES = ("prediction-calibration.json", "coefficients.csv", "coefficient-log-draws.npz")
+
+
+def load_bundle(calibration_dir, scenario, cohort):
+    """The verified calibration of one scenario/cohort: (manifest, manifest sha256, metrics, rows by metric, draws)."""
     manifest_path = calibration_dir / "prediction-calibration.json"
     if not manifest_path.exists():
         raise ValueError("calibration bundle missing; run cpushowspeed classic network-fit first")
+    try:
+        stats = tuple((st.st_mtime_ns, st.st_size, st.st_ino) for st in (os.stat(calibration_dir / n) for n in BUNDLE_FILES))
+    except FileNotFoundError:
+        stats = None
+    key = (str(Path(calibration_dir).resolve()), scenario, cohort, stats)
+    if stats is not None and key in _BUNDLES:
+        return _BUNDLES[key]
     manifest = json.loads(manifest_path.read_text())
     if (
         manifest.get("schema_version") != 3
@@ -83,7 +90,7 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
         raise ValueError("expected one matching scenario/cohort calibration")
     run = runs[0]
     metrics = run["metrics"]
-    if len(metrics) != len(set(metrics)) or not set(scores) <= set(metrics):
+    if len(metrics) != len(set(metrics)):
         raise ValueError("requested metric not uniquely calibrated")
     # Parse the already verified bytes instead of rereading a mutable file.
     import csv
@@ -110,6 +117,23 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
             raise ValueError("invalid joint coefficient draw arrays")
     if any(int(r["valid_bootstrap_draws"]) != len(intercepts) for r in rows):
         raise ValueError("coefficient/draw sample counts disagree")
+    bundle = (manifest, hashlib.sha256(manifest_path.read_bytes()).hexdigest(), metrics, bymetric, intercepts, exponents)
+    if stats is not None:
+        _BUNDLES[key] = bundle
+    return bundle
+
+
+def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="with_spec89"):
+    """Inputs are already expressed in their named units at the target clock."""
+    if not scores:
+        raise ValueError("provide at least one classical benchmark score")
+    known = {metric for metric, unit in OPTIONS.values()}
+    if set(scores) - known:
+        raise ValueError("unsupported metric: " + ", ".join(sorted(set(scores) - known)))
+    scores = {m: positive(v, m) for m, v in scores.items()}
+    manifest, manifest_sha256, metrics, bymetric, intercepts, exponents = load_bundle(calibration_dir, scenario, cohort)
+    if not set(scores) <= set(metrics):
+        raise ValueError("requested metric not uniquely calibrated")
     weights = metric_weights(scores)
     point_log = 0.0
     draw_logs = np.zeros(len(intercepts))
@@ -152,7 +176,7 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
         bootstrap_draws=len(intercepts),
         uncertainty_scope="conditional_joint_calibration_not_individual_machine_prediction_interval",
         input_clock_policy="scores used at supplied target configuration; no additional frequency scaling",
-        calibration_manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        calibration_manifest_sha256=manifest_sha256,
         calibration_files_sha256=manifest["files"],
     )
 

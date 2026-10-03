@@ -18,6 +18,7 @@ from pathlib import Path
 
 import click
 from cpushowspeed.curated import sha256, write_jsonl
+from cpushowspeed.parallel import jobs_option
 from cpushowspeed.processor_keys import sku_key
 
 MENTIONS = Path("data/derived/schema/processor-mentions.jsonl")
@@ -26,12 +27,15 @@ RULES = {"sku-key-v1": sku_key}
 
 @click.command("extract")
 @click.option("--raw-dir", type=click.Path(path_type=Path, file_okay=False), default=Path("data/raw/spec"), show_default=True)
-def extract_command(raw_dir):
+@jobs_option
+def extract_command(raw_dir, jobs):
     """Run every source adapter into benchmark-observation-v2, then extract mentions, hardware and results."""
+    from cpushowspeed import spec_inputs
     from cpushowspeed.benchmark_records import write_jsonl as write_observations
     from cpushowspeed.curated_observation import OBSERVATIONS
     from cpushowspeed.input_catalog import records
 
+    spec_inputs.JOBS = jobs
     observations = write_observations(OBSERVATIONS, records(raw_dir))
     counts = Counter()
     with OBSERVATIONS.open() as stream:

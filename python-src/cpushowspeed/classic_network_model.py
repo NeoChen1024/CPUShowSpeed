@@ -163,15 +163,25 @@ def calibration(metrics, phi):
     return {m: (float(phi[2 * i]), float(phi[2 * i + 1])) for i, m in enumerate(metrics)}
 
 
-def train(nodes, edges, bridge_enabled, anchor, exclude=None, latent=True):
-    """Point calibration {metric: (intercept, exponent)} and the per-model normal equations."""
+def train(nodes, edges, bridge_enabled, anchor, exclude=None, latent=True, cache=None):
+    """Point calibration {metric: (intercept, exponent)} and the per-model normal equations.
+
+    A model's equations depend only on its own nodes and the calibrated metrics, so holdout
+    loops pass a `cache` dict (one per node list) and reuse them across folds.
+    """
     if any(n["target_kind"] not in {"observed_speed", "estimated_89", "unanchored"} for n in nodes):
         raise ValueError("the classical network anchors only on SPECint92 speed or bridged SPECint89")
     training = [n for n in nodes if n["model_key"] != exclude]
     metrics = supported_metrics(training, bridge_enabled, latent)
     if not metrics:
         return {}, {}
-    grouped = matrices(training, metrics, bridge_enabled, latent)
+    if cache is None:
+        grouped = matrices(training, metrics, bridge_enabled, latent)
+    else:
+        key = (bridge_enabled, latent, tuple(metrics))
+        if key not in cache:
+            cache[key] = matrices(nodes, metrics, bridge_enabled, latent)
+        grouped = {k: v for k, v in cache[key].items() if k != exclude}
     bridge = bridge_log(edges, exclude) if bridge_enabled else 0.0
     h1, h2 = (sum(v[i] for v in grouped.values())[None] for i in (0, 3))
     g1, g2 = (sum(v[i] + bridge * v[i + 1] for v in grouped.values())[None] for i in (1, 4))

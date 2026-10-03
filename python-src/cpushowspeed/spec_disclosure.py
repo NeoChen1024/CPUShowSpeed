@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 import re
+from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
@@ -48,8 +49,13 @@ class TableRows(HTMLParser):
             self.cell.append(data)
 
 
+NON_ALNUM = re.compile(r"[^a-z0-9]")
+BENCHMARK = re.compile(r"\d{3}\.[A-Za-z_]\w*")
+
+
+@lru_cache(maxsize=1 << 16)
 def canonical(value):
-    return re.sub(r"[^a-z0-9]", "", value.lower())
+    return NON_ALNUM.sub("", value.lower())
 
 
 def integer(value):
@@ -89,10 +95,10 @@ def parse_disclosure(body, suffix, generation, track):
             continue
         if len(row) == 1 and "Results Table" in row[0]:
             section = row[0]
-        for index, cell in enumerate(row):
-            if canonical(cell) in aliases and index + 1 < len(row):
-                hardware[aliases[canonical(cell)]] = " ".join(row[index + 1 :]).strip()
         labels = [canonical(c) for c in row]
+        for index, label in enumerate(labels):
+            if label in aliases and index + 1 < len(row):
+                hardware[aliases[label]] = " ".join(row[index + 1 :]).strip()
         if any(c in ("benchmark", "benchmarkandname") for c in labels) or any("benchmark" in c and "name" in c for c in labels):
             if any(quantity in c for c in labels):
                 header = labels
@@ -101,12 +107,12 @@ def parse_disclosure(body, suffix, generation, track):
             continue
         if header is None:
             continue
-        if suffix == ".csv" and not re.fullmatch(r"\d{3}\.[A-Za-z_]\w*", row[0].strip()):
+        if suffix == ".csv" and not BENCHMARK.fullmatch(row[0].strip()):
             # Result rows end before aggregate scores, metadata and compiler flags.
             # Those later sections may also contain benchmark names and numbers.
             header = None
             continue
-        bench = next((v for v in row if re.fullmatch(r"\d{3}\.[A-Za-z_]\w*", v.strip())), None)
+        bench = next((v for v in row if BENCHMARK.fullmatch(v.strip())), None)
         if bench is None:
             continue
         for mode in ("base", "peak"):

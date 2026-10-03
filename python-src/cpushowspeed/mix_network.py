@@ -32,6 +32,7 @@ from cpushowspeed.classical_store import BRIDGE_SCOPE, SCOPES, family, results
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.mix_bridge import MIX_SCOPE, _rows, pending_links
 from cpushowspeed.observation_store import connect, inputs_digest
+from cpushowspeed.parallel import jobs_option, pmap
 from cpushowspeed.research_io import code_hashes, write_csv
 
 METHOD_VERSION = "instruction-mix-joint-network-v6-two-stage-power-law"
@@ -191,13 +192,90 @@ def _value(vaxen, logs, members):
     )
 
 
+def fit_run(task):
+    """One links/scenario/cohort fit of the joint network: coefficients, holdouts and estimates."""
+    rows, mixes, links, edges, anchor, anchor_sd, scaling, tier, enabled, draws, seed = task
+    scenario = "linear_clock" if scaling else "reported_clock"
+    cohort = "with_spec89" if enabled else "spec92_only"
+    nodes, _, _ = build(rows, scaling)
+    extended, baseline, merged, audit = attach(nodes, edges, mixes, links, tier)
+    coefficients, summary, held_rows, anchors, predictions, arrays = [], [], [], [], [], {}
+    context = dict(links=tier, scenario=scenario, cohort=cohort)
+    click.echo(f"Fitting {tier} / {scenario} / {cohort}", err=True)
+    calib, grouped = train(extended, merged, enabled, anchor)
+    base, _ = train(baseline, merged, enabled, anchor)
+    metrics, intercepts, exponents = bootstrap(extended, merged, enabled, anchor, anchor_sd, draws, seed)
+    key = "__".join((tier, scenario, cohort))
+    arrays[key + "__intercept"] = intercepts
+    arrays[key + "__exponent"] = exponents
+    for i, metric in enumerate(metrics):
+        coefficients.append(
+            dict(
+                context,
+                metric=metric,
+                exponent=calib[metric][1],
+                exponent_ci95_low=float(np.quantile(exponents[:, i], 0.025)),
+                exponent_ci95_high=float(np.quantile(exponents[:, i], 0.975)),
+                vaxen_at_unit_score=math.exp(calib[metric][0]),
+                unit_score_ci95_low=float(np.exp(np.quantile(intercepts[:, i], 0.025))),
+                unit_score_ci95_high=float(np.exp(np.quantile(intercepts[:, i], 0.975))),
+                vax780_anchored=metric in anchor,
+                valid_draws=len(intercepts),
+                classical_only_exponent=base[metric][1] if metric in base else "",
+                classical_only_vaxen_at_unit_score=math.exp(base[metric][0]) if metric in base else "",
+            )
+        )
+    held = holdouts(extended, merged, enabled, anchor, context)
+    held_rows.extend(held)
+    for reference in ("observed_target", "classical_proxy"):
+        selected = [r for r in held if r["reference"] == reference]
+        summary.append(
+            dict(
+                context,
+                reference=reference,
+                models=len({r["model_key"] for r in selected}),
+                nodes=len(selected),
+                **error_summary(selected),
+            )
+        )
+    for name, ns in (("classical_only", baseline), ("with_mixes", extended)):
+        s, _, _ = evaluate(ns, merged, enabled, anchor, methods=("network",))
+        anchors.extend(
+            dict(context, experiment=name, **r)
+            for r in s
+            if r["method"] == "network" and r["subset"] == "all_available" and r["scope"] == "all_available_nodes"
+        )
+    predictions.extend(estimates(mixes, calib, metrics, intercepts, exponents, context))
+    run = dict(
+        context,
+        draw_key=key,
+        metrics=metrics,
+        valid_draws=len(intercepts),
+        informative_models=len(grouped),
+        mix_nodes=sum(bool(n["mix_metrics"]) for n in extended),
+        mix_models=len({n["model_key"] for n in extended if n["mix_metrics"]}),
+        mix_nodes_with_observed_speed=sum(bool(n["mix_metrics"]) and n["target_kind"] == "observed_speed" for n in extended),
+        attached_ratings=sum(r["status"] == "attached" for r in audit),
+    )
+    return dict(
+        coefficients=coefficients,
+        summary=summary,
+        held=held_rows,
+        anchors=anchors,
+        predictions=predictions,
+        arrays=arrays,
+        run=run,
+    )
+
+
 @click.command("mix-network-fit")
 @click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--output", type=click.Path(path_type=Path), default=OUTPUT, show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=RESEARCH, show_default=True)
 @click.option("--bootstrap", "draws", type=click.IntRange(min=100), default=10000, show_default=True)
 @click.option("--seed", type=int, default=20260928, show_default=True)
-def mix_network_fit(database, output, research_dir, draws, seed):
+@jobs_option
+def mix_network_fit(database, output, research_dir, draws, seed, jobs):
     """Jointly calibrate Gibson/ADP ratings with the classical network to speed-VAXen (SPECint92 = 1)."""
     with connect(database) as db:
         rows = results(db, SCOPES + (BRIDGE_SCOPE,))
@@ -207,76 +285,24 @@ def mix_network_fit(database, output, research_dir, draws, seed):
     edges = speed_edges(bridge_evidence(rows))
     anchor, anchor_sd, _ = vax780_anchor(rows)
     coefficients, summary, held_rows, attach_rows, anchors, predictions, runs, arrays = [], [], [], [], [], [], [], {}
-    for scaling in (False, True):
-        scenario = "linear_clock" if scaling else "reported_clock"
-        nodes, _, _ = build(rows, scaling)
-        for tier in LINKS:
-            extended, baseline, merged, audit = attach(nodes, edges, mixes, links, tier)
-            if scaling:
-                attach_rows.extend(audit)
-            for enabled in (False, True):
-                cohort = "with_spec89" if enabled else "spec92_only"
-                context = dict(links=tier, scenario=scenario, cohort=cohort)
-                click.echo(f"Fitting {tier} / {scenario} / {cohort}", err=True)
-                calib, grouped = train(extended, merged, enabled, anchor)
-                base, _ = train(baseline, merged, enabled, anchor)
-                metrics, intercepts, exponents = bootstrap(extended, merged, enabled, anchor, anchor_sd, draws, seed)
-                key = "__".join((tier, scenario, cohort))
-                arrays[key + "__intercept"] = intercepts
-                arrays[key + "__exponent"] = exponents
-                for i, metric in enumerate(metrics):
-                    coefficients.append(
-                        dict(
-                            context,
-                            metric=metric,
-                            exponent=calib[metric][1],
-                            exponent_ci95_low=float(np.quantile(exponents[:, i], 0.025)),
-                            exponent_ci95_high=float(np.quantile(exponents[:, i], 0.975)),
-                            vaxen_at_unit_score=math.exp(calib[metric][0]),
-                            unit_score_ci95_low=float(np.exp(np.quantile(intercepts[:, i], 0.025))),
-                            unit_score_ci95_high=float(np.exp(np.quantile(intercepts[:, i], 0.975))),
-                            vax780_anchored=metric in anchor,
-                            valid_draws=len(intercepts),
-                            classical_only_exponent=base[metric][1] if metric in base else "",
-                            classical_only_vaxen_at_unit_score=math.exp(base[metric][0]) if metric in base else "",
-                        )
-                    )
-                held = holdouts(extended, merged, enabled, anchor, context)
-                held_rows.extend(held)
-                for reference in ("observed_target", "classical_proxy"):
-                    selected = [r for r in held if r["reference"] == reference]
-                    summary.append(
-                        dict(
-                            context,
-                            reference=reference,
-                            models=len({r["model_key"] for r in selected}),
-                            nodes=len(selected),
-                            **error_summary(selected),
-                        )
-                    )
-                for name, ns in (("classical_only", baseline), ("with_mixes", extended)):
-                    s, _, _ = evaluate(ns, merged, enabled, anchor, methods=("network",))
-                    anchors.extend(
-                        dict(context, experiment=name, **r)
-                        for r in s
-                        if r["method"] == "network" and r["subset"] == "all_available" and r["scope"] == "all_available_nodes"
-                    )
-                predictions.extend(estimates(mixes, calib, metrics, intercepts, exponents, context))
-                runs.append(
-                    dict(
-                        context,
-                        draw_key=key,
-                        metrics=metrics,
-                        valid_draws=len(intercepts),
-                        informative_models=len(grouped),
-                        mix_nodes=sum(bool(n["mix_metrics"]) for n in extended),
-                        mix_models=len({n["model_key"] for n in extended if n["mix_metrics"]}),
-                        mix_nodes_with_observed_speed=sum(
-                            bool(n["mix_metrics"]) and n["target_kind"] == "observed_speed" for n in extended
-                        ),
-                        attached_ratings=sum(r["status"] == "attached" for r in audit),
-                    )
-                )
+    nodes, _, _ = build(rows, True)
+    for tier in LINKS:
+        attach_rows.extend(attach(nodes, edges, mixes, links, tier)[3])
+    # The eight links/scenario/cohort fits are independent; run them in parallel and merge in order.
+    tasks = [
+        (rows, mixes, links, edges, anchor, anchor_sd, scaling, tier, enabled, draws, seed)
+        for scaling in (False, True)
+        for tier in LINKS
+        for enabled in (False, True)
+    ]
+    for result in pmap(fit_run, tasks, jobs):
+        coefficients.extend(result["coefficients"])
+        summary.extend(result["summary"])
+        held_rows.extend(result["held"])
+        anchors.extend(result["anchors"])
+        predictions.extend(result["predictions"])
+        arrays.update(result["arrays"])
+        runs.append(result["run"])
     output.mkdir(parents=True, exist_ok=True)
     for name, data in (
         ("coefficients", coefficients),

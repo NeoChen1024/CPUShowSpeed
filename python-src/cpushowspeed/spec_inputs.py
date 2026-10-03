@@ -6,11 +6,11 @@ import json
 import re
 import statistics
 from dataclasses import replace
-from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urlparse
 
 from cpushowspeed import spec92_disclosure
+from cpushowspeed.parallel import pmap
 from cpushowspeed.spec92_rate import BENCHMARKS, _checked
 from cpushowspeed.spec_disclosure import load_disclosure
 from cpushowspeed.spec_overlap import (
@@ -28,13 +28,27 @@ GENERATIONS = ("cpu95", "cpu2000", "cpu2006", "cpu2017", "cpu2026")
 MODES = ("base", "peak")
 
 
-@lru_cache(None)
-def _live_disclosure(raw_dir, url, generation, track):
+# Parsed disclosures by (raw_dir, url, generation, track); filled lazily or in parallel by prefetch.
+_DISCLOSURES = {}
+JOBS = 0
+
+
+def _load(key):
+    raw_dir, url, generation, track = key
     return load_disclosure(Path(raw_dir), url, generation, track)
 
 
 def disclosure(raw_dir, url, generation, track):
-    return _live_disclosure(raw_dir, url, generation, track)
+    key = (str(raw_dir), url, generation, track)
+    if key not in _DISCLOSURES:
+        _DISCLOSURES[key] = _load(key)
+    return _DISCLOSURES[key]
+
+
+def prefetch(keys, jobs=None):
+    """Parse the not yet loaded disclosures of (raw_dir, url, generation, track) keys in worker processes."""
+    missing = list(dict.fromkeys(k for k in ((str(r), u, g, t) for r, u, g, t in keys) if k not in _DISCLOSURES))
+    _DISCLOSURES.update(zip(missing, pmap(_load, missing, JOBS if jobs is None else jobs, chunksize=64)))
 
 
 def enrich(result, raw_dir, track, raw_fields=None, execution=None):
@@ -91,11 +105,15 @@ def collect_integer(raw_dir: Path, track: str) -> dict[str, list[Result]]:
                     digest,
                     track=track,
                     raw_fields=raw,
-                    execution=disclosure(raw_dir, url, generation, track),
                 )
             )
         results[generation] = selected
-    return results
+    # Disclosures parse independently; load them together, then attach in order.
+    prefetch((raw_dir, r.source_url, r.generation, track) for group in results.values() for r in group)
+    return {
+        generation: [replace(r, execution=disclosure(raw_dir, r.source_url, r.generation, track)) for r in group]
+        for generation, group in results.items()
+    }
 
 
 def collect_cpu92_rate(path: Path, raw_dir: Path | None = None) -> list[Result]:

@@ -9,6 +9,7 @@ import math
 import re
 from collections import defaultdict
 from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 
 import click
@@ -91,6 +92,7 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+@lru_cache(maxsize=None)
 def _month(value: str) -> str:
     """Keep the source's month precision and refuse guessed dates."""
     value = value.strip()

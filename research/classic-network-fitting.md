@@ -501,7 +501,9 @@ OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/cpushowspeed-mpl .venv/bin/cpushowspeed
 
 Options `--database`, `--output`, `--research-dir`, `--bootstrap` and `--seed`
 select the built database, outputs and resampling. The default output is
-`data/derived/classic/network-fit/`.
+`data/derived/classic/network-fit/`. `--jobs` sets the
+worker processes for the four scenario/cohort fits (0, the default, uses every CPU);
+results are identical for any value.
 
 - `coefficients.csv`: per-benchmark family exponent, speed-VAXen at unit score,
   780 anchor score, units, cohort/scenario and CI95.

@@ -16,8 +16,12 @@ VENDOR_COMMIT = "460fb574870606a67eccaf59f7d7c08b46ec551e"
 ROOT = Path(__file__).resolve().parents[2]
 
 
+# One encoder for every cell; json.dumps with options would build a new one per call.
+_COMPACT = json.JSONEncoder(ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+
+
 def compact(value):
-    return json.dumps(value, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+    return _COMPACT.encode(value)
 
 
 def write_table(path, rows):
