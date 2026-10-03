@@ -3,6 +3,9 @@
 {"metric_id": "InstructionMix:ADP_KIPS", "registry_metric": "adp", "mode": "reported", "unit": "KIPS", "track": "instruction_mix"}
 {"metric_id": "InstructionMix:Gibson_KIPS", "registry_metric": "gibson", "mode": "reported", "unit": "KIPS", "track": "instruction_mix"}
 {"metric_id": "LINPACK:n100_MFLOPS", "registry_metric": "linpack-100", "mode": "reported", "unit": "MFLOPS", "track": "classical"}
+{"metric_id": "Livermore:LFK72_AM_MFLOPS", "registry_metric": "livermore-72", "mode": "reported", "unit": "MFLOPS", "track": "classical", "note": "Livermore Fortran Kernels, arithmetic mean of the 72 kernel rates as the program prints it"}
+{"metric_id": "Livermore:LFK72_GM_MFLOPS", "registry_metric": "livermore-72", "mode": "reported", "unit": "MFLOPS", "track": "classical", "note": "Livermore Fortran Kernels, geometric mean of the 72 kernel rates as the program prints it"}
+{"metric_id": "Livermore:LFK72_HM_MFLOPS", "registry_metric": "livermore-72", "mode": "reported", "unit": "MFLOPS", "track": "classical", "note": "Livermore Fortran Kernels, harmonic mean of the 72 kernel rates as the program prints it"}
 {"metric_id": "SPECbase_int92", "registry_metric": "base-int92", "mode": "base", "unit": "native_suite_points", "track": "speed", "note": "Historical collections; same suite as cpu92:integer:speed:base"}
 {"metric_id": "SPECfp89", "registry_metric": "fp89", "mode": "reported", "unit": "native_suite_points", "track": "speed", "note": "Historical collections and the SPEC89 package"}
 {"metric_id": "SPECfp92", "registry_metric": "fp92", "mode": "reported", "unit": "native_suite_points", "track": "speed"}

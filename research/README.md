@@ -34,7 +34,7 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 - Identity: [processor](processor-identity.md) and [system](system-identity.md) resolution (schema steps 2 and 2b).
 - Dates: [date events and chronology selection](chronology.md) (schema step 3).
 - Vendor reports: [1990 DEC RISC summary and MIPS Performance Brief 3.5](vendor-performance-reports.md).
-- Usenet lists: [Richardson's Dhrystone lists](usenet-result-lists.md).
+- Usenet lists: [Richardson's Dhrystone lists, SSBA, SPARC LINPACK and Livermore posts](usenet-result-lists.md).
 - Earlier reconstruction: [mix/timing observations](early-benchmark-evidence.md),
   [OCR sample checks](chandra-timesharing-sample.md), [historical data contract](data/historical/README.md).
 

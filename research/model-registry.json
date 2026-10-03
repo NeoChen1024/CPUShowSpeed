@@ -326,6 +326,15 @@
       "scope": "Precision and implementation remain source metadata; do not pool sizes"
     },
     {
+      "id": "livermore-72",
+      "title": "Livermore Fortran Kernels, 72 samples",
+      "mode": "classical",
+      "unit": "MFLOPS",
+      "status": "recorded",
+      "variants": [],
+      "scope": "Harmonic, geometric and arithmetic means as the program prints them; not a classical-network family"
+    },
+    {
       "id": "linpack-300",
       "title": "LINPACK n=300",
       "mode": "classical",
@@ -2094,7 +2103,7 @@
       "title": "Usenet result lists",
       "role": "evidence",
       "status": "current",
-      "purpose": "Richardson's Dhrystone 1.1 and 2 lists parsed from UTZOO postings and used by the classical network"
+      "purpose": "Richardson's Dhrystone lists parsed from UTZOO postings; SSBA, SPARC LINPACK and Livermore posts transcribed as curated observations"
     },
     {
       "path": "research/overview.md",

@@ -156,11 +156,14 @@ Located on 2026-10-03; transcribed only where noted:
   comp.arch). The final Dhrystone 1.1 list (1987-09-20) and Dhrystone 2
   database (1989-04-30) are parsed; see
   [Usenet result lists](../research/usenet-result-lists.md).
-- John McCalpin's 64-bit and 32-bit Livermore Fortran Kernel tables, 1990-11-11
-  (comp.unix.aix).
-- Smaller multi-machine posts: Aburto's Nsieve results (1989-05); the SSBA suite
-  on HP 9000/720 versus SPARCstation 2 (1991-03); SPARCstation LINPACK comparisons
-  (1990-12); workstation benchmark collections (1985-09, 1990-07).
+- John McCalpin's Livermore Fortran Kernel output, the SSBA run on HP 9000/720
+  and SPARCstation 2, and Nefzger's SPARC LINPACK comparison are transcribed;
+  Aburto's Nsieve results and two workstation benchmark collections (1985-09,
+  1990-07) were examined and not used. See
+  [Usenet result lists](../research/usenet-result-lists.md#smaller-result-posts-19901991).
+- SSBA results for about 110 systems in Tribunix (AFUU newsletter, issues
+  27–35, 1989–1990) and IX Magazine (1990), listed by Nhuan Doduc in 1991. Not
+  acquired.
 - About 850 posts mention SPEC results. They are reserved for the SPEC89 source
   search.
 

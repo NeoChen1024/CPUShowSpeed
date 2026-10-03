@@ -74,7 +74,7 @@
   "clock_assumption": "linear_clock scales Dhrystone/Whetstone to the target clock only when both results resolve to one processor; unknown clocks unscaled; LINPACK never scaled",
   "fit": "family/variant/node/model balanced log least squares; unanchored node values eliminated analytically",
   "qualification": "hardware/clock/FPU/cache/software equivalence unverified across sources; coefficient intervals omit model discrepancy and scaling exponent uncertainty",
-  "inputs_sha256": "93c726319018fb42016aa6ce67a02adab8f632431679df1befdcfe1a7fa42c82",
+  "inputs_sha256": "be9e26da29a88ac3c0bb2f86856046b639da9f919d2eb6256c50c7504303be10",
   "shared_code_sha256": {
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
@@ -95,7 +95,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_review.py": "0c8578492eeee9982083ac4996dc18dd4bfef4932ddbc594a64e8ffbb76c9057",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_system.py": "94156a6b0aa461b1d9ed06be76cbdd5850de30b6aebea9097a437467be323e4d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/execution_policy.py": "c482cf4e5cd22c52cb0246af192407851b48c3daec77cf2ec279175f9d65800d",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_catalog.py": "d2f7db5ec259b4aab2424b2f5732432df52af784ec65f3e71224ee76ace697a4",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_catalog.py": "bc99ca947116e5c5bd37417ec5c6d71f000ddc442f93e3edd96b6b0ccb12b1ce",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/observation_store.py": "ecc52313bb5b1975788ce07a30b3633aecaf8ce4a01b760bc903b345c1938347",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/processor_keys.py": "c3b6ec67bbf4df3abab32167ad8758882cef20eeb876152ab796daaa7907eb82",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/rate_convert.py": "68a78857870729098bd83715d9d3cab25b99364531a6e59ba7dbebac1c2740de",

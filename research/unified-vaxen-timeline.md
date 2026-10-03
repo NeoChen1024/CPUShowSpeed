@@ -174,6 +174,21 @@ changes in the [network report](classic-network-fitting.md#changes-from-the-1990
 SPEC rows and SPEC89 bridge estimates are unchanged. The full-population Node
 test passed (2026-10-03).
 
+## Smaller Usenet result posts — 2026-10-03
+
+The [SSBA and Nefzger LINPACK posts](usenet-result-lists.md#smaller-result-posts-19901991)
+add five classical results: 102,020 → 102,025 records (classical 2,234 → 2,239;
+speed 43,207 → 43,212; hardware-dated 26,377 → 26,381, unknown 1,151 → 1,152;
+the Sun 4/490 has no curated year). They estimate 5.02 (SPARCstation 1+, LINPACK
+only) to 30.21 (HP 9000/720, SSBA) speed-VAXen; the SPARCstation 2 gets 10.34
+from LINPACK alone and 15.89 from its SSBA vector. LINPACK-only estimates of
+these Sun systems fall below their SPEC results (SPARCstation 2 SPECint92 21.8),
+as LINPACK n=100 on Sun's 1990 Fortran was low relative to integer speed. The
+Livermore rows are context and give no records. The refit moved the other
+classical and mix rows by the coefficient changes in the
+[network report](classic-network-fitting.md#changes-from-the-smaller-usenet-result-posts-2026-10-03).
+SPEC rows are unchanged. The full-population Node test passed.
+
 ## Richardson's Dhrystone lists — 2026-10-03
 
 [Richardson's lists](usenet-result-lists.md) add 570 classical results:

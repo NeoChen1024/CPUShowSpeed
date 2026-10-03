@@ -115,6 +115,7 @@ def dec_vectors():
 CONVERSIONS = {
     ("Dhrystones/s", "DMIPS"): ("dhrystones-per-second-to-dmips", 1 / 1757),
     ("KWIPS", "MWIPS"): ("kwips-to-mwips", 1 / 1000),
+    ("KFLOPS", "MFLOPS"): ("kflops-to-mflops", 1 / 1000),
 }
 
 

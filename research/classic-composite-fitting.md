@@ -64,7 +64,7 @@ P95 is also retained. The shaded CI95 is not a prediction interval for an old
 machine. Source selection, configuration mismatch, shared lineage and earlier
 architecture extrapolation are not covered by the bootstrap.
 
-There are 2,326 tuples across both cohorts and all combinations, and 194
+There are 2,356 tuples across both cohorts and all combinations, and 194
 composite/baseline comparison rows, including insufficient-model cases. These
 are not counts of independent benchmark runs. Peak targets cover 99 results on
 46 systems (`same_system`); base targets 32 results on 14 systems.
@@ -75,21 +75,21 @@ are not counts of independent benchmark runs. Peak targets cover 99 results on
 
 | Composite | Systems / tuples | k | Factor CI95 | LOMO model-center P95 |
 | --- | ---: | ---: | --- | ---: |
-| Dhrystone 1.1 + LINPACK | 43 / 96 | 1.43491 | 1.35285–1.51799 | 40.51% |
-| Dhrystone 2.1 + LINPACK | 44 / 97 | 1.46589 | 1.37281–1.56579 | 44.26% |
-| Whetstone DP + LINPACK | 34 / 79 | 1.67217 | 1.59938–1.74613 | 27.26% |
-| Dhrystone 1.1 + Whetstone DP + LINPACK | 33 / 78 | 1.20697 | 1.16535–1.24744 | 22.16% |
-| Dhrystone 2.1 + Whetstone DP + LINPACK | 33 / 78 | 1.23738 | 1.18868–1.28518 | 25.24% |
+| Dhrystone 1.1 + LINPACK | 43 / 96 | 1.44267 | 1.35685–1.53191 | 41.75% |
+| Dhrystone 2.1 + LINPACK | 44 / 97 | 1.47311 | 1.37608–1.57918 | 45.27% |
+| Whetstone DP + LINPACK | 36 / 81 | 1.71526 | 1.62455–1.81627 | 35.03% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 35 / 80 | 1.23696 | 1.18195–1.30178 | 27.61% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 35 / 80 | 1.26821 | 1.20704–1.33930 | 29.50% |
 
 ### Base
 
 | Composite | Systems / tuples | k | Factor CI95 | LOMO model-center P95 |
 | --- | ---: | ---: | --- | ---: |
-| Dhrystone 1.1 + LINPACK | 14 / 32 | 1.39423 | 1.33866–1.45294 | 13.64% |
-| Dhrystone 2.1 + LINPACK | 14 / 32 | 1.40611 | 1.34634–1.46906 | 15.92% |
-| Whetstone DP + LINPACK | 13 / 31 | 1.51546 | 1.46194–1.56930 | 13.07% |
-| Dhrystone 1.1 + Whetstone DP + LINPACK | 13 / 31 | 1.11684 | 1.07485–1.15880 | 13.64% |
-| Dhrystone 2.1 + Whetstone DP + LINPACK | 13 / 31 | 1.12121 | 1.07519–1.16670 | 14.15% |
+| Dhrystone 1.1 + LINPACK | 14 / 32 | 1.41236 | 1.34114–1.50262 | 19.65% |
+| Dhrystone 2.1 + LINPACK | 14 / 32 | 1.42419 | 1.34843–1.52148 | 21.70% |
+| Whetstone DP + LINPACK | 14 / 32 | 1.57110 | 1.47649–1.71257 | 25.67% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 14 / 32 | 1.15490 | 1.08618–1.25329 | 26.23% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 14 / 32 | 1.16133 | 1.08767–1.26563 | 27.57% |
 
 The `same_result` cohort covers 62 peak targets on 38 systems; for example
 Dhrystone 1.1 + LINPACK gives 1.36335 (P95 28.20%) and the Dhrystone 1.1 +
@@ -100,10 +100,10 @@ combinations per variant in the main cohort, with native/SP Whetstone and every
 single-component baseline. No combination was removed because its error was
 high. These tables do not select a universal winning estimator.
 
-For the 33-system peak Dhrystone 1.1/DP/LINPACK triple cohort, single
-Dhrystone, Whetstone and LINPACK P95 values are 21.49%, 30.38% and 44.42%,
-versus 22.16% for the composite: on this cohort the composite does not beat
-Dhrystone alone. Its maximum within-system observation P95 is 55.46%.
+For the 35-system peak Dhrystone 1.1/DP/LINPACK triple cohort, single
+Dhrystone, Whetstone and LINPACK P95 values are 26.15%, 33.55% and 47.17%,
+versus 27.61% for the composite: on this cohort the composite does not beat
+Dhrystone alone. Its maximum within-system observation P95 is 59.38%.
 
 Base's smaller errors do not establish that base is intrinsically more
 predictable: its source and hardware cohorts differ from peak. Pair and triple
@@ -111,6 +111,24 @@ rows above are not controlled same-machine comparisons; the matched
 single-score comparisons are controlled at the tuple/fold level.
 
 ## Changes
+
+### Smaller Usenet result posts (2026-10-03)
+
+The [SSBA and Nefzger posts](usenet-result-lists.md#smaller-result-posts-19901991)
+add Dhrystone 1.1, Whetstone DP and LINPACK results for the HP 9000/720 and
+SPARCstation 2, which have SPECint92 targets with matching clocks. Tuples rise
+2,326 → 2,356. The Whetstone DP patterns gain both systems in peak (for example
+the Dhrystone 1.1 + DP + LINPACK triple 33 → 35 systems) and the HP 9000/720 in
+base (13 → 14). Peak k for that triple 1.20697 → 1.23696 and P95 22.16% →
+27.61%; base Whetstone DP + LINPACK 1.51546 → 1.57110, P95 13.07% → 25.67%.
+The base Dhrystone + LINPACK patterns keep 14 systems, but their P95 also rises
+(13.64% → 19.65% for Dhrystone 1.1) with the same 32 tuples, because the HP
+9000/720's same-system inputs now include the SSBA run. Most of the change comes from one pairing: the HP
+9000/720's SPECint92 targets include a 1996 Netlib disclosure (peak 64.0, base
+51.6) made with later compilers than the 1991 SSBA run (see the
+[network report](classic-network-fitting.md#changes-from-the-smaller-usenet-result-posts-2026-10-03)).
+`same_result` rows are unchanged.
+
 
 ### Rate target to speed target (2026-10-03)
 

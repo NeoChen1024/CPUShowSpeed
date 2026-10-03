@@ -36,9 +36,9 @@ const context=vm.createContext({bundle,document,window,DOMPoint,innerWidth:1500,
 if(process.argv[3]==='full'){
  vm.runInContext(script+`
  const count=k=>data.filter(r=>kind(r)===k).length,quantity=q=>data.filter(r=>quantityOf(r)===q).length;
- assert.equal(data.length,102020);
- assert.deepEqual(['baseline','mix','mix_combined'].map(count),[101474,360,186]);
- assert.deepEqual(['rate','speed'].map(quantity),[58813,43207]);
+ assert.equal(data.length,102025);
+ assert.deepEqual(['baseline','mix','mix_combined'].map(count),[101479,360,186]);
+ assert.deepEqual(['rate','speed'].map(quantity),[58813,43212]);
  assert(data.every(r=>['rate','speed'].includes(r.quantity)));
  assert(data.every(r=>quantityOf(r)==='speed'||(r.generation.startsWith('cpu')&&r.generation!=='cpu89')));
  assert.equal(filtered.length,count('baseline')+count('mix_combined'));

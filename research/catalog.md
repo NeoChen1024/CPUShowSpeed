@@ -36,6 +36,7 @@ Start with the [four-track overview](overview.md).
 | whet-sp | Whetstone SP | classical / MWIPS | recorded |
 | whet-dp | Whetstone DP | classical / MWIPS | recorded |
 | linpack-100 | LINPACK n=100 | classical / MFLOPS | recorded |
+| livermore-72 | Livermore Fortran Kernels, 72 samples | classical / MFLOPS | recorded |
 | linpack-300 | LINPACK n=300 | classical / MFLOPS | recorded |
 | linpack-unknown | LINPACK n=unknown | classical / MFLOPS | recorded |
 | composite | Fixed equal-weight classical pair/triple index | derived-index / dimensionless geometric index | defined |

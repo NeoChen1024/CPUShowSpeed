@@ -154,39 +154,39 @@ For `linear_clock / with_spec89`:
 
 | Input metric | Score unit | speed-VAXen coefficient k | Conditional factor CI95 |
 | --- | --- | ---: | --- |
-| Dhrystone 1.1 | DMIPS | 0.64513 | 0.60082–0.69291 |
-| Dhrystone 2.1 | DMIPS | 0.68453 | 0.63393–0.73776 |
-| Whetstone native | MWIPS | 0.53800 | 0.45570–0.62701 |
-| Whetstone SP | MWIPS | 0.59119 | 0.51298–0.66868 |
-| Whetstone DP | MWIPS | 0.95775 | 0.82833–1.09373 |
-| LINPACK n=100 | MFLOPS | 3.12475 | 2.74663–3.58055 |
+| Dhrystone 1.1 | DMIPS | 0.64515 | 0.60039–0.69353 |
+| Dhrystone 2.1 | DMIPS | 0.68424 | 0.63335–0.73805 |
+| Whetstone native | MWIPS | 0.53870 | 0.45779–0.62680 |
+| Whetstone SP | MWIPS | 0.59767 | 0.52016–0.67364 |
+| Whetstone DP | MWIPS | 0.95903 | 0.83128–1.09194 |
+| LINPACK n=100 | MFLOPS | 3.13484 | 2.75594–3.59550 |
 
 For example, a Dhrystone **1.1** score of **10 DMIPS** maps to approximately
 6.45 speed-VAXen (SPECint92 ≈ 6.5) using this experimental coefficient. Raw
 Dhrystones/second first need the declared /1757 DMIPS conversion; coefficients
 must not be applied to uninterpreted KIPS or printed unit labels with unresolved meaning.
 
-On the common 33-system, 78-node observed-SPECint92 holdout cohort with all three
+On the common 35-system, 80-node observed-SPECint92 holdout cohort with all three
 families (`linear_clock / with_spec89`):
 
 | Available inputs | Network P95 | Anchored-only control P95 |
 | --- | ---: | ---: |
-| Dhrystone 1.1 only | 26.78% | 24.50% |
-| Dhrystone 2.1 only | 31.55% | 30.29% |
-| Whetstone SP only (32 systems) | 26.98% | 26.19% |
-| Whetstone DP only | 54.59% | 46.08% |
-| LINPACK only | 44.84% | 46.73% |
-| Dhrystone + Whetstone families | 28.24% | 29.29% |
-| Dhrystone + LINPACK families | 25.94% | 26.63% |
-| Whetstone + LINPACK families | 21.79% | 24.43% |
-| All available measurements | 17.99% | 20.80% |
+| Dhrystone 1.1 only | 28.62% | 26.24% |
+| Dhrystone 2.1 only | 34.61% | 33.15% |
+| Whetstone SP only (34 systems) | 39.55% | 38.82% |
+| Whetstone DP only | 54.55% | 49.33% |
+| LINPACK only | 44.86% | 46.74% |
+| Dhrystone + Whetstone families | 28.65% | 29.62% |
+| Dhrystone + LINPACK families | 28.99% | 30.73% |
+| Whetstone + LINPACK families | 25.52% | 25.90% |
+| All available measurements | 20.17% | 24.12% |
 
 More available workloads do not guarantee a lower error, and the unanchored
 coupling does not uniformly beat the anchored-only control on this population.
 All combinations remain; the table is not a residual-based selection rule.
 
 Over all 115 observed-SPECint92 nodes (59 systems), the all-available network
-P95 is 84.4% (83.5% before Richardson's lists). Before the 2026-10-03
+P95 is 85.1% (84.4% before the smaller Usenet posts, 83.5% before Richardson's lists). Before the 2026-10-03
 vendor-report rows (82.3%), on the 48 nodes that also carry a one-processor rate (the former
 anchor population) it is 31.5%; on 42 further DEC, multi-processor and
 speed-only nodes 37.8%; on the 25 bridge-table nodes 122.7%, dominated by IBM
@@ -199,6 +199,26 @@ The network emits full-availability estimates for **1,420 unanchored nodes on
 not 1,420 newly verified machines: configuration identity and source
 interpretation still need source-specific review. Their estimates are stored
 separately from observed SPEC targets.
+
+### Changes from the smaller Usenet result posts (2026-10-03)
+
+[SSBA, Nefzger's LINPACK and McCalpin's Livermore posts](usenet-result-lists.md#smaller-result-posts-19901991)
+add five results with eleven calibration inputs, all on systems the network
+already had: HP 9000/720 and SPARCstation 2 (SSBA Dhrystone 1.1, Whetstone SP and
+DP, LINPACK) and SPARCstation 2, SPARCstation 1+ and Sun 4/490 (LINPACK). The
+Livermore rows are context. Node and informative-system counts are unchanged
+(115 observed, 122 inferred-89, 1,420 unanchored; 505 and 515 informative).
+`linear_clock / with_spec89` coefficients: Whetstone SP 0.59119 → 0.59767
+(+1.10%), LINPACK 3.12475 → 3.13484 (+0.32%), the others within ±0.13%.
+
+HP 9000/720 and SPARCstation 2 are new to the common holdout cohort (33 → 35
+systems, 78 → 80 nodes), and its P95 rises (all-available 17.99% → 20.17%,
+Whetstone SP alone 26.98% → 39.55%). The cause is one pairing: the HP 9000/720's
+observed SPECint92 node is a 1996 Netlib disclosure (peak 64.0, base 51.6) made
+with later compilers, while its 1991 classical vector predicts 33.9 speed-VAXen
+(47% low all-available; 64% low from Whetstone SP alone). The same vector is
+8–11% below its 1991 SPECint89 results (38.5–39.5). All-available
+observed P95: 84.4% → 85.1%. Whether to reject that pair is open.
 
 ### Changes from Richardson's Dhrystone lists (2026-10-03)
 
