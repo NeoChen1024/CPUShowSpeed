@@ -6,8 +6,8 @@
   "comparison_cohort": "same_result",
   "target_unit": "speed-VAXen: one SPECint92 speed point (VAX-11/780 = 1)",
   "pairing": "same resolved system_id; reported clocks must agree within 1% when both are known; no clock scaling; reviewed result_pair rejections drop a pairing and acceptances admit it",
-  "inputs_sha256": "27876859e421ef25c70bdc3f22005850b0172ff29ba16569f5b7d8ae4a5ae8a4",
-  "target_rows": 2356,
+  "inputs_sha256": "75aa169072fada7dd0f9302bfe13ac3f167ac2856a385c393b448618f49ff9f7",
+  "target_rows": 2332,
   "comparisons": 194,
   "uncertainty": "system-cluster bootstrap; conditional on sources, system resolution, configurations and unit interpretation",
   "shared_code_sha256": {

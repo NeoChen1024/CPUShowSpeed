@@ -46,14 +46,14 @@ Speed-VAXen per KIPS, `linear_clock / with_spec89`:
 
 | Links | Gibson | ADP |
 | --- | --- | --- |
-| `resolved_system` | 0.00046711 (0.00032934–0.00062080) | 0.00024447 (0.00012474–0.00037364) |
-| `plus_pending_links` | 0.00039916 (0.00028675–0.00052942) | 0.00019686 (0.00011578–0.00030882) |
+| `resolved_system` | 0.00046671 (0.00032827–0.00061901) | 0.00024426 (0.00012449–0.00037302) |
+| `plus_pending_links` | 0.00039882 (0.00028672–0.00052743) | 0.00019669 (0.00011596–0.00030855) |
 
 The whole-cluster holdout compares a mix-only prediction with the held-out
 node's classical-network prediction (a proxy, not a SPEC measurement). The
 model-center P95 is 194.6% for `resolved_system` (10 clusters) and 187.4% for
-`plus_pending_links` (15 clusters). On the 59 observed-SPECint92 models, adding
-the mixes changes the network's held-out P95 from 88.1% to 87.6% / 87.4%.
+`plus_pending_links` (15 clusters). On the 58 observed-SPECint92 models, adding
+the mixes changes the network's held-out P95 from 89.3% to 88.9% / 88.7%.
 
 The timeline uses `plus_pending_links / linear_clock / with_spec89`, as the
 former experiment used its unapproved name candidates. `resolved_system` is the
@@ -82,7 +82,8 @@ raised them 0.15% and 0.13% (Gibson → 0.00038310, ADP → 0.00018844), and the
 2.9% and 3.1% (Gibson → 0.00039425, ADP → 0.00019421), following the higher
 Whetstone and LINPACK coefficients. The N3909 curated records and system merges
 raised them 1.2% and 1.4% (Gibson → 0.00039916, ADP → 0.00019686), following the
-higher Whetstone SP coefficient.
+higher Whetstone SP coefficient. Rejecting the HP 9000/720 1996 pairing lowered
+them 0.09% (Gibson → 0.00039882, ADP → 0.00019669).
 
 ### Name-matched experiment
 

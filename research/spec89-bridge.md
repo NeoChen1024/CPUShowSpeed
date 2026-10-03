@@ -70,21 +70,32 @@ with the converted SPEC89 targets.
 
 | Composite | SPEC92-only → joint systems | SPEC92-only P95 | Joint P95, observed | Joint P95, SPEC89 |
 | --- | ---: | ---: | ---: | ---: |
-| Dhrystone 1.1 + LINPACK | 43 → 61 | 41.75% | 50.41% | 78.21% |
-| Dhrystone 2.1 + LINPACK | 44 → 56 | 45.27% | 51.10% | 75.53% |
+| Dhrystone 1.1 + LINPACK | 42 → 61 | 39.91% | 50.72% | 78.17% |
+| Dhrystone 2.1 + LINPACK | 43 → 56 | 43.54% | 51.40% | 75.49% |
 | Whetstone native + LINPACK | 9 → 12 | 22.14% | 32.04% | 49.20% |
-| Whetstone DP + LINPACK | 36 → 52 | 35.03% | 48.13% | 49.48% |
-| Whetstone SP + LINPACK | 34 → 49 | 33.08% | 39.52% | 45.92% |
-| Dhrystone 1.1 + Whetstone DP | 36 → 51 | 30.92% | 38.28% | 30.63% |
-| Dhrystone 1.1 + Whetstone DP + LINPACK | 35 → 49 | 27.61% | 38.46% | 33.06% |
-| Dhrystone 2.1 + Whetstone DP + LINPACK | 35 → 43 | 29.50% | 37.91% | 37.01% |
-| Dhrystone 1.1 + Whetstone SP + LINPACK | 34 → 48 | 29.09% | 36.19% | 30.05% |
+| Whetstone DP + LINPACK | 35 → 52 | 28.27% | 48.17% | 49.48% |
+| Whetstone SP + LINPACK | 33 → 49 | 23.57% | 38.31% | 45.93% |
+| Dhrystone 1.1 + Whetstone DP | 35 → 51 | 26.93% | 37.41% | 30.65% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 34 → 49 | 23.10% | 36.35% | 33.08% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 34 → 43 | 26.12% | 36.65% | 37.03% |
+| Dhrystone 1.1 + Whetstone SP + LINPACK | 33 → 48 | 21.79% | 32.94% | 30.07% |
 
 Full results and baselines are in the
 [machine-readable summary](data/classic/spec89-summary.csv). For Dhrystone 1.1 +
-LINPACK the joint factor is 1.537481 (CI95 1.439365–1.641245). The largest
+LINPACK the joint factor is 1.537157 (CI95 1.439097–1.640840). The largest
 SPEC89 misses remain the IBM RS/6000 systems, whose LINPACK n=100 results are
 high relative to their integer speed; one shared composite factor cannot follow them.
+
+### HP 9000/720 1996 pairing rejected (2026-10-03)
+
+The HP 9000/720's January 1996 SPECint92 disclosure no longer pairs with its
+1991-era classical results (see the
+[composite report](classic-composite-fitting.md#hp-9000720-1996-pairing-rejected-2026-10-03)).
+The system leaves the SPEC92-only cohorts (Dhrystone 1.1 + Whetstone DP + LINPACK
+35 → 34) but stays in the joint cohorts through its SPEC89 results. SPEC92-only
+P95 falls up to 10 points (Whetstone SP + LINPACK 33.08% → 23.57%), the reverse of
+the rise reported below for the smaller Usenet posts; joint factors move by at
+most 0.031%.
 
 ### Changes from the N3909 curated records and system merges (2026-10-03)
 

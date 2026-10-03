@@ -189,7 +189,7 @@
   "attachment": "a rating attaches to every node of its resolved system, or also of needs_review linked systems; nodes sharing a rating form one cluster",
   "target": "speed-VAXen: SPECint92 peak (VAX-11/780 = 1); SPECint89 through the int89_to_int92 bridge",
   "qualification": "all system links unapproved; observed-target holdouts exist only where a mix system has a SPEC target; CI95 omits model discrepancy; no mix clock scaling",
-  "inputs_sha256": "27876859e421ef25c70bdc3f22005850b0172ff29ba16569f5b7d8ae4a5ae8a4",
+  "inputs_sha256": "75aa169072fada7dd0f9302bfe13ac3f167ac2856a385c393b448618f49ff9f7",
   "code_sha256": {
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",

@@ -1,5 +1,5 @@
 cohort,target,target_results,systems
 same_result,SPECbase_int92,17,9
 same_result,SPECint92,62,38
-same_system,SPECbase_int92,32,14
-same_system,SPECint92,99,46
+same_system,SPECbase_int92,31,13
+same_system,SPECint92,98,45

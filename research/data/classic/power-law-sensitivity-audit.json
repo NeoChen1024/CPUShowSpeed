@@ -10,7 +10,7 @@
   "year": "result_chronology year of the target result; nodes without one are dropped from the year methods; the 780 is predicted at 1977",
   "validation": "leave-one-system-out relative errors; VAX-11/780 is never fitted (it has no speed target)",
   "qualification": "single-metric fits ignore the network's latent coupling; replicate variances mix compiler, OS and clock differences",
-  "inputs_sha256": "27876859e421ef25c70bdc3f22005850b0172ff29ba16569f5b7d8ae4a5ae8a4",
+  "inputs_sha256": "75aa169072fada7dd0f9302bfe13ac3f167ac2856a385c393b448618f49ff9f7",
   "shared_code_sha256": {
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
