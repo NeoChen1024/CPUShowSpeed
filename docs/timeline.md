@@ -439,7 +439,7 @@ network requests and never fits a model in the browser.
   1.1/2.1 DMIPS, Whetstone SP/DP/Native MWIPS and LINPACK n=100 MFLOPS.
   Only the listed calibrated definitions are supported, not arbitrary versions.
 - Historical inputs give speed-VAXen. Classical-only input uses the same
-  `linear_clock / with_spec89` bundle as `classic predict-speed`. Adding a mix input selects the mix network's timeline
+  `linear_clock / with_spec89` bundle as the [classical prediction contract](classical-prediction.md). Adding a mix input selects the mix network's timeline
   run (`plus_pending_links / linear_clock / with_spec89`) for **all** supplied
   historical metrics.
 - Available families receive equal weights, and variants share their family's

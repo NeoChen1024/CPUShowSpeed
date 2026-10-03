@@ -1,14 +1,12 @@
-"""The small converter must preserve score scaling and reject stale CI snapshots."""
+"""The rate converter used by the timeline must preserve score scaling and reject stale CI snapshots."""
 
 import csv
 import hashlib
-import json
 import tempfile
 import unittest
 from pathlib import Path
 
-from click.testing import CliRunner
-from cpushowspeed.rate_convert import convert_rate_command
+from cpushowspeed.rate_convert import convert_rate
 
 
 class RateConvertTests(unittest.TestCase):
@@ -38,36 +36,35 @@ class RateConvertTests(unittest.TestCase):
             writer.writeheader()
             writer.writerows(rows)
 
-    def invoke(self, score="10", generation="2017", extra=()):
-        return CliRunner().invoke(
-            convert_rate_command, [generation, "base", "--calibration-dir", str(self.root), *extra, "--", score]
-        )
+    def convert(self, score=10, generation="cpu2017"):
+        return convert_rate(generation, "base", score, "same_os", self.root)
 
     def test_score_and_ci_use_same_scalar(self):
-        result = self.invoke(generation="SPEC2017")
-        self.assertEqual(result.exit_code, 0, result.output)
-        value = json.loads(result.output)
+        value = self.convert()
         self.assertEqual(value["vaxen"], 20)
         self.assertEqual(value["ci95"], {"low": 15, "high": 25})
         self.assertEqual(value["reported_score"], 10)
-        self.assertIn("20 VAXen", self.invoke(extra=("--format", "text")).output)
 
     def test_invalid_score_and_generation(self):
-        for score in ("0", "-1", "nan", "inf", "1e308"):
-            self.assertNotEqual(self.invoke(score).exit_code, 0)
-        self.assertNotEqual(self.invoke(generation="2018").exit_code, 0)
+        for score in (0, -1, float("nan"), float("inf"), 1e308):
+            with self.assertRaises(ValueError):
+                self.convert(score)
+        with self.assertRaisesRegex(ValueError, "exactly one"):
+            self.convert(generation="cpu2018")
 
     def test_stale_and_duplicate_tables(self):
         self.chain.write_text(self.chain.read_text() + "\n")
-        result = self.invoke()
-        self.assertNotEqual(result.exit_code, 0)
-        self.assertIn("stale", result.output)
+        with self.assertRaisesRegex(ValueError, "stale"):
+            self.convert()
+        self.chain.write_text(self.chain.read_text().rstrip("\n") + "\n")
         self.write_intervals([self.row, self.row])
-        self.assertIn("exactly one", self.invoke().output)
+        with self.assertRaisesRegex(ValueError, "exactly one"):
+            self.convert()
 
     def test_factor_disagreement(self):
         self.write_intervals([{**self.row, "vaxen_per_rate_score": 3}])
-        self.assertIn("differs", self.invoke().output)
+        with self.assertRaisesRegex(ValueError, "differs"):
+            self.convert()
 
 
 if __name__ == "__main__":

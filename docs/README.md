@@ -24,7 +24,7 @@ introduces the unit, zero-intercept fitting assumption and local setup.
 | --- | --- |
 | [SPEC collection](spec-collection.md) | Integer-rate scraping, fitting and conversion commands |
 | [Shared VAXen timeline](timeline.md) | Common record schema, CPU-first chronology, combined interactive view |
-| [Classical prediction](classical-prediction.md) | Arbitrary score subsets to estimated SPECint92 speed-VAXen and calibration CI95 |
+| [Classical prediction](classical-prediction.md) | Calculator contract: classical score subsets to SPECint92 speed-VAXen and calibration CI95 |
 | [Classic collection](classic-collection.md) | Classical source extraction and experimental fitting commands |
 | [Document extraction](document-extraction.md) | PDF inventory, processing workflow and evidence policy |
 | [OCR dispatch](ocr-dispatch.md) | Bounded rendering/inference and resumable publication |

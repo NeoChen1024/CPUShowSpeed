@@ -188,8 +188,8 @@ results](../research/classical-fits.md#sparse-network) for weighting, eligibilit
 identifiability and conditional CI95. Targets are SPECint92 speed (speed-VAXen);
 the SPEC chains are not changed.
 
-`classic predict-speed` consumes the saved network calibration and accepts any
-nonempty score subset. See [input units, examples and CI95 semantics](classical-prediction.md).
+The timeline and its calculator consume the saved network calibration and accept
+any nonempty score subset. See [input units and CI95 semantics](classical-prediction.md).
 
 ## Instruction-mix preparation
 

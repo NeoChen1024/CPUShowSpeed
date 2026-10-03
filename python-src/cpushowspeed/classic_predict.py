@@ -7,10 +7,8 @@ import math
 import os
 from pathlib import Path
 
-import click
 import numpy as np
 from cpushowspeed.classic_network_model import metric_weights
-from cpushowspeed.rate_convert import _si
 
 OPTIONS = {
     "dhrystone_1_1": ("Dhrystone:v1.1_DMIPS", "DMIPS"),
@@ -179,61 +177,3 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
         calibration_manifest_sha256=manifest_sha256,
         calibration_files_sha256=manifest["files"],
     )
-
-
-@click.command("predict-speed")
-@click.option("--dhrystone-1-1", type=float, help="Dhrystone 1.1 score (DMIPS by default).")
-@click.option("--dhrystone-2-1", type=float, help="Dhrystone 2.1 score (DMIPS by default).")
-@click.option("--dhrystone-unit", type=click.Choice(["dmips", "dhrystones-per-second"]), default="dmips", show_default=True)
-@click.option("--whetstone-sp", type=float, help="Whetstone SP in MWIPS.")
-@click.option("--whetstone-dp", type=float, help="Whetstone DP in MWIPS.")
-@click.option("--whetstone-native", type=float, help="Whetstone native precision in MWIPS.")
-@click.option("--linpack-100", type=float, help="LINPACK n=100 in MFLOPS.")
-@click.option("--scenario", type=click.Choice(["linear_clock", "reported_clock"]), default="linear_clock", show_default=True)
-@click.option("--cohort", type=click.Choice(["with_spec89", "spec92_only"]), default="with_spec89", show_default=True)
-@click.option(
-    "--calibration-dir", type=click.Path(path_type=Path), default=Path("data/derived/classic/network-fit"), show_default=True
-)
-@click.option("--format", "output_format", type=click.Choice(["json", "text"]), default="json", show_default=True)
-def predict_speed(
-    dhrystone_1_1,
-    dhrystone_2_1,
-    dhrystone_unit,
-    whetstone_sp,
-    whetstone_dp,
-    whetstone_native,
-    linpack_100,
-    scenario,
-    cohort,
-    calibration_dir,
-    output_format,
-):
-    """Predict speed-VAXen (SPECint92 peak, VAX-11/780 = 1) from any nonempty score subset.
-
-    Inputs must describe the same target hardware/configuration. Native Whetstone
-    is separate from SP. CI95 is shared calibration uncertainty, not an individual
-    machine prediction interval. Scenario selects training calibration and does
-    not rescale supplied scores. No fitting or network request is performed.
-    """
-    supplied = locals().copy()
-    scores = {}
-    original = []
-    try:
-        for option, (metric, unit) in OPTIONS.items():
-            if supplied[option] is None:
-                continue
-            value = positive(supplied[option], option)
-            original.append(dict(option=option, value=value, unit=dhrystone_unit if option.startswith("dhrystone") else unit))
-            scores[metric] = value / 1757 if option.startswith("dhrystone") and dhrystone_unit == "dhrystones-per-second" else value
-        result = predict_scores(scores, calibration_dir, scenario, cohort)
-    except (OSError, ValueError, KeyError, OverflowError, FloatingPointError) as exc:
-        raise click.ClickException(str(exc)) from exc
-    result["supplied_inputs"] = original
-    if output_format == "json":
-        click.echo(json.dumps(result, sort_keys=True, allow_nan=False))
-    else:
-        ci = result["vaxen_ci95"]
-        click.echo(f"Estimated SPECint92 (peak): {_si(result['vaxen'])} speed-VAXen (CI95 {_si(ci['low'])}–{_si(ci['high'])})")
-        label = "metric" if len(scores) == 1 else "metrics"
-        click.echo(f"Calibration: {scenario} / {cohort}; {len(scores)} {label}")
-        click.echo("Conditional calibration CI95; not an individual-machine prediction interval.")

@@ -87,22 +87,10 @@ uv run --no-sync cpushowspeed --help
 uv run --no-sync cpushowspeed research validate
 ```
 
-`requirements.txt` is the single dependency list. Convert a modern integer-rate
-score with the saved calibration:
-
-```sh
-uv run --no-sync cpushowspeed predict spec-rate 2017 base 11800 --format text
-```
-
-The converter prints estimated VAXen and conditional calibration CI95.
-For arbitrary classical score subsets, use the [classical predictor](docs/classical-prediction.md):
-
-```sh
-uv run --no-sync cpushowspeed predict classical --dhrystone-1-1 10 --format text
-```
-
-It uses the saved network calibration to estimate SPECint92 peak speed
-(speed-VAXen) and joint calibration CI95. Inputs may contain one or several benchmark families.
+`requirements.txt` is the single dependency list. To convert one SPEC score or
+any subset of classical scores to VAXen with calibration CI95, use the timeline's
+offline **Calculator** tab; the [classical prediction contract](docs/classical-prediction.md)
+describes its classical route.
 
 - [Combined VAXen timeline](docs/timeline.md): CPU-first history, rate-VAXen and speed-VAXen side by side, historical speed estimates and time zoom (`uv run cpushowspeed plot timeline`).
   Initialize the `third-party/` submodules (decoder and theme sources) with `git submodule update --init`, then serve the Parquet-backed export over HTTP; no npm build is required.

@@ -131,31 +131,6 @@ under `data/derived/figures/annual-rate/`, and the compact
 See the [annual figure note](../research/spec-chains.md#annual-rate-view) for the meaning
 of the pale envelopes and top-retention statistic.
 
-## Convert one reported integer-rate score
-
-From the repository root:
-
-```sh
-./.venv/bin/cpushowspeed convert-rate 2017 base 11800 --format text
-./.venv/bin/cpushowspeed convert-rate 2026 peak 100
-```
-
-`convert-rate GENERATION MODE SCORE` accepts generations `92`, `95`, `2000`,
-`2006`, `2017` and `2026` (also `cpu2017` or `SPEC2017` spellings), and requires
-`base` or `peak`. It defaults to JSON on stdout, including the original score,
-VAXen, CI95 bounds, calibration scenario, method and table hashes. `--format
-text` gives SI-scaled labels. Input scores must be finite and positive. Supply
-only the specified suite's integer-rate metric, not floating-point or speed.
-
-The default `--scenario same_os` matches the annual figures;
-`--scenario hardware_near` selects the alternate CPU92 anchor. The command
-reads the two saved chain/CI CSVs under `--calibration-dir` and rejects mismatched
-chain hashes. It needs no raw archives, NPZ samples or new fitting run. The
-score multiplies both the central scale and its CI endpoints. This gives a
-conditional **calibration** interval and does not estimate individual-machine
-prediction error or systematic bias. CPU92's scale is defined, so its
-calibration CI has zero width.
-
 ## SPEC95/CPU2000 overlap-loss audit
 
 `uv run --no-sync cpushowspeed bridge audit-95-2000 --fetch-review` reproduces

@@ -1,16 +1,13 @@
 import itertools
-import json
 import math
 import tempfile
 import unittest
 from pathlib import Path
 
 import numpy as np
-from click.testing import CliRunner
 from cpushowspeed.classic_predict import (
     OPTIONS,
     predict_scores,
-    predict_speed,
     write_prediction_manifest,
 )
 from cpushowspeed.research_io import write_csv
@@ -88,20 +85,3 @@ class PredictionTests(unittest.TestCase):
             f.write("\n")
         with self.assertRaisesRegex(ValueError, "changed"):
             predict_scores({self.metrics[0]: 1}, self.root)
-
-    def test_cli_raw_dhrystones_and_json(self):
-        result = CliRunner().invoke(
-            predict_speed,
-            ["--dhrystone-1-1", "1757", "--dhrystone-unit", "dhrystones-per-second", "--calibration-dir", str(self.root)],
-        )
-        self.assertEqual(result.exit_code, 0, result.output)
-        r = json.loads(result.output)
-        self.assertAlmostEqual(r["vaxen"], self.coefficients["Dhrystone:v1.1_DMIPS"])
-        self.assertEqual(r["components"][0]["score"], 1)
-        self.assertEqual(r["supplied_inputs"][0]["value"], 1757)
-
-    def test_no_input_is_clean_cli_error(self):
-        result = CliRunner().invoke(predict_speed, ["--calibration-dir", str(self.root)])
-        self.assertNotEqual(result.exit_code, 0)
-        self.assertIn("at least one", result.output)
-        self.assertNotIn("Traceback", result.output)

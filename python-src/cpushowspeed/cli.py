@@ -12,7 +12,6 @@ from cpushowspeed.classic_network import network_fit
 from cpushowspeed.classic_overlap import overlap_spec
 from cpushowspeed.classic_pdf import extract_pdf_tables
 from cpushowspeed.classic_power_law import power_law_sensitivity
-from cpushowspeed.classic_predict import predict_speed
 from cpushowspeed.classical_fit import composite_fit, spec89_fit
 from cpushowspeed.curated import data
 from cpushowspeed.curated_identity import extract_command
@@ -24,7 +23,6 @@ from cpushowspeed.mix_bridge import mix_bridge
 from cpushowspeed.mix_evidence import mix_evidence
 from cpushowspeed.mix_network import mix_network_fit
 from cpushowspeed.ocr import ocr_command
-from cpushowspeed.rate_convert import convert_rate_command
 from cpushowspeed.research_registry import research
 from cpushowspeed.spec import spec
 from cpushowspeed.spec89 import spec89
@@ -40,16 +38,6 @@ def cli() -> None:
     """Collect and analyze historical CPU performance evidence."""
 
 
-@click.group("predict")
-def predict():
-    """Estimate VAXen from SPEC integer rate or classical benchmark scores."""
-
-
-predict.add_command(convert_rate_command, name="spec-rate")
-predict.add_command(predict_speed, name="classical")
-cli.add_command(predict)
-
-
 spec.add_command(legacy92_rate_parse_command)
 cli.add_command(research)
 data.add_command(extract_command)
@@ -61,7 +49,6 @@ spec.add_command(fetch_resources)
 cli.add_command(spec)
 inputs.add_command(compare_factors)
 cli.add_command(inputs)
-cli.add_command(convert_rate_command)
 cli.add_command(spec89)
 cli.add_command(bridge)
 plot.add_command(annual_rate_ci_command)
@@ -81,7 +68,6 @@ classic.add_command(spec89_fit)
 classic.add_command(network_fit)
 classic.add_command(power_law_sensitivity)
 classic.add_command(mix_network_fit)
-classic.add_command(predict_speed)
 classic.add_command(mix_evidence)
 classic.add_command(mix_bridge)
 cli.add_command(classic)
