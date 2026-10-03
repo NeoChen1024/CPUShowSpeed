@@ -33,7 +33,7 @@ Reports distinguish measured evidence, derived estimates and proposed work.
 - Chronology: [CPU SKU release catalog](cpu-sku-chronology.md) (converted into date events).
 - Identity: [processor](processor-identity.md) and [system](system-identity.md) resolution (schema steps 2 and 2b).
 - Dates: [date events and chronology selection](chronology.md) (schema step 3).
-- Vendor reports: [1990 DEC RISC summary and MIPS Performance Briefs](vendor-performance-reports.md).
+- Vendor reports: [1990 DEC RISC summary and MIPS Performance Brief 3.5](vendor-performance-reports.md).
 - Earlier reconstruction: [mix/timing observations](early-benchmark-evidence.md),
   [OCR sample checks](chandra-timesharing-sample.md), [historical data contract](data/historical/README.md).
 

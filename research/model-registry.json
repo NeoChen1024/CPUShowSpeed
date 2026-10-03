@@ -2087,7 +2087,7 @@
       "title": "Vendor performance reports",
       "role": "evidence",
       "status": "current",
-      "purpose": "Transcribed 1990 DEC RISC performance summary (curated observations) and located MIPS Performance Briefs"
+      "purpose": "Transcribed 1990 DEC RISC performance summary and MIPS Performance Brief 3.5 (curated observations); earlier Brief issues located"
     },
     {
       "path": "research/overview.md",

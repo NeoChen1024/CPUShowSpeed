@@ -1,41 +1,41 @@
 {
   "schema_version": "vaxen-timeline-v4",
   "database": "data/derived/schema/cpushowspeed.sqlite",
-  "inputs_sha256": "0639b6d64814e2cc9aada69deea958e1776cce40792473b3809cc969efe6a201",
-  "web_manifest_sha256": "d2f31b18d5fd8a7073cbc418abd48f6e5d3afeb6f6a0eca90c098bbf84591de5",
+  "inputs_sha256": "77cf906fc9cd1df3c94d6e9a42b795d9eeb51f9aee8a773c08286801c5095a58",
+  "web_manifest_sha256": "d24bac0f2810e129d1330978b4c059c56d8e64e83d375d2ff62bcc4b6dd4e63d",
   "lineage_inputs_sha256": {
     "research/model-registry.json": "0051361366f35a0e0562fa5b68ee2830bc604b23d6798e23745673db567b786f",
     "research/data/spec/fitting/integer-rate-edge-intervals.csv": "eb36be6fa72bc09a833428630a79ad8e7e2846cded9979aad70757f6889a492a",
-    "research/data/spec/fitting/integer-speed-factors.csv": "aac395ad8b0f9bf6631de1cc816eba7b82cf4253e5e5e2f217521759cd9e6643",
+    "research/data/spec/fitting/integer-speed-factors.csv": "4ea9b668e7500e3e811a66890204e425d0ce62197421e2602051fa1bc6723e47",
     "data/derived/spec/fitting/integer-speed-generation-pairs.csv": "aef952e4008c47c3c8667a6540ac014ee31fb10b83f472450a31627d079cd887",
     "research/data/classic/spec89-bridge-summary.csv": "b2c86e32ca518f8cd21cfb744c5b052733cc64577ecb35a75c6135d7e052a4f8",
     "research/data/classic/spec89-bridge-evidence.csv": "f3e19880479b4091041ae9be40729e202d15e5491993999bf5dec92de7a035de",
-    "research/data/classic/network-coefficients.csv": "1b83ccb0fa80dfe89ff1c3ec203660b37551d5cdc5aee296e819eb5ae5bc4053",
-    "research/data/classic/mix-network-coefficients.csv": "d4e484f0044146f25be8137900c6fd9915590681e1ba7309dcd90441ca7a9fbd",
-    "data/derived/classic/network-fit/coefficients.csv": "1b83ccb0fa80dfe89ff1c3ec203660b37551d5cdc5aee296e819eb5ae5bc4053",
-    "data/derived/classic/network-fit/coefficient-log-draws.npz": "d240c867ecb01fa71265fee0bad97aeeb3ec5d3f7ea68bd461d11e1aa3ff368c",
-    "data/derived/classic/network-fit/prediction-calibration.json": "d367f35f574cbba24dd410a9b3a1c3572dd3f5d8120eed7970d2139573b32f41",
-    "data/derived/classic/mix-network-fit/coefficients.csv": "d4e484f0044146f25be8137900c6fd9915590681e1ba7309dcd90441ca7a9fbd",
-    "data/derived/classic/mix-network-fit/coefficient-log-draws.npz": "c0d3222c4abaf280643e6bf14c2b177c0d60cd51f0b2a578649b21dffc3e7540",
-    "data/derived/classic/mix-network-fit/audit.json": "afbdba85e65bd29b622373d964eece7132d7b2c3baa7e72af95c788fccaf511e",
-    "research/data/classic/spec89-audit.json": "0a9495f67b082004cf5c6ce61fb8cbe7d928009bf8bda78b20fbefc844f0774e",
+    "research/data/classic/network-coefficients.csv": "399e9978562e1d3614f9a15ed5b573ee55fd3d3d5d233a1c674a788a1637dbf2",
+    "research/data/classic/mix-network-coefficients.csv": "45aab109a79d890e3b29c915ad40bb96c2e0950496af24a86300d0c99efabf68",
+    "data/derived/classic/network-fit/coefficients.csv": "399e9978562e1d3614f9a15ed5b573ee55fd3d3d5d233a1c674a788a1637dbf2",
+    "data/derived/classic/network-fit/coefficient-log-draws.npz": "bd147fba0560c8a4860059c9fb0c615cedb0f917214a078ee39455c1fc654a17",
+    "data/derived/classic/network-fit/prediction-calibration.json": "351cec453f2f3e88db594f077469bdb2bf649c6b7bd9f567fec5ab923e2dff26",
+    "data/derived/classic/mix-network-fit/coefficients.csv": "45aab109a79d890e3b29c915ad40bb96c2e0950496af24a86300d0c99efabf68",
+    "data/derived/classic/mix-network-fit/coefficient-log-draws.npz": "c8960fa098528d1e844b23aa8ad7052795a370bc84e7ec77225f698e58029def",
+    "data/derived/classic/mix-network-fit/audit.json": "4eaba6508bf2a6dfd2aaee2c7e6633684f8a58aea1beea02363c4d1c37ba54ea",
+    "research/data/classic/spec89-audit.json": "d6fc59bb5b7df3858984f7ad95a98af749fa04c052e62a464e524aac56be8e2d",
     "research/data/spec/fitting/integer-rate-chain-intervals.csv": "9223a0b85bb0e2f54bf87c2248ac96db03f214db8cc12ebfb868c6e2bdfb6723",
     "research/data/spec/fitting/integer-speed-chain-intervals.csv": "ec9ba132df00ad7840e8b0ba6e6e0c6eff7927ba2e01f664e5825ad4ec747259"
   },
-  "records": 101436,
+  "records": 101450,
   "spec_rate": 58813,
   "spec_speed": 40248,
-  "classical": 1650,
+  "classical": 1664,
   "spec89": 179,
   "estimates": {
-    "baseline": 100890,
+    "baseline": 100904,
     "mix": 360,
     "mix_combined": 186
   },
   "dates": {
-    "hardware": 26211,
+    "hardware": 26219,
     "cpu": 74475,
-    "unknown": 733,
+    "unknown": 739,
     "fallback": 17
   },
   "routes": {
@@ -45,7 +45,7 @@
     "CPU2006": 47553,
     "CPU2017": 40075,
     "CPU2026": 423,
-    "classical": 1650,
+    "classical": 1664,
     "SPEC89": 179,
     "ADP mix": 183,
     "Gibson mix": 177,
@@ -53,12 +53,12 @@
   },
   "quantities": {
     "rate": 58813,
-    "speed": 42623
+    "speed": 42637
   },
   "modes": {
     "base": 53795,
     "peak": 45266,
-    "peak_proxy": 2375
+    "peak_proxy": 2389
   },
   "chronology": "result_chronology: CPU release → hardware → reviewed fallback → publication",
   "cpu92_anchor_software_policy": "same_os",
@@ -79,8 +79,8 @@
   },
   "inputs_file_sha256": {
     "research/data/classic/spec89-estimates.csv": "492832cda0299f721237fbb426aee30472ed277f01caa954ee4da9182751172d",
-    "data/derived/classic/network-fit/prediction-calibration.json": "d367f35f574cbba24dd410a9b3a1c3572dd3f5d8120eed7970d2139573b32f41",
-    "data/derived/classic/mix-network-fit/mix-estimates.csv": "6d5e034dcb426d0d7a0c6b89d76da9c9639c6cfa1d613a633a6526768f4631cc",
+    "data/derived/classic/network-fit/prediction-calibration.json": "351cec453f2f3e88db594f077469bdb2bf649c6b7bd9f567fec5ab923e2dff26",
+    "data/derived/classic/mix-network-fit/mix-estimates.csv": "8b6f4cb7f9bf68aeab51b3cfe2fe7eabc627d26014950e71be4c0bfbecf8913c",
     "research/data/spec/fitting/integer-speed-chain-intervals.csv": "ec9ba132df00ad7840e8b0ba6e6e0c6eff7927ba2e01f664e5825ad4ec747259",
     "research/data/spec/fitting/integer-rate-chain-intervals.csv": "9223a0b85bb0e2f54bf87c2248ac96db03f214db8cc12ebfb868c6e2bdfb6723",
     "research/data/spec/fitting/integer-rate-cpu92-vaxen-chain.csv": "bc84ae7bce141747a9f0438090c8ef98975fa2b12ce302d2e57ec56ff1fdc428"
@@ -102,7 +102,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated.py": "7c35f291c6a275114c1c1ed3c2ce7be017ab59692a1a94e4a5bdb214cddddfdb",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "481fc3b5d600caf5b76209672a6ccdeb1a3c64b37a51f915204de173cfa336f9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_identity.py": "686c50a95e11fece1eba1410d399f073c988a43ab719f5a728702bd38b1de87c",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_observation.py": "2c5a6ea1276bddf0bb43b0458f1d4e7811fe7f3f2acf1ed608a7c9e2556699c3",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_observation.py": "a73b22ca09c6232fba7bbab84a10d8ec09e50326387724b8c9c477ccb116a5c6",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_review.py": "0c8578492eeee9982083ac4996dc18dd4bfef4932ddbc594a64e8ffbb76c9057",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_system.py": "94156a6b0aa461b1d9ed06be76cbdd5850de30b6aebea9097a437467be323e4d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/execution_policy.py": "c482cf4e5cd22c52cb0246af192407851b48c3daec77cf2ec279175f9d65800d",

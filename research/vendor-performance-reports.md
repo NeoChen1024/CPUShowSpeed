@@ -1,10 +1,10 @@
 # Vendor performance reports
 
-Reviewed: 2026-10-03. Status: one report transcribed into
+Reviewed: 2026-10-03. Status: the 1990 DEC summary and MIPS Performance Brief
+3.5 are transcribed into
 [`data/curated/observation.jsonl`](../data/curated/observation.jsonl)
 ([schema](../docs/data-schema.md#curated_observation)) and used by the classical
-network. The MIPS Performance Briefs (Usenet, 1986–1990) are located but not yet
-transcribed.
+network. Earlier Brief issues (1986–1987) are located but not transcribed.
 
 Vendor reports print many benchmarks for their own and competitors' machines in
 one table. They are dense overlap sources, but each row must say who measured it,
@@ -79,13 +79,47 @@ The Livermore loops, DR Labs CPU2, application benchmarks and the p. 33 SPEC89
 per-benchmark times are not transcribed. The report cites MIPS Performance Brief
 issue 3.9 (1990-01) and SPEC Newsletter vol. 2 no. 1 (Winter 1990).
 
-## MIPS Performance Briefs (located)
+## MIPS Performance Brief 3.5, 1988
 
-Copies of the MIPS Computer Systems "Performance Brief" were found in a local copy of
-the UTZOO Usenet archive (1981–1991). They are in comp.arch and net.arch posts
-by MIPS staff: 1986-10-15 (M/500), 1987-04-02, 1987-10-29 with errata on
-1987-11-03 and 1987-11-12, and issue 3.5 on 1988-10-26 (1,380 lines). Issue 3.5
-mixes rows measured by MIPS with rows cited from other publications ([Richardson 87]
-Dhrystone, [Dongarra 88] LINPACK, Whetstone from several vendors). Each row
-therefore needs a `measured_by` value and a duplicate check against Netlib before
-transcription. Nothing from the Briefs is in the data yet.
+Source: `src:mips-performance-brief-3.5-1988`. This is the comp.arch posting
+`<7000@winchester.mips.COM>` by John Mashey, the Brief's editor, dated
+1988-10-26. It is an extract of the printed issue. It is UTZOO tape
+`news087f1.tgz`, member `b108/comp/arch/6868`; the tape's MD5 matches the
+archive.org item. The message bytes are stored as a raw blob (BLAKE3
+`35e43455…36bf`, 69,458 bytes). Every printed value was matched against the
+message text (`usenet_text_checked`).
+
+| Table | Rows used for calibration | Context only |
+| --- | --- | --- |
+| Dhrystone optimization effects (section 4) | Highest register result without inlining (-O3, or -O where no -O3 is printed), Dhrystone 1.1 for 11 columns and 2.1 for M/120-5 and M/2000-8 | -O4 (inlining, "beyond the spirit of the benchmark") |
+| Whetstone (section 5.6) | MIPS's own rows: M/500 to M/2000-8, VAX 11/780 (4.3BSD f77 and LLL compiler), Sun-3/260 | M/2000-8 -O4; Intel 80386 rows posted by Intel ([Purkiser 87]) |
+| LINPACK n=100 (section 5) | VAX 11/780, 4.3BSD, LLL Fortran ([ours]) | MIPS rows, which are from [Dongarra 88] and duplicate the Netlib report |
+
+That gives 48 rows, 30 of them calibration inputs, in 14 results. The Brief says
+its tested configurations are in-house systems, and those configurations are the
+`conditions` of the MIPS rows. Rows with no citation are recorded as
+`source_author` for MIPS's and its own VAX 11/780 measurements, and
+`unattributed` for other vendors' machines. The cited Dhrystone list
+([Richardson 87] and others) is not transcribed; Richardson's own postings are
+in UTZOO and are the source to use. The relative summary table is derived and
+is not transcribed.
+
+"MIPS M/2000-8" resolves to `sys:m/2000` through a reviewed alias. The Brief's
+tested M/2000-8 (25 MHz R3000, 64K I-cache, 64K D-cache) matches the SPEC89
+package's MIPS M/2000 (25.0 MHz, 64 KB I + 64 KB D).
+
+Effect: only M/120-5 and M/2000 have SPEC89 targets. Both are underpredicted
+like the DEC systems: Dhrystone by 19–24%, Whetstone by 38–40% and LINPACK by 23%.
+`linear_clock / with_spec89` coefficients change by −0.3% to +0.4%; the
+exception is Whetstone SP, +5.1%. The VAX 11/780 rows show that classical routes
+give the reference machine 0.34–0.67 speed-VAXen
+([timeline](unified-vaxen-timeline.md#mips-performance-brief-35-rows--2026-10-03)).
+
+## Earlier MIPS Performance Briefs (located)
+
+These are also in UTZOO (comp.arch and net.arch): 1986-10-15 (M/500 development
+system), 1987-04-02, and 1987-10-29 with errata on 1987-11-03 and 1987-11-12.
+They report the same MIPS machines with older compilers. Adding them would weight
+one vendor's machines several times, so they are context for compiler effects
+unless a later issue lacks a value. The DEC summary cites issue 3.9 (1990-01),
+which has not been found.

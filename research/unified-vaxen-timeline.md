@@ -2,7 +2,7 @@
 
 Reviewed: 2026-10-03. Status: rebuilt on the schema database
 (`vaxen-timeline-v4`): rate-VAXen and speed-VAXen are parallel quantities
-([quantities section](#parallel-rate-and-speed-quantities--2026-10-03); [latest change](#1990-dec-report-rows--2026-10-03)). Earlier
+([quantities section](#parallel-rate-and-speed-quantities--2026-10-03); [latest change](#mips-performance-brief-35-rows--2026-10-03)). Earlier
 sections record the v3 exports; the speed predictor and joint rows they describe
 were removed. Sections from "Checked population (2026-09-28)" on describe
 earlier exports.
@@ -173,6 +173,18 @@ speed-VAXen. The refit moved the other classical and mix rows by the coefficient
 changes in the [network report](classic-network-fitting.md#changes-from-the-1990-dec-report-rows-2026-10-03);
 SPEC rows and SPEC89 bridge estimates are unchanged. The full-population Node
 test passed (2026-10-03).
+
+## MIPS Performance Brief 3.5 rows — 2026-10-03
+
+[Brief 3.5](vendor-performance-reports.md#mips-performance-brief-35-1988) adds 14
+classical results: 101,436 → 101,450 records (classical 1,650 → 1,664; speed
+42,623 → 42,637; hardware-dated 26,211 → 26,219, unknown 733 → 739). Six are undated: no
+year evidence is curated for MIPS M/500, M/800, M/1000 and M/120-5, Sun-3/160M
+or Sun-4/200. The three VAX 11/780 results estimate 0.34–0.67 speed-VAXen, not
+the reference machine's defined 1. This is a property of the calibration, not
+of these rows: a Dhrystone 1.1 coefficient of 0.648 gives the VAX/VMS reference
+of 1 DMIPS only 0.65 speed-VAXen, so classical routes calibrated on 1987–92
+hardware understate the oldest machines. The full-population Node test passed.
 
 ## Checked population (2026-09-28)
 

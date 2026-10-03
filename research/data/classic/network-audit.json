@@ -6,8 +6,8 @@
     {
       "scenario": "reported_clock",
       "cohort": "spec92_only",
-      "nodes": 1371,
-      "informative_models": 481,
+      "nodes": 1382,
+      "informative_models": 486,
       "calibrated_metrics": [
         "Dhrystone:v1.1_DMIPS",
         "Dhrystone:v2.1_DMIPS",
@@ -17,13 +17,13 @@
         "Whetstone:MWIPS_SP"
       ],
       "anchored_nodes": 115,
-      "unknown_target_nodes": 1139
+      "unknown_target_nodes": 1146
     },
     {
       "scenario": "reported_clock",
       "cohort": "with_spec89",
-      "nodes": 1371,
-      "informative_models": 491,
+      "nodes": 1382,
+      "informative_models": 495,
       "calibrated_metrics": [
         "Dhrystone:v1.1_DMIPS",
         "Dhrystone:v2.1_DMIPS",
@@ -32,14 +32,14 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "anchored_nodes": 232,
-      "unknown_target_nodes": 1139
+      "anchored_nodes": 236,
+      "unknown_target_nodes": 1146
     },
     {
       "scenario": "linear_clock",
       "cohort": "spec92_only",
-      "nodes": 1371,
-      "informative_models": 481,
+      "nodes": 1382,
+      "informative_models": 486,
       "calibrated_metrics": [
         "Dhrystone:v1.1_DMIPS",
         "Dhrystone:v2.1_DMIPS",
@@ -49,13 +49,13 @@
         "Whetstone:MWIPS_SP"
       ],
       "anchored_nodes": 115,
-      "unknown_target_nodes": 1139
+      "unknown_target_nodes": 1146
     },
     {
       "scenario": "linear_clock",
       "cohort": "with_spec89",
-      "nodes": 1371,
-      "informative_models": 491,
+      "nodes": 1382,
+      "informative_models": 495,
       "calibrated_metrics": [
         "Dhrystone:v1.1_DMIPS",
         "Dhrystone:v2.1_DMIPS",
@@ -64,8 +64,8 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "anchored_nodes": 232,
-      "unknown_target_nodes": 1139
+      "anchored_nodes": 236,
+      "unknown_target_nodes": 1146
     }
   ],
   "frequency_check_rows": 7,
@@ -74,7 +74,7 @@
   "clock_assumption": "linear_clock scales Dhrystone/Whetstone to the target clock only when both results resolve to one processor; unknown clocks unscaled; LINPACK never scaled",
   "fit": "family/variant/node/model balanced log least squares; unanchored node values eliminated analytically",
   "qualification": "hardware/clock/FPU/cache/software equivalence unverified across sources; coefficient intervals omit model discrepancy and scaling exponent uncertainty",
-  "inputs_sha256": "0639b6d64814e2cc9aada69deea958e1776cce40792473b3809cc969efe6a201",
+  "inputs_sha256": "77cf906fc9cd1df3c94d6e9a42b795d9eeb51f9aee8a773c08286801c5095a58",
   "shared_code_sha256": {
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
@@ -91,7 +91,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated.py": "7c35f291c6a275114c1c1ed3c2ce7be017ab59692a1a94e4a5bdb214cddddfdb",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "481fc3b5d600caf5b76209672a6ccdeb1a3c64b37a51f915204de173cfa336f9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_identity.py": "686c50a95e11fece1eba1410d399f073c988a43ab719f5a728702bd38b1de87c",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_observation.py": "2c5a6ea1276bddf0bb43b0458f1d4e7811fe7f3f2acf1ed608a7c9e2556699c3",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_observation.py": "a73b22ca09c6232fba7bbab84a10d8ec09e50326387724b8c9c477ccb116a5c6",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_review.py": "0c8578492eeee9982083ac4996dc18dd4bfef4932ddbc594a64e8ffbb76c9057",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_system.py": "94156a6b0aa461b1d9ed06be76cbdd5850de30b6aebea9097a437467be323e4d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/execution_policy.py": "c482cf4e5cd22c52cb0246af192407851b48c3daec77cf2ec279175f9d65800d",

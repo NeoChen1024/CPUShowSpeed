@@ -169,8 +169,7 @@
         "kind",
         "provenance_class",
         "acquisition_status",
-        "reviews",
-        "legacy_ids"
+        "reviews"
       ],
       "properties": {
         "source_id": {
@@ -294,7 +293,7 @@
           "$ref": "#/$defs/text"
         },
         "legacy_ids": {
-          "description": "Identities this row was migrated from, as <registry>:<key>.",
+          "description": "Identities this row was migrated from, as <registry>:<key>; absent for sources added directly to the table.",
           "type": "array",
           "items": {
             "$ref": "#/$defs/text"

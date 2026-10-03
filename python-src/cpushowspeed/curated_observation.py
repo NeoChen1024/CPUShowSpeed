@@ -41,7 +41,7 @@ class SourceIndex:
         for s in sources:
             if s.get("hash"):
                 self.hash[s["hash"]] = s["source_id"]
-            for key in s["legacy_ids"]:
+            for key in s.get("legacy_ids", ()):
                 self.legacy[key] = s["source_id"]
             for url in {s.get("url"), s.get("final_url"), *(s.get("alternate_urls") or [])} - {None}:
                 urls.setdefault(url, set()).add(s["source_id"])

@@ -135,7 +135,36 @@ Before importing numbers, define result records with the original metric and
 unit, mix/version, source locator, machine/configuration, timing assumptions,
 reported-versus-reconstructed status and verification status. Preserve raw
 transcriptions separately from reviewed interpretations. Apart from the 1990 DEC
-summary, no scores from this discovery pass have been added to the VAXen chain.
+summary and MIPS Performance Brief 3.5, no scores from this discovery pass have been added to the VAXen chain.
+
+## UTZOO Usenet archive
+
+The UTZOO archive (Henry Spencer's Usenet tapes, 1981–1991; 161 `.tgz` files from
+the archive.org item `utzoo-wiseman-usenet-archive`, whose `md5sums.txt` the tapes are checked against) is mirrored locally at
+`~/net/DF32/archive/utzoo-usenet`. On 2026-10-03 every article header was indexed,
+and keyword hits were extracted to `data/derived/documents/utzoo/` (not in Git).
+This is a discovery index. Cite a post by message ID, tape and member path, and
+store its exact bytes as a raw blob before transcribing it. Searches of
+archive.org mboxes miss this period: the comp.arch mbox there covers only
+2001–2013.
+
+Located on 2026-10-03; transcribed only where noted:
+
+- MIPS Performance Briefs, 1986-10 to 1988-10 (comp.arch, net.arch). Issue 3.5 is
+  transcribed; see [vendor performance reports](../research/vendor-performance-reports.md).
+- Rick Richardson's Dhrystone result lists, 1985-11 to 1989-04 (net.arch,
+  comp.arch). Postings from 1988 on include a tab-separated database: machine,
+  processor, clock, OS, compiler, options, register/no-register results,
+  submission date and submitter. The 1989-04-30 Dhrystone 2.x database,
+  `<756@pcrat.UUCP>`, has 300 rows. Compare with the later Netlib
+  compilation before importing, since that compilation may contain these rows.
+- John McCalpin's 64-bit and 32-bit Livermore Fortran Kernel tables, 1990-11-11
+  (comp.unix.aix).
+- Smaller multi-machine posts: Aburto's Nsieve results (1989-05); the SSBA suite
+  on HP 9000/720 versus SPARCstation 2 (1991-03); SPARCstation LINPACK comparisons
+  (1990-12); workstation benchmark collections (1985-09, 1990-07).
+- About 850 posts mention SPEC results. They are reserved for the SPEC89 source
+  search.
 
 ## Local PDF mirror and discovery inventory
 
