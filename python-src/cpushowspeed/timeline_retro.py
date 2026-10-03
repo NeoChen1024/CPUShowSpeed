@@ -257,6 +257,12 @@ def win98_css(scope):
             ".window",
             ".title-bar",
             ".title-bar-text",
+            "menu[role=tablist]",
+            "menu[role=tablist] > li",
+            "menu[role=tablist] > li[aria-selected=true]",
+            "menu[role=tablist] > li > a",
+            "menu[role=tablist] > li[aria-selected=true] > a:focus",
+            "menu[role=tablist] > li > a:focus",
         ],
         scope,
         rename={".window": "body", ".title-bar-text": "h1 span", ".title-bar": "h1"},
@@ -280,8 +286,14 @@ fieldset{{margin:8px 0}}
 #tip{{border:none;border-radius:0;background:var(--surface);box-shadow:var(--border-window-outer), var(--border-window-inner)}}
 th{{background:var(--surface);box-shadow:var(--border-raised-outer), var(--border-raised-inner)}}
 #lineage, #calculator{{border:none;border-radius:0;box-shadow:var(--border-window-outer), var(--border-window-inner)}}
-#lineage summary{{font:bold 13px "Pixelated MS Sans Serif", Arial;-webkit-font-smoothing:none}}
+#lineage h2{{font:bold 13px "Pixelated MS Sans Serif", Arial;-webkit-font-smoothing:none}}
 #lineage-card, #calc-kind, .lineage-badge{{border-radius:0}}
+#filters>summary{{border:none;border-radius:0;padding:4px 10px;background:var(--surface);box-shadow:var(--border-raised-outer), var(--border-raised-inner)}}
+.filters-panel{{border:none;border-radius:0;background:var(--surface);box-shadow:var(--border-window-outer), var(--border-window-inner)}}
+menu[role=tablist]{{gap:0;margin-top:20px;border:none}}
+menu[role=tablist]>li>a{{padding:0;border:none}}
+menu[role=tablist]>li[aria-selected=true]>a{{font-weight:normal}}
+.tab-panel{{position:relative;z-index:2;padding:10px;background:var(--surface);box-shadow:var(--border-window-outer), var(--border-window-inner)}}
 """,
     )
     return "\n".join(
@@ -327,7 +339,7 @@ h1{{margin:0 0 10px;height:auto;min-height:1.6rem;border-bottom:1px solid #000;p
 h1 span{{font-size:16px;font-weight:normal}}
 #load-status, #timeline-app, .theme-credits{{margin-inline:10px}}
 .theme-bar{{position:absolute;top:4px;right:10px;margin:0;z-index:1;background:#fff;padding:0 6px}}
-button, input, select, legend, label, th, #count, #range-label{{font-family:Chicago, Geneva, sans-serif}}
+button, input, select, legend, label, th, summary, menu[role=tablist] a, #count, #range-label{{font-family:Chicago, Geneva, sans-serif}}
 button, input, select{{font-size:16px}}
 button{{padding:0 14px;min-width:0}}
 select{{width:auto;padding:2px 28px 2px 8px}}
@@ -339,8 +351,13 @@ fieldset{{border:1px solid #000;margin:8px 0}}
 #tip{{border-width:1px;border-radius:0;box-shadow:2px 2px 0 #000}}
 th{{border-bottom:2px solid #000}}
 #lineage, #calculator{{border:1px solid #000;border-radius:0;box-shadow:2px 2px 0 #000}}
-#lineage summary{{font:16px Chicago, Geneva, sans-serif}}
+#lineage h2{{font:16px Chicago, Geneva, sans-serif}}
 #lineage-card, #calc-kind, .lineage-badge{{border-radius:0}}
+#filters>summary{{border:1.5px solid #000;border-radius:6px;padding:2px 12px;font-size:16px}}
+.filters-panel{{border:1px solid #000;border-radius:0;box-shadow:2px 2px 0 #000}}
+menu[role=tablist]{{gap:0;border-bottom:1px solid #000}}
+menu[role=tablist]>li>a{{margin-right:-1px;padding:2px 14px;border:1px solid #000;border-bottom:none;border-radius:6px 6px 0 0;font-weight:normal}}
+menu[role=tablist]>li[aria-selected=true]>a{{background:#000;color:#fff}}
 """,
     )
     return "\n".join([_license(SYSTEM7 / "LICENSE"), font_face("Chicago", SYSTEM7 / "fonts/ChicagoFLF.woff2"), vendor, own])
@@ -361,7 +378,9 @@ fieldset{border:1px solid var(--panel-border)}
 #tip{border-radius:0;font-size:17px}
 svg text{text-shadow:none}
 #lineage, #lineage-card, #calculator, #calc-kind, .lineage-badge{border-radius:0}
-#lineage summary{font-size:24px;font-weight:normal}
+#lineage h2{font-size:24px;font-weight:normal}
+#filters>summary, .filters-panel{border-radius:0;border-color:var(--fg)}
+menu[role=tablist]>li[aria-selected=true]>a{background:var(--fg);color:var(--bg);text-shadow:none;font-weight:normal}
 """,
     )
     return "\n".join([_license(GLASSTTY / "LICENSE"), font_face("Glass TTY VT220", GLASSTTY / "Glass_TTY_VT220.ttf"), own])

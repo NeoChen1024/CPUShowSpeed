@@ -16,14 +16,14 @@ TITLE = "CPUShowSpeed: 70 years of benchmarks measured in VAXen"
 def list_browsing(suffix=""):
     """One toolbar template for both ends of the list."""
     return f"""<form id="page-jump{suffix}" class="table-tools" aria-label="List browsing">
-<label>Sort list: <select id="sort{suffix}">
+<label>Sort <select id="sort{suffix}">
 <option value="year-asc">Year: oldest first</option><option value="year-desc">Year: newest first</option>
 <option value="vaxen-asc">VAXen: low to high</option><option value="vaxen-desc">VAXen: high to low</option>
 <option value="name">System name: A–Z</option></select></label>
-<button id="table-prev{suffix}" type="button">Previous page</button>
+<button id="table-prev{suffix}" type="button">Previous</button>
 <span id="page-count{suffix}" aria-live="polite"></span>
-<button id="table-next{suffix}" type="button">Next page</button>
-<label>Goto Page <input id="goto-page{suffix}" type="number" min="1" step="1" value="1" required style="width:6em"></label>
+<button id="table-next{suffix}" type="button">Next</button>
+<label>Go to page <input id="goto-page{suffix}" type="number" min="1" step="1" value="1" required style="width:6em"></label>
 <button id="goto-submit{suffix}" type="submit">Go</button>
 </form>"""
 
@@ -87,7 +87,24 @@ __THEME_INIT__
 __THEME_STYLE__
 body{font:15px system-ui;margin:24px;color:var(--fg);background:var(--bg)}a{color:var(--link)}input,select,button{font:inherit;padding:7px}
 input{width:min(36em,85vw)}button{cursor:pointer}svg{width:100%;background:var(--plot-bg);display:block}svg text{fill:var(--fg)}
-.timeline-chart{width:100%;max-width:min(1440px,calc((75vh - 80px)*1.842105));margin:0 auto}
+.subtitle{margin:-6px 0 14px;color:var(--muted)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:0 0 12px}.toolbar input[type=search]{width:min(20em,85vw)}
+#quantities{display:flex;gap:14px;border:none;margin:0;padding:0}.toolbar label,#routes label{display:flex;align-items:center;gap:4px}
+#filters{position:relative}#filters>summary{cursor:pointer;padding:6px 10px;border:1px solid var(--panel-border);border-radius:6px}
+.filters-panel{position:absolute;z-index:20;top:calc(100% + 6px);left:0;width:min(26em,85vw);padding:12px;background:var(--card);
+ border:1px solid var(--card-border);border-radius:8px;box-shadow:0 4px 24px var(--shadow)}
+.filters-panel fieldset{margin:0 0 10px}.filters-panel label{margin:4px 0}.filters-panel p{margin:6px 0 0}
+.view-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px}#zoom-in,#zoom-out{min-width:2.4em}#range-label{margin-left:4px}
+.chart-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:12px 16px}
+#routes{flex:0 0 170px;margin:0;font-size:14px}#routes label{margin:4px 0}
+@media(max-width:900px){#routes{flex-basis:100%;display:flex;flex-wrap:wrap;gap:0 14px}}
+.chart-notes{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;margin:6px 0 0;font-size:13px}
+menu[role=tablist]{display:flex;flex-wrap:wrap;gap:2px;margin:28px 0 0;padding:0;list-style:none;border-bottom:1px solid var(--panel-border)}
+menu[role=tablist]>li>a{display:block;padding:8px 16px;color:var(--fg);text-decoration:none;border-bottom:3px solid transparent}
+menu[role=tablist]>li[aria-selected=true]>a{border-bottom-color:var(--accent);font-weight:600}.tab-panel{padding-top:4px}
+#tip .tip-value{font-size:17px}#tip details{margin:7px 0}
+.timeline-chart{flex:1 1 640px;min-width:0;width:100%;max-width:min(1440px,calc((75vh - 80px)*1.842105));margin:0 auto}
 @supports(height:1svh){.timeline-chart{max-width:min(1440px,calc((75svh - 80px)*1.842105))}}
 #plot{height:auto;aspect-ratio:1400/760}#overview{height:80px;touch-action:none;user-select:none;cursor:crosshair}
 #overview [data-brush="move"]{cursor:grab}#overview [data-brush="left"],#overview [data-brush="right"]{cursor:ew-resize}
@@ -106,43 +123,58 @@ __CALCULATOR_STYLE__
 </style>
 __THEME_PICKER__
 <h1><span>__TITLE__</span></h1>
+<p class="subtitle">Each point is one benchmark result converted to VAXen: the VAX-11/780 is 1.</p>
 <p id="load-status" role="status">Loading timeline…</p>
 <noscript>JavaScript is required to view the timeline.</noscript>
 <div id="timeline-app" hidden>
-__LINEAGE_MARKUP__
-<label>Search system, CPU, configuration or benchmark: <input id="q" type="search" placeholder="VAX, PDP, LINPACK…"></label>
-<fieldset id="quantities"><legend>Quantity</legend>
-<label><input type="checkbox" style="width:auto" data-quantity="rate" checked> ● Throughput · rate-VAXen</label>
-<label><input type="checkbox" style="width:auto" data-quantity="speed" checked> ▲ Single job · speed-VAXen</label></fieldset>
-<p class="hint">Both set the VAX-11/780 to 1. Rate-VAXen count every copy a system runs (SPEC92 rate × 25500 / 604800); speed-VAXen time one job (one SPECint92 point each). They are parallel quantities, never converted into each other. Classical, SPEC89 and mix estimates are speed-VAXen.</p>
+<div class="toolbar">
+<input id="q" type="search" placeholder="Search systems, CPUs, benchmarks" aria-label="Search systems, CPUs, configurations and benchmarks">
+<fieldset id="quantities"><legend class="sr-only">Quantity</legend>
+<label title="Throughput: every copy a system runs at once"><input type="checkbox" style="width:auto" data-quantity="rate" checked> ● Rate-VAXen</label>
+<label title="Single job: one copy timed alone"><input type="checkbox" style="width:auto" data-quantity="speed" checked> ▲ Speed-VAXen</label></fieldset>
+<details id="filters"><summary>Filters</summary><div class="filters-panel">
 <fieldset id="scores"><legend>Scores</legend>
-<label><input type="checkbox" style="width:auto" data-mode="base" checked> SPEC Base</label>
-<label><input type="checkbox" style="width:auto" data-mode="peak" checked> SPEC Peak</label>
-<label><input type="checkbox" style="width:auto" data-mode="peak_proxy" checked> Historical estimates</label>
+<label><input type="checkbox" style="width:auto" data-mode="base" checked> SPEC base</label>
+<label><input type="checkbox" style="width:auto" data-mode="peak" checked> SPEC peak</label>
+<label><input type="checkbox" style="width:auto" data-mode="peak_proxy" checked> Historical</label>
 </fieldset>
 <fieldset id="estimates"><legend>Estimates</legend>
-<label><input type="checkbox" style="width:auto" data-estimate="baseline" checked> Reported SPEC / historical baseline</label>
-<label><input type="checkbox" style="width:auto" data-estimate="mix_combined" checked> ■ Combined Gibson + ADP mixes</label>
-<label><input type="checkbox" style="width:auto" data-estimate="mix"> ■ Single mix ratings</label></fieldset>
-<p class="hint">Combined mixes merge a source row's available Gibson and ADP ratings; single ratings are optional comparisons. CI95 is calibration uncertainty, not a prediction interval.</p>
-<p id="estimate-status" class="hint"></p>
-<fieldset id="routes"><legend>Benchmark routes</legend></fieldset>
-<p>Single node/system · not per-core performance</p>
-<p id="count" aria-live="polite"></p>
-<p>Year: CPU release → system availability → eligible submission date. Undated records remain in the list.</p>
-<p class="hint">Hover to inspect · click to pin · scroll to zoom · drag to pan</p>
-<p><button id="zoom-in">Zoom in</button> <button id="zoom-out">Zoom out</button> <button id="reset">All years</button>
-<button id="early">Early hardware</button> <button id="modern">SPEC era</button> <span id="range-label"></span></p>
+<label><input type="checkbox" style="width:auto" data-estimate="baseline" checked> Reported scores</label>
+<label><input type="checkbox" style="width:auto" data-estimate="mix_combined" checked> ■ Mixes, combined</label>
+<label><input type="checkbox" style="width:auto" data-estimate="mix"> ■ Mixes, single</label></fieldset>
+<p class="hint">Combined merges a source row's Gibson and ADP ratings; single ratings are optional comparisons.</p>
+<p id="estimate-status" class="hint"></p></div></details>
+<span class="view-tools"><button id="reset" type="button">All years</button>
+<button id="early" type="button" title="Up to 1992">Early</button><button id="modern" type="button" title="From 1991">SPEC era</button>
+<button id="zoom-out" type="button" aria-label="Zoom out">−</button><button id="zoom-in" type="button" aria-label="Zoom in">+</button>
+<span id="range-label"></span></span>
+</div>
+<div class="chart-row">
 <div class="timeline-chart"><div class="chart plot-stack"><canvas id="plot-canvas" aria-hidden="true"></canvas><svg id="plot" viewBox="0 0 1400 760" aria-label="Historical VAXen scatterplot"></svg></div>
 <svg id="overview" viewBox="0 0 1400 90" preserveAspectRatio="none" aria-label="Record counts and time-range selection"></svg></div>
-<p class="hint" style="text-align:center">Displayed points per year. Drag the handles to resize the time window; drag its center to move it. Arrow keys adjust focused handles.</p>
+<fieldset id="routes"><legend>Routes</legend></fieldset>
+</div>
+<div class="chart-notes"><span id="count" aria-live="polite"></span><span class="hint">Hover to inspect · click to pin · wheel to zoom · drag to pan</span></div>
+<p class="chart-notes hint">One value per system or node, not per core. Year: CPU release, else system availability, else submission date; undated rows appear only in the list.</p>
 <div id="tip" role="region" aria-label="Selected data point" hidden><div id="tip-content"></div>
 <div id="tip-controls"><button id="prev" type="button">Previous</button><button id="next" type="button">Next</button>
 <button id="close" type="button">Close</button><button id="trace-path" type="button">View calibration path</button></div></div>
-__CALCULATOR_MARKUP__
+<menu id="tabs" role="tablist" aria-label="Views">
+<li role="tab" id="tab-btn-list" aria-controls="tab-list" aria-selected="true"><a href="#tab-list">List</a></li>
+<li role="tab" id="tab-btn-calculator" aria-controls="tab-calculator" aria-selected="false"><a href="#tab-calculator">Calculator</a></li>
+<li role="tab" id="tab-btn-method" aria-controls="tab-method" aria-selected="false"><a href="#tab-method">Method</a></li>
+</menu>
+<section id="tab-list" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-list">
 __BROWSING_TOP__
 <table><thead><tr><th>Year / evidence</th><th>System / configuration</th><th>Route / inputs</th><th>VAXen / CI95</th><th>Sources</th></tr></thead><tbody id="body"></tbody></table>
 __BROWSING_BOTTOM__
+</section>
+<section id="tab-calculator" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-calculator" hidden>
+__CALCULATOR_MARKUP__
+</section>
+<section id="tab-method" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-method" hidden>
+__LINEAGE_MARKUP__
+</section>
 </div>
 __THEME_CREDITS__
 <script>
@@ -178,6 +210,9 @@ const palette=[0,1,2,3,4,5,6,7].map(i=>`var(--route-${i})`);
 const routeNames=[...new Set(data.map(r=>r.route))],enabled=new Set(routeNames),routeCode=new Map(routeNames.map((n,i)=>[n,i]));
 const color=r=>palette[routeCode.get(r.route)%palette.length];
 const modeOf=r=>r.mode||'peak_proxy';
+// Saved scopes read conditional_<kind>_CI95_not_machine_prediction_interval.
+const scopeLabel=r=>{const m=/^conditional_(.+)_CI95_not_machine_prediction_interval$/.exec(r.uncertainty_scope||'');
+ return m?m[1].replace(/_/g,' ')+' CI95, not a prediction interval for one machine':r.uncertainty_scope||'calibration CI95';};
 const configurationDetails=r=>[Number(r.clock_mhz)>0?`clock: ${r.clock_mhz} MHz`:'',r.os,r.configuration].filter(Boolean).join('; ');
 let sortOrder='year-asc';
 const browsingSuffixes=['','-bottom'];
@@ -281,15 +316,14 @@ function showSelection(){if(!candidates.length){clearSelection();return;}
  <circle cx="${p.x}" cy="${p.y}" r="${6/scale}" style="fill:${c}"/>`;
  tip.hidden=false;tip.classList.toggle('pinned',pinned);tip.style.borderColor=c;
  document.querySelector('#tip-content').innerHTML=`<strong>${esc(r.system)}</strong>
- <p>${esc(r.cpu||'CPU unspecified')} · ${esc(r.route)}</p><p>${esc(configurationDetails(r))}</p>
- <p>${esc(modeOf(r))} · ${esc(r.measurement_scope||'historical proxy')}<br>
- ${resourceDescription(r)}</p>
- <p>${esc(quantityLabel(r))} · ${esc(estimateLabel(r))} · ${esc(r.calibration_scenario||'')}<br><b>${fmt(r.vaxen,quantityOf(r))}</b><br>CI95: ${fmt(r.ci95_low,quantityOf(r))}–${fmt(r.ci95_high,quantityOf(r))}</p>
- ${related.length?'<details open><summary>From the same source results</summary>'+related.slice(0,8).map(q=>`<p>${esc(estimateLabel(q))} · ${esc(q.route)} · ${esc(modeOf(q))}: <b>${fmt(q.vaxen,quantityOf(q))}</b><br><small>${esc(q.system)} · CI95 ${fmt(q.ci95_low,quantityOf(q))}–${fmt(q.ci95_high,quantityOf(q))}</small></p>`).join('')+(related.length>8?`<small>${related.length} related rows; first 8 shown</small>`:'')+'</details>':''}
+ <p class="tip-value"><b>${fmt(r.vaxen,quantityOf(r))}</b><br><small>CI95 ${fmt(r.ci95_low,quantityOf(r))}–${fmt(r.ci95_high,quantityOf(r))}<br>${esc(scopeLabel(r))}</small></p>
+ <p>${esc(r.cpu||'CPU unspecified')} · ${esc(r.year||'undated')} <small>(${esc(r.year_low)}–${esc(r.year_high)})</small><br>${esc(r.route)} · ${esc(estimateLabel(r))} · ${esc(modeOf(r))}<br><small>${esc(quantityLabel(r))}</small></p>
+ ${related.length?'<details><summary>From the same source results · '+related.length+'</summary>'+related.slice(0,8).map(q=>`<p>${esc(estimateLabel(q))} · ${esc(q.route)} · ${esc(modeOf(q))}: <b>${fmt(q.vaxen,quantityOf(q))}</b><br><small>${esc(q.system)} · CI95 ${fmt(q.ci95_low,quantityOf(q))}–${fmt(q.ci95_high,quantityOf(q))}</small></p>`).join('')+(related.length>8?`<small>${related.length} related rows; first 8 shown</small>`:'')+'</details>':''}
  ${others.length?'<details><summary>Same resolved system · '+others.length+' other row'+(others.length===1?'':'s')+'</summary>'+others.slice(0,8).map(q=>`<p>${esc(q.route)} · ${esc(quantityOf(q))} · ${esc(estimateLabel(q))} · ${esc(modeOf(q))}: <b>${fmt(q.vaxen,quantityOf(q))}</b><br><small>${esc(q.year||'undated')} · CI95 ${fmt(q.ci95_low,quantityOf(q))}–${fmt(q.ci95_high,quantityOf(q))}</small></p>`).join('')+'</details>':''}
- <p>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">Source ${i+1}</a>`).join(' · ')}</p>
- <p>Year: ${esc(r.year)} (${esc(r.year_low)}–${esc(r.year_high)})<br><small>${esc(r.date_method)}</small></p>
- <p><small>${scoreDetails(r)}${r.mix_combination?'<br>'+esc(r.mix_combination)+' · '+esc(r.reported_unit):''}<br>${esc(r.calibration_route||r.route)}<br>${esc(r.uncertainty_scope||'conditional calibration CI95')}<br>${esc(r.limitation||'')}<br>${esc(r.date_notes||'')}</small></p><small>${pinned?'Pinned':'Click to pin'} · ${active+1} / ${candidates.length} nearby point${candidates.length===1?'':'s'}</small>`;
+ <details><summary>Details</summary><p>${esc(configurationDetails(r))}</p><p>${esc(r.measurement_scope||'historical proxy')}<br>${resourceDescription(r)}</p>
+ <p><small>${scoreDetails(r)}${r.mix_combination?'<br>'+esc(r.mix_combination)+' · '+esc(r.reported_unit):''}<br>${esc(r.calibration_route||r.route)}<br>${esc(r.calibration_scenario||'')}<br>${esc(r.limitation||'')}</small></p>
+ <p><small>Year method: ${esc(r.date_method)}<br>${esc(r.date_notes||'')}</small></p></details>
+ <p>${(r.benchmark_sources||[r.source_url]).map((u,i)=>`<a href="${esc(u)}">Source ${i+1}</a>`).join(' · ')}</p><small>${pinned?'Pinned':'Click to pin'} · ${active+1} / ${candidates.length} nearby point${candidates.length===1?'':'s'}</small>`;
  document.querySelector('#prev').disabled=document.querySelector('#next').disabled=candidates.length<2;
  positionTip();
 }
@@ -298,8 +332,19 @@ plot.addEventListener('pointermove',e=>{if(drag){const delta=e.clientX-drag.x;if
  candidates=next;active=0;showSelection();});
 plot.addEventListener('pointerleave',()=>{if(!pinned)clearSelection();});
 plot.addEventListener('click',e=>{if(dragged){dragged=false;return;}candidates=nearby(e.clientX,e.clientY);active=0;pinned=!!candidates.length;showSelection();});
-document.addEventListener('click',e=>{if(pinned&&!plot.contains(e.target)&&!tip.contains(e.target))clearSelection();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')clearSelection();});
+const filters=document.querySelector('#filters');
+document.addEventListener('click',e=>{if(pinned&&!plot.contains(e.target)&&!tip.contains(e.target))clearSelection();
+ if(filters.open&&!filters.contains(e.target))filters.open=false;});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){clearSelection();filters.open=false;}});
+// Views below the chart; the address fragment names the open one.
+const tabNames=['list','calculator','method'];
+function showTab(name,focus){for(const n of tabNames){const on=n===name,tab=document.querySelector('#tab-btn-'+n);
+ tab.setAttribute('aria-selected',String(on));document.querySelector('#tab-'+n).hidden=!on;if(on&&focus)tab.querySelector?.('a')?.focus();}
+ if(typeof history==='object')history.replaceState?.(null,'','#tab-'+name);}
+document.querySelector('#tabs').addEventListener('click',e=>{const tab=e.target.closest?.('[role=tab]');if(!tab)return;e.preventDefault();showTab(tab.id.slice(8));});
+document.querySelector('#tabs').addEventListener('keydown',e=>{const step={ArrowLeft:-1,ArrowRight:1}[e.key],tab=e.target.closest?.('[role=tab]');if(!step||!tab)return;
+ e.preventDefault();showTab(tabNames[(tabNames.indexOf(tab.id.slice(8))+step+tabNames.length)%tabNames.length],true);});
+if(typeof location==='object'&&tabNames.includes(location.hash.slice(5)))showTab(location.hash.slice(5));
 for(const [id,delta] of [['prev',-1],['next',1]])document.querySelector('#'+id).addEventListener('click',()=>{
  active=(active+delta+candidates.length)%candidates.length;showSelection();});
 document.querySelector('#close').addEventListener('click',clearSelection);
@@ -356,13 +401,13 @@ const bound=(rows,value,after)=>{let lo=0,hi=rows.length;while(lo<hi){const mid=
 // Time window, points, counts and every drawn layer; the table may be deferred while dragging.
 function render(deferTable){const started=typeof performance==='object'?performance.now():0;clearSelection();const query=document.querySelector('#q').value.toLowerCase();
  const c=selectCohort(query);
- document.querySelector('#estimate-status').textContent=`${c.estimates} mix estimates shown alongside ${c.total-c.estimates} baseline rows. Mix estimates are correlated with the classical route, not extra evidence.`;
+ document.querySelector('#estimate-status').textContent=`${c.estimates} mix estimates and ${c.total-c.estimates} reported rows selected. Mix estimates are correlated with the classical route, not extra evidence.`;
  const visible=c.dated.subarray(bound(c.dated,viewMin,false),bound(c.dated,viewMax,true));
  filteredIndex=[...c.undated,...visible];filtered=filteredIndex.map(i=>data[i]);
  stamp++;let sources=0,rate=0;const rateCode=quantityNames.indexOf('rate');
  for(const i of filteredIndex){rowSeen[i]=stamp;if(rowQuantity[i]===rateCode)rate++;
   for(let k=sourceStart[i];k<sourceStart[i+1];k++)if(sourceSeen[sourceKeys[k]]!==stamp){sourceSeen[sourceKeys[k]]=stamp;sources++;}}
- document.querySelector('#count').textContent=`${sources} source records · ${rate} rate · ${filtered.length-rate} speed · ${filtered.length} displayed points`;
+ document.querySelector('#count').textContent=`${filtered.length} points (${rate} rate, ${filtered.length-rate} speed) from ${sources} source records`;
  points=Array.from(visible,i=>({r:data[i],i,x:X(rowYear[i]),y:Y(data[i].vaxen)}));visibleCache=null;indexPoints();
  paintCanvas();
  let s='<defs><clipPath id="plot-region"><rect x="90" y="40" width="1270" height="640"/></clipPath></defs>';for(let y=ymin;y<=ymax;y++)s+=`<text x="8" y="${Y(10**y)+5}">10^${y} VAXen</text>`;
@@ -371,7 +416,7 @@ function render(deferTable){const started=typeof performance==='object'?performa
  if(deferTable&&typeof setTimeout==='function'){if(tableTimer!==null)clearTimeout(tableTimer);tableTimer=setTimeout(renderTable,150);}else renderTable();
  document.querySelector('#range-label').textContent=`${viewMin.toFixed(1)}–${viewMax.toFixed(1)}`;
  const maxCount=Math.max(0,...c.bins.values()),left=overviewX(viewMin),right=overviewX(viewMax);
- let overview=`<text x="90" y="13" font-size="12">Points/year · max ${maxCount} · √ height</text>`;
+ let overview=`<text x="90" y="13" font-size="12">Points per year (max ${maxCount}, √ scale) · drag to choose years</text>`;
  for(const [yr,n] of c.bins)overview+=`<path d="M${overviewX(yr)} 65V${65-42*Math.sqrt(n/Math.max(1,maxCount))}" style="stroke:var(--overview-bar)" stroke-width="5" pointer-events="none"/>`;
  overview+=`<rect x="90" y="18" width="${left-90}" height="49" style="fill:var(--overview-mask)" pointer-events="none"/>
  <rect x="${right}" y="18" width="${1360-right}" height="49" style="fill:var(--overview-mask)" pointer-events="none"/>
@@ -455,7 +500,7 @@ for(const [id,side] of [['brush-left','left'],['brush-right','right']])document.
  const delta={ArrowLeft:-1,ArrowDown:-1,ArrowRight:1,ArrowUp:1}[e.key];if(delta===undefined)return;e.preventDefault();
  if(side==='left')setRange(Math.max(xmin,Math.min(viewMax-1,viewMin+delta)),viewMax);
  else setRange(viewMin,Math.min(xmax,Math.max(viewMin+1,viewMax+delta)));});
-document.querySelector('#routes').innerHTML='<legend>Benchmark routes</legend>'+routeNames.map((name,i)=>`<label style="margin-right:14px;color:${palette[i%palette.length]}"><input type="checkbox" style="width:auto" data-route="${esc(name)}" ${enabled.has(name)?'checked':''}> ${esc(name)}</label>`).join('');
+document.querySelector('#routes').innerHTML='<legend>Routes</legend>'+routeNames.map((name,i)=>`<label style="color:${palette[i%palette.length]}"><input type="checkbox" style="width:auto" data-route="${esc(name)}" ${enabled.has(name)?'checked':''}> ${esc(name)}</label>`).join('');
 document.querySelector('#routes').addEventListener('change',e=>{const name=e.target.dataset.route;if(!name)return;e.target.checked?enabled.add(name):enabled.delete(name);page=0;draw();});
 document.querySelector('#scores').addEventListener('change',e=>{const mode=e.target.dataset.mode;if(!mode)return;e.target.checked?enabledModes.add(mode):enabledModes.delete(mode);page=0;draw();});
 document.querySelector('#quantities').addEventListener('change',e=>{const q=e.target.dataset.quantity;if(!q)return;e.target.checked?enabledQuantities.add(q):enabledQuantities.delete(q);page=0;draw();});

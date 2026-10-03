@@ -209,10 +209,32 @@ converted into the other. Each route retains its own CI95. CPU92 rate and speed
 use defined reference scales; later SPEC modes use their own chain's saved
 interval. Classical, SPEC89 and mix proxies use their saved intervals, all
 targeting the SPECint92 speed anchor.
-They appear when **Historical estimates** is selected, independently of the
-**SPEC Base** and **SPEC Peak** selections. All three score checkboxes default on.
+They appear when **Historical** is selected, independently of the
+**SPEC base** and **SPEC peak** selections. All three score checkboxes default on.
 Intervals are not pooled across routes or advertised as machine prediction
 intervals. CPU2026 remains explicitly exploratory.
+
+## Page layout (2026-10-03)
+
+The chart comes first: at 1440×900 the plot, overview and notes fit in the first
+screen. Above it, one toolbar holds the search, the rate/speed checkboxes, a
+**Filters** menu (score modes, estimate kinds and the mix-correlation note) and
+the time-range buttons. The route checkboxes sit beside the chart as its legend
+and move below it on screens narrower than 900px. Two short lines under the chart
+give the record counts, the interaction hints, the per-system scope and the year
+rule.
+
+Below the chart, three tabs hold the **List**, the **Calculator** and the
+**Method** (the calibration pathway explorer, with the quantity definitions and
+the CI95 caveat). The address fragment (`#tab-list`, `#tab-calculator`,
+`#tab-method`) names the open tab and opens it on load; arrow keys move between
+tabs. **View calibration path** opens the Method tab. Interface text stays in
+English.
+
+The tooltip leads with the VAXen value, its CI95 and the interval's scope, then
+CPU, year, route, estimate kind and mode. Related rows, rows of the same
+resolved system, and the configuration, resources, input scores, calibration,
+limitation and year method are collapsed sections.
 
 ## Interaction and testing
 
@@ -284,8 +306,8 @@ The **Quantity** checkboxes (throughput · rate-VAXen ●, single job ·
 speed-VAXen ▲) both default on. The **Estimates** checkboxes select by
 `estimate_kind`: reported SPEC / historical baseline and combined mixes (■) are
 on by default; single mix ratings (■) are optional. Route checkboxes
-default on for every route. A status line counts model estimates beside
-baseline rows, which they are correlated with rather than independent of.
+default on for every route. A status line in **Filters** counts model estimates beside
+reported rows, which they are correlated with rather than independent of.
 
 There is one cross-generation policy, `hardware_near` over resolved identity, so
 records carry no per-policy variants and the page has no matching selector
@@ -294,7 +316,7 @@ experiments). SPEC speed record IDs are `spec:{generation}:speed:{result}:{mode}
 Mix record IDs are the database result IDs
 (`mix:longbottom-cpumix:…`); combined rows append `:combined`.
 
-A pinned point lists rows **from the same source results**: rows sharing a
+A pinned point lists, in a collapsed section, rows **from the same source results**: rows sharing a
 `source_record_ids` entry (base/peak of one result, a single rating and its
 combined row). These are connected on the
 plot. A collapsed **Same resolved system** list adds other rows with the same
@@ -306,14 +328,14 @@ is archived and reviewed fallbacks enter through the database chronology.
 
 ### Score selection and list navigation
 
-Scores uses independent SPEC Base, SPEC Peak and Historical estimates
+Scores (in **Filters**) uses independent SPEC base, SPEC peak and Historical
 checkboxes, initially all selected. Clearing all three shows an empty view.
 Changes reset list pagination to the first page.
 
 Both ends of the list use one List Browsing template and one shared event
-binding function. Each includes Sort list, Previous/Next, page/row counts and
-Goto Page. Sort and page state are synchronized in both directions. Each Goto
-Page field accepts a whole page number from 1 through the filtered page count;
+binding function. Each includes Sort, Previous/Next, page/row counts and
+Go to page. Sort and page state are synchronized in both directions. Each Go to
+page field accepts a whole page number from 1 through the filtered page count;
 Enter or Go submits. Invalid/out-of-range values do not
 navigate. Empty lists disable the jump controls and both paging directions.
 
@@ -326,7 +348,7 @@ an assumed CPU clock.
 
 ## Calibration pathway explorer
 
-The collapsed **How scores become VAXen** section contains an offline SVG graph
+The **Method** tab (**How scores become VAXen**) contains an offline SVG graph
 and a details card. Nodes and edges use the model registry; saved rate edge
 intervals, the saved speed-chain factors, the SPEC89 bridge summary, and the
 classical and mix network coefficients supply numerical details. Input hashes are recorded in the timeline audit.
@@ -408,7 +430,7 @@ rate, speed and mix. The fonts add about 200 KB to the page.
 
 ## Offline VAXen calculator (2026-09-29)
 
-The calculator sits after the timeline and before the list. Its form uses two
+The calculator is the **Calculator** tab below the timeline. Its form uses two
 columns with labels above controls, switching to one column when the calculator
 container is at most 36rem wide. The form is capped at 64rem; controls may shrink
 without overflowing their grid cells. It performs no

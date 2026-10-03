@@ -329,8 +329,8 @@ def build_lineage(output):
 
 
 STYLE = r"""
-#lineage{max-width:1440px;margin:22px auto;border:1px solid var(--panel-border);border-radius:16px;background:var(--panel);overflow:hidden}
-#lineage summary{cursor:pointer;padding:18px 22px;font-size:19px;font-weight:650}
+#lineage{max-width:1440px;margin:12px auto;border:1px solid var(--panel-border);border-radius:16px;background:var(--panel);overflow:hidden}
+#lineage h2{margin:0;padding:18px 22px 10px;font-size:19px;font-weight:650}
 .lineage-intro{padding:0 22px 8px;max-width:960px;font-size:14px;line-height:1.55}.lineage-intro p{margin:0 0 10px}
 .lineage-toolbar{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:0 22px 12px}.lineage-toolbar input{width:auto}
 .lineage-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;padding:0 16px 18px}
@@ -342,7 +342,7 @@ STYLE = r"""
 @media(max-width:1050px){.lineage-layout{grid-template-columns:1fr}#lineage-card{max-height:330px}}
 """
 MARKUP = r"""
-<details id="lineage"><summary>How scores become VAXen</summary>
+<section id="lineage" aria-labelledby="lineage-title"><h2 id="lineage-title">How scores become VAXen</h2>
 <div class="lineage-intro">
 <p><strong>1 VAX = the VAX-11/780, in two parallel quantities.</strong><br>
 <b>Rate-VAXen</b> (throughput, every copy) = SPECrate_int92 × 25500 / 604800.
@@ -354,7 +354,7 @@ The two quantities are never converted into each other.</p>
 <p class="lineage-intro">Pairs across SPEC generations require the same resolved system, processor, chip count, clock and memory (hardware-near). CPU92↔CPU95 rate pairs are individually reviewed; speed pairs are automatic.</p>
 <div class="lineage-toolbar">
 <span class="hint">Solid: calibration · dashed: bridge · dotted grey: diagnostic only · teal: fixed definition</span></div>
-<div id="lineage-selection" aria-live="polite">Select a node or arrow to inspect its calibration. Click empty graph space to reset. To trace a plotted result, pin the point and choose View calibration path.</div>
+<div id="lineage-selection" aria-live="polite">Select a node or arrow to inspect it; click empty space to reset. To trace a plotted point, pin it and choose View calibration path.</div>
 <div class="lineage-layout"><div class="lineage-scroll"><svg id="lineage-graph" viewBox="0 0 1410 740" aria-label="Benchmark calibration pathways"></svg></div>
 <aside id="lineage-card" aria-live="polite"><h3>Calibration details</h3><p>Select a node or arrow.</p><p>Joint models share evidence; their intervals are correlated.</p></aside></div>
 <details id="fit-comparison"><summary>Speed chain and SPEC89 bridge fits</summary>
@@ -369,7 +369,7 @@ The two quantities are never converted into each other.</p>
 <label>Scores <select id="fit-mode"><option value="peak">Peak</option><option value="base">Base</option></select></label></p>
 <p id="fit-stats"></p><svg id="fit-scatter" viewBox="0 0 700 330" style="max-width:850px" aria-label="Generation calibration scatterplot"></svg>
 <p class="hint">Each mark is one hardware-near pair (or one SPEC89/92 source row); repeated submissions remain included. The line is the fitted factor, shading its CI95; the factor is a mean of processor-configuration medians, not a regression line. Axes show native benchmark scores.</p>
-</details></details>
+</details></section>
 """
 SCRIPT = r"""
 const lineage=__LINEAGE_DATA__;
@@ -434,7 +434,7 @@ function traceFormula(r){
  return 'V = input score × saved calibration factor(s)';
 }
 function traceLineage(r){
- lineageRecord=r;lineageActive=pathway(r);document.querySelector('#lineage').open=true;drawLineage();
+ lineageRecord=r;lineageActive=pathway(r);showTab('method');drawLineage();
  const q=quantityOf(r);
  document.querySelector('#lineage-selection').textContent=`${r.system} · ${r.route} · ${modeOf(r)} · ${quantityLabel(r)} · ${estimateLabel(r)}`;
  document.querySelector('#lineage-card').innerHTML=`<h3>${esc(r.system)}</h3><p class="lineage-badge">${esc(r.route)} · ${esc(modeOf(r))} · ${esc(quantityLabel(r))}</p><h4>Actual inputs</h4><div>${scoreDetails(r)}</div><p>${esc(traceFormula(r))}</p><h4>${fmt(r.vaxen,q)}</h4><p>Calibration CI95<br>${fmt(r.ci95_low,q)} – ${fmt(r.ci95_high,q)}</p><p>${esc(r.calibration_route||'')}<br>${esc(r.calibration_scenario||'Saved route calibration')}<br>${esc(r.limitation)}</p><p><a href="${esc(r.source_url)}">Original source</a></p><p>Select a highlighted arrow for details. CI95 uses the saved joint or chain calibration.</p>`;

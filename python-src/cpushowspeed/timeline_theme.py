@@ -131,7 +131,10 @@ def stylesheet():
         css.append(f"{scope}{{{_variables(variables)}}}")
         if extra:
             css.append(extra(scope))
-    css.append(".theme-bar{display:flex;justify-content:flex-end;gap:8px;align-items:center;margin:-8px 0 8px}")
+    css.append(
+        ".theme-bar{position:absolute;top:24px;right:24px;display:flex;gap:8px;align-items:center}"
+        "@media(max-width:760px){.theme-bar{position:static;justify-content:flex-end;margin:-8px 0 8px}}"
+    )
     css.append(".theme-credits{margin-top:32px;font-size:12px;color:var(--muted)}")
     return "\n".join(css)
 

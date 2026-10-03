@@ -110,7 +110,7 @@ def calculator_markup():
 
 
 STYLE = """
-#calculator{margin:24px 0;padding:20px;border:1px solid var(--panel-border);border-radius:12px;background:var(--panel);container-type:inline-size}
+#calculator{margin:12px 0;padding:20px;border:1px solid var(--panel-border);border-radius:12px;background:var(--panel);container-type:inline-size}
 #calculator h2{margin-top:0}#calc-form{max-width:64rem}
 .calc-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px;align-items:start}
 #calculator label{display:grid;gap:6px;min-width:0}

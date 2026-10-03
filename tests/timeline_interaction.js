@@ -171,7 +171,7 @@ if(process.argv[3]==='full'){
  assert.equal(filtered.length,baselineCount);
  const modern=data.find(r=>r.generation==='cpu2026'&&r.mode==='base'&&r.quantity==='rate');
  traceLineage(modern);assert(lineageActive.includes('rate-2026')&&lineageActive.includes('rate-92')&&lineageActive.includes('rate-vaxen'));
- assert(!lineageActive.includes('mix-model'));assert(elements['#lineage'].open);
+ assert(!lineageActive.includes('mix-model'));assert(!elements['#tab-method'].hidden&&elements['#tab-list'].hidden);
  inspectLineage('edge','rate-2026-to-2017');assert(elements['#lineage-card'].innerHTML.includes('base'));
  const mixed=data.find(r=>r.route==='Combined mixes');traceLineage(mixed);
  assert.deepEqual(pathway(mixed),['mixes','mix-model','speed-vaxen']);
@@ -254,6 +254,9 @@ overviewPlot.events.pointerdown(brushEvent(1988,'right'));overviewPlot.events.po
 overviewPlot.events.pointerdown(brushEvent(1985,'move'));overviewPlot.events.pointermove(brushEvent(1984,'move'));overviewPlot.events.pointerup();assert(Math.abs(viewMin-1981)<1e-8);assert.equal(viewMax,1988);
 overviewPlot.events.pointerdown(brushEvent(1983,undefined));overviewPlot.events.pointermove(brushEvent(1986,undefined));overviewPlot.events.pointerup();assert(Math.abs(viewMin-1983)<1e-8);assert.equal(viewMax,1986);
 elements['#brush-left'].events.keydown({key:'ArrowRight',preventDefault(){}});assert(Math.abs(viewMin-1984)<1e-8);
+showTab('calculator');assert(elements['#tab-list'].hidden&&!elements['#tab-calculator'].hidden&&elements['#tab-method'].hidden);
+assert.equal(elements['#tab-btn-calculator']['aria-selected'],'true');assert.equal(elements['#tab-btn-list']['aria-selected'],'false');showTab('list');
+elements['#filters'].open=true;document.events.click({target:{}});assert.equal(elements['#filters'].open,false);
 // Handles must not cross and a minimum one-year span must remain.
 overviewPlot.events.pointerdown(brushEvent(1984,'left'));overviewPlot.events.pointermove(brushEvent(1990,'left'));overviewPlot.events.pointercancel();assert.equal(viewMax-viewMin,1);
 
