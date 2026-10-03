@@ -3,6 +3,8 @@
 __pycache__/
 .pytest_cache/
 .ruff_cache/
+.claude/
+uv.lock
 data/raw/
 data/derived/
 inventories/bitsavers-filelist.txt
