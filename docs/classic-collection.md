@@ -215,5 +215,5 @@ of the same resolved system (`resolved_system`), and separately adds the system
 links a review leaves open (`plus_pending_links`); it fits them with the shared
 geometric-ratio policy and audits direct SPEC89/SPEC92 overlap on the database. It preserves metric
 identities and reports missing cells separately. Outputs include source-score
-inventories, coverage, conditional fit summaries and PNG/SVG scatterplots under
+inventories, coverage, conditional fit summaries and paired scores under
 `data/derived/classic/mix-bridge/`. No production VAXen coefficient is updated.

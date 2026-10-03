@@ -43,7 +43,6 @@ from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import connect, inputs_digest
 from cpushowspeed.parallel import jobs_option, pmap
 from cpushowspeed.research_io import code_hashes, write_csv
-from cpushowspeed.research_plot import save_figure
 
 
 def ci95(log_draws, chunk=1000):
@@ -270,56 +269,6 @@ def evaluate(nodes, edges, enabled, anchor, methods=METHODS):
     return summary, predictions, coverage
 
 
-def plot(output, summary):
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    scenarios = sorted({r["scenario"] for r in summary})
-    fig, axes = plt.subplots(1, len(scenarios), figsize=(18, 8), squeeze=False)
-    for ax, scenario in zip(axes.flat, scenarios):
-        rows = [
-            r
-            for r in summary
-            if r["scenario"] == scenario
-            and r["cohort"] == "with_spec89"
-            and r["target_kind"] == "observed_speed"
-            and r["scope"] == "complete_family_nodes"
-            and (r["subset"].startswith("single:") or r["subset"].startswith("two_families:") or r["subset"] == "all_available")
-        ]
-        subsets = sorted({r["subset"] for r in rows})
-        for j, method in enumerate(("anchored_only", "network", "free_intercept")):
-            selected = {r["subset"]: r for r in rows if r["method"] == method}
-            ax.scatter(
-                [selected[s]["model_center_p95_percent"] for s in subsets if s in selected],
-                [i + (j - 1) * 0.18 for i, s in enumerate(subsets) if s in selected],
-                label=method,
-            )
-        ax.set_yticks(
-            range(len(subsets)),
-            [
-                s.replace("single:", "")
-                .replace("two_families:", "")
-                .replace("Dhrystone:", "D ")
-                .replace("Whetstone:", "W ")
-                .replace("LINPACK:", "L ")
-                for s in subsets
-            ],
-        )
-        ax.set_title(scenario)
-        ax.invert_yaxis()
-        ax.grid(alpha=0.2)
-        ax.legend()
-        ax.set_xlabel("Held-out model-center relative P95 (%)")
-    fig.suptitle(
-        "Sparse classical calibration — observed-SPECint92 holdouts\nComplete-family nodes for availability comparisons; SPEC89 targets are estimated, not observed SPECint92"
-    )
-    fig.tight_layout(rect=(0, 0, 1, 0.94))
-    save_figure(fig, output, "availability-comparison")
-    plt.close(fig)
-
-
 def fit_run(task):
     """One scenario/cohort fit: coefficients, holdouts, hardware estimates and bootstrap arrays."""
     rows, edges, anchor, anchor_sd, scaling, enabled, draws, seed = task
@@ -476,7 +425,6 @@ def network_fit(database, output, research_dir, draws, seed, jobs):
         write_csv(output / (name + ".csv"), data)
     np.savez_compressed(output / "coefficient-log-draws.npz", **bootstrap_arrays)
     write_prediction_manifest(output, runs)
-    plot(output, summary)
     write_csv(research_dir / "network-coefficients.csv", coefficients)
     write_csv(research_dir / "network-summary.csv", summary)
     write_csv(research_dir / "network-frequency-checks.csv", clock_checks)

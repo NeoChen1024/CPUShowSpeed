@@ -202,7 +202,6 @@ def mix_bridge(database, output_dir, research_dir, bootstrap, seed):
         ("bridge-spec92-target-coverage", spec92_targets),
     ]:
         write_csv(research_dir / (name + ".csv"), data)
-    _plot(output_dir, pairs, summaries)
     audit = dict(
         method="mix-bridge-v3-resolved-systems",
         mix_listings=len(mixes),
@@ -231,44 +230,3 @@ def mix_bridge(database, output_dir, research_dir, bootstrap, seed):
     for path in (output_dir / "audit.json", research_dir / "bridge-audit.json"):
         path.write_text(json.dumps(audit, indent=2) + "\n")
     click.echo(json.dumps({k: v for k, v in audit.items() if k not in ("inputs_sha256", "shared_code_sha256", "notes")}))
-
-
-def _plot(output_dir, pairs, summaries):
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    panels = sorted({(p["mix"], p["metric"]) for p in pairs})
-    if not panels:
-        return
-    cols = 3
-    fig, axs = plt.subplots(
-        (len(panels) + cols - 1) // cols, cols, figsize=(17, 5 * ((len(panels) + cols - 1) // cols)), squeeze=False
-    )
-    for ax, (mix, metric) in zip(axs.flat, panels):
-        group = [p for p in pairs if p["mix"] == mix and p["metric"] == metric]
-        for tier, marker in (("resolved_system", "o"), ("pending_link", "^")):
-            sub = [p for p in group if p["candidate_tier"] == tier]
-            if sub:
-                ax.scatter(
-                    [p["mix_kips"] for p in sub], [p["classical_score"] for p in sub], s=25, alpha=0.6, marker=marker, label=tier
-                )
-        for scenario, color in (("resolved_system", "#17628a"), ("plus_pending_links", "#dd8822")):
-            r = next(s for s in summaries if s["mix"] == mix and s["target_metric"] == metric and s["scenario"] == scenario)
-            if "factor" in r:
-                x = [min(p["mix_kips"] for p in group) * 0.8, max(p["mix_kips"] for p in group) * 1.2]
-                ax.plot(x, [v * r["factor"] for v in x], color=color, label=f'{scenario}: {r["models"]} systems')
-                ax.fill_between(
-                    x, [v * r["factor_ci95_low"] for v in x], [v * r["factor_ci95_high"] for v in x], alpha=0.1, color=color
-                )
-        ax.set(xscale="log", yscale="log", xlabel=mix + " KIPS", ylabel=metric)
-        ax.grid(alpha=0.2)
-        ax.legend(fontsize=7)
-    for ax in list(axs.flat)[len(panels) :]:
-        ax.axis("off")
-    fig.suptitle("Exploratory mix/classical pairs over resolved systems — y = kx; conditional coefficient CI95")
-    fig.tight_layout()
-    for ext in ("png", "svg"):
-        fig.savefig(output_dir / f"classical-mix-scatter.{ext}", dpi=150)
-    plt.close(fig)

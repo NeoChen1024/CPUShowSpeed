@@ -41,7 +41,7 @@ the [CPU95-relative](data/spec/fitting/integer-rate-cpu95-relative-chain.csv) an
 [rate chain intervals](data/spec/fitting/integer-rate-chain-intervals.csv),
 [speed factors](data/spec/fitting/integer-speed-factors.csv) and
 [speed chain intervals](data/spec/fitting/integer-speed-chain-intervals.csv).
-Pair records with both disclosure URLs, scatterplots, bootstrap draws and JSON
+Pair records with both disclosure URLs, paired-score points, bootstrap draws and JSON
 audits are generated under `data/derived/spec/fitting/`.
 
 ## Inputs and metric boundary
@@ -122,7 +122,7 @@ memory.
 The search found **152** system/processor/chip candidates; **44** are hardware
 near and **42** accepted (33 systems, 23 processor configurations); **23** of
 those also satisfy same OS (23 systems, 14 configurations). All candidate
-pairings and repeated submissions remain in the exported CSVs and figures.
+pairings and repeated submissions remain in the exported CSVs.
 
 ### Adjacent-suite results
 
@@ -352,5 +352,5 @@ CPU92↔CPU95 conversion.
   and joint speed/rate predictors (in Git history).
 - 2026-10-03: the annual rate view (`plot annual-rate`, `plot annual-rate-ci`,
   its leader, statistics and confidence tables and figures) was removed; the
-  [timeline](../docs/timeline.md) shows every rate result by year. It is in Git
-  history.
+  [timeline](../docs/timeline.md) shows every rate result by year. The fitting
+  commands no longer draw PNG/SVG figures. Both are in Git history.

@@ -56,7 +56,7 @@ class SpeedCompositeTests(unittest.TestCase):
             self.assertAlmostEqual(r["y_vaxen"], r["x"] ** EXPONENT[r["target"]])
 
     def test_known_exponent_through_the_vax780_and_shared_baselines(self):
-        summaries, predictions, curves = composite_calculate(speed_rows(), ANCHOR, ANCHOR_SD, 100, 20260927)
+        summaries, predictions = composite_calculate(speed_rows(), ANCHOR, ANCHOR_SD, 100, 20260927)
         for r in summaries:
             expected = EXPONENT[r["target"]]
             self.assertAlmostEqual(r["exponent"], expected)
@@ -65,7 +65,6 @@ class SpeedCompositeTests(unittest.TestCase):
             self.assertAlmostEqual(r["vaxen_at_unit_score"], 1)
             self.assertLess(r["loo_model_p95_percent"], 1e-10)
         self.assertTrue(all(abs(r["signed_error_percent"]) < 1e-10 for r in predictions))
-        self.assertEqual(len(curves), len(summaries))
         groups = {}
         for r in predictions:
             groups.setdefault((r["cohort"], r["target"], r["pattern"], r["predictor"]), []).append(r["spec_id"])
@@ -95,7 +94,7 @@ class BridgeTests(unittest.TestCase):
     def test_two_edge_product_and_joint_known_solution(self):
         edges = self.edges()
         self.assertAlmostEqual(math.exp(bridge_log(edges)), 6)
-        result_, predictions, _ = evaluate(self.rows(), edges, 0.0, np.zeros(100), 100, 3)
+        result_, predictions = evaluate(self.rows(), edges, 0.0, np.zeros(100), 100, 3)
         for name in ("exponent", "exponent_ci95_low", "exponent_ci95_high"):
             self.assertAlmostEqual(result_[name], 0.8)
         self.assertAlmostEqual(result_["bridge_factor"], 6)

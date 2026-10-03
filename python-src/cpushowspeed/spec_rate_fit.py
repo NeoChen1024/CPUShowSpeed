@@ -5,7 +5,6 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
-from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
@@ -95,74 +94,6 @@ def _chain(edges: list[dict[str, object]], scenario: str, mode: str) -> dict[str
             return {"status": "disconnected", "relative_to": "CPU95 integer rate score", "factors": factors}
         factors[str(edge["new_generation"])] = factors[str(edge["old_generation"])] * float(fit["factor_old_per_new"])
     return {"status": "exploratory_chain_only", "relative_to": "CPU95 integer rate score", "factors": factors}
-
-
-def _plot(points: list[dict[str, object]], edges: list[dict[str, object]], output_dir: Path, mode: str) -> dict[str, str]:
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    fig, axes = plt.subplots(2, 2, figsize=(14, 10), constrained_layout=True)
-    fig.suptitle(f"SPEC integer rate: adjacent-generation {mode} scores\nEach mark is a submission pairing", fontsize=15)
-    for axis, edge in zip(axes.flat, edges):
-        old, new = str(edge["old_generation"]), str(edge["new_generation"])
-        subset = [row for row in points if row["mode"] == mode and row["old_generation"] == old and row["new_generation"] == new]
-        for tier, color, alpha, label in (
-            ("name_cpu_chips_only", "#a5afb8", 0.28, "Name/CPU/chips candidate"),
-            ("hardware_near", "#17628a", 0.55, "Hardware-near fit tier"),
-        ):
-            rows = [row for row in subset if row["tier"] == tier]
-            if rows:
-                axis.scatter(
-                    [float(row["new_score"]) for row in rows],
-                    [float(row["old_score"]) for row in rows],
-                    s=14 if tier == "name_cpu_chips_only" else 22,
-                    c=color,
-                    alpha=alpha,
-                    label=label,
-                )
-        fit = edge["strict", mode]
-        if subset and fit is not None:
-            xs = [float(row["new_score"]) for row in subset]
-            low, high = min(xs), max(xs)
-            if low == high:
-                low *= 0.9
-                high *= 1.1
-            factor = float(fit["factor_old_per_new"])
-            axis.plot(
-                [low, high],
-                [low * factor, high * factor],
-                color="#20445f",
-                linewidth=1.6,
-                label="Configuration-geometric-mean factor",
-            )
-            counts = Counter(str(row["tier"]) for row in subset)
-            axis.text(
-                0.03,
-                0.97,
-                f"k={factor:.4g}; {fit['processor_configs']} configs\n{len(subset)} pairs; {counts['hardware_near']} fit-tier pairs",
-                transform=axis.transAxes,
-                va="top",
-                fontsize=8,
-                bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.85, "pad": 2},
-            )
-        axis.set_xscale("log")
-        axis.set_yscale("log")
-        axis.set_title(f"{old.upper()} → {new.upper()}")
-        axis.set_xlabel(f"{new.upper()} reported integer rate {mode}")
-        axis.set_ylabel(f"{old.upper()} reported integer rate {mode}")
-        axis.grid(which="both", alpha=0.2)
-    handles, labels = axes.flat[0].get_legend_handles_labels()
-    if handles:
-        fig.legend(handles, labels, loc="lower center", ncol=3, fontsize=9)
-    paths = {}
-    for suffix in ("png", "svg"):
-        path = output_dir / f"integer-rate-{mode}-overlaps.{suffix}"
-        fig.savefig(path, dpi=170 if suffix == "png" else None)
-        paths[suffix] = str(path)
-    plt.close(fig)
-    return paths
 
 
 def analyze_rate_generations(database: Path, output_dir: Path, research_dir: Path) -> dict[str, object]:
@@ -284,7 +215,6 @@ def analyze_rate_generations(database: Path, output_dir: Path, research_dir: Pat
                         "status": chain["status"],
                     }
                 )
-    figures = {mode: _plot(points, edges, output_dir, mode) for mode in MODES}
     summary = {
         "method_version": METHOD_VERSION,
         "scope": "integer rate, CPU95 through CPU2026; dependent submission pairings retained",
@@ -296,7 +226,6 @@ def analyze_rate_generations(database: Path, output_dir: Path, research_dir: Pat
         "scatter_points": str(point_path),
         "factor_csv": str(factor_path),
         "chain_csv": str(chain_path),
-        "figures": figures,
         "nonadjacent_diagnostics": nonadjacent,
         "edges": [
             {
@@ -325,7 +254,7 @@ def analyze_rate_generations(database: Path, output_dir: Path, research_dir: Pat
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/fitting"), show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=Path("research/data/spec/fitting"), show_default=True)
 def fit_rate_generations_command(database: Path, output_dir: Path, research_dir: Path) -> None:
-    """Fit CPU95–CPU2026 integer-rate overlaps from the built database and draw paired-score scatters."""
+    """Fit CPU95–CPU2026 integer-rate overlaps from the built database and export the paired scores."""
     try:
         summary = analyze_rate_generations(database, output_dir, research_dir)
     except (OSError, ValueError, KeyError, IndexError) as exc:

@@ -80,66 +80,6 @@ def _heldout_p95(pairs: list[dict[str, object]], mode: str) -> float | None:
     return quantile(errors, 0.95)
 
 
-def _plot(pairs: list[dict[str, object]], fits: dict[tuple[str, str], dict | None], output_dir: Path) -> dict[str, str]:
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5.6), constrained_layout=True)
-    for axis, mode in zip(axes, ("base", "peak")):
-        available = [row for row in pairs if row[f"{mode}_ratio"] != ""]
-        for scenario, color, marker, size in (
-            ("name_only", "#a5afb8", "o", 15),
-            ("hardware_near", "#17628a", "o", 28),
-            ("same_os", "#d27136", "x", 38),
-        ):
-            if scenario == "name_only":
-                subset = [row for row in available if row["review_decision"] != "accept"]
-            elif scenario == "same_os":
-                subset = _selected(available, "same_os")
-            else:
-                subset = _selected(available, "hardware_near")
-            if subset:
-                axis.scatter(
-                    [row[f"new_{mode}"] for row in subset],
-                    [row[f"old_{mode}"] for row in subset],
-                    color=color,
-                    marker=marker,
-                    s=size,
-                    alpha=0.57,
-                    label=scenario.replace("_", " "),
-                )
-        xs = [float(row[f"new_{mode}"]) for row in available]
-        if xs:
-            for scenario, color, style in (("hardware_near", "#17628a", "--"), ("same_os", "#a7461c", "-")):
-                fit = fits[scenario, mode]
-                if fit:
-                    axis.plot(
-                        [min(xs), max(xs)],
-                        [min(xs) * fit["factor_old_per_new"], max(xs) * fit["factor_old_per_new"]],
-                        color=color,
-                        linestyle=style,
-                        label=f"{scenario.replace('_', ' ')} fit",
-                    )
-        axis.set(
-            xscale="log",
-            yscale="log",
-            xlabel=f"CPU95 {mode} integer rate",
-            ylabel=f"CPU92 {mode} integer rate",
-            title=f"CPU92 → CPU95 {mode}",
-        )
-        axis.grid(which="both", alpha=0.2)
-    axes[1].legend(loc="lower right", fontsize=8)
-    paths = {}
-    for extension in ("png", "svg"):
-        path = output_dir / f"cpu92-cpu95-rate-overlap.{extension}"
-        fig.savefig(path, dpi=170 if extension == "png" else None)
-        paths[extension] = str(path)
-    plt.close(fig)
-    return paths
-
-
 def _write_edge_intervals(research_dir: Path) -> Path:
     """Collect all edge CIs without treating them as a joint chain interval."""
     rows = []
@@ -292,7 +232,6 @@ def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path)
                         )
                     )
     interval_path = _write_edge_intervals(research_dir)
-    figures = _plot(pairs, fits, output_dir)
     summary = {
         "method_version": METHOD_VERSION,
         "cpu92_records": len(results["cpu92"]),
@@ -303,7 +242,6 @@ def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path)
         "edge_intervals_csv": str(interval_path),
         "pair_csv": str(pair_path),
         "chain_csv": str(chain_path),
-        "figures": figures,
         "vax_rate92_reference": VAX_RATE92_REFERENCE,
         "fits": {scenario: {mode: fits[scenario, mode] for mode in ("base", "peak")} for scenario in ("hardware_near", "same_os")},
         "limitations": [

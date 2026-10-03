@@ -1,5 +1,4 @@
 click>=8
-matplotlib>=3.8
 blake3>=1.0
 pypdfium2>=5.0
 rich>=13

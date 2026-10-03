@@ -127,7 +127,7 @@ MPLCONFIGDIR=/tmp/cpushowspeed-mpl .venv/bin/cpushowspeed classic composite-fit
 ```
 
 Outputs under `data/derived/classic/composite-fit/` (observations, summary,
-predictions, target coverage and figures); compact summary, coverage and audit in
+predictions and target coverage); compact summary, coverage and audit in
 `research/data/classic/composite-*`. Tests: `tests/test_classical_fit.py`,
 `tests/test_classical_store.py`.
 
@@ -310,8 +310,8 @@ OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/cpushowspeed-mpl .venv/bin/cpushowspeed
 `--jobs` sets worker processes for the four scenario/cohort fits (results are
 identical for any value). Outputs under `data/derived/classic/network-fit/`:
 coefficients, nodes and observations, clock and frequency audits, summary,
-predictions and fold coverage, hardware estimates, correlated coefficient draws,
-the availability figure and the hash-bound `prediction-calibration.json`.
+predictions and fold coverage, hardware estimates, correlated coefficient draws
+and the hash-bound `prediction-calibration.json`.
 Compact coefficients, summary, frequency checks and audit are kept in
 `research/data/classic/network-*`. Tests: `tests/test_classic_network.py`,
 `tests/test_classical_store.py`.

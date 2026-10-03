@@ -23,7 +23,7 @@ Machine-readable snapshots are under [`data/`](data/): `spec/`, `spec89/`,
 `classic/`, `historical/`, `resource-refresh/` and `timeline/`. The
 [classic](data/classic/README.md) and [historical](data/historical/README.md)
 guides describe their records. Large raw documents, DocIR, derived tuples and
-figures stay outside Git. Original values, citations and qualifications must
+the timeline export stay outside Git. Original values, citations and qualifications must
 survive every conversion; Markdown is not the sole numerical store.
 
 ## The VAXen unit

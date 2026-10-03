@@ -3,7 +3,7 @@
 The active collector stores public SPEC result exports and individual
 **integer speed and rate** disclosures with source URLs, retrieval dates and SHA-256 metadata.
 Original downloaded bytes remain under `data/raw/spec/`; generated manifests,
-parsed records and figures remain under ignored `data/derived/spec/`. The
+parsed records and paired-score exports remain under ignored `data/derived/spec/`. The
 versioned research tables under `research/data/spec/fitting/` contain
 source-linked factors. [SPEC Fair Use](https://www.spec.org/products/fairuse/)
 governs public presentation of these results.
@@ -82,7 +82,7 @@ extends the chain using the first command's strict factors, after checking
 that both were fitted from the same database inputs. Both retain repeated submission
 pairings in source-linked point exports while weighting processor
 configurations in the factor calculation. The [primary rate audit](../research/spec-chains.md)
-owns the methods, tables, scatterplots and limits. The VAXen chain is an
+owns the methods, tables and limits. The VAXen chain is an
 exploratory **throughput** normalization, not a measured score for a modern
 VAX or a validated general conversion.
 

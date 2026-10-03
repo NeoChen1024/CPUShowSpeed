@@ -31,7 +31,6 @@ from cpushowspeed.classical_store import (
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import connect, inputs_digest
 from cpushowspeed.research_io import code_hashes, write_csv
-from cpushowspeed.research_plot import save_figure
 
 SPEED_TARGETS = ("SPECbase_int92", "SPECint92")
 SPEED_EDGE = "int89_to_int92"
@@ -154,14 +153,13 @@ def free_slope(rows):
 def composite_calculate(rows, anchor, anchor_sd, bootstrap, seed):
     """Anchored power laws per cohort, target, pattern and predictor, with model leave-one-out predictions.
 
-    Returns the summaries, the held-out predictions and, per fitted summary, the kept
-    (exponent, anchor) draw pairs for drawing calibration bands.
+    Returns the summaries and the held-out predictions.
     """
     groups = defaultdict(list)
     for r in rows:
         groups[r["cohort"], r["target"], r["pattern"]].append(r)
     c_draws = anchor_draws(anchor, anchor_sd, bootstrap, seed)
-    summaries, predictions, curves = [], [], {}
+    summaries, predictions = [], []
     for (cohort, target, pattern), data in sorted(groups.items()):
         for predictor in ["equal_weight"] + pattern.split("+"):
             prepared = list(_predictor_rows(data, pattern, predictor, "y_vaxen"))
@@ -183,8 +181,7 @@ def composite_calculate(rows, anchor, anchor_sd, bootstrap, seed):
                 continue
             c, cs = anchored
             beta, _ = coefficient(prepared, {}, c)
-            beta_draws, _, valid = joint_bootstrap(prepared, {}, bootstrap, seed, cs)
-            curves[cohort, target, pattern, predictor] = (beta_draws, cs[valid])
+            beta_draws, _, _ = joint_bootstrap(prepared, {}, bootstrap, seed, cs)
             residuals = []
             for model in models:
                 held, _ = coefficient(prepared, {}, c, exclude=model)
@@ -208,7 +205,7 @@ def composite_calculate(rows, anchor, anchor_sd, bootstrap, seed):
             result.update(status="exploratory_vax780_anchored_power_law", **anchored_summary(beta, beta_draws, c))
             result.update(holdout_summary(residuals), **free_slope(prepared))
             summaries.append(dict(context, **result))
-    return summaries, predictions, curves
+    return summaries, predictions
 
 
 def holdout_summary(residuals):
@@ -219,74 +216,6 @@ def holdout_summary(residuals):
         loo_within_model_p95_max_percent=stats["within_model_p95_max_percent"],
         statistics_policy=stats["statistics_policy"],
     )
-
-
-def band(curve, xx):
-    """CI95 of the calibrated speed-VAXen at each composite score in xx, from kept (exponent, anchor) draws."""
-    beta, cs = curve
-    logs = beta[:, None] * (np.log(xx)[None, :] - cs[:, None])
-    return np.exp(np.quantile(logs, [0.025, 0.975], axis=0))
-
-
-def composite_plot(output, rows, summaries, curves):
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    from matplotlib.ticker import NullFormatter
-
-    for target in SPEED_TARGETS:
-        selected = [r for r in rows if r["cohort"] == "same_system" and r["target"] == target]
-        patterns = sorted({r["pattern"] for r in selected})
-        if not patterns:
-            continue
-        fig, axes = plt.subplots(math.ceil(len(patterns) / 3), 3, figsize=(17, 4 * math.ceil(len(patterns) / 3)), squeeze=False)
-        for ax, pattern in zip(axes.flat, patterns):
-            data = [r for r in selected if r["pattern"] == pattern]
-            result = next(
-                r
-                for r in summaries
-                if r["cohort"] == "same_system"
-                and r["target"] == target
-                and r["pattern"] == pattern
-                and r["predictor"] == "equal_weight"
-            )
-            same = [r for r in data if r["pairing_status"] == "same_result"]
-            other = [r for r in data if r["pairing_status"] != "same_result"]
-            for group, color, label in ((same, "#167eaf", "same report column"), (other, "#d67c24", "same system, other source")):
-                if group:
-                    ax.scatter([r["x"] for r in group], [r["y_vaxen"] for r in group], s=18, alpha=0.55, label=label, color=color)
-            if "exponent" in result:
-                xx = np.geomspace(min(r["x"] for r in data) * 0.85, max(r["x"] for r in data) * 1.15, 40)
-                c = math.log(result["vax780_anchor_score"])
-                ax.plot(xx, np.exp(result["exponent"] * (np.log(xx) - c)), color="black")
-                low, high = band(curves["same_system", target, pattern, "equal_weight"], xx)
-                ax.fill_between(xx, low, high, color="gray", alpha=0.2)
-            title = pattern.replace("Dhrystone:", "D ").replace("Whetstone:", "W ").replace("LINPACK:", "L ").replace("+", " +\n")
-            ax.set(
-                xscale="log",
-                yscale="log",
-                title=title,
-                xlabel="Equal-weight geometric composite",
-                ylabel="speed-VAXen (SPECint92)",
-            )
-            ax.xaxis.set_minor_formatter(NullFormatter())
-            ax.yaxis.set_minor_formatter(NullFormatter())
-            ax.text(
-                0.03, 0.96, f"{result['models']} systems / {result['pairs']} targets", transform=ax.transAxes, va="top", fontsize=8
-            )
-            ax.legend(fontsize=7, loc="lower right")
-            ax.grid(alpha=0.2)
-        for ax in list(axes.flat)[len(patterns) :]:
-            ax.axis("off")
-        variant = "base" if target == SPEED_TARGETS[0] else "peak"
-        fig.suptitle(
-            f"Classical composites → SPECint92 speed — {variant}\n"
-            "Power laws through the VAX-11/780; paired by resolved system; shading: calibration CI95, not prediction interval"
-        )
-        fig.tight_layout(rect=(0, 0, 1, 0.95))
-        save_figure(fig, output, f"composite-{variant}")
-        plt.close(fig)
 
 
 @click.command("composite-fit")
@@ -306,7 +235,7 @@ def composite_fit(database, output, research_dir, bootstrap, seed):
     for r in rows:
         r["y_vaxen"] = r.pop("y")
         r["variant"] = "base" if r["target"] == SPEED_TARGETS[0] else "peak"
-    summaries, predictions, curves = composite_calculate(rows, anchor, anchor_sd, bootstrap, seed)
+    summaries, predictions = composite_calculate(rows, anchor, anchor_sd, bootstrap, seed)
     coverage = [
         dict(
             cohort=cohort,
@@ -323,7 +252,6 @@ def composite_fit(database, output, research_dir, bootstrap, seed):
         write_csv(output / (name + ".csv"), data)
     write_csv(research_dir / "composite-summary.csv", summaries)
     write_csv(research_dir / "composite-target-coverage.csv", coverage)
-    composite_plot(output, rows, summaries, curves)
     _audit(
         research_dir / "composite-audit.json",
         method="classic-direct-speed-composites-v4-power-law-vax780",
@@ -392,7 +320,7 @@ def evaluate(rows, edges, c, c_draws, draws, seed):
     """Anchored power law on SPECint92 and bridged SPECint89 targets, with model leave-one-out predictions.
 
     Rows carry lx (log score) and ly (log reported target); a held-out model leaves the bridge
-    edges and the fit. Returns the summary, the held-out predictions and the kept draw pairs.
+    edges and the fit. Returns the summary and the held-out predictions.
     """
     models = sorted({r["model_key"] for r in rows})
     result = dict(
@@ -403,9 +331,9 @@ def evaluate(rows, edges, c, c_draws, draws, seed):
         status="insufficient_models",
     )
     if len(models) < 2:
-        return result, [], None
+        return result, []
     beta, b = coefficient(rows, edges, c)
-    beta_draws, _, valid = joint_bootstrap(rows, edges, draws, seed, c_draws)
+    beta_draws, _, _ = joint_bootstrap(rows, edges, draws, seed, c_draws)
     predictions = []
     errors = defaultdict(lambda: defaultdict(list))
     for model in models:
@@ -438,61 +366,7 @@ def evaluate(rows, edges, c, c_draws, draws, seed):
         result[kind + "_within_model_p95_max_percent"] = max(
             quantile([100 * abs(math.expm1(e)) for e in v], 0.95) for v in groups.values()
         )
-    return result, predictions, (beta_draws, c_draws[valid])
-
-
-def spec89_plot(output, rows, summary, curves, b):
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    patterns = sorted({r["pattern"] for r in rows if r["generation"] == "89"})
-    if not patterns:
-        return
-    fig, axes = plt.subplots(math.ceil(len(patterns) / 2), 2, figsize=(13, 4 * math.ceil(len(patterns) / 2)), squeeze=False)
-    for ax, p in zip(axes.flat, patterns):
-        group = [r for r in rows if r["pattern"] == p]
-        for gen, color, label in [("92", "#167eaf", "Observed SPECint92"), ("89", "#d67c24", "SPECint89-derived estimate")]:
-            selected = [r for r in group if r["generation"] == gen]
-            if selected:
-                ax.scatter(
-                    [r["x"] for r in selected],
-                    [r["raw_target"] * (math.exp(b) if gen == "89" else 1) for r in selected],
-                    s=20,
-                    alpha=0.5,
-                    label=label,
-                    color=color,
-                    marker="o" if gen == "92" else "^",
-                )
-        for cohort, color in [("spec92_only", "#167eaf"), ("joint", "#222222")]:
-            result = next(r for r in summary if r["pattern"] == p and r["cohort"] == cohort and r["predictor"] == "equal_weight")
-            if "exponent" not in result:
-                continue
-            xx = np.geomspace(min(r["x"] for r in group) * 0.9, max(r["x"] for r in group) * 1.1, 40)
-            c = math.log(result["vax780_anchor_score"])
-            ax.plot(xx, np.exp(result["exponent"] * (np.log(xx) - c)), color=color, label=cohort)
-            if cohort == "joint":
-                low, high = band(curves[p, cohort, "equal_weight"], xx)
-                ax.fill_between(xx, low, high, color=color, alpha=0.12)
-        ax.set(
-            xscale="log",
-            yscale="log",
-            xlabel="Equal-weight composite",
-            ylabel="speed-VAXen (SPECint92)",
-            title=p.replace("Dhrystone:", "D ").replace("Whetstone:", "W ").replace("LINPACK:", "L ").replace("+", " +\n"),
-        )
-        ax.legend(fontsize=8)
-        ax.grid(alpha=0.2)
-    for ax in list(axes.flat)[len(patterns) :]:
-        ax.axis("off")
-    fig.suptitle(
-        "SPECint89 bridge + direct SPECint92: joint power laws through the VAX-11/780\n"
-        "Triangles are estimated targets; shading is calibration CI95, not prediction interval"
-    )
-    fig.tight_layout(rect=(0, 0, 1, 0.94))
-    save_figure(fig, output, "joint-scatter")
-    plt.close(fig)
+    return result, predictions
 
 
 @click.command("spec89-fit")
@@ -523,7 +397,7 @@ def spec89_fit(database, output, research_dir, bootstrap, seed):
     rows = composite_rows(rows_, ("SPECint89", "SPECint92"), cohorts=("same_system",))
     for r in rows:
         r["raw_target"] = r.pop("y")
-    summaries, predictions, curves = [], [], {}
+    summaries, predictions = [], []
     for p in sorted({r["pattern"] for r in rows}):
         for cohort in ("spec92_only", "89_only", "joint"):
             selected = [
@@ -538,10 +412,9 @@ def spec89_fit(database, output, research_dir, bootstrap, seed):
                     summaries.append(dict(context, status="no_vax780_anchor"))
                     continue
                 prepared = list(_predictor_rows(selected, p, predictor, "raw_target"))
-                result, heldout, curve = evaluate(prepared, edges, *anchored, bootstrap, seed)
+                result, heldout = evaluate(prepared, edges, *anchored, bootstrap, seed)
                 summaries.append(dict(context, **result))
                 predictions.extend(dict(context, **r) for r in heldout)
-                curves[p, cohort, predictor] = curve
     for r in rows:
         r["target_kind"] = "estimated_89_target" if r["generation"] == "89" else "observed_speed_target"
         r["assigned_target_vaxen"] = r["raw_target"] * (math.exp(b) if r["generation"] == "89" else 1)
@@ -580,7 +453,6 @@ def spec89_fit(database, output, research_dir, bootstrap, seed):
         ("spec89-estimates", estimates),
     ]:
         write_csv(research_dir / (name + ".csv"), data)
-    spec89_plot(output, rows, summaries, curves, b)
     _audit(
         research_dir / "spec89-audit.json",
         method="spec89-one-edge-speed-joint-v4-power-law-vax780",
