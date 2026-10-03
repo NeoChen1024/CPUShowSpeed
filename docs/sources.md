@@ -153,11 +153,9 @@ Located on 2026-10-03; transcribed only where noted:
 - MIPS Performance Briefs, 1986-10 to 1988-10 (comp.arch, net.arch). Issue 3.5 is
   transcribed; see [vendor performance reports](../research/vendor-performance-reports.md).
 - Rick Richardson's Dhrystone result lists, 1985-11 to 1989-04 (net.arch,
-  comp.arch). Postings from 1988 on include a tab-separated database: machine,
-  processor, clock, OS, compiler, options, register/no-register results,
-  submission date and submitter. The 1989-04-30 Dhrystone 2.x database,
-  `<756@pcrat.UUCP>`, has 300 rows. Compare with the later Netlib
-  compilation before importing, since that compilation may contain these rows.
+  comp.arch). The final Dhrystone 1.1 list (1987-09-20) and Dhrystone 2
+  database (1989-04-30) are parsed; see
+  [Usenet result lists](../research/usenet-result-lists.md).
 - John McCalpin's 64-bit and 32-bit Livermore Fortran Kernel tables, 1990-11-11
   (comp.unix.aix).
 - Smaller multi-machine posts: Aburto's Nsieve results (1989-05); the SSBA suite

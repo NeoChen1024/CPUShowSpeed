@@ -225,8 +225,9 @@ source block, raw record, qualification) plus
 `source_id` (by content hash, then a registry key the adapter cites such as a
 SPEC89 package source ID, then an address claimed by one source, then a dataset's
 `member_url_prefix`), the result's `hardware_id`, `system_id` and
-`processor_entity`, and its selected chronology year. All 103,192 observations
-(56,561 results, after the 2026-10-03 vendor-report rows) resolve to a source.
+`processor_entity`, and its selected chronology year. All 103,762 observations
+(57,131 results, after the 2026-10-03 vendor-report rows and Richardson's
+Dhrystone lists) resolve to a source.
 
 ### `curated_observation`
 
@@ -441,7 +442,9 @@ changed.
      101,427 records (58,813 rate, 42,614 speed). Adding the `curated_observation`
      rows of the [1990 DEC RISC summary](../research/vendor-performance-reports.md)
      and [MIPS Performance Brief 3.5](../research/vendor-performance-reports.md#mips-performance-brief-35-1988)
-     the same day gave 103,192 observations, 56,561 results and 101,450 records.
+     the same day gave 103,192 observations, 56,561 results and 101,450 records;
+     [Richardson's Dhrystone lists](../research/usenet-result-lists.md) then gave
+     103,762 observations, 57,131 results and 102,020 records.
 
    By user decision (2026-10-02) step 5 is compared with the former products, not
    held to parity: identity and dates were redesigned in steps 2–4, so coefficients

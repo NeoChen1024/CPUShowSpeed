@@ -144,25 +144,25 @@ counts are recorded in `fold-coverage.csv`, not silently scored as success.
 ## Results
 
 Both scenarios identify all six coefficients. The SPECint92-only network has
-486 informative systems; the SPEC89-enabled network has 495. These include
+505 informative systems; the SPEC89-enabled network has 515. These include
 unanchored co-observations constraining relative scales and are **not** hundreds
 of measured SPEC anchor machines. The SPEC89-enabled run has 115 observed
-SPECint92 nodes, 121 inferred-89 nodes and 1,146 unanchored nodes; one-metric
+SPECint92 nodes, 122 inferred-89 nodes and 1,420 unanchored nodes; one-metric
 unanchored nodes do not influence training.
 
 For `linear_clock / with_spec89`:
 
 | Input metric | Score unit | speed-VAXen coefficient k | Conditional factor CI95 |
 | --- | --- | ---: | --- |
-| Dhrystone 1.1 | DMIPS | 0.64775 | 0.60426–0.69469 |
-| Dhrystone 2.1 | DMIPS | 0.69674 | 0.65112–0.74609 |
-| Whetstone native | MWIPS | 0.54415 | 0.45611–0.63571 |
-| Whetstone SP | MWIPS | 0.59387 | 0.51672–0.67147 |
-| Whetstone DP | MWIPS | 0.96651 | 0.82805–1.11146 |
-| LINPACK n=100 | MFLOPS | 3.09026 | 2.70689–3.54104 |
+| Dhrystone 1.1 | DMIPS | 0.64513 | 0.60082–0.69291 |
+| Dhrystone 2.1 | DMIPS | 0.68453 | 0.63393–0.73776 |
+| Whetstone native | MWIPS | 0.53800 | 0.45570–0.62701 |
+| Whetstone SP | MWIPS | 0.59119 | 0.51298–0.66868 |
+| Whetstone DP | MWIPS | 0.95775 | 0.82833–1.09373 |
+| LINPACK n=100 | MFLOPS | 3.12475 | 2.74663–3.58055 |
 
 For example, a Dhrystone **1.1** score of **10 DMIPS** maps to approximately
-6.48 speed-VAXen (SPECint92 ≈ 6.5) using this experimental coefficient. Raw
+6.45 speed-VAXen (SPECint92 ≈ 6.5) using this experimental coefficient. Raw
 Dhrystones/second first need the declared /1757 DMIPS conversion; coefficients
 must not be applied to uninterpreted KIPS or printed unit labels with unresolved meaning.
 
@@ -171,33 +171,49 @@ families (`linear_clock / with_spec89`):
 
 | Available inputs | Network P95 | Anchored-only control P95 |
 | --- | ---: | ---: |
-| Dhrystone 1.1 only | 27.32% | 24.50% |
-| Dhrystone 2.1 only | 33.94% | 28.41% |
-| Whetstone SP only (32 systems) | 26.64% | 26.19% |
-| Whetstone DP only | 56.01% | 47.56% |
-| LINPACK only | 45.46% | 46.73% |
-| Dhrystone + Whetstone families | 29.40% | 29.15% |
-| Dhrystone + LINPACK families | 25.94% | 26.90% |
-| Whetstone + LINPACK families | 21.97% | 24.50% |
-| All available measurements | 18.11% | 20.74% |
+| Dhrystone 1.1 only | 26.78% | 24.50% |
+| Dhrystone 2.1 only | 31.55% | 30.29% |
+| Whetstone SP only (32 systems) | 26.98% | 26.19% |
+| Whetstone DP only | 54.59% | 46.08% |
+| LINPACK only | 44.84% | 46.73% |
+| Dhrystone + Whetstone families | 28.24% | 29.29% |
+| Dhrystone + LINPACK families | 25.94% | 26.63% |
+| Whetstone + LINPACK families | 21.79% | 24.43% |
+| All available measurements | 17.99% | 20.80% |
 
 More available workloads do not guarantee a lower error, and the unanchored
 coupling does not uniformly beat the anchored-only control on this population.
 All combinations remain; the table is not a residual-based selection rule.
 
 Over all 115 observed-SPECint92 nodes (59 systems), the all-available network
-P95 is 83.5%. Before the 2026-10-03 vendor-report rows (82.3%), on the 48 nodes that also carry a one-processor rate (the former
+P95 is 84.4% (83.5% before Richardson's lists). Before the 2026-10-03
+vendor-report rows (82.3%), on the 48 nodes that also carry a one-processor rate (the former
 anchor population) it is 31.5%; on 42 further DEC, multi-processor and
 speed-only nodes 37.8%; on the 25 bridge-table nodes 122.7%, dominated by IBM
 RS/6000 systems overpredicted by 78–129% because their LINPACK n=100 is high
 relative to integer speed, and by the HP 9000/J200 (−69%, see below).
 
-The network emits full-availability estimates for **1,146 unanchored nodes on
-1,094 system keys** (an unresolved result counts as its own key). Of these,
-1,116 nodes have one benchmark family, 14 have two and 16 have three. They are
-not 1,146 newly verified machines: configuration identity and source
+The network emits full-availability estimates for **1,420 unanchored nodes on
+1,322 system keys** (an unresolved result counts as its own key). Of these,
+1,376 nodes have one benchmark family, 28 have two and 16 have three. They are
+not 1,420 newly verified machines: configuration identity and source
 interpretation still need source-specific review. Their estimates are stored
 separately from observed SPEC targets.
+
+### Changes from Richardson's Dhrystone lists (2026-10-03)
+
+[Richardson's Usenet lists](usenet-result-lists.md) add 570 Dhrystone results
+(296 version 1.1, 274 version 2) on mostly pre-SPEC systems. About 20 of those
+systems already had Whetstone or LINPACK results, so informative systems rise
+486 → 505 (`spec92_only`) and 495 → 515 (`with_spec89`). Observed anchors are
+unchanged (115 nodes); VAX 8700 adds one inferred-89 node (121 → 122).
+Unanchored nodes rise from 1,146 on 1,094 system keys to 1,420 on 1,322 keys
+(1,376 with one family, 28 with two, 16 with three). `linear_clock /
+with_spec89` coefficients: Dhrystone 1.1 0.64775 → 0.64513 (−0.40%), Dhrystone
+2.1 0.69674 → 0.68453 (−1.75%), LINPACK 3.09026 → 3.12475 (+1.12%), Whetstone
+native −1.13%, DP −0.91%, SP −0.45%. Without SPEC89 targets Dhrystone 2.1 falls
+2.77% and Dhrystone 1.1 0.87%. All-available observed P95: 83.5% → 84.4%;
+common-cohort all-available 18.11% → 17.99%, Dhrystone 2.1 alone 33.94% → 31.55%.
 
 ### Changes from MIPS Performance Brief 3.5 (2026-10-03)
 

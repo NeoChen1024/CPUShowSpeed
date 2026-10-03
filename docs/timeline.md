@@ -50,9 +50,9 @@ The population is:
 Every record carries `quantity` (`rate` or `speed`). The SPEC and historical
 routes are the **baseline** (`estimate_kind = baseline`); the mix rows are model
 estimates (`mix`, `mix_combined`), correlated with the classical route and never
-counted as extra evidence. On 2026-10-03 this gave 101,450 records: 58,813 SPEC
-rate, 40,248 SPEC speed, 1,664 classical, 179 SPEC89, 360 mix and 186 combined
-mix (58,813 rate and 42,637 speed). The former speed-only and speed + rate
+counted as extra evidence. On 2026-10-03 this gave 102,020 records: 58,813 SPEC
+rate, 40,248 SPEC speed, 2,234 classical, 179 SPEC89, 360 mix and 186 combined
+mix (58,813 rate and 43,207 speed). The former speed-only and speed + rate
 predictor rows (and their 17,039 joint rows) were removed on 2026-10-03.
 
 ## Static website export
@@ -242,7 +242,7 @@ generated page's actual Parquet through the pinned JavaScript decoder:
 node tests/timeline_interaction.js data/derived/figures/timeline/vaxen-timeline.html full
 ```
 
-It asserts the 2026-10-03 population (101,450 rows by estimate kind and
+It asserts the 2026-10-03 population (102,020 rows by estimate kind and
 quantity), quantity and estimate filters, related rows, speed-chain fit
 scatterplots, lineage traces, pagination, and that the calculator reproduces
 timeline rows in their own quantity (CPU2017 rate; CPU92, CPU95, CPU2006 and

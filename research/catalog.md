@@ -238,6 +238,7 @@ analysis from evidence, diagnostics and retired work.
 | [SPEC89 recovered observations, curated v2.0.0 snapshot](../research/data/spec89/v2.0.0/README.md) | guide | current |
 | [First local early-benchmark evidence pass](../research/early-benchmark-evidence.md) | evidence | current |
 | [Vendor performance reports](../research/vendor-performance-reports.md) | evidence | current |
+| [Usenet result lists](../research/usenet-result-lists.md) | evidence | current |
 | [Research overview](../research/overview.md) | guide | current |
 | [Locating early SPEC CPU results](../research/spec-early-archives.md) | evidence | current |
 | [Cross-generation SPEC entity resolution precedents](../research/spec-entity-resolution.md) | archive | retired |

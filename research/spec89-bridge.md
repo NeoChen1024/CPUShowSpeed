@@ -86,6 +86,15 @@ LINPACK the joint factor is 1.530745 (CI95 1.432851–1.633008). The largest
 SPEC89 misses remain the IBM RS/6000 systems, whose LINPACK n=100 results are
 high relative to their integer speed; one shared composite factor cannot follow them.
 
+### Changes from Richardson's Dhrystone lists (2026-10-03)
+
+[Richardson's lists](usenet-result-lists.md) change only cohorts with Dhrystone
+2.1. Its VAX 8700 row adds one SPEC89 system to the Dhrystone 2.1 + Whetstone
+cohorts (D2.1 + Whetstone DP joint 43 → 44 systems; D2.1 + Whetstone native 89-only
+2 → 3). Joint factors move by less than 1% (D2.1 + LINPACK 1.531108 → 1.530136),
+and SPEC89-target P95 falls by up to 6 points (D2.1 + Whetstone native joint
+28.56% → 24.71%). Dhrystone 1.1 cohorts are unchanged.
+
 ### Changes from MIPS Performance Brief 3.5 (2026-10-03)
 
 [Brief 3.5](vendor-performance-reports.md#mips-performance-brief-35-1988) adds

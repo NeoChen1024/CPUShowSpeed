@@ -174,6 +174,17 @@ changes in the [network report](classic-network-fitting.md#changes-from-the-1990
 SPEC rows and SPEC89 bridge estimates are unchanged. The full-population Node
 test passed (2026-10-03).
 
+## Richardson's Dhrystone lists — 2026-10-03
+
+[Richardson's lists](usenet-result-lists.md) add 570 classical results:
+101,450 → 102,020 records (classical 1,664 → 2,234; speed 42,637 → 43,207;
+hardware-dated 26,219 → 26,377, unknown 739 → 1,151). Most of the 412 undated
+rows are microcomputers and minicomputers with no curated year; the
+submission dates in the lists are upper bounds on the test date and are not
+used as hardware dates. The refit moved the other classical and mix rows by the
+coefficient changes in the [network report](classic-network-fitting.md#changes-from-richardsons-dhrystone-lists-2026-10-03).
+SPEC rows are unchanged. The full-population Node test passed.
+
 ## MIPS Performance Brief 3.5 rows — 2026-10-03
 
 [Brief 3.5](vendor-performance-reports.md#mips-performance-brief-35-1988) adds 14

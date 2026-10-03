@@ -154,6 +154,36 @@ def curated_observations():
         )
 
 
+def richardson_dhrystone():
+    """C-program rows of Richardson's Usenet Dhrystone lists, one result per row; 2.0 and 2.1 share one metric."""
+    from cpushowspeed.usenet_results import richardson_dhrystone as rows
+    from cpushowspeed.usenet_results import sources
+
+    table = sources()
+    for r in rows():
+        if r["excluded"]:
+            continue
+        version = "1.1" if r["dhrystone_version"] == "1.1" else "2"
+        metric = "Dhrystone:v1.1_DMIPS" if version == "1.1" else "Dhrystone:v2.1_DMIPS"
+        source = table[r["source_id"]]
+        identity = f"classical:richardson-dhrystone-{version}:{r['key']}"
+        yield observation(
+            identity,
+            metric,
+            r["dhrystones_per_second"] / 1757,
+            unit="DMIPS",
+            track="classical",
+            mode="reported",
+            system=" ".join(x for x in (r["manufacturer"], r["model"]) if x),
+            source=dict(url=source["url"], locator=r["locator"], blake3=source["hash"], legacy_id=None),
+            hardware=dict(processor=r["processor"] or None, nominal_mhz=r["clock_mhz"]),
+            run=dict(os=r["os"], compiler=r["compiler"], optimization=r["options"], language="C"),
+            evidence="historical_source_observation",
+            verification="parsed_cross_checked",
+            raw=dict(r, conversion=dict(rule="Dhrystones/s / 1757", factor=1 / 1757)),
+        )
+
+
 def records(raw):
     for track in ("rate", "speed"):
         for group in collect_integer(raw, track).values():
@@ -184,6 +214,7 @@ def records(raw):
             if numeric(r[metric]):
                 yield historical_observation(r, metric, numeric(r[metric]), "historical-spec")
     yield from curated_observations()
+    yield from richardson_dhrystone()
     for r in dec_vectors():
         for metric, score in {**r["scores"], **r["targets"]}.items():
             yield historical_observation(r, metric, score, "reviewed-vector")

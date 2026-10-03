@@ -100,8 +100,8 @@ its tested configurations are in-house systems, and those configurations are the
 `conditions` of the MIPS rows. Rows with no citation are recorded as
 `source_author` for MIPS's and its own VAX 11/780 measurements, and
 `unattributed` for other vendors' machines. The cited Dhrystone list
-([Richardson 87] and others) is not transcribed; Richardson's own postings are
-in UTZOO and are the source to use. The relative summary table is derived and
+([Richardson 87] and others) is not transcribed here; Richardson's own postings
+are parsed instead ([Usenet result lists](usenet-result-lists.md)). The relative summary table is derived and
 is not transcribed.
 
 "MIPS M/2000-8" resolves to `sys:m/2000` through a reviewed alias. The Brief's
