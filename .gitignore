@@ -9,3 +9,4 @@ data/raw/
 data/derived/
 inventories/bitsavers-filelist.txt
 inventories/SPEC89_consolidated_2026-09-26/
+classic-benchs/build*/

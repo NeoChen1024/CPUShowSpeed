@@ -26,7 +26,7 @@ introduces the unit, zero-intercept fitting assumption and local setup.
 | [Shared VAXen timeline](timeline.md) | Common record schema, CPU-first chronology, combined interactive view |
 | [Classical prediction](classical-prediction.md) | Calculator contract: classical score subsets to SPECint92 speed-VAXen and calibration CI95 |
 | [Classic collection](classic-collection.md) | Classical source extraction and experimental fitting commands |
-| [Classical benchmark runner](classic-bench.md) | Planned: running Dhrystone, Whetstone and LINPACK on current hardware with copies and duration |
+| [Classical benchmark runner](classic-bench.md) | Running Dhrystone, Whetstone and LINPACK on current hardware with copies, duration and interval reports (Linux-checked; data use planned) |
 | [Document extraction](document-extraction.md) | PDF inventory, processing workflow and evidence policy |
 | [OCR dispatch](ocr-dispatch.md) | Bounded rendering/inference and resumable publication |
 | [DocIR](docir.md) | Page/block schema, rich tables and Markdown projection |
