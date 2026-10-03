@@ -2,7 +2,7 @@
   "schema_version": "vaxen-timeline-v4",
   "database": "data/derived/schema/cpushowspeed.sqlite",
   "inputs_sha256": "75aa169072fada7dd0f9302bfe13ac3f167ac2856a385c393b448618f49ff9f7",
-  "web_manifest_sha256": "199a1822b33c8677e81cd1206277b008c0dc776bfd7bb1020aa5f04be1725115",
+  "web_manifest_sha256": "891ada07af6b044a84eefc7e00520b2d7b9c62a021c6582c6b0acbc301272300",
   "lineage_inputs_sha256": {
     "research/model-registry.json": "ef70333e59c0305b71deda42bb83646b981c4fdf45c25d9fb8708f701a2b0542",
     "research/data/spec/fitting/integer-rate-edge-intervals.csv": "201161fb3f2c0987848b6d1ba9d4ff6516edf61e70d83bb66a34dcf5fdbba156",

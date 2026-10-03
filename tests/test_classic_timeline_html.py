@@ -59,6 +59,10 @@ class TimelineHTMLTests(unittest.TestCase):
         for value in ("win98", "system7", "vt220"):
             self.assertIn(f':root[data-theme="{value}"] body', css)
             self.assertIn(f'value="{value}"', timeline_theme.picker())
+        # A window rule applied to body must not clip it: body overflow would stop the page scrolling.
+        for value in ("win98", "system7", "vt220"):
+            overflow = re.findall(rf':root\[data-theme="{value}"\] body\{{[^}}]*?overflow:\s*(\w+)', css)
+            self.assertIn(overflow[-1:], ([], ["visible"]), value)
         self.assertNotIn("svg-load(", css)
         self.assertIsNone(re.search(r'url\((?!"data:)', css))
         with self.assertRaises(ValueError):

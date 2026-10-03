@@ -334,7 +334,7 @@ def system7_css(scope):
         scope,
         f"""
 :root{{background:repeating-conic-gradient(#000 0 25%, #fff 0 50%) 0 0/2px 2px}}
-body{{position:relative;max-width:1520px;margin:16px auto;padding:0 0 12px;font:14px/1.4 Geneva, "Helvetica Neue", Arial, sans-serif;box-shadow:2px 2px 0 #000}}
+body{{position:relative;max-width:1520px;margin:16px auto;padding:0 0 12px;overflow:visible;font:14px/1.4 Geneva, "Helvetica Neue", Arial, sans-serif;box-shadow:2px 2px 0 #000}}
 h1{{margin:0 0 10px;height:auto;min-height:1.6rem;border-bottom:1px solid #000;padding:0.3rem 0.2rem}}
 h1 span{{font-size:16px;font-weight:normal}}
 #load-status, #timeline-app, .theme-credits{{margin-inline:10px}}
