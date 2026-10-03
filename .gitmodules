@@ -13,3 +13,7 @@
 [submodule "third-party/glasstty"]
 	path = third-party/glasstty
 	url = https://github.com/svofski/glasstty
+[submodule "third-party/nlohmann-json"]
+	path = third-party/nlohmann-json
+	url = https://github.com/nlohmann/json
+	shallow = true
