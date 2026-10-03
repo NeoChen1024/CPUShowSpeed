@@ -77,7 +77,6 @@ struct Options {
     double unit_ms = 20.0;
     std::vector<int> cpus;
     bool pin = true;
-    bool per_copy_series = false;
 };
 
 enum Kind : int32_t { kReady = 0, kUnit = 1, kError = 2 };
@@ -150,11 +149,10 @@ std::string utc_now() {
                  "                        once per entry, e.g. 1,16 (default 1)\n"
                  "  -d, --duration S      measured seconds per benchmark (default 10)\n"
                  "  -w, --warmup S        unscored seconds before measuring (default 2)\n"
-                 "  -i, --interval S      reporting interval in seconds (default 1)\n"
+                 "  -i, --interval S      interval for rate statistics and progress lines (default 1)\n"
                  "      --unit-ms MS      target wall time of one timed unit (default 20)\n"
                  "      --cpus LIST       CPUs to use, e.g. 0,2,4-7 (default: the first N allowed)\n"
                  "      --no-pin          do not pin copies to CPUs\n"
-                 "      --per-copy-series also record every copy's rate in each interval\n"
                  "  -l, --list            list benchmark IDs and exit\n"
                  "  -h, --help            show this help\n");
     std::exit(code);
@@ -187,7 +185,6 @@ Options parse(int argc, char **argv) {
                                       {"unit-ms", required_argument, nullptr, 'u'},
                                       {"cpus", required_argument, nullptr, 'p'},
                                       {"no-pin", no_argument, nullptr, 'n'},
-                                      {"per-copy-series", no_argument, nullptr, 's'},
                                       {"list", no_argument, nullptr, 'l'},
                                       {"help", no_argument, nullptr, 'h'},
                                       {nullptr, 0, nullptr, 0}};
@@ -216,7 +213,6 @@ Options parse(int argc, char **argv) {
             case 'u': o.unit_ms = std::stod(optarg); break;
             case 'p': o.cpus = parse_cpus(optarg); break;
             case 'n': o.pin = false; break;
-            case 's': o.per_copy_series = true; break;
             case 'l':
                 for (const auto &b : benchmarks())
                     std::printf("%-24s %s\n", b.id.c_str(), b.unit.c_str());
@@ -377,6 +373,34 @@ json run_benchmark(const Benchmark &b, const Options &o, int ncopies, const std:
             }
         }
     };
+    // Sum of the copies' rates in interval k; incomplete if some copy finished no unit in it.
+    auto interval_total = [&](long k, bool &complete) {
+        double total = 0;
+        complete = false;
+        auto it = intervals.find(k);
+        if (it == intervals.end())
+            return total;
+        complete = true;
+        for (const auto &[work, ks] : it->second) {
+            if (ks > 0)
+                total += work / ks * b.scale;
+            else
+                complete = false;
+        }
+        return total;
+    };
+    // Progress on stderr for watching long (stress) runs; the JSON keeps only the interval statistics.
+    const long last_interval = static_cast<long>(std::ceil(o.duration / o.interval)) - 1;
+    long printed = 0, boundaries = 0;
+    auto print_intervals = [&](long upto) {
+        for (; printed <= std::min(upto, last_interval); ++printed) {
+            bool complete;
+            double total = interval_total(printed, complete);
+            std::fprintf(stderr, "classic-bench: %s x%d %8.1f s %10.6g %s%s\n", b.id.c_str(), ncopies,
+                         std::min((printed + 1) * o.interval, o.duration), total, b.unit.c_str(),
+                         complete ? "" : " (incomplete)");
+        }
+    };
     auto mean_mhz = [&](size_t i) -> json {
         return mhz_count[i] ? json(std::round(mhz_sum[i] / mhz_count[i])) : json(nullptr);
     };
@@ -396,6 +420,8 @@ json run_benchmark(const Benchmark &b, const Options &o, int ncopies, const std:
         if (started && cb_seconds() >= next_sample) {
             sample_frequency();
             next_sample += o.interval;
+            // Units ending in interval k are reported before boundary k + 2, so print with one interval of lag.
+            print_intervals(boundaries++ - 2);
         }
         if (rc <= 0)
             continue;
@@ -430,8 +456,7 @@ json run_benchmark(const Benchmark &b, const Options &o, int ncopies, const std:
             c.last_end = r.end;
             long k = static_cast<long>(std::floor((r.end - window_start) / o.interval));
             // Units start inside the window but may end just after it; they belong to the last interval.
-            const long last = static_cast<long>(std::ceil(o.duration / o.interval)) - 1;
-            k = std::clamp(k, 0L, last);
+            k = std::clamp(k, 0L, last_interval);
             auto &slot = intervals[k];
             slot.resize(ncopies, {0.0, 0.0});
             slot[r.copy].first += r.passes * b.work_per_pass;
@@ -483,28 +508,12 @@ json run_benchmark(const Benchmark &b, const Options &o, int ncopies, const std:
                             {"intervals", median_min_max(copy_rates)},
                             {"mean_mhz", o.pin && freq_per_cpu ? mean_mhz(i) : json(nullptr)}});
     }
-    json series = json::array();
+    if (errors.empty())
+        print_intervals(last_interval);
     std::vector<double> rates;
-    for (const auto &[k, slot] : intervals) {
-        json copy_rates = json::array();
-        double total = 0;
-        bool complete = true;
-        for (const auto &[work, ks] : slot) {
-            if (ks > 0) {
-                double rate = work / ks * b.scale;
-                copy_rates.push_back(round_sig(rate));
-                total += rate;
-            } else {
-                copy_rates.push_back(nullptr);
-                complete = false;
-            }
-        }
-        json entry = {{"t_s", round_us(std::min((k + 1) * o.interval, o.duration))},
-                      {"aggregate", round_sig(total)},
-                      {"complete", complete}};
-        if (o.per_copy_series)
-            entry["per_copy"] = copy_rates;
-        series.push_back(entry);
+    for (long k = 0; k <= last_interval; ++k) {
+        bool complete;
+        double total = interval_total(k, complete);
         if (complete)
             rates.push_back(total);
     }
@@ -522,7 +531,6 @@ json run_benchmark(const Benchmark &b, const Options &o, int ncopies, const std:
     result["aggregate_score"] = round_sig(aggregate);
     result["per_copy"] = per_copy;
     result["intervals"] = interval_summary;
-    result["interval_series"] = series;
     result["frequency"] = {{"cpus", freq_per_cpu ? json(freq_cpus) : json(nullptr)},
                            {"samples", freq_samples},
                            {"mean_mhz", all_count ? json(std::round(all_sum / all_count)) : json(nullptr)}};
@@ -590,7 +598,6 @@ int main(int argc, char **argv) {
                        {"warmup_s", o.warmup},
                        {"interval_s", o.interval},
                        {"unit_target_ms", o.unit_ms},
-                       {"per_copy_series", o.per_copy_series},
                        {"timer", "CLOCK_MONOTONIC"}};
     json results = json::array();
     bool all_valid = true;

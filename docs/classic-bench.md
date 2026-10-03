@@ -152,12 +152,13 @@ sequence.
 | Whetstone SP / DP | MWIPS | As computed by `whets.c` |
 | LINPACK n=100 | MFLOPS | (2/3·n³ + 2·n²) operations per solve ÷ (`dgefa` + `dgesl` time) ÷ 10⁶ |
 
-- **Intervals**: every `--interval` seconds (default 1), the runner records the
-  sum of the copies' rates over the units that ended in that interval, and the
-  median, minimum and maximum of those sums over the run, so a long run shows
-  throttling or decay. Each copy reports the median, minimum and maximum of its
-  own interval rates; `--per-copy-series` also stores every copy's rate in
-  every interval.
+- **Intervals**: the window is divided into `--interval`-second intervals
+  (default 1). An interval's rate is the sum of the copies' rates over the units
+  that ended in it. The result keeps the median, minimum and maximum of those
+  sums, and each copy keeps the same statistics of its own rates, so throttling
+  or decay shows without storing a time series. For watching a long (stress)
+  run, each interval's rate is also printed to stderr as it completes, one
+  interval behind real time.
 - **Frequency**: the OS-reported frequency is read at every interval boundary,
   but only its mean over the run is kept: per pinned copy, and over all sampled
   CPUs. Unpinned copies migrate, so every allowed CPU is sampled and no
@@ -184,20 +185,20 @@ document, not repeated in each result. The JSON document contains:
 - `host`: OS, release, machine, CPU model, logical CPU count, and frequency
   source.
 - `settings`: the list of copy counts, pinning and CPU list, duration,
-  warm-up, interval, unit target, `per_copy_series`, and timer.
+  warm-up, interval, unit target, and timer.
 - `results[]`, one entry per benchmark and copy count:
   - benchmark, `copies` (the count), family, unit, precision and variant;
   - UTC start and end times;
   - `valid`, `errors` and `aggregate_score`;
   - `per_copy[]`: CPU, passes per unit, units, program and wall seconds, check
     status, score, interval median/minimum/maximum and `mean_mhz`;
-  - `intervals` (summary) and `interval_series` (`t_s`, `aggregate`,
-    `complete`, and per-copy rates only with `--per-copy-series`);
+  - `intervals`: interval length, number of complete intervals, and the
+    median, minimum and maximum of their aggregate rates;
   - `frequency`: sampled CPUs (`null` for a system-wide source), sample count
     and `mean_mhz`.
 
-Eight benchmarks with 16 copies for 20 s each produce about 43 KB of compact
-JSON.
+Eight benchmarks with 16 copies produce about 35 KB of compact JSON, mostly the
+per-copy summaries; the size no longer depends on the duration.
 
 ## Submitting results
 

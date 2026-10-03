@@ -20,7 +20,6 @@ def result(benchmark="dhrystone-2.1", valid=True, copies=1):
         "aggregate_score": 30101.0 * copies,
         "per_copy": [],
         "intervals": {"length_s": 1.0, "complete": 10, "median": 30228.0, "minimum": 29796.0, "maximum": 30287.0},
-        "interval_series": [],
         "frequency": {"cpus": [0], "samples": 11, "mean_mhz": 4042.0},
     }
 
