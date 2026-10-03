@@ -18,38 +18,46 @@ calibration.
 
 ## Sources
 
-Original files are vendored unchanged under `bench/upstream/`; local changes are
-kept as patches under `bench/patches/` and applied in the build tree, so the
-originals stay byte-identical to the archived blobs. Each upstream directory has
-a `PROVENANCE.md` with the original URL, retrieval date, BLAKE3 of the archived
-file, the original author line and the statement that the source carries **no
-licence or copyright notice** (all predate open-source licensing conventions).
+Byte-identical originals are kept in
+[`classic-benchs/original/`](../classic-benchs/original/README.md), whose README
+records each file's URL, retrieval date, BLAKE3 and authorship. None carries a
+licence or copyright notice; all predate open-source licensing conventions. The
+project's modified versions are complete sources (not patch sets) in sibling
+directories: `classic-benchs/dhrystone-2.1/`, `dhrystone-1.1/`, `whetstone/` and
+`linpack/`.
 
-| Benchmark | Source | Archived blob | Notes |
-| --- | --- | --- | --- |
-| Dhrystone 2.1 | [netlib `dhry-c`](https://www.netlib.org/benchmark/dhry-c) (Weicker C 2.1: `dhry.h`, `dhry_1.c`, `dhry_2.c`, RATIONALE, README_C) | `2ec5910d…` (shar, unpacked without executing it) | Reference version |
-| Dhrystone 1.1 | `Dhry1.c` in Longbottom's [`benchnt.zip`](http://www.roylongbottom.org.uk/benchnt.zip) (Richardson's 1.1 via James Day's ANSI C) | `f661844b…` | No original Richardson 1.1 file is archived; this copy already changes `Proc3(NextRecord.PtrComp)` to `Proc3(&…)` and uses DOS `conio.h` |
-| Whetstone | Longbottom [`whets.c`](http://www.roylongbottom.org.uk/whets.c), the C/C++ version approved by Harold Curnow | `f031750c…` | Reports MWIPS; `DP` selects double precision |
-| LINPACK n=100 | netlib `linpackc.new` (Bonnie Toy, 1988; daxpy fix 1994) — **not yet archived**; fallback `LINPACK.C` in `benchnt.zip` | `f661844b…` (fallback) | `SP`/`DP`, `ROLL`/`UNROLL` |
+| Benchmark | Original | Notes |
+| --- | --- | --- |
+| Dhrystone 2.1 | netlib `dhry-c` (Weicker C 2.1: `dhry.h`, `dhry_1.c`, `dhry_2.c`) | Reference version; the shell archive is unpacked by parsing |
+| Dhrystone 1.1 | `Dhry1.c` from Longbottom's `benchnt.zip` (Richardson's 1.1 via James Day's ANSI C) | No original Richardson file is archived; this copy already changes `Proc3(NextRecord.PtrComp)` to `Proc3(&…)` |
+| Whetstone | Longbottom `whets.c`, the C/C++ version approved by Harold Curnow | Reports MWIPS; `DP` selects double precision |
+| LINPACK n=100 | netlib `linpackc.new` (Toy 1988, Menninger 1993, Dongarra daxpy fix 1994) | Standard C with `clock()`; `SP`/`DP`, `ROLL`/`UNROLL` |
 
-## Patch policy
+Longbottom's `LINPACK.C` in `benchnt.zip` derives from the same netlib
+translation and remains in the raw archive for comparison.
 
-Patches may only:
+## Allowed changes
 
-- replace platform timing, console I/O, prompts and result-file writing;
-- turn each program's `main` into an entry function that runs a requested number
-  of benchmark passes and returns elapsed work, leaving the measured loop body
-  untouched;
-- make file-scope state `static` and give the entry function a
-  precision-specific name, so the Whetstone source compiles twice (SP and DP)
-  into one binary and the precision is chosen **at runtime**; one invocation can
-  measure both;
-- keep each program's own result check (Dhrystone final variable values,
-  Whetstone checksums, LINPACK normalized residual). A failed check invalidates
-  the run.
+The measured code — the statements each benchmark times, its data types,
+per-pass loop counts and call structure — stays as in the original. Everything
+around it may be rewritten freely: `main`, argument handling, prompts, result
+files, platform timers and system-information code. In particular:
 
-Every patch states what it changes and why. Changes to arithmetic, loop counts
-per pass, data types or call structure are not allowed.
+- each program exposes an entry that runs a requested number of passes and
+  returns the completed work, with initialisation separated from the timed loop;
+- file-scope state may become `static`, and the Whetstone source compiles twice
+  (SP and DP) under precision-specific names, so precision is chosen **at
+  runtime** and one invocation can measure both;
+- each program's own result check stays (Dhrystone final variable values,
+  Whetstone checksums, LINPACK normalized residual); a failed check invalidates
+  the run;
+- old-style C is compiled in a C dialect that accepts it rather than rewritten
+  where rewriting could change generated code (for example K&R parameter
+  promotion in Dhrystone).
+
+The difference against `original/` is reviewed with `diff`; any change inside
+the measured code must be stated with its reason in the source and in this
+document.
 
 ## Build
 
@@ -107,7 +115,7 @@ speed and needs many repetitions for timer accuracy.
 One JSON document per invocation on stdout; progress and errors on stderr.
 Planned fields:
 
-- benchmark, unit, precision, source and patch hashes;
+- benchmark, unit, precision, hashes of the original and modified sources;
 - compiler ID/version, target, flags and build profile;
 - copies, CPU list and pinning status, duration, warm-up, interval length;
 - per-copy scores, aggregate, interval series (aggregate and per copy), median
@@ -137,8 +145,7 @@ results; user-profile and multi-copy results stay diagnostic.
 
 ## Open items
 
-- Archive netlib `linpackc.new` (21,903 bytes) and compare it with the
-  Longbottom `LINPACK.C` derivative.
+- Compare netlib `linpackc.new` with the Longbottom `LINPACK.C` derivative.
 - Choose the reference compiler flags and check them against how the historical
   calibration scores were compiled.
 - Search for an original Richardson Dhrystone 1.1 file to compare with the

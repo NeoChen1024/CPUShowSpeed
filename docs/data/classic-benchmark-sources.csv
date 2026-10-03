@@ -13,6 +13,7 @@ netlib-dhrystone-results,https://www.netlib.org/performance/html/dhrystone.data.
 netlib-dhrystone-notes,https://www.netlib.org/performance/papers/dhrystone/,Dhrystone,Netlib,aburto-contributor-compilation,method_and_provenance
 netlib-dhrystone-code,https://www.netlib.org/benchmark/dhry-c,Dhrystone,Netlib,weicker-dhrystone,source_code
 netlib-whetstone-code,https://www.netlib.org/benchmark/whetstones,Whetstone,Netlib,curnow-wichmann-whetstone,source_code
+netlib-linpack-c-code,https://www.netlib.org/benchmark/linpackc.new,LINPACK,Netlib,dongarra-linpack,source_code
 netlib-livermore-code,https://www.netlib.org/benchmark/livermore,Livermore,Netlib,mcmahon-llnl,source_code
 netlib-nas-code,https://www.netlib.org/benchmark/nas,NAS kernels,Netlib,nasa-nas-kernels,source_code
 netlib-perfect-results,https://www.netlib.org/performance/rank/perfect/,PERFECT,Netlib,perfect-club-contributors,result_index
