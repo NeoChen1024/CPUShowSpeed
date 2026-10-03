@@ -17,6 +17,7 @@
 #include <functional>
 #include <iostream>
 #include <map>
+#include <set>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -69,7 +70,7 @@ const std::vector<Benchmark> &benchmarks() {
 
 struct Options {
     std::vector<std::string> benchmarks;
-    int copies = 1;
+    std::vector<int> copies = {1}; // one run of every benchmark per entry, in order
     double duration = 10.0;
     double warmup = 2.0;
     double interval = 1.0;
@@ -145,7 +146,8 @@ std::string utc_now() {
     std::fprintf(out,
                  "Usage: classic-bench [options]\n"
                  "  -b, --benchmark ID    benchmark to run; repeatable or comma-separated; 'all' (default)\n"
-                 "  -c, --copies N        independent processes, one per CPU (default 1)\n"
+                 "  -c, --copies N[,N...] independent processes, one per CPU; a list runs every benchmark\n"
+                 "                        once per entry, e.g. 1,16 (default 1)\n"
                  "  -d, --duration S      measured seconds per benchmark (default 10)\n"
                  "  -w, --warmup S        unscored seconds before measuring (default 2)\n"
                  "  -i, --interval S      reporting interval in seconds (default 1)\n"
@@ -200,7 +202,14 @@ Options parse(int argc, char **argv) {
                     o.benchmarks.push_back(id);
                 break;
             }
-            case 'c': o.copies = std::stoi(optarg); break;
+            case 'c': {
+                o.copies.clear();
+                std::stringstream ss(optarg);
+                std::string n;
+                while (std::getline(ss, n, ','))
+                    o.copies.push_back(std::stoi(n));
+                break;
+            }
             case 'd': o.duration = std::stod(optarg); break;
             case 'w': o.warmup = std::stod(optarg); break;
             case 'i': o.interval = std::stod(optarg); break;
@@ -231,8 +240,10 @@ Options parse(int argc, char **argv) {
         std::fprintf(stderr, "classic-bench: %s\n", msg);
         std::exit(2);
     };
-    if (o.copies < 1)
-        bad("--copies must be at least 1");
+    if (o.copies.empty() || *std::min_element(o.copies.begin(), o.copies.end()) < 1)
+        bad("--copies must list counts of at least 1");
+    if (std::set<int>(o.copies.begin(), o.copies.end()).size() != o.copies.size())
+        bad("--copies must not repeat a count");
     if (!(o.duration > 0) || !(o.warmup >= 0) || !(o.interval >= 0.1) || !(o.unit_ms >= 1))
         bad("need --duration > 0, --warmup >= 0, --interval >= 0.1 and --unit-ms >= 1");
     if (o.unit_ms * 2 > o.interval * 1000)
@@ -305,16 +316,16 @@ struct CopyStats {
     bool check_failed = false;
 };
 
-json run_benchmark(const Benchmark &b, const Options &o, const std::vector<int> &cpus) {
-    std::fprintf(stderr, "classic-bench: %s, %d cop%s, %.0f s\n", b.id.c_str(), o.copies, o.copies == 1 ? "y" : "ies",
-                 o.duration);
+// Runs `b` as `ncopies` copies; pinned copies use the first `ncopies` entries of `cpus`.
+json run_benchmark(const Benchmark &b, const Options &o, int ncopies, const std::vector<int> &cpus) {
+    std::fprintf(stderr, "classic-bench: %s, %d cop%s, %.0f s\n", b.id.c_str(), ncopies, ncopies == 1 ? "y" : "ies", o.duration);
     int go[2], report[2];
     if (pipe(go) != 0 || pipe(report) != 0) {
         std::perror("pipe");
         std::exit(1);
     }
     std::vector<pid_t> pids;
-    for (int i = 0; i < o.copies; ++i) {
+    for (int i = 0; i < ncopies; ++i) {
         std::fflush(nullptr);
         pid_t pid = fork();
         if (pid < 0) {
@@ -331,8 +342,8 @@ json run_benchmark(const Benchmark &b, const Options &o, const std::vector<int> 
     close(go[0]);
     close(report[1]);
 
-    std::vector<CopyStats> copies(o.copies);
-    for (int i = 0; i < o.copies; ++i)
+    std::vector<CopyStats> copies(ncopies);
+    for (int i = 0; i < ncopies; ++i)
         copies[i].cpu = o.pin ? cpus[i] : -1;
     std::vector<std::string> errors;
     // interval index -> per copy (work, kernel seconds)
@@ -346,7 +357,7 @@ json run_benchmark(const Benchmark &b, const Options &o, const std::vector<int> 
     // Frequency is sampled at every interval boundary but only its mean over the run is kept. Pinned copies sample
     // their own CPUs; unpinned copies migrate, so every allowed CPU is sampled. A system-wide source (per_cpu false)
     // is sampled once per boundary and reported without a CPU list.
-    std::vector<int> freq_cpus = o.pin ? cpus : cb::allowed_cpus();
+    std::vector<int> freq_cpus = o.pin ? std::vector<int>(cpus.begin(), cpus.begin() + ncopies) : cb::allowed_cpus();
     std::vector<double> mhz_sum(freq_cpus.size(), 0.0);
     std::vector<long> mhz_count(freq_cpus.size(), 0);
     bool freq_per_cpu = true;
@@ -401,7 +412,7 @@ json run_benchmark(const Benchmark &b, const Options &o, const std::vector<int> 
             errors.push_back("copy " + std::to_string(r.copy) + ": " + r.message);
         } else if (r.kind == kReady) {
             c.passes = r.passes;
-            if (++ready == o.copies && errors.empty()) {
+            if (++ready == ncopies && errors.empty()) {
                 window_start = cb_seconds() + o.warmup;
                 next_sample = window_start;
                 started = true;
@@ -422,7 +433,7 @@ json run_benchmark(const Benchmark &b, const Options &o, const std::vector<int> 
             const long last = static_cast<long>(std::ceil(o.duration / o.interval)) - 1;
             k = std::clamp(k, 0L, last);
             auto &slot = intervals[k];
-            slot.resize(o.copies, {0.0, 0.0});
+            slot.resize(ncopies, {0.0, 0.0});
             slot[r.copy].first += r.passes * b.work_per_pass;
             slot[r.copy].second += r.kernel_seconds;
         }
@@ -442,6 +453,7 @@ json run_benchmark(const Benchmark &b, const Options &o, const std::vector<int> 
     }
 
     json result = {{"benchmark", b.id},
+                   {"copies", ncopies},
                    {"family", b.family},
                    {"unit", b.unit},
                    {"precision", b.precision.empty() ? json(nullptr) : json(b.precision)},
@@ -491,7 +503,7 @@ json run_benchmark(const Benchmark &b, const Options &o, const std::vector<int> 
                       {"aggregate", round_sig(total)},
                       {"complete", complete}};
         if (o.per_copy_series)
-            entry["copies"] = copy_rates;
+            entry["per_copy"] = copy_rates;
         series.push_back(entry);
         if (complete)
             rates.push_back(total);
@@ -508,7 +520,7 @@ json run_benchmark(const Benchmark &b, const Options &o, const std::vector<int> 
     result["valid"] = valid;
     result["errors"] = errors;
     result["aggregate_score"] = round_sig(aggregate);
-    result["copies"] = per_copy;
+    result["per_copy"] = per_copy;
     result["intervals"] = interval_summary;
     result["interval_series"] = series;
     result["frequency"] = {{"cpus", freq_per_cpu ? json(freq_cpus) : json(nullptr)},
@@ -540,12 +552,13 @@ int main(int argc, char **argv) {
         } else {
             std::vector<int> allowed = cb::allowed_cpus();
             cpus = o.cpus.empty() ? allowed : o.cpus;
-            if (static_cast<int>(cpus.size()) < o.copies) {
+            const int most = *std::max_element(o.copies.begin(), o.copies.end());
+            if (static_cast<int>(cpus.size()) < most) {
                 std::fprintf(stderr, "classic-bench: %d copies need %d CPUs, %zu available (use --cpus or --no-pin)\n",
-                             o.copies, o.copies, cpus.size());
+                             most, most, cpus.size());
                 return 2;
             }
-            cpus.resize(o.copies);
+            cpus.resize(most);
         }
     }
 
@@ -581,11 +594,13 @@ int main(int argc, char **argv) {
                        {"timer", "CLOCK_MONOTONIC"}};
     json results = json::array();
     bool all_valid = true;
-    for (const Benchmark *b : selected) {
-        json r = run_benchmark(*b, o, cpus);
-        all_valid = all_valid && r["valid"].get<bool>();
-        results.push_back(std::move(r));
-    }
+    // Every benchmark at the first count, then every benchmark at the next.
+    for (int n : o.copies)
+        for (const Benchmark *b : selected) {
+            json r = run_benchmark(*b, o, n, cpus);
+            all_valid = all_valid && r["valid"].get<bool>();
+            results.push_back(std::move(r));
+        }
     doc["results"] = results;
     std::cout << doc.dump(2) << std::endl;
     return all_valid ? 0 : 1;

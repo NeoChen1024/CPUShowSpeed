@@ -37,13 +37,17 @@ def warnings_for(doc: dict) -> list[str]:
     notes = []
     if build["profile"] != "reference":
         notes.append(f"Custom build profile (`{build['kernel_c_flags']}`): diagnostic only, not a reference result.")
-    if settings["copies"] > 1:
-        notes.append(f"{settings['copies']} copies: a throughput result, not comparable with SPEC speed.")
+    multi = [n for n in settings["copies"] if n > 1]
+    if multi:
+        counts = ", ".join(map(str, multi))
+        notes.append(f"Results with copies = {counts} are throughput results, not comparable with SPEC speed.")
     if not settings["pinned"]:
         notes.append("Copies were not pinned to CPUs.")
     for r in doc["results"]:
         if not r["valid"]:
-            notes.append(f"`{r['benchmark']}` is invalid: {'; '.join(r['errors']) or 'no error message'}.")
+            notes.append(
+                f"`{r['benchmark']}` with copies = {r['copies']} is invalid: {'; '.join(r['errors']) or 'no error message'}."
+            )
     return notes
 
 
@@ -52,7 +56,7 @@ def issue_title(doc: dict) -> str:
     build = doc["tool"]["build"]
     return (
         f"[classic-bench] {host['cpu_model'] or host['machine']}, {build['c_compiler']} {build['c_compiler_version']}, "
-        f"copies={doc['settings']['copies']}"
+        f"copies={','.join(map(str, doc['settings']['copies']))}"
     )
 
 
@@ -82,19 +86,20 @@ def render_issue(doc: dict, json_name: str, limit: int = ISSUE_BODY_LIMIT) -> tu
         f"| C compiler | {build['c_compiler']} {build['c_compiler_version']} |",
         f"| Kernel flags | `{build['kernel_c_flags']}` ({build['profile']} profile, {build['kernel_c_dialect']}) |",
         f"| Runner | {doc['tool']['name']} {doc['tool']['version']} |",
-        f"| Copies | {settings['copies']} ({'pinned to ' + ','.join(map(str, settings['cpus'])) if settings['pinned'] else 'unpinned'}) |",
+        f"| Copies | {', '.join(map(str, settings['copies']))} "
+        f"({'pinned to the first N of CPUs ' + ','.join(map(str, settings['cpus'])) if settings['pinned'] else 'unpinned'}) |",
         f"| Duration / warm-up / interval | {settings['duration_s']:g} s / {settings['warmup_s']:g} s / {settings['interval_s']:g} s |",
         f"| Started (UTC) | {doc['results'][0]['start_utc'] if doc['results'] else '—'} |",
         "",
         "## Results",
         "",
-        "| Benchmark | Unit | Score | Interval median | Interval min | Interval max | Mean MHz | Check |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |",
+        "| Benchmark | Copies | Unit | Score | Interval median | Interval min | Interval max | Mean MHz | Check |",
+        "| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for r in doc["results"]:
         iv = r["intervals"]
         lines.append(
-            f"| `{r['benchmark']}` | {r['unit']} | {fmt(r['aggregate_score'])} | {fmt(iv.get('median'))} | "
+            f"| `{r['benchmark']}` | {r['copies']} | {r['unit']} | {fmt(r['aggregate_score'])} | {fmt(iv.get('median'))} | "
             f"{fmt(iv.get('minimum'))} | {fmt(iv.get('maximum'))} | {fmt(r['frequency']['mean_mhz'])} | "
             f"{'passed' if r['valid'] else '**failed**'} |"
         )

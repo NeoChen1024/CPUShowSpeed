@@ -120,7 +120,7 @@ machine (Ryzen 7 5700X3D) they are large:
 ## Running
 
 ```sh
-classic-benchs/build/classic-bench --benchmark dhrystone-2.1 --copies 8 --duration 60
+classic-benchs/build/classic-bench --benchmark dhrystone-2.1 --copies 1,16 --duration 60
 ```
 
 `--help` owns the options, and `--list` prints the eight benchmark IDs:
@@ -130,10 +130,15 @@ sequence.
 
 - **Copies**: the runner forks N independent processes. Each is pinned to one
   logical CPU unless `--no-pin` is given or the platform cannot pin. The CPUs
-  are either the first N the process may use or those given with `--cpus` (for
-  example `0,2,4-7`). Copies share no benchmark state. Each calibrates a pass
-  count whose wall time is about `--unit-ms` (default 20 ms), then all copies
-  wait at a common start barrier.
+  are either the first N the process may use or the first N of those given with
+  `--cpus` (for example `0,2,4-7`). Copies share no benchmark state. Each
+  calibrates a pass count whose wall time is about `--unit-ms` (default 20 ms),
+  then all copies wait at a common start barrier.
+- **Several copy counts**: `--copies` takes a list such as `1,16`. Every
+  selected benchmark runs at the first count, then every benchmark at the next,
+  so one invocation gives both the `copies=1` speed results and a throughput
+  run. Counts may not repeat, and pinning needs as many CPUs as the largest
+  count.
 - **Duration**: after `--warmup` seconds (default 2, unscored), each copy runs
   units that start within the `--duration` window (default 10 s). The last unit
   may end slightly after the window.
@@ -178,13 +183,13 @@ document, not repeated in each result. The JSON document contains:
   source hashes.
 - `host`: OS, release, machine, CPU model, logical CPU count, and frequency
   source.
-- `settings`: copies, pinning and CPU list, duration, warm-up, interval, unit
-  target, `per_copy_series`, and timer.
-- `results[]`, one entry per benchmark:
-  - benchmark, family, unit, precision and variant;
+- `settings`: the list of copy counts, pinning and CPU list, duration,
+  warm-up, interval, unit target, `per_copy_series`, and timer.
+- `results[]`, one entry per benchmark and copy count:
+  - benchmark, `copies` (the count), family, unit, precision and variant;
   - UTC start and end times;
   - `valid`, `errors` and `aggregate_score`;
-  - `copies[]`: CPU, passes per unit, units, program and wall seconds, check
+  - `per_copy[]`: CPU, passes per unit, units, program and wall seconds, check
     status, score, interval median/minimum/maximum and `mean_mhz`;
   - `intervals` (summary) and `interval_series` (`t_s`, `aggregate`,
     `complete`, and per-copy rates only with `--per-copy-series`);
@@ -198,7 +203,7 @@ JSON.
 
 ```sh
 uv run cpushowspeed bench build
-uv run cpushowspeed bench run -- --copies 1 --duration 60
+uv run cpushowspeed bench run -- --copies 1,16 --duration 60
 uv run cpushowspeed bench report data/derived/bench/<UTC time>.json > issue.md
 ```
 
@@ -238,6 +243,9 @@ host, a KVM guest, has no `dev.cpu.N.freq`.
 - All eight benchmarks pass their result checks:
   - with GCC and Clang reference builds, for one copy;
   - with the GCC reference build, for eight pinned and sixteen unpinned copies.
+- `--copies 1,16` runs both counts in order on Linux and FreeBSD, and
+  `--copies 4,2 --cpus 3,5,7,9` pins to CPUs 3, 5, 7, 9 and then 3, 5.
+  Repeated, zero, malformed or too-large counts exit with status 2.
 - On FreeBSD 15.1-RELEASE-p3 amd64, a KVM guest with a Xeon Platinum 8275CL
   and 16 logical CPUs (2026-10-03):
   - the CMake build succeeds with Clang 19.1.7 and gmake, with no warnings;

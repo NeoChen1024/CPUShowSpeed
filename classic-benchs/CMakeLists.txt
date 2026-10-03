@@ -100,7 +100,7 @@ add_executable(classic-bench harness/main.cpp harness/platform.cpp
   $<TARGET_OBJECTS:cb_time>)
 target_include_directories(classic-bench PRIVATE common harness "${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(classic-bench SYSTEM PRIVATE "${CB_JSON_DIR}")
-target_compile_options(classic-bench PRIVATE -O2 -Wall -Wextra)
+target_compile_options(classic-bench PRIVATE -O2 -Wall -Wextra -Wshadow)
 find_library(MATH_LIBRARY m)
 if(MATH_LIBRARY)
   target_link_libraries(classic-bench PRIVATE ${MATH_LIBRARY})
