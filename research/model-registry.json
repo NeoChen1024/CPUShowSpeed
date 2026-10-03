@@ -1855,6 +1855,13 @@
       "purpose": "Classic benchmark source collection"
     },
     {
+      "path": "docs/classic-bench.md",
+      "title": "Classical benchmark runner (planned design)",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Planned runner for Dhrystone, Whetstone and LINPACK n=100 on current hardware: sources, patch policy, copies, duration and output"
+    },
+    {
       "path": "docs/data-contract.md",
       "title": "Data contract",
       "role": "guide",

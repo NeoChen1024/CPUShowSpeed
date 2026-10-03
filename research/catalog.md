@@ -200,6 +200,7 @@ Role distinguishes current analysis from evidence, diagnostics and guides.
 | [Documentation index](../docs/README.md) | guide | current |
 | [Research roadmap](../docs/TODO.md) | guide | current |
 | [Classic benchmark source collection](../docs/classic-collection.md) | guide | current |
+| [Classical benchmark runner (planned design)](../docs/classic-bench.md) | guide | current |
 | [Data contract](../docs/data-contract.md) | guide | current |
 | [Data schema design](../docs/data-schema.md) | guide | current |
 | [Historical document IR (selected design)](../docs/docir.md) | guide | current |
