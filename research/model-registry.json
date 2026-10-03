@@ -1326,7 +1326,7 @@
       ],
       "target_metric": "speed-vaxen",
       "relationship": "joint-fit",
-      "formula": "family/node/model-balanced log WLS with eliminated latent unanchored targets; ln y = a_b + beta_g*ln x_b, one exponent per group (Dhrystone versions shared, each Whetstone precision alone, LINPACK), a_b = -beta_g*ln(VAX-11/780 median score)",
+      "formula": "family/node/model-balanced log WLS with eliminated latent unanchored targets; ln y = a_b + beta_g*ln x_b, one exponent per group (Dhrystone versions shared, each Whetstone precision alone, LINPACK), a_b = -beta_g*ln(VAX-11/780 median score); exponents from anchored and multi-family nodes, then free intercepts from all nodes",
       "variants": [
         "peak; reported_clock/linear_clock; spec92_only/with_spec89"
       ],

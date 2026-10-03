@@ -74,6 +74,34 @@ class NetworkTests(unittest.TestCase):
         self.assertAlmostEqual(calib["Whetstone:SP"][1], 0.9)
         self.assertAlmostEqual(calib["Whetstone:DP"][1], 0.6)
 
+    def test_one_family_unanchored_nodes_do_not_set_exponents(self):
+        anchor = {"Whetstone:SP": 0.0, "Whetstone:DP": 0.0}
+        rows = [node(k, {"Whetstone:SP": x}, x**0.9) for k, x in [("a", 3), ("b", 9)]]
+        rows += [node(k, {"Whetstone:DP": x}, x**0.6) for k, x in [("c", 3), ("d", 9)]]
+        rows.append(node("u", {"Whetstone:SP": 2, "Whetstone:DP": 50}))
+        calib, _ = train(rows, {}, False, anchor)
+        self.assertAlmostEqual(calib["Whetstone:SP"][1], 0.9)
+        self.assertAlmostEqual(calib["Whetstone:DP"][1], 0.6)
+
+    def test_one_family_unanchored_nodes_still_set_free_intercepts(self):
+        # The mix exponent comes from the cross-family nodes alone; both free intercepts are
+        # re-solved with the mix-only node included.
+        anchor = {"Dhrystone:1": 0.0}
+        rows = [
+            node("a", {"Dhrystone:1": 5}, 5),
+            node("b", {"Dhrystone:1": 10}, 10),
+            node("c", {"Dhrystone:1": 6, "InstructionMix:G": 3, "InstructionMix:A": 1}),
+            node("d", {"Dhrystone:1": 12, "InstructionMix:G": 6, "InstructionMix:A": 2}),
+            node("e", {"InstructionMix:G": 3, "InstructionMix:A": 3}),
+        ]
+        without, _ = train(rows[:-1], {}, False, anchor)
+        self.assertAlmostEqual(without["InstructionMix:G"][1], 1)
+        self.assertAlmostEqual(math.exp(without["InstructionMix:G"][0]), 2)
+        calib, _ = train(rows, {}, False, anchor)
+        for m in ("InstructionMix:G", "InstructionMix:A"):
+            self.assertAlmostEqual(calib[m][1], without[m][1])
+            self.assertNotAlmostEqual(calib[m][0], without[m][0])
+
     def test_unanchored_overlap_identifies_a_free_intercept(self):
         # Dhrystone is anchored at the 780 (score 1, exponent 1 from a and b); LINPACK has no
         # 780 rating and no target pair, so its free intercept comes from unanchored overlap

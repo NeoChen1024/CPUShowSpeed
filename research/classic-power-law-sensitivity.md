@@ -136,7 +136,8 @@ rows and every CI are in the
 
 Selected 2026-10-03 (user decisions): the VAX-11/780 anchor, and the year
 confounding left as a limitation. Exponents were first one per benchmark family
-(v4); Whetstone native, SP and DP then got their own exponents (v5), because one
-shared exponent worsened Whetstone holdouts. The network and mix network
+(v4); Whetstone native, SP and DP then got their own exponents (v5), and one-family
+unanchored nodes stopped setting exponents (v6), because both had pulled the
+Whetstone exponents down and worsened Whetstone holdouts. The network and mix network
 implement it. The composite and SPEC89 fits still use the
 proportional form; extending the power law to them is the next planned step.

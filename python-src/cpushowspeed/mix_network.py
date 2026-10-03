@@ -34,7 +34,7 @@ from cpushowspeed.mix_bridge import MIX_SCOPE, _rows, pending_links
 from cpushowspeed.observation_store import connect, inputs_digest
 from cpushowspeed.research_io import code_hashes, write_csv
 
-METHOD_VERSION = "instruction-mix-joint-network-v5-grouped-power-law"
+METHOD_VERSION = "instruction-mix-joint-network-v6-two-stage-power-law"
 MIX_METRICS = ("InstructionMix:Gibson_KIPS", "InstructionMix:ADP_KIPS")
 LINKS = ("resolved_system", "plus_pending_links")
 TIMELINE_RUN = dict(links="plus_pending_links", scenario="linear_clock", cohort="with_spec89")

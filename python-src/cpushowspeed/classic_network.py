@@ -483,7 +483,7 @@ def network_fit(database, output, research_dir, draws, seed):
     write_csv(research_dir / "network-summary.csv", summary)
     write_csv(research_dir / "network-frequency-checks.csv", clock_checks)
     audit = dict(
-        method="sparse-family-balanced-log-network-v5-grouped-power-law-vax780",
+        method="sparse-family-balanced-log-network-v6-two-stage-power-law-vax780",
         bootstrap=draws,
         seed=seed,
         runs=runs,
@@ -493,7 +493,7 @@ def network_fit(database, output, research_dir, draws, seed):
         clock_assumption="linear_clock scales Dhrystone/Whetstone to the target clock only when both results resolve to one processor; unknown clocks unscaled; LINPACK never scaled",
         model="log speed-VAXen = a_m + b_g log score_m; one exponent b_g per group (Dhrystone versions share one, each Whetstone precision has its own, LINPACK one); a_m = -b_g log c_m where c_m is the VAX-11/780's median measured score",
         vax780_anchor=anchor_rows,
-        fit="family/variant/node/model balanced log least squares; unanchored node values eliminated analytically",
+        fit="family/variant/node/model balanced log least squares; unanchored node values eliminated analytically; exponents from anchored and multi-family unanchored nodes, then free intercepts from all nodes with exponents fixed",
         uncertainty="model-cluster bootstrap with the 780 anchor redrawn per draw from its run-sample standard error",
         free_intercept="LOSO comparison only: the same exponent groups with free per-metric intercepts",
         qualification="hardware/clock/FPU/cache/software equivalence unverified across sources; intervals omit model discrepancy and clock-scaling exponent uncertainty; era drift of score versus SPEC is not modeled (see the power-law sensitivity report)",

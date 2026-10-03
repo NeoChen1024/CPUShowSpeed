@@ -237,17 +237,18 @@ hardware understate the oldest machines. The full-population Node test passed.
 
 The classical and mix routes now use
 [power laws](classic-network-fitting.md#family-power-law-through-the-vax-11780-2026-10-03),
-with [separate Whetstone precision exponents](classic-network-fitting.md#separate-whetstone-precision-exponents-2026-10-03).
+with [separate Whetstone precision exponents](classic-network-fitting.md#separate-whetstone-precision-exponents-2026-10-03)
+and a [two-stage fit](classic-network-fitting.md#two-stage-fit-2026-10-03).
 Record counts are unchanged (102,034). The offline calculator and the
 timeline rows evaluate `intercept + exponent × ln(score)` with the same joint
 draws, and the lineage table shows the exponents.
 
-- **VAX-11/780.** Its 17 classical rows now estimate 0.56–1.17 speed-VAXen
+- **VAX-11/780.** Its 17 classical rows now estimate 0.49–1.17 speed-VAXen
   (median 1.0), not 0.34–0.67. The spread is that of the 780's own source runs,
   for example Whetstone native 0.494 against 1.02 MWIPS.
 - **Classical.** Slow machines rise and fast ones fall: a Dhrystone 1.1 row gains
   74% at 1 DMIPS and 27% at 10 DMIPS, and loses 7% at 100 DMIPS.
-- **Mix.** Every mix row rises, by 50–177% (Gibson) and 86% or more (ADP); see the
+- **Mix.** Every mix row rises, by 79–98% (Gibson) and 85–103% (ADP); see the
   [mix network](instruction-mix-network.md#changes).
 
 ## Checked population (2026-09-28)
