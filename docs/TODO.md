@@ -3,8 +3,6 @@
 Unchecked items are not implemented or verified. Move stable findings to their
 owning document as work lands; remove superseded items.
 
-- [ ] Review CPU92→CPU95 rate pairs against full disclosures, including copy
-      counts, OS, compiler, tuning and architecture-specific held-out errors.
 - [ ] Review hardware-near CPU95→CPU2026 rate pairs against detailed disclosures;
       especially check copy counts, software, memory and enabled hardware.
 - [ ] Refit the CPU2026 edge as its published integer-rate cohort grows, and

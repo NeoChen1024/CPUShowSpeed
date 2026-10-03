@@ -76,5 +76,6 @@ Before/after coefficient comparison:
 
     uv run cpushowspeed inputs compare-factors
 
-The one-time migration review that compared factors before and after
+It writes `factor-changes.csv` and `model-review.csv` under
+`data/derived/input-unification/`, outside Git. The one-time migration review that compared factors before and after
 unification is in Git history.

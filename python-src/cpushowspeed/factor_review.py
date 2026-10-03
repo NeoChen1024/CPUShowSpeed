@@ -122,7 +122,7 @@ def compare(before, output):
 @click.option(
     "--output",
     type=click.Path(path_type=Path),
-    default=Path("research/data/input-unification/factor-changes.csv"),
+    default=Path("data/derived/input-unification/factor-changes.csv"),
     show_default=True,
 )
 def compare_factors(before, output):
