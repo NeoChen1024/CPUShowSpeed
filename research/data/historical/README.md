@@ -41,7 +41,6 @@ The reviewed date tables that used to live here (`cpu-release-proxies.csv`,
 `hardware-date-evidence.csv`, `timeline-year-overrides.csv`,
 `submission-date-reviews.csv`, `year-document-reviews.csv` and the CPU SKU
 catalogue `cpu-sku-*`) were converted into the curated `date_event`, `review`,
-`processor_sku` and `source` tables in schema steps 1–4 and moved unchanged to
-[`../archive/legacy-dates/`](../archive/legacy-dates/README.md) in step 5d
-(2026-10-02). Dates are now edited in `data/curated/` and selected by the built
+`processor_sku` and `source` tables in schema steps 1–4 and retired in step 5d
+(2026-10-02); the original files remain in Git history. Dates are now edited in `data/curated/` and selected by the built
 `result_chronology` view; see the [data schema](../../../docs/data-schema.md).

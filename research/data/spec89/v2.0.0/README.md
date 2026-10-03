@@ -32,7 +32,7 @@ scores from calculated QA fields.
 `SPECint89`. Several rows reprint the same system and score vector. Retain all
 source observations; account for source dependence when estimating a bridge.
 The pairing alone does not prove identical hardware and software run settings.
-See [the research findings](../../../spec-early-archives.md) and the project's
+See [the research findings](../../../spec-sources.md#early-spec-result-archives) and the project's
 [bridge method](../../../../docs/methods.md) before fitting a factor.
 
 ## Rebuild and verification

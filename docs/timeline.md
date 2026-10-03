@@ -8,7 +8,7 @@ Everything below describes current behavior.
 
 This document owns the combined view's data contract, date handling and
 interaction. It consumes saved calibration; it does not fit a model.
-[Research results](../research/unified-vaxen-timeline.md) own the checked
+[Research results](../research/README.md#timeline-export) own the checked
 population and numerical comparisons.
 
 ## Reproduce
@@ -40,11 +40,11 @@ The population is:
 
 | Route | Quantity | Rows | Value |
 | --- | --- | ---: | --- |
-| SPEC92–SPEC2026 integer rate | rate | one per result and base/peak mode | Reported score × saved `same_os` [rate-chain](../research/spec95-spec2026-rate-fitting.md) factor, with its pointwise CI95 |
-| SPEC92–SPEC2026 integer speed | speed | one per result and base/peak mode | Reported score × saved [speed-chain](../research/spec-speed-chain.md) factor (CPU92 SPECint92 = 1 by definition), with its pointwise CI95 |
+| SPEC92–SPEC2026 integer rate | rate | one per result and base/peak mode | Reported score × saved `same_os` [rate-chain](../research/spec-chains.md) factor, with its pointwise CI95 |
+| SPEC92–SPEC2026 integer speed | speed | one per result and base/peak mode | Reported score × saved [speed-chain](../research/spec-chains.md#speed-chain) factor (CPU92 SPECint92 = 1 by definition), with its pointwise CI95 |
 | Classical | speed | one per one-processor (or unknown-count) classical result | Saved classical network prediction (`linear_clock / with_spec89`) |
-| SPEC89 | speed | one per SPEC89 result in the saved estimates | Saved one-edge [SPEC89 → SPECint92 bridge](../research/spec89-bridge.md) estimate |
-| Gibson / ADP mix | speed | one per positive rating | Saved [mix network](../research/instruction-mix-network.md) estimate (`plus_pending_links / linear_clock / with_spec89`) |
+| SPEC89 | speed | one per SPEC89 result in the saved estimates | Saved one-edge [SPEC89 → SPECint92 bridge](../research/spec89.md) estimate |
+| Gibson / ADP mix | speed | one per positive rating | Saved [mix network](../research/instruction-mix.md#mix-network) estimate (`plus_pending_links / linear_clock / with_spec89`) |
 | Combined mixes | speed | one per source table row | Equal-log-weight combination of the row's available ratings, CI95 from aligned draws |
 
 Every record carries `quantity` (`rate` or `speed`). The SPEC and historical
@@ -187,8 +187,7 @@ On 2026-10-03: 74,475 rows were dated by CPU, 26,219 by hardware, 17 by a
 reviewed fallback and 739 were unknown. Unknown rows are concentrated in
 classical sources without model-year evidence (Netlib LINPACK alone has 573
 of its 815 rows unknown) and in SPEC89; they stay in the list but are not plotted.
-The former per-pass date tables are archived in
-[`research/data/archive/legacy-dates/`](../research/data/archive/legacy-dates/README.md).
+The former per-pass date tables were removed and remain in Git history.
 
 ## Measurement scope and uncertainty
 
@@ -494,7 +493,7 @@ Cached disclosures provide mode ranges; runtime_resources retains benchmark-leve
 values and source hashes. Missing details are labeled explicitly. Raw cache/memory/compiler/
 pointer/parallel context is expandable. CPU92 uses a legacy CPU-count label.
 Topology conflicts are flagged without changing numbers. See the
-[source audit](../research/spec-resource-field-audit.md).
+[source audit](../research/spec-sources.md#source-fields-and-execution-resources).
 
 ### Shared inputs
 

@@ -45,7 +45,7 @@ rebuild inputs, and a 25-table CSV export. Its package consistency checks pass,
 but source-specific verification flags remain in every result. The larger
 user-provided input bundle stays unchanged in the ignored local `inventories/`
 area; the generated workbook, redundant JSON export, and broad search index
-are not versioned. See the [checked package audit](../research/spec89-curated-snapshot.md)
+are not versioned. See the [checked package audit](../research/spec89.md#curated-spec89-snapshot)
 for CPU89–CPU92 overlap counts and limitations.
 
 The [Helman 1991 supplement](../research/data/spec89/helman-1991/README.md)
@@ -117,7 +117,7 @@ Priority order:
    already present in the local mirror. Their inventory entries are `ok`. The
    [next candidate OCR batch](../inventories/early-benchmark-ocr.txt) lists these
    two files (125 pages), now fully processed through OCR, captioning and DocIR
-   backfill on 2026-09-26. See the [first evidence pass](../research/early-benchmark-evidence.md)
+   backfill on 2026-09-26. See the [first evidence pass](../research/historical-sources.md#early-timing-evidence)
    for checked claims and structural-table exceptions. Trace citations backward
    to original definitions.
 6. Build a machine/configuration-by-benchmark coverage table. Select calibration
@@ -135,7 +135,7 @@ calibration targets.
 
 The 1990 Digital RISC summary was acquired and transcribed on 2026-10-03, and the
 MIPS Performance Briefs were found in the UTZOO Usenet archive (comp.arch,
-1986–1988). See [vendor performance reports](../research/vendor-performance-reports.md).
+1986–1988). See [vendor performance reports](../research/historical-sources.md#vendor-performance-reports).
 
 For each acquired file, retain retrieval date, original URL, immutable local
 path and hash; distinguish archive copies of one report from independent
@@ -145,7 +145,7 @@ with snapshot/message identity retained. Direct HTTP access to Longbottom's
 site succeeded on 2026-09-26 after an earlier HTTPS failure. The
 [classic collector](classic-collection.md) now preserves its Historic/Classic
 pages and linked programs alongside other origins; see the
-[acquisition audit](../research/classic-benchmark-collection.md).
+[acquisition audit](../research/historical-sources.md#acquired-classical-sources).
 
 Before importing numbers, define result records with the original metric and
 unit, mix/version, source locator, machine/configuration, timing assumptions,
@@ -167,16 +167,16 @@ archive.org mboxes miss this period: the comp.arch mbox there covers only
 Located on 2026-10-03; transcribed only where noted:
 
 - MIPS Performance Briefs, 1986-10 to 1988-10 (comp.arch, net.arch). Issue 3.5 is
-  transcribed; see [vendor performance reports](../research/vendor-performance-reports.md).
+  transcribed; see [vendor performance reports](../research/historical-sources.md#vendor-performance-reports).
 - Rick Richardson's Dhrystone result lists, 1985-11 to 1989-04 (net.arch,
   comp.arch). The final Dhrystone 1.1 list (1987-09-20) and Dhrystone 2
   database (1989-04-30) are parsed; see
-  [Usenet result lists](../research/usenet-result-lists.md).
+  [Usenet result lists](../research/historical-sources.md#usenet-result-lists).
 - John McCalpin's Livermore Fortran Kernel output, the SSBA run on HP 9000/720
   and SPARCstation 2, and Nefzger's SPARC LINPACK comparison are transcribed;
   Aburto's Nsieve results and two workstation benchmark collections (1985-09,
   1990-07) were examined and not used. See
-  [Usenet result lists](../research/usenet-result-lists.md#smaller-result-posts-19901991).
+  [Usenet result lists](../research/historical-sources.md#smaller-result-posts-19901991).
 - SSBA results for about 110 systems in Tribunix (AFUU newsletter, issues
   27–35, 1989–1990) and IX Magazine (1990), listed by Nhuan Doduc in 1991. Not
   acquired.
@@ -184,7 +184,7 @@ Located on 2026-10-03; transcribed only where noted:
   means not already in the SPEC89 package are transcribed from four posts (Mashey's
   YMMV 2.0 extract, Control Data's 4680/6280 runs, Mashey's RC3360 figure and
   a Harris Night Hawk result); see
-  [Usenet result lists](../research/usenet-result-lists.md#printed-spec89-means-19901991).
+  [Usenet result lists](../research/historical-sources.md#printed-spec89-means-19901991).
   The other posts repeat package values or give per-benchmark ratios only.
 
 ## Local PDF mirror and discovery inventory

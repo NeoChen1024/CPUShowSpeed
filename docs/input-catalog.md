@@ -76,5 +76,5 @@ Before/after coefficient comparison:
 
     uv run cpushowspeed inputs compare-factors
 
-[Migration and fitting review](../research/input-unification-fitting-review.md)
-owns results, per-model decisions and the coefficient change table.
+The one-time migration review that compared factors before and after
+unification is in Git history.

@@ -9,7 +9,7 @@
 Longbottom inventory. It is not yet consumed by fitting. Preserve reported
 units, variant names, processor counts and reference identities; blank dates
 and processor counts mean unknown. `fit_eligible=false` means equivalence has
-not been approved. See the [mix study](../../instruction-mix-bridge.md).
+not been approved. See the [mix study](../../instruction-mix.md).
 
 `mix-study/sc3-observations.csv` records twelve page-verified scores from the
 1991 SC-3 paper. Gibson operations/s, Dhrystones/s and millions of Whetstones/s
@@ -26,16 +26,16 @@ variant/configuration review; no fitted coefficients were changed.
 `cpushowspeed classic overlap-spec` (copies of `source-coverage.csv` and
 `audit.json`). Full records remain in the ignored derived output directory and
 are loaded by `data extract`. Pairing is by resolved system in the fitters; the
-former name-based `overlap-summary.csv`/`overlap-models.csv` are archived in
-[`../archive/name-pairing/`](../archive/name-pairing/README.md).
-See the [overlap report](../../classic-spec-overlap.md) for coverage limits.
+former name-based `overlap-summary.csv`/`overlap-models.csv` were removed and
+remain in Git history.
+See the [overlap report](../../classical-fits.md#hardware-overlap) for coverage limits.
 
 ## Primary direct rate composite experiment
 
 `rate-composite-summary.csv`, `rate-composite-target-coverage.csv` and
 `rate-composite-audit.json` preserve the direct SPEC92 integer-rate experiment.
 Factors produce VAXen; base/peak and pair/triple variants remain separate.
-See [method and validation](../../classic-composite-fitting.md).
+See [method and validation](../../classical-fits.md#direct-composites).
 
 ## SPEC89 to rate bridge experiment
 
@@ -44,7 +44,7 @@ See [method and validation](../../classic-composite-fitting.md).
 retain the two-edge bridge and joint-model experiment. Estimate intervals cover
 coefficient uncertainty only; these rows are not historical rate measurements.
 The compact estimate table omits bulk raw provenance, retaining stable source
-record IDs and URLs. See [interpretation and reproduction](../../spec89-bridge.md).
+record IDs and URLs. See [interpretation and reproduction](../../spec89.md).
 
 ## Sparse per-benchmark network
 
@@ -52,13 +52,13 @@ record IDs and URLs. See [interpretation and reproduction](../../spec89-bridge.m
 and `network-audit.json` preserve the missing-data network experiment. Each
 coefficient applies to its named metric/version/unit. Estimated hardware values
 are not measured rate scores; intervals describe conditional calibration only.
-See [method and validation](../../classic-network-fitting.md).
+See [method and validation](../../classical-fits.md#sparse-network).
 
 `mix-network-coefficients.csv`, `mix-network-holdout-summary.csv`,
 `mix-network-anchor-comparison.csv` and `mix-network-audit.json` hold the same
 network with Gibson/ADP ratings attached, one row per link scenario, clock policy,
 cohort and metric. Mix coefficients are VAXen per KIPS and rest on unapproved
-system links. See the [mix network](../../instruction-mix-network.md).
+system links. See the [mix network](../../instruction-mix.md#mix-network).
 
 ## Instruction-mix bridge preparation
 
@@ -67,7 +67,7 @@ which turned it into open `system_link` reviews; it does not approve hardware
 identity and no fitter reads it. `mix-study/weights.csv` and `audit.json`
 snapshot `classic mix-inventory`. Full source listings including missing scores
 remain in the generated `mix-records.csv`. See
-[the preparation report](../../instruction-mix-bridge.md).
+[the preparation report](../../instruction-mix.md).
 
 `mix-study/bridge-classical-fit-summary.csv` records exploratory `y=kx` factors
 in classical-score units per mix KIPS, never VAXen, for the `resolved_system`

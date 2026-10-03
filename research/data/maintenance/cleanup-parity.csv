@@ -1,7 +1,0 @@
-artifact,rows,check,passed
-data/derived/classic/rate-composite-fit/summary.csv,154,factor_CI_core_P95_parity,True
-data/derived/classic/spec89-rate-fit/summary.csv,171,factor_CI_core_P95_parity,True
-data/derived/classic/pair-fit/pairs.csv,,byte_identical_preparation,True
-data/derived/classic/source-pair-fit/pairs.csv,,byte_identical_preparation,True
-data/derived/classic/source-pair-fit/vectors.jsonl,,byte_identical_preparation,True
-research/data/spec/fitting/integer-rate-chain-intervals.csv,24,all_numeric_chain_fields_unchanged,True

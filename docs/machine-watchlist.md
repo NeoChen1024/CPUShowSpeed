@@ -3,7 +3,7 @@
 These machines are explicit research priorities, including their named variants.
 They are targets for source discovery and evaluation, not claims that usable
 benchmark or instruction-timing results have been extracted. Candidate paths
-below were found in the [bitsavers file inventory](sources.md#local-bitsavers-discovery-inventory);
+below were found in the [bitsavers file inventory](sources.md#local-pdf-mirror-and-discovery-inventory);
 filenames alone do not establish document contents or applicable model revisions.
 
 ## DEC PDP-8: original, PDP-8/I, PDP-8/E

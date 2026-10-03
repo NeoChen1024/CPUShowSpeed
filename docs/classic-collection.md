@@ -13,11 +13,11 @@ Collectors and parsers (`classic collect`, `extract`, `extract-pdf-tables`,
 read only that database and pair classical with SPEC results by resolved
 `system_id` (schema step 5c, 2026-10-02). The former `prepare-pairs` /
 `prepare-sources` name-matching stage and the earlier diagnostic fitting commands
-were removed; see the [schema cleanup inventory](../research/schema-cleanup-inventory.md).
+were removed; they remain in Git history.
 
 ## Reading and reproduction order
 
-For the research interpretation, start with the [classical track](../research/tracks/classical.md).
+For the research interpretation, start with the [classical fits](../research/classical-fits.md).
 
 | Task | Commands / section |
 | --- | --- |
@@ -92,7 +92,7 @@ In particular:
 - Historical commercial MIPS claims, instruction-mix KIPS, executed benchmark
   rates, scalar/vector results and parallel results retain their own semantics.
 
-The [first acquisition audit](../research/classic-benchmark-collection.md)
+The [first acquisition audit](../research/historical-sources.md#acquired-classical-sources)
 records current coverage. Raw bodies, archives and extracted reading data stay
 outside Git. The compact acquisition CSV is a provenance inventory; it does
 not replace a future reviewed per-result dataset.
@@ -140,7 +140,7 @@ Outputs in `data/derived/classic/overlap-spec/`:
 | `audit.json` | Source/derived/parser hashes and PDF extraction version/hash |
 
 Generic CPU labels and unparsed sources cannot establish absence of overlap.
-See the [overlap report](../research/classic-spec-overlap.md) for resolved-system
+See the [overlap report](../research/classical-fits.md#hardware-overlap) for resolved-system
 pairing counts.
 
 ## Selected historical PDF tables
@@ -150,7 +150,7 @@ SSCL and Tomari/Hiraki table sets using source-specific, reviewed recipes.
 `--acquisition`, `--recipes`, `--corrections` and `--output` select inputs and
 destination; source BLAKE3, correction preconditions and expected row counts
 are checked. Embedded text is a parsing aid, checked against rendered PDFs.
-See [extraction findings](../research/classic-pdf-extraction.md) and the
+See [extraction findings](../research/historical-sources.md#three-source-pdf-extraction) and the
 [table data contract](../research/data/classic/pdf-extraction/README.md).
 
 The extracted tables stay literal and are not fitting inputs. The DEC N3909
@@ -169,13 +169,13 @@ as 1 for the VAX-11/780), with separate base and peak cohorts and matched
 single-score baselines, in `same_result` and `same_system` cohorts.
 `--database`, `--output`, `--research-dir`, `--bootstrap` and `--seed` control
 inputs, outputs and resampling. SPECint89 targets are excluded. See [results and
-validation](../research/classic-composite-fitting.md).
+validation](../research/classical-fits.md#direct-composites).
 
 `uv run cpushowspeed classic spec89-fit` estimates the one-edge SPECint89 →
 SPECint92 speed bridge from hardware-near overlap, writes SPEC89 speed-VAXen
 estimates, and evaluates joint classical models. `--database`, `--output`,
 `--research-dir`, `--bootstrap` and `--seed` select inputs and settings. See
-[bridge findings](../research/spec89-bridge.md) for the peak-only scope and the
+[bridge findings](../research/spec89.md) for the peak-only scope and the
 separation of observed-target validation from agreement with estimated targets.
 
 ### Sparse per-benchmark calibration
@@ -184,7 +184,7 @@ separation of observed-target validation from agreement with estimated targets.
 coefficients jointly from anchor observations and unanchored co-measurements.
 It runs reported/linear-clock scenarios and `spec92_only`/SPEC89-enabled cohorts,
 with availability-masked whole-system holdouts. See [network methods and
-results](../research/classic-network-fitting.md) for weighting, eligibility,
+results](../research/classical-fits.md#sparse-network) for weighting, eligibility,
 identifiability and conditional CI95. Targets are SPECint92 speed (speed-VAXen);
 the SPEC chains are not changed.
 
@@ -199,7 +199,7 @@ source/configuration/metric identities. Default outputs live in
 `data/derived/classic/mix-study/`; `--output-dir` selects another directory.
 It writes `mix-records.csv`, `mix-weights.csv` and an audit; it no longer
 pairs mixes with classical rows. The
-[research report](../research/instruction-mix-bridge.md) owns the checked counts,
+[research report](../research/instruction-mix.md) owns the checked counts,
 configuration risks and next experiment design.
 
 `uv run cpushowspeed classic mix-evidence` screens the eight instruction-mix

@@ -1,6 +1,6 @@
 # Documentation index
 
-For the research story, begin with the [four-track overview](../research/overview.md).
+For the research story, begin with the [research index](../research/README.md).
 For exact metric/model dependencies and document roles, use the
 [registry catalog](../research/catalog.md). The root [README](../README.md)
 introduces the unit, zero-intercept fitting assumption and local setup.
@@ -33,4 +33,4 @@ introduces the unit, zero-intercept fitting assumption and local setup.
 
 CLI `--help` owns command options. The [research index](../research/README.md)
 owns result navigation; topic reports own their numerical conclusions. Registry
-maintenance is documented in the [overview](../research/overview.md#registry-maintenance).
+maintenance is documented in the [research index](../research/README.md#registry-maintenance).

@@ -6,7 +6,7 @@ OCR output is derived reading material for historical scans. Stage 1 completed t
 16-document, 2,213-page [watchlist batch](../inventories/watchlist-ocr.txt)
 on 2026-09-26. The additional [early-benchmark batch](../inventories/early-benchmark-ocr.txt)
 completed 2 documents / 125 pages, 118 image captions and DocIR backfill on the
-same date. Its [evidence audit](../research/early-benchmark-evidence.md) records
+same date. Its [evidence audit](../research/historical-sources.md#early-timing-evidence) records
 structural-table exceptions and reviewed claims. The full corpus has not been
 run or throughput-tuned.
 
@@ -139,7 +139,7 @@ not ordinary project documentation or Git content.
 
 ## Hardware-year discovery batch
 
-The [hardware-year evidence review](../research/hardware-year-evidence.md)
+The [hardware-year evidence review](../research/identity-and-dates.md#hardware-year-evidence)
 tracks an 80-document / 947-page batch completed on 2026-09-27 with 64 inflight
 pages. All DocIR pages are published, and all 80 documents have completed the
 hardware-year review (full text screening plus 145 relevant original-page checks).

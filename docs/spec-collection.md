@@ -60,7 +60,7 @@ months are normalized to `YYYY-MM` and an unreadable value (two rate pages print
 with `; `. The same parser reads all 232 CFP92 pages, which no adapter consumes.
 
 Netlib's combined rate list omits one detail linked from an issue summary;
-the [source audit](../research/spec92-archive-expansion.md) identifies it and
+the [source audit](../research/spec-sources.md#spec-cpu92-integer-rate-archive) identifies it and
 preserves the issue-linked result. The separate 1992 Digital vendor brief is
 source evidence, not part of this official-submission fit.
 
@@ -81,7 +81,7 @@ integer-rate scores. The second fits CPU92 rate directly to CPU95 rate and
 extends the chain using the first command's strict factors, after checking
 that both were fitted from the same database inputs. Both retain repeated submission
 pairings in source-linked point exports while weighting processor
-configurations in the factor calculation. The [primary rate audit](../research/spec95-spec2026-rate-fitting.md)
+configurations in the factor calculation. The [primary rate audit](../research/spec-chains.md)
 owns the methods, tables, scatterplots and limits. The VAXen chain is an
 exploratory **throughput** normalization, not a measured score for a modern
 VAX or a validated general conversion.
@@ -101,7 +101,7 @@ PNG/SVG figures to `data/derived/figures/annual-rate/`; the compact
 [statistics](../research/data/spec/annual-rate-statistics.csv) are tracked as
 research results. All positive scores with a parseable reported hardware month
 that no review rejects enter their year. See the
-[interpretation and limits](../research/annual-rate-vaxen.md).
+[interpretation and limits](../research/spec-chains.md#annual-rate-view).
 
 ## Whole-chain rate confidence intervals
 
@@ -128,7 +128,7 @@ replicate vectors to recompute yearly quartiles, fixed representative scores
 and the annual frontier. It produces combined hardware/boxplot PNG and SVG
 under `data/derived/figures/annual-rate/`, and the compact
 [confidence table](../research/data/spec/annual-rate-confidence.csv).
-See the [annual figure note](../research/annual-rate-vaxen.md) for the meaning
+See the [annual figure note](../research/spec-chains.md#annual-rate-view) for the meaning
 of the pale envelopes and top-retention statistic.
 
 ## Convert one reported integer-rate score
@@ -159,7 +159,7 @@ calibration CI has zero width.
 ## SPEC95/CPU2000 overlap-loss audit
 
 `uv run --no-sync cpushowspeed bridge audit-95-2000 --fetch-review` reproduces
-the [SPEC95/CPU2000 overlap-loss audit](../research/spec95-spec2000-overlap-audit.md).
+the [SPEC95/CPU2000 overlap-loss audit](../research/spec-sources.md#cpu95cpu2000-overlap-audit).
 It exports candidate aliases, RAM/resource ablations and source-field checks
 without changing production matches or coefficients. Omit `--fetch-review`
 for cached-source-only review.
@@ -175,4 +175,4 @@ fetch-resources shares the resumable collector, raw cache and manifest, and acce
 integer/floating-point speed/rate tracks. Current detailed audit scope is integer.
 Selected CSV tables retain benchmark copies/threads by mode; legacy CPU95/2000 HTML
 rate tables are supported. No runtime count is inferred from enabled CPU resources.
-[Resource audit](../research/spec-resource-field-audit.md) owns findings and coverage.
+[Resource audit](../research/spec-sources.md#source-fields-and-execution-resources) owns findings and coverage.

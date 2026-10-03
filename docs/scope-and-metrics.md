@@ -16,7 +16,7 @@ own chain, and they are never merged or converted into each other:
   suites chained through their integer-rate metrics.
 - **speed-VAXen** (one job): SPECint92 speed, since the VAX-11/780 is the SPEC92
   reference machine; later suites are chained through their integer-speed
-  metrics ([speed chain](../research/spec-speed-chain.md)).
+  metrics ([speed chain](../research/spec-chains.md#speed-chain)).
 
 Both set the VAX-11/780 to 1. Speed denotes task completion, not a single-core
 guarantee (CPU2017 speed may run threads). Classical, SPEC89 and instruction-mix
@@ -26,7 +26,7 @@ independent dimension. Never combine speed and rate observations into one fit.
 
 ## Active SPEC rate series
 
-The [CPU92–CPU2026 rate audit](../research/spec95-spec2026-rate-fitting.md)
+The [CPU92–CPU2026 rate audit](../research/spec-chains.md)
 uses `SPECrate_int92` and the integer-rate metrics in CPU95, CPU2000,
 CPU2006, CPU2017 and CPU2026. It fits adjacent suites on matched system
 submissions. The CPU92 rate formula defines the VAX-11/780 one-copy throughput
@@ -47,7 +47,7 @@ speed-VAXen proxies, all with CPU-first dating. It keeps
 source scope and node-count uncertainty visible; reported cluster results are
 not silently certified as single-node measurements.
 
-The earlier [annual integer-rate view](../research/annual-rate-vaxen.md) now groups
+The earlier [annual integer-rate view](../research/spec-chains.md#annual-rate-view) now groups
 all positive dated submissions by their **reported configuration hardware
 availability** and shows the highest score per year plus the submission
 distribution. Its frontier is exploratory and not a model-launch history.
@@ -64,7 +64,7 @@ tracks after their workload, parallelism and reference conventions are
 specified. The SPEC89 corpus now supports an implemented one-edge peak
 estimate, SPECint89 → SPECint92 speed-VAXen. Direct classical speed fits
 and joint fits with these estimated targets are implemented; reported and
-inferred targets remain separate. See the [historical track guides](../research/overview.md).
+inferred targets remain separate. See the [research index](../research/README.md).
 These extensions do not turn native SPECint89/92 scores into measured rate
 submissions or change either SPEC chain's inputs.
 

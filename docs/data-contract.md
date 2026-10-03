@@ -57,7 +57,7 @@ snapshots of the earlier policy, not retroactively CPU-year statistics.
 
 Hardware availability in SPEC means when the last required hardware component
 became available; it can be later than the CPU or system model introduction.
-See the [shared timeline contract](timeline.md#cpu-first-date-selection) for
+See the [shared timeline contract](timeline.md#date-selection) for
 matching, uncertainty and fallback details.
 
 [SPEC's hardware-availability field definition](https://www.spec.org/cpu2026/Docs/result-fields.html)
@@ -90,7 +90,7 @@ benchmark threads are separate quantities. Enabled counts below chip capacity ar
 not automatically errors. CPU92 CPU count remains a legacy matching proxy with
 unverified chip equivalence. Runtime records retain mode, benchmark, quantity,
 raw value, locator and source hash. Uncollected details and missing parsed fields
-are distinct statuses. The [audit](../research/spec-resource-field-audit.md)
+are distinct statuses. The [audit](../research/spec-sources.md#source-fields-and-execution-resources)
 records ambiguities; metadata enrichment does not silently change fitting cohorts.
 
 ## Timeline storage

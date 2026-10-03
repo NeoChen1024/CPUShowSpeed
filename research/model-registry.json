@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-02",
+  "updated": "2026-10-03",
   "path_base": "repository root",
   "conventions": {
     "fit": "y = k*x; zero intercept; grouped median log ratios then mean across groups",
@@ -17,25 +17,25 @@
       "id": "vaxen",
       "order": 1,
       "title": "VAXen reference",
-      "path": "research/tracks/vaxen.md"
+      "path": "research/README.md"
     },
     {
       "id": "spec-rate",
       "order": 2,
-      "title": "SPEC92–2026 speed and rate calibration",
-      "path": "research/tracks/spec-rate.md"
+      "title": "SPEC92–2026 rate and speed chains",
+      "path": "research/spec-chains.md"
     },
     {
       "id": "spec89",
       "order": 3,
       "title": "SPEC89 recovery and bridge",
-      "path": "research/tracks/spec89.md"
+      "path": "research/spec89.md"
     },
     {
       "id": "classical",
       "order": 4,
       "title": "Classical benchmark extension",
-      "path": "research/tracks/classical.md"
+      "path": "research/classical-fits.md"
     }
   ],
   "metrics": [
@@ -433,7 +433,7 @@
       "id": "modern-factor-snapshots",
       "path": "research/data/spec/fitting",
       "kind": "snapshot",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "optional": false,
       "lineage": "Reuses matched official rate submissions across fits and chain"
     },
@@ -441,7 +441,7 @@
       "id": "spec89-snapshot",
       "path": "research/data/spec89/v2.0.0",
       "kind": "source-snapshot",
-      "owner": "research/spec89-curated-snapshot.md",
+      "owner": "research/spec89.md",
       "optional": false,
       "lineage": "Collectors and republications can share upstream measurements"
     },
@@ -449,7 +449,7 @@
       "id": "spec89-native-bridge",
       "path": "research/data/spec89/v2.0.0/csv/bridges89_92.csv",
       "kind": "source-snapshot",
-      "owner": "research/spec89-cpu92-scatter.md",
+      "owner": "research/spec89.md",
       "optional": false,
       "lineage": "Subset of SPEC89 archive; 17 integer rows, 15 model keys; includes development-level observations"
     },
@@ -457,7 +457,7 @@
       "id": "spec89-supplement",
       "path": "research/data/spec89/aggregate89-plus-helman.csv",
       "kind": "snapshot",
-      "owner": "research/spec89-helman-worksheet.md",
+      "owner": "research/spec89.md",
       "optional": false,
       "lineage": ""
     },
@@ -465,7 +465,7 @@
       "id": "classic-acquisition",
       "path": "research/data/classic/acquisition.csv",
       "kind": "manifest",
-      "owner": "research/classic-benchmark-collection.md",
+      "owner": "research/historical-sources.md",
       "optional": false,
       "lineage": "Mirrors/republications are not independent experiments"
     },
@@ -473,7 +473,7 @@
       "id": "classic-pdf-tables",
       "path": "research/data/classic/pdf-extraction/tables.jsonl",
       "kind": "reviewed-data",
-      "owner": "research/classic-pdf-extraction.md",
+      "owner": "research/historical-sources.md",
       "optional": false,
       "lineage": "DEC, SSCL, Tomari/Hiraki; DEC rows recur in source fits and bridge"
     },
@@ -489,7 +489,7 @@
       "id": "classic-overlap",
       "path": "data/derived/classic/overlap-spec",
       "kind": "derived",
-      "owner": "research/classic-spec-overlap.md",
+      "owner": "research/classical-fits.md",
       "optional": true,
       "lineage": "Parsed classical and SPEC89/92 records; pairing happens over resolved systems in the database"
     },
@@ -505,17 +505,9 @@
       "id": "historical-observations",
       "path": "research/data/historical",
       "kind": "reviewed-data",
-      "owner": "research/early-benchmark-evidence.md",
+      "owner": "research/historical-sources.md",
       "optional": false,
       "lineage": "PDF page citations; mixes and timing observations are not SPEC scores"
-    },
-    {
-      "id": "maintenance-inventory",
-      "path": "research/data/maintenance",
-      "kind": "maintenance-snapshot",
-      "owner": "research/cleanup-inventory.md",
-      "optional": false,
-      "lineage": "Static inspection at d2e4329; not benchmark evidence"
     },
     {
       "id": "curated-sources",
@@ -529,7 +521,7 @@
       "id": "curated-processors",
       "path": "data/curated/processor_sku.jsonl",
       "kind": "curated-table",
-      "owner": "research/processor-identity.md",
+      "owner": "research/identity-and-dates.md",
       "optional": false,
       "lineage": "Seeded from the CPU SKU catalogue (2026-10-02) with processor_family.jsonl and alias.jsonl; edited directly thereafter"
     },
@@ -537,7 +529,7 @@
       "id": "processor-mentions",
       "path": "data/derived/schema/processor-mentions.jsonl",
       "kind": "derived",
-      "owner": "research/processor-identity.md",
+      "owner": "research/identity-and-dates.md",
       "optional": true,
       "lineage": "Distinct processor text/clock mentions extracted from the input catalogue"
     },
@@ -545,7 +537,7 @@
       "id": "curated-vendors",
       "path": "data/curated/vendor.jsonl",
       "kind": "curated-table",
-      "owner": "research/system-identity.md",
+      "owner": "research/identity-and-dates.md",
       "optional": false,
       "lineage": "Seeded from SPEC vendor spellings (2026-10-02); edited directly thereafter"
     },
@@ -553,7 +545,7 @@
       "id": "hardware-records",
       "path": "data/derived/schema/hardware-records.jsonl",
       "kind": "derived",
-      "owner": "research/system-identity.md",
+      "owner": "research/identity-and-dates.md",
       "optional": true,
       "lineage": "Distinct vendor/system/processor/resource tuples extracted from the input catalogue"
     },
@@ -561,7 +553,7 @@
       "id": "curated-date-events",
       "path": "data/curated/date_event.jsonl",
       "kind": "curated-table",
-      "owner": "research/chronology.md",
+      "owner": "research/identity-and-dates.md",
       "optional": false,
       "lineage": "Converted 2026-10-02 from the SKU catalogue, CPU proxies, hardware date evidence, year overrides and SPEC89 introductions"
     },
@@ -569,7 +561,7 @@
       "id": "result-records",
       "path": "data/derived/schema/result-records.jsonl",
       "kind": "derived",
-      "owner": "research/chronology.md",
+      "owner": "research/identity-and-dates.md",
       "optional": true,
       "lineage": "One row per benchmark result with its hardware tuple and reported dates, from the input catalogue"
     },
@@ -577,7 +569,7 @@
       "id": "instruction-mix-study",
       "path": "research/data/classic/mix-study",
       "kind": "reviewed-data",
-      "owner": "research/instruction-mix-bridge.md",
+      "owner": "research/instruction-mix.md",
       "optional": false,
       "lineage": "CCTA source ratings; resolved-system classical pairing snapshots (automatic, unreviewed)"
     },
@@ -585,7 +577,7 @@
       "id": "spec95-2000-overlap-audit",
       "path": "research/data/spec/95-2000-audit",
       "kind": "reviewed-data",
-      "owner": "research/spec95-spec2000-overlap-audit.md",
+      "owner": "research/spec-sources.md",
       "optional": false,
       "lineage": "Hash-checked cached official exports and selected original disclosures; sensitivity scenarios are not promoted fits"
     },
@@ -593,7 +585,7 @@
       "id": "mix-network",
       "path": "research/data/classic/mix-network-coefficients.csv",
       "kind": "derived",
-      "owner": "research/instruction-mix-network.md",
+      "owner": "research/instruction-mix.md",
       "optional": false,
       "lineage": "CCTA Gibson/ADP ratings attached to classical network nodes by resolved system_id or needs_review link; schema database"
     },
@@ -601,7 +593,7 @@
       "id": "modern-speed-chain",
       "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
       "kind": "snapshot",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "optional": false,
       "lineage": "Automatic hardware_near SPEC92–2026 integer-speed pairs from the schema database"
     }
@@ -646,7 +638,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-rate-inputs"
       ],
@@ -682,7 +674,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-factor-snapshots"
       ],
@@ -722,7 +714,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-rate-inputs"
       ],
@@ -760,7 +752,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-factor-snapshots"
       ],
@@ -800,7 +792,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-rate-inputs"
       ],
@@ -838,7 +830,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-factor-snapshots"
       ],
@@ -878,7 +870,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-rate-inputs"
       ],
@@ -916,7 +908,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-factor-snapshots"
       ],
@@ -956,7 +948,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-rate-inputs"
       ],
@@ -994,7 +986,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec95-spec2026-rate-fitting.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-factor-snapshots"
       ],
@@ -1039,7 +1031,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/annual-rate-vaxen.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-rate-inputs"
       ],
@@ -1075,7 +1067,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec89-bridge.md",
+      "owner": "research/spec89.md",
       "dataset_ids": [
         "spec89-native-bridge"
       ],
@@ -1107,7 +1099,7 @@
       ],
       "role": "diagnostic",
       "status": "implemented-conditional",
-      "owner": "research/spec89-bridge.md",
+      "owner": "research/spec89.md",
       "dataset_ids": [
         "schema-database"
       ],
@@ -1141,7 +1133,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec89-bridge.md",
+      "owner": "research/spec89.md",
       "dataset_ids": [
         "spec89-snapshot"
       ],
@@ -1204,7 +1196,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/classic-composite-fitting.md",
+      "owner": "research/classical-fits.md",
       "dataset_ids": [
         "schema-database",
         "curated-observations"
@@ -1237,7 +1229,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec89-bridge.md",
+      "owner": "research/spec89.md",
       "dataset_ids": [
         "schema-database"
       ],
@@ -1269,7 +1261,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec89-bridge.md",
+      "owner": "research/spec89.md",
       "dataset_ids": [
         "schema-database"
       ],
@@ -1332,7 +1324,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/classic-network-fitting.md",
+      "owner": "research/classical-fits.md",
       "dataset_ids": [
         "classic-overlap",
         "schema-database",
@@ -1381,7 +1373,7 @@
       ],
       "role": "diagnostic",
       "status": "implemented-conditional",
-      "owner": "research/classic-power-law-sensitivity.md",
+      "owner": "research/classical-fits.md",
       "dataset_ids": [
         "schema-database"
       ],
@@ -1420,7 +1412,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/instruction-mix-network.md",
+      "owner": "research/instruction-mix.md",
       "dataset_ids": [
         "mix-network",
         "instruction-mix-study",
@@ -1465,7 +1457,7 @@
       ],
       "role": "primary",
       "status": "defined",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [],
       "depends_on": [],
       "shared_evidence": "Defined: VAX-11/780 is the SPEC92 reference machine",
@@ -1488,7 +1480,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain",
         "schema-database"
@@ -1527,7 +1519,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain"
       ],
@@ -1567,7 +1559,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain",
         "schema-database"
@@ -1606,7 +1598,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain"
       ],
@@ -1646,7 +1638,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain",
         "schema-database"
@@ -1685,7 +1677,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain"
       ],
@@ -1725,7 +1717,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain",
         "schema-database"
@@ -1764,7 +1756,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain"
       ],
@@ -1804,7 +1796,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain",
         "schema-database"
@@ -1843,7 +1835,7 @@
       ],
       "role": "primary",
       "status": "implemented-conditional",
-      "owner": "research/spec-speed-chain.md",
+      "owner": "research/spec-chains.md",
       "dataset_ids": [
         "modern-speed-chain"
       ],
@@ -1982,88 +1974,88 @@
       "purpose": "SPEC integer-rate collection and fitting"
     },
     {
+      "path": "docs/classical-prediction.md",
+      "title": "Predict SPEC92 integer rate from classical scores",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Prediction CLI inputs, units, shared bootstrap CI and calibration bundle"
+    },
+    {
+      "path": "docs/timeline.md",
+      "title": "Shared VAXen timeline",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Database-built timeline records, chronology from result_chronology, export and interaction"
+    },
+    {
+      "path": "docs/input-catalog.md",
+      "title": "Shared benchmark input contract",
+      "role": "guide",
+      "status": "current",
+      "purpose": "Source adapters, the observation envelope and execution-count admission"
+    },
+    {
       "path": "research/README.md",
-      "title": "Research index",
+      "title": "Research",
       "role": "guide",
       "status": "current",
-      "purpose": "Research index"
-    },
-    {
-      "path": "research/annual-rate-vaxen.md",
-      "title": "Annual SPEC integer-rate VAXen view",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Annual SPEC integer-rate VAXen view"
-    },
-    {
-      "path": "research/annual-vaxen-timeline.md",
-      "title": "Annual VAXen view of dated SPEC integer-speed evidence",
-      "role": "archive",
-      "status": "retired",
-      "purpose": "Annual VAXen view of dated SPEC integer-speed evidence"
-    },
-    {
-      "path": "research/archive/README.md",
-      "title": "Historical analyses",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Historical analyses"
+      "purpose": "Research index, VAXen unit, route overview, timeline export and registry maintenance"
     },
     {
       "path": "research/catalog.md",
       "title": "Research catalog",
       "role": "guide",
       "status": "current",
-      "purpose": "Research catalog"
+      "purpose": "Generated catalog of registry metrics, models, datasets and documents"
     },
     {
-      "path": "research/chandra-timesharing-sample.md",
-      "title": "Chandra sample: *A General-Purpose Time-Sharing System*",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Chandra sample: *A General-Purpose Time-Sharing System*"
-    },
-    {
-      "path": "research/classic-benchmark-collection.md",
-      "title": "Classic benchmark source acquisition",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Classic benchmark source acquisition"
-    },
-    {
-      "path": "research/classic-pdf-extraction.md",
-      "title": "Three-source PDF extraction completed",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Three-source PDF extraction completed"
-    },
-    {
-      "path": "research/classic-composite-fitting.md",
-      "title": "Direct classical composites to SPEC92 integer-rate VAXen",
+      "path": "research/spec-chains.md",
+      "title": "SPEC92–2026 integer rate and speed chains",
       "role": "primary",
       "status": "current",
-      "purpose": "Direct classical composites to SPEC92 integer-rate VAXen"
+      "purpose": "Adjacent-suite rate and speed fits, VAX rate constant, chain intervals and annual rate view"
     },
     {
-      "path": "research/classic-spec-literature.md",
-      "title": "Additional classical/SPEC sources and prior work",
+      "path": "research/spec-sources.md",
+      "title": "SPEC sources and audits",
       "role": "evidence",
       "status": "current",
-      "purpose": "Additional classical/SPEC sources and prior work"
+      "purpose": "Early SPEC archives, CPU92 rate archive, field/resource audits and CPU95/CPU2000 overlap audit"
     },
     {
-      "path": "research/classic-spec-overlap.md",
-      "title": "Classical benchmark / SPEC89-92 hardware overlap: first pass",
-      "role": "diagnostic",
+      "path": "research/spec89.md",
+      "title": "SPEC89 recovery and bridge",
+      "role": "primary",
       "status": "current",
-      "purpose": "Classical benchmark / SPEC89-92 hardware overlap: first pass"
+      "purpose": "SPEC89 snapshot and supplement, SPECint89→SPECint92 bridge, joint classical experiment and estimates"
     },
     {
-      "path": "research/cpu92-cpu95-bridge.md",
-      "title": "CPU92–CPU95 integer-speed overlap audit",
-      "role": "archive",
-      "status": "retired",
-      "purpose": "CPU92–CPU95 integer-speed overlap audit"
+      "path": "research/classical-fits.md",
+      "title": "Classical benchmark calibration",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Classical/SPEC overlap, direct composites, sparse network and power-law sensitivity"
+    },
+    {
+      "path": "research/instruction-mix.md",
+      "title": "Gibson and ADP instruction mixes",
+      "role": "primary",
+      "status": "current",
+      "purpose": "Mix inventory and pairing, mix network and further mix sources"
+    },
+    {
+      "path": "research/historical-sources.md",
+      "title": "Historical benchmark sources",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Classical source acquisition, prior work, PDF tables, vendor reports, Usenet lists and early timing evidence"
+    },
+    {
+      "path": "research/identity-and-dates.md",
+      "title": "Identity resolution and dates",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Processor and system resolution, date events, chronology selection, CPU SKU catalogue and hardware-year evidence"
     },
     {
       "path": "research/data/classic/README.md",
@@ -2087,27 +2079,6 @@
       "purpose": "Curated historical observations"
     },
     {
-      "path": "research/data/archive/date-passes/README.md",
-      "title": "Completed date-pass logs",
-      "role": "archive",
-      "status": "retired",
-      "purpose": "Unchanged records of finished hardware-date review passes; no code reads them"
-    },
-    {
-      "path": "research/data/archive/name-pairing/README.md",
-      "title": "Name-based classical/SPEC pairing snapshots",
-      "role": "archive",
-      "status": "retired",
-      "purpose": "Unchanged candidate-pair snapshots replaced by resolved-system pairing in schema step 5c; no code reads them"
-    },
-    {
-      "path": "research/data/archive/legacy-dates/README.md",
-      "title": "Legacy date tables",
-      "role": "archive",
-      "status": "retired",
-      "purpose": "Unchanged date tables converted into curated date events and reviews in schema steps 1–4; no code reads them"
-    },
-    {
       "path": "research/data/spec89/helman-1991/README.md",
       "title": "Helman SPEC89 worksheet derivative (1991-03-31)",
       "role": "guide",
@@ -2120,293 +2091,6 @@
       "role": "guide",
       "status": "current",
       "purpose": "SPEC89 recovered observations, curated v2.0.0 snapshot"
-    },
-    {
-      "path": "research/early-benchmark-evidence.md",
-      "title": "First local early-benchmark evidence pass",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "First local early-benchmark evidence pass"
-    },
-    {
-      "path": "research/vendor-performance-reports.md",
-      "title": "Vendor performance reports",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Transcribed 1990 DEC RISC performance summary and MIPS Performance Brief 3.5 (curated observations); earlier Brief issues located"
-    },
-    {
-      "path": "research/usenet-result-lists.md",
-      "title": "Usenet result lists",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Richardson's Dhrystone lists parsed from UTZOO postings; SSBA, SPARC LINPACK and Livermore posts and printed SPEC89 means missing from the SPEC89 package transcribed as curated observations"
-    },
-    {
-      "path": "research/overview.md",
-      "title": "Research overview",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Research overview"
-    },
-    {
-      "path": "research/spec-early-archives.md",
-      "title": "Locating early SPEC CPU results",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Locating early SPEC CPU results"
-    },
-    {
-      "path": "research/spec-entity-resolution.md",
-      "title": "Cross-generation SPEC entity resolution precedents",
-      "role": "archive",
-      "status": "retired",
-      "purpose": "Cross-generation SPEC entity resolution precedents"
-    },
-    {
-      "path": "research/spec2017-8280-speed-rate.md",
-      "title": "Why Xeon Platinum 8280 is absent from the annual speed leader list",
-      "role": "archive",
-      "status": "retired",
-      "purpose": "Why Xeon Platinum 8280 is absent from the annual speed leader list"
-    },
-    {
-      "path": "research/spec89-cpu92-scatter.md",
-      "title": "SPEC89–CPU92 source-paired scatter",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "SPEC89–CPU92 source-paired scatter"
-    },
-    {
-      "path": "research/spec89-curated-snapshot.md",
-      "title": "Curated SPEC89 recovery snapshot",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Curated SPEC89 recovery snapshot"
-    },
-    {
-      "path": "research/spec89-hardware-years.md",
-      "title": "SPEC89 hardware introduction-year audit",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "SPEC89 hardware introduction-year audit"
-    },
-    {
-      "path": "research/spec89-helman-worksheet.md",
-      "title": "Helman's 1991 SPEC89 worksheet derivative",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Helman's 1991 SPEC89 worksheet derivative"
-    },
-    {
-      "path": "research/spec89-bridge.md",
-      "title": "SPECint89 bridge to SPEC92 rate and joint classical fitting",
-      "role": "primary",
-      "status": "current",
-      "purpose": "SPECint89 bridge to SPEC92 rate and joint classical fitting"
-    },
-    {
-      "path": "research/spec92-archive-expansion.md",
-      "title": "SPEC CPU92 integer-rate archive expansion",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "SPEC CPU92 integer-rate archive expansion"
-    },
-    {
-      "path": "research/spec92-vaxen.md",
-      "title": "First SPEC92 VAXen figure",
-      "role": "archive",
-      "status": "retired",
-      "purpose": "First SPEC92 VAXen figure"
-    },
-    {
-      "path": "research/spec95-spec2026-rate-fitting.md",
-      "title": "Exploratory SPEC CPU92–CPU2026 integer-rate fitting",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Exploratory SPEC CPU92–CPU2026 integer-rate fitting"
-    },
-    {
-      "path": "research/tracks/classical.md",
-      "title": "Track 4 — Classical benchmarks and pre-SPEC extension",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Track 4 — Classical benchmarks and pre-SPEC extension"
-    },
-    {
-      "path": "research/tracks/spec-rate.md",
-      "title": "Track 2 — SPEC92 through SPEC2026 integer rate",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Track 2 — SPEC92 through SPEC2026 integer rate"
-    },
-    {
-      "path": "research/tracks/spec89.md",
-      "title": "Track 3 — SPEC89 scavenging and rate bridge",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Track 3 — SPEC89 scavenging and rate bridge"
-    },
-    {
-      "path": "research/tracks/vaxen.md",
-      "title": "Track 1 — VAXen reference and numeric types",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Track 1 — VAXen reference and numeric types"
-    },
-    {
-      "path": "research/cleanup-inventory.md",
-      "title": "Cleanup inventory",
-      "role": "diagnostic",
-      "status": "current",
-      "purpose": "Static cleanup audit; no data removal or model changes"
-    },
-    {
-      "path": "research/schema-cleanup-inventory.md",
-      "title": "Schema-driven cleanup inventory",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Designs made obsolete by the data schema, their retirement steps, and the 2026-10-02 removal of diagnostic experiments"
-    },
-    {
-      "path": "research/data/maintenance/README.md",
-      "title": "Maintenance inventory snapshot",
-      "role": "diagnostic",
-      "status": "current",
-      "purpose": "Static cleanup audit; no data removal or model changes"
-    },
-    {
-      "path": "research/calibration-cleanup.md",
-      "title": "Calibration cleanup and unified validation policy",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Shared statistics, preparation-only CLI and numerical parity"
-    },
-    {
-      "path": "research/classic-network-fitting.md",
-      "title": "Sparse joint calibration of individual classical benchmarks",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Per-benchmark coefficients, missing-data coupling and qualified clock scaling"
-    },
-    {
-      "path": "research/classic-power-law-sensitivity.md",
-      "title": "Power-law sensitivity of classical calibrations",
-      "role": "diagnostic",
-      "status": "current",
-      "purpose": "Whether speed-VAXen is proportional to classical scores; VAX-11/780 validation and era confounding"
-    },
-    {
-      "path": "docs/classical-prediction.md",
-      "title": "Predict SPEC92 integer rate from classical scores",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Prediction CLI inputs, units, shared bootstrap CI and calibration bundle"
-    },
-    {
-      "path": "research/historical-vaxen-timeline.md",
-      "title": "Classical and SPEC89 historical VAXen timeline",
-      "role": "archive",
-      "status": "retired",
-      "purpose": "Former combined classical/SPEC89 plot (retired 2026-10-02) and its dating notes"
-    },
-    {
-      "path": "research/hardware-year-evidence.md",
-      "title": "Hardware-year evidence: bitsavers discovery and first review",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Candidate inventory, active OCR batch, source-checked date events and explicit unresolved dating"
-    },
-    {
-      "path": "research/cpu-sku-chronology.md",
-      "title": "CPU SKU release chronology",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Wikipedia SKU catalog converted into processor_sku and date_event rows: matching rule, SPEC coverage, clock conflicts and spot checks"
-    },
-    {
-      "path": "research/processor-identity.md",
-      "title": "Processor identity resolution",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Schema step 2: processor families, SKUs, aliases, resolution coverage and comparison with the previous key"
-    },
-    {
-      "path": "research/system-identity.md",
-      "title": "System identity resolution",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Schema step 2b: vendors, derived system models, hardware configurations and cross-suite links"
-    },
-    {
-      "path": "research/chronology.md",
-      "title": "Date events and chronology selection",
-      "role": "evidence",
-      "status": "current",
-      "purpose": "Schema step 3: date events, selection order, comparison with the former timeline and consistency findings"
-    },
-    {
-      "path": "docs/timeline.md",
-      "title": "Shared VAXen timeline",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Database-built timeline records, chronology from result_chronology, export and interaction"
-    },
-    {
-      "path": "research/unified-vaxen-timeline.md",
-      "title": "Unified historical and SPEC rate timeline",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Database-built timeline population, comparison with the former export and removed views"
-    },
-    {
-      "path": "research/instruction-mix-bridge.md",
-      "title": "Gibson and ADP evidence and calibration experiments",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Source variants, SPEC overlap feasibility, and conditional joint classical-to-rate calibration"
-    },
-    {
-      "path": "research/instruction-mix-network.md",
-      "title": "Gibson/ADP ratings in the classical network",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Mix network over resolved systems: attachment, coefficients, proxy holdouts and timeline run"
-    },
-    {
-      "path": "research/spec95-spec2000-overlap-audit.md",
-      "title": "SPEC95/CPU2000 overlap-loss audit",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Collection coverage, structural pair blockers, RAM/name ablations and original disclosure checks"
-    },
-    {
-      "path": "research/spec-resource-field-audit.md",
-      "title": "SPEC source fields and execution-resource audit",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Source field coverage, hardware/resource semantics, execution counts and matching limitations"
-    },
-    {
-      "path": "docs/input-catalog.md",
-      "title": "Shared benchmark input contract",
-      "role": "guide",
-      "status": "current",
-      "purpose": "Source adapters, the observation envelope and execution-count admission"
-    },
-    {
-      "path": "research/input-unification-fitting-review.md",
-      "title": "Shared input migration and fitting review",
-      "role": "primary",
-      "status": "current",
-      "purpose": "Shared input migration and fitting review"
-    },
-    {
-      "path": "research/spec-speed-chain.md",
-      "title": "SPEC integer-speed chain (speed-VAXen)",
-      "role": "primary",
-      "status": "current",
-      "purpose": "CPU92–CPU2026 integer-speed chain to SPECint92 = 1 speed-VAXen, parallel to the rate chain"
     }
   ]
 }

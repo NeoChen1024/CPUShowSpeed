@@ -1,6 +1,0 @@
-mix,metric,candidate_pairs,mix_rows,classical_configurations,model_keys,approved_pairs
-Gibson Mix,LINPACK:n100_MFLOPS,5,2,5,2,0
-Gibson Mix,Whetstone:MWIPS,41,19,32,16,0
-Gibson Mix,Whetstone:MWIPS_DP,24,15,17,13,0
-ADP Mix,Whetstone:MWIPS,38,18,29,15,0
-ADP Mix,Whetstone:MWIPS_DP,23,14,16,12,0

@@ -1,82 +1,134 @@
-# Research index
+# Research
 
-Start with the [overview](overview.md), then follow the four research tracks.
-The [machine-readable registry](model-registry.json) and [generated catalog](catalog.md)
-record metric identities, datasets, model dependencies and every document's role.
-Reports distinguish measured evidence, derived estimates and proposed work.
+Updated: 2026-10-03. This directory holds source-checked research results. Each
+report below owns one topic; the [model registry](model-registry.json) and its
+generated [catalog](catalog.md) record metric identities, datasets, model
+dependencies and each document's role. Reports distinguish measured evidence,
+derived estimates and open work. Earlier and superseded reports remain in Git
+history.
 
-## Four primary tracks
+## Reports
 
-| Track | Reading guide | Principal result owner |
+| Report | Owns |
+| --- | --- |
+| [SPEC chains](spec-chains.md) | CPU92–CPU2026 integer rate and speed chains, the VAX rate constant, chain intervals and the annual rate view |
+| [SPEC sources and audits](spec-sources.md) | Early SPEC archives, the CPU92 rate archive, source-field and execution-resource audits, CPU95/CPU2000 overlap |
+| [SPEC89](spec89.md) | Recovered SPEC89 evidence, the SPECint89 → SPECint92 bridge, the joint classical experiment and SPEC89 estimates |
+| [Classical fits](classical-fits.md) | Classical/SPEC hardware overlap, direct composites, the sparse network and the power-law sensitivity study |
+| [Instruction mixes](instruction-mix.md) | Gibson/ADP inventory and pairing, the mix network and further mix sources |
+| [Historical sources](historical-sources.md) | Classical source acquisition, prior work, PDF tables, vendor reports, Usenet lists and early timing evidence |
+| [Identity and dates](identity-and-dates.md) | Processor and system resolution, date events, chronology selection, the CPU SKU catalogue and hardware-year evidence |
+
+Machine-readable snapshots are under [`data/`](data/): `spec/`, `spec89/`,
+`classic/`, `historical/`, `resource-refresh/` and `timeline/`. The
+[classic](data/classic/README.md) and [historical](data/historical/README.md)
+guides describe their records. Large raw documents, DocIR, derived tuples and
+figures stay outside Git. Original values, citations and qualifications must
+survive every conversion; Markdown is not the sole numerical store.
+
+## The VAXen unit
+
+VAXen has two parallel quantities, both setting the VAX-11/780 to 1 (user
+decision 2026-10-03). **Rate-VAXen** is its reference throughput under SPEC92
+integer rate (`SPECrate_int92 × 25500 / 604800`); **speed-VAXen** is one
+SPECint92 point, since the VAX-11/780 is the SPEC92 reference machine. They are
+never converted into each other; classical, SPEC89 and mix estimates are
+speed-VAXen. The [README](../README.md#the-unit-1-vax) gives the public formula
+and [methods](../docs/methods.md#vax-throughput-convention) the full convention.
+
+| Numeric type | Meaning | Interpretation |
 | --- | --- | --- |
-| VAXen reference | [Unit and value types](tracks/vaxen.md) | [Methods](../docs/methods.md#vax-throughput-convention) |
-| SPEC92–2026 integer rate | [Modern chain](tracks/spec-rate.md) | [Rate calibration](spec95-spec2026-rate-fitting.md), [annual results](annual-rate-vaxen.md) |
-| SPEC89 scavenging | [Recovery and bridge](tracks/spec89.md) | [One-edge bridge and joint fits](spec89-bridge.md) |
-| Classical benchmarks | [Pre-SPEC extension](tracks/classical.md) | [Direct speed composites](classic-composite-fitting.md), [indirect/joint experiment](spec89-bridge.md) |
+| Reported suite score | Literal measurement under a named suite, version and mode | Preserve original source and run configuration |
+| Normalized observed rate | Reported SPEC92 rate multiplied by the defined constant | The same rate observation in rate-VAXen |
+| Observed SPECint92 speed | Reported SPECint92 / SPECbase_int92 | Equal to speed-VAXen by definition |
+| Cross-suite estimate | Rate or speed inferred through its own chain's fitted factors | Conditional on matching and calibration population |
+| Classical or mix estimate | Power-law calibration of classical scores or mix ratings | Not a measured VAX reference score |
+| Manual reconstruction | Workload timing from instructions and hardware assumptions | Planned; separate evidence, not an executed result |
 
-## Shared inputs and fitting update
+VAXen is a unit; the evidence class belongs to each value. Factor CI95, held-out
+P95 and individual prediction intervals are different quantities: a small factor
+CI95 does not imply a small error for an individual historical system.
 
-[Input migration and fitting review](input-unification-fitting-review.md) records source parity, execution-count exclusions and before/after coefficients.
+## How the routes connect
 
-## Source resource audit
+```mermaid
+flowchart TD
+    modernRate[CPU2026 / 2017 / 2006 / 2000 / 95 integer rate] -->|adjacent empirical fits, base and peak separate| rate92[SPEC92 integer rate]
+    rate92 -->|defined factor 25500/604800| rvax[rate-VAXen]
+    modernSpeed[CPU2026 / 2017 / 2006 / 2000 / 95 integer speed] -->|adjacent empirical fits, base and peak separate| int92[SPECint92 speed]
+    int92 -->|defined: VAX-11/780 = 1| svax[speed-VAXen]
+    int89[SPECint89 speed] -->|one-edge bridge, peak only| int92
+    classic[Classical composites and network] -->|power laws through the VAX-11/780| svax
+    mix[Gibson / ADP instruction mixes] -->|joint network with classical scores| svax
+    int92 -.->|diagnostic only: rate ÷ speed| rvax
+```
 
-[Field and runtime-resource audit](spec-resource-field-audit.md) records full integer disclosure coverage, resource anomalies and the count-aware refit, with the initial audit retained as history.
+The graph shows logical relationships, not statistical independence; the
+registry records fitted direction and dependencies. SPEC89 estimates are
+inferred targets and cannot validate themselves as SPECint92 measurements, and
+the classical→SPEC89 route is supported only for the available intersections.
+Composed estimates inherit upstream uncertainty, and shared data or calibration
+factors prevent treating all paths as independent.
 
-## Source evidence
+1. Read [SPEC chains](spec-chains.md) for the modern calibration both quantities
+   rest on.
+2. [SPEC89](spec89.md) extends speed back to 1987–1991 through one edge.
+3. [Classical fits](classical-fits.md) and [instruction mixes](instruction-mix.md)
+   extend it to machines with only Dhrystone, Whetstone, LINPACK or mix ratings.
+   Benchmark publication date and the age of tested hardware are distinct:
+   classical workloads also ran on later machines, which provide overlap rather
+   than pre-SPEC evidence by themselves.
+4. [Identity and dates](identity-and-dates.md) explains which results are the
+   same machine and which year each is plotted at.
 
-- SPEC: [early archives](spec-early-archives.md), [CPU92 rate expansion](spec92-archive-expansion.md),
-  [SPEC89 snapshot](spec89-curated-snapshot.md), [Helman supplement](spec89-helman-worksheet.md),
-  [hardware dates](spec89-hardware-years.md), [89/92 paired-score review](spec89-cpu92-scatter.md).
-- Classical: [source acquisition](classic-benchmark-collection.md),
-  [prior work](classic-spec-literature.md), [DEC/SSCL/Tomari tables](classic-pdf-extraction.md),
-  [initial hardware overlaps](classic-spec-overlap.md).
-- Chronology: [CPU SKU release catalog](cpu-sku-chronology.md) (converted into date events).
-- Identity: [processor](processor-identity.md) and [system](system-identity.md) resolution (schema steps 2 and 2b).
-- Dates: [date events and chronology selection](chronology.md) (schema step 3).
-- Vendor reports: [1990 DEC RISC summary and MIPS Performance Brief 3.5](vendor-performance-reports.md).
-- Usenet lists: [Richardson's Dhrystone lists, SSBA, SPARC LINPACK and Livermore posts, and printed SPEC89 means](usenet-result-lists.md).
-- Earlier reconstruction: [mix/timing observations](early-benchmark-evidence.md),
-  [OCR sample checks](chandra-timesharing-sample.md), [historical data contract](data/historical/README.md).
+Earlier-machine reconstruction (SIMH execution plus trace-based timing) remains
+planned; emulator wall time is not hardware execution time. The
+[machine watchlist](../docs/machine-watchlist.md) lists priority systems.
 
-## New sparse calibration experiment
+## Timeline export
 
-[Per-benchmark network fitting](classic-network-fitting.md) jointly estimates
-individual coefficients from incomplete observations, with explicit clock
-scaling and single/two-family/full-availability holdouts. The
-[mix network](instruction-mix-network.md) adds Gibson/ADP ratings to it. Both
-target speed-VAXen, which the [integer-speed chain](spec-speed-chain.md) extends
-from SPECint92 to CPU2026 in parallel with the rate chain.
-The network uses family power laws through the VAX-11/780. The
-[power-law sensitivity report](classic-power-law-sensitivity.md) compares
-single-metric proportional, free and 780-anchored forms.
+`cpushowspeed plot timeline` combines the saved calibrations with the database
+results; the [timeline contract](../docs/timeline.md) owns the record schema,
+filters and page. It performs no fitting, scaling by processor count or
+residual-based source selection. The [compact audit](data/timeline/unified-audit.json)
+records counts and input/code hashes of the current export (`vaxen-timeline-v4`,
+2026-10-03):
 
-## Historical analyses and storage
+| Rows | Quantity | Records |
+| --- | --- | ---: |
+| SPEC92–2026 rate, base and peak | rate | 58,813 |
+| SPEC92–2026 speed, base and peak | speed | 40,248 |
+| Classical results (one processor or unknown count) | speed | 2,239 |
+| SPEC89 bridge estimates | speed | 188 |
+| Gibson / ADP mix and combined mixes | speed | 546 |
+| **Total** | | **102,034** |
 
-[Archive index](archive/README.md) identifies retired speed-era analyses and
-commands. Their files stay at stable paths. SPEC89 source evidence is actively
-reused by the historical bridge; the original modern speed pipeline remains retired.
+Every record has a unique ID and a positive finite value inside its CI95. The
+full-population Node test reproduces CPU2017 rate, CPU92/CPU95/CPU2006/CPU2026
+speed, SPEC89, a multi-score classical row, a Gibson row and a two-rating
+combined mix through the offline calculator (relative error below 1e-6). The
+removed speed/rate joint rows and the former name-merged historical timeline
+are in Git history.
 
-[Classic snapshots](data/classic/README.md) and [historical observations](data/historical/README.md)
-are machine-readable evidence/results. Large raw documents, DocIR, derived tuples
-and figures remain outside Git. Original values, citations and qualifications
-must survive every conversion; Markdown is not the sole numerical data store.
+## Role and status
 
-## Maintenance
+Role (primary, control, diagnostic, evidence, archive or planned) describes how
+a result is used; status (defined, implemented-conditional, recorded, retired or
+planned) describes what exists. Neither is assigned from residual size alone.
+Source breadth, hardware coverage and transparent limitations matter alongside
+prediction error.
 
-[Cleanup inventory](cleanup-inventory.md) records duplicated code, command/data
-dependencies and provisional generated-artifact dispositions. It is an audit,
-not authorization to remove historical evidence.
+## Registry maintenance
 
-[Calibration cleanup implementation](calibration-cleanup.md) records the current
-shared statistics policy, preparation-only commands and parity checks.
+After adding a metric, data source or analysis, update the registry, then run:
 
-[Schema cleanup inventory](schema-cleanup-inventory.md) maps designs made obsolete
-by the [data schema](../docs/data-schema.md) to migration steps; nothing is removed by it.
+```sh
+uv run --no-sync cpushowspeed research validate
+uv run --no-sync cpushowspeed research render
+```
 
-- [Gibson / ADP bridge preparation](instruction-mix-bridge.md): source definitions and classical-overlap review queue; the [mix network](instruction-mix-network.md) owns the fit.
-
-The [SPEC95/CPU2000 overlap audit](spec95-spec2000-overlap-audit.md) explains
-cross-generation cohort losses using field-level blockers and original disclosures.
-
-- [Unified historical and SPEC rate timeline](unified-vaxen-timeline.md) describes the last working
-  timeline; it is not reproducible after the 2026-10-02 removal of diagnostic experiments.
+Validation checks IDs, references, dependency cycles, registered document
+coverage and required local paths. Derived paths can be absent in a fresh
+checkout and are marked optional. Validation does not certify source accuracy,
+metric equivalence or statistical independence; `render --check` detects a
+stale catalog.

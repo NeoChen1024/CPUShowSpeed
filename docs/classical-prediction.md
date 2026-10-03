@@ -4,8 +4,8 @@
 and predicts **peak SPECint92 speed**, which is speed-VAXen by definition
 (VAX-11/780 = 1, the SPEC92 reference machine), with conditional calibration
 CI95. Classical routes are anchored to speed, not rate (user decision 2026-10-03);
-see the [SPEC integer-speed chain](../research/spec-speed-chain.md). It reads an existing calibration bundle; prediction performs no fitting
-or network access. The [network experiment](../research/classic-network-fitting.md)
+see the [SPEC integer-speed chain](../research/spec-chains.md#speed-chain). It reads an existing calibration bundle; prediction performs no fitting
+or network access. The [network experiment](../research/classical-fits.md#sparse-network)
 owns coefficient estimation and empirical limitations.
 
 ## Common prediction entry point

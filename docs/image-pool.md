@@ -72,7 +72,7 @@ Structured OCR and captions remain unverified. Important relationship
 diagrams and numeric charts still need visual checks; a valid-looking
 graph can have wrong edges. A source figure can also be omitted from OCR
 entirely, which captioning emitted images cannot repair. The
-[time-sharing sample review](../research/chandra-timesharing-sample.md)
+[time-sharing sample review](../research/historical-sources.md#ocr-reliability)
 shows both cases.
 
 ## Image-only caption batch

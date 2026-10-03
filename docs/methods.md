@@ -1,6 +1,6 @@
 # Research methods
 
-This document owns shared scientific rules for the [four research tracks](../research/overview.md).
+This document owns shared scientific rules for the [four research tracks](../research/README.md).
 The modern SPEC rate and speed chains, classical speed composites and the
 one-edge SPEC89 → SPECint92 bridge are implemented conditional estimates. Manual instruction-mix/SIMH
 reconstruction and a universal historical converter remain unimplemented.
@@ -56,7 +56,7 @@ sets the VAX-11/780's one-copy reference rate to `604800 / 25500`, about
 unit. Decimal SI labels such as `1k VAXen` and `26m VAX` are display formatting
 only; stored values remain unprefixed numbers.
 
-The [rate audit](../research/spec95-spec2026-rate-fitting.md) gives both the
+The [rate audit](../research/spec-chains.md) gives both the
 CPU95-relative internal chain and the exploratory CPU92-anchored VAXen chain.
 Keep its original scores, per-edge factors and source hashes with every
 normalized estimate. Architecture-dependent overlap and limited CPU2026
@@ -81,7 +81,7 @@ provenance requirements.
 The implemented `bridge bootstrap-rate-chain` command audits cross-edge
 configuration/source overlap, then propagates 10,000 complete multiplier
 vectors under a disjoint-cohort independence assumption. The
-[rate audit](../research/spec95-spec2026-rate-fitting.md#conditional-whole-chain-confidence-intervals)
+[rate audit](../research/spec-chains.md#conditional-whole-chain-confidence-intervals)
 defines its pointwise CI scope and the stored replicate arrays. These quantify
 conditional calibration sampling variation, not individual-machine prediction
 error or shared systematic bias. `plot annual-rate-ci` propagates those shared vectors to yearly quartiles and
@@ -143,9 +143,9 @@ scenario rather than an inferred OS/compiler correction.
 On 2026-09-27, the user selects **direct SPEC92 integer rate** as the primary
 classical target, with base and peak separate. Normalize the reported rate by
 `25500 / 604800` once, then fit the classical composite directly in VAXen.
-The implemented [rate composite experiment](../research/classic-composite-fitting.md)
+The implemented [rate composite experiment](../research/classical-fits.md#direct-composites)
 provides pair/triple coefficients, model-bootstrap CI95 and matched single-score
-baselines. The subsequent [SPEC89 rate bridge experiment](../research/spec89-bridge.md)
+baselines. The subsequent [SPEC89 rate bridge experiment](../research/spec89.md)
 adds explicitly estimated SPEC89 targets through two observed edges, native
 SPECint89→SPECint92 and same-column SPECint92→integer-rate VAXen. It propagates
 shared bridge uncertainty and separates holdout errors on observed rate from
@@ -186,8 +186,7 @@ on including more diverse observations.
 
 ## Unified weighting and error policy
 
-Selected 2026-09-27; implementation/parity evidence is in the
-[calibration cleanup](../research/calibration-cleanup.md). Each independent
+Selected 2026-09-27; the implementation/parity review is in Git history. Each independent
 model/configuration has equal total fitting weight, using its median log ratio.
 Modern system/configuration grouping and classical normalized model identity
 remain declared grouping contracts, not extra submission-count weights.
@@ -210,7 +209,7 @@ retaining shared-model dependence.
 
 ## Sparse benchmark network experiment
 
-The [network experiment](../research/classic-network-fitting.md) jointly fits
+The [network experiment](../research/classical-fits.md#sparse-network) jointly fits
 power laws (Dhrystone versions share an exponent, each Whetstone precision has
 its own, LINPACK has one; intercepts tied to the
 VAX-11/780's measured scores) and latent unanchored configuration values.

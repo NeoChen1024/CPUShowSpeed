@@ -204,7 +204,7 @@ Order: exact text, then rules with their constraints, then family patterns. A
 failed SKU rule keeps its reason when a pattern resolves the family; overlapping
 patterns are reported as ambiguous instead of being ordered. Every consumer reads
 the resolution; none re-implements matching. The step-2 results and comparison
-with the previous key are in [processor identity](../research/processor-identity.md).
+with the previous key are in [processor identity](../research/identity-and-dates.md#processor-identity).
 
 ### `observation`
 
@@ -250,7 +250,7 @@ hand from a report table or post, one row per printed cell.
 `reviewed-vector:<source>`, converting the `reviewed_reading` when present, else the printed unit, to the metric's unit by a
 named rule (Dhrystones/s ÷ 1757 = DMIPS; KWIPS ÷ 1000 = MWIPS; KFLOPS ÷ 1000 = MFLOPS) recorded in the
 observation. The first rows are the
-[Digital RISC Family Performance Summary](../research/vendor-performance-reports.md)
+[Digital RISC Family Performance Summary](../research/historical-sources.md#vendor-performance-reports)
 (2026-10-03). The DEC N3909 report columns (661 rows, 140 with a reviewed reading)
 replaced a separate unit-interpretation policy the same day. The older `research/data/historical/observations.jsonl` rows
 (Honeywell 300, DEC benchmark memo) are not yet migrated.
@@ -272,7 +272,7 @@ Implemented 2026-10-02 as `data/curated/date_event.jsonl`.
 Dates a result reports itself (SPEC hardware availability, test and publication
 months, Longbottom table years) and catalogue years stay extracted
 (`result-records.jsonl`, `model-years.jsonl`) rather than curated. The selection
-order is implemented in `data build`; see [chronology](../research/chronology.md).
+order is implemented in `data build`; see [chronology](../research/identity-and-dates.md#date-events).
 
 ### `review`
 
@@ -339,7 +339,7 @@ The timeline and fitters then read these views instead of private lookups.
 | SPEC89 `aliases.csv` | `alias`, with the SPEC89 package adaptation in step 5 |
 | Input catalog `observations.jsonl` / `sources.jsonl` (removed in step 5d) | Extracted `observation` v2 + `hardware_config` + SPEC date events |
 | `historical/observations.jsonl` | Curated `observation` v2 |
-| `year-*-changes.csv`, `*-targets.csv`, `*-open-leads.csv`, pass audits | Move to `research/data/archive/<pass>/` as historical pass logs |
+| `year-*-changes.csv`, `*-targets.csv`, `*-open-leads.csv`, pass audits | Removed; the pass logs remain in Git history |
 | Fit outputs, timeline Parquet | Unchanged products, gaining input-table hashes |
 
 The SPEC89 v2.0.0 snapshot remains a versioned external package; it is adapted
@@ -365,7 +365,7 @@ changed.
    nine prefix splits, an empty key grouping clock-only texts). 71.7% of input
    observations resolve to a SKU and 20.2% to a family.
    **2b. System identity** (done 2026-10-02): vendors, derived SPEC system models
-   and hardware configurations; see [system identity](../research/system-identity.md).
+   and hardware configurations; see [system identity](../research/identity-and-dates.md#system-identity).
    Equality-based configurations cannot link suites that omit counts (CPU92 has no
    core counts); cross-suite pairing is a fitter policy over equal-or-unknown facts.
 3. **Dates** (done 2026-10-02). `date_event` from the SKU catalogue, CPU proxies,
@@ -380,7 +380,7 @@ changed.
    accepted CPU92–CPU95 speed pairs and 12 mix↔classical system links (11 awaiting
    review, one rejected). The EPYC 7313 launch date that justified the exclusion became a
    SKU release event, so all 26 EPYC 7313 results are CPU-dated (2021), including
-   the two that reported 2019 availability. See [chronology](../research/chronology.md#reviews).
+   the two that reported 2019 availability. See [chronology](../research/identity-and-dates.md#date-reviews).
 5. **Observations**, in four parts.
    - **5a** (done 2026-10-02): `benchmark-observation-v2`, the `metric` table, the
      `observation` table and dataset sources for the SPEC bulk exports, the SPEC89
@@ -395,7 +395,7 @@ changed.
      record one `inputs_sha256` over the database's input hashes. The CPU92→CPU95
      same-OS base factor moved +2.10%, CPU2000→CPU2006 peak −4.80%, other edges
      within 1.4%; 71 of 72 annual leaders are unchanged. See the
-     [rate audit](../research/spec95-spec2026-rate-fitting.md#changes-from-the-name-matched-fit).
+     [rate audit](../research/spec-chains.md#history).
      The CPU92 anchor then fits only reviewed-accepted pairs: 44 `result_pair`
      reviews of the automatic hardware-near CPU92/CPU95 rate pairs (42 accepted, 2
      rejected for differing cache), which left the same-OS anchor unchanged. The 13
@@ -415,20 +415,20 @@ changed.
      tracked snapshots are archived. Same-column cohorts and both SPEC89 bridge
      edges are unchanged; cross-source composites, the network (−8% to +4%) and the
      SPEC89 joint cohorts change. See the
-     [rate composites](../research/classic-composite-fitting.md#changes-from-the-name-matched-fit-2026-10-02),
-     [SPEC89 bridge](../research/spec89-bridge.md#changes-from-the-name-matched-run-2026-10-02)
-     and [network](../research/classic-network-fitting.md#changes-from-the-name-matched-run-2026-10-02).
+     [rate composites](../research/classical-fits.md#history),
+     [SPEC89 bridge](../research/spec89.md#history)
+     and [network](../research/classical-fits.md#history).
    - **5d** (done 2026-10-02): `plot timeline` (`vaxen-timeline-v3`) reads the
      database and takes every year from `result_chronology`. Its population is
      SPEC92–2026 rate results through the saved rate chain, every one-processor
      classical result through the saved network and the saved SPEC89 estimates:
      60,633 records (58,813 / 1,641 / 179), of which 753 are undated. Mix rows,
      speed/joint estimates and matching policies are dropped from the timeline;
-     the same day the [mix network](../research/instruction-mix-network.md) and
+     the same day the [mix network](../research/instruction-mix.md#mix-network) and
      speed/rate predictors (removed in 5e) are refitted
      on the database and their rows restored, without the matching policies. The
-     legacy date files above and the per-pass date tables are archived in
-     [`research/data/archive/legacy-dates/`](../research/data/archive/legacy-dates/README.md);
+     legacy date files above and the per-pass date tables were
+     removed from the working tree and remain in Git history;
      their readers (`cpu-chronology`, `documents year-candidates`/`year-evidence`,
      `classic historical-timeline`), the one-time importers (`import-dates`,
      `import-reviews`, `import-processors`, `migrate-sources`) and the input catalog
@@ -436,20 +436,20 @@ changed.
      is unchanged by the deletion.
    - **5e** (done 2026-10-03): speed and rate become two parallel quantities by
      user decision. `bridge fit-speed-chain` fits the
-     [integer-speed chain](../research/spec-speed-chain.md) to SPECint92 speed
+     [integer-speed chain](../research/spec-chains.md#speed-chain) to SPECint92 speed
      (speed-VAXen); classical, SPEC89 and mix routes are re-anchored to it
      (`composite-fit`, `spec89-fit`, `predict-speed` replace the rate-named
      commands); the speed/rate predictors and their joint rows are removed; and
      `plot timeline` writes `vaxen-timeline-v4` with a `quantity` per row:
      101,427 records (58,813 rate, 42,614 speed). Adding the `curated_observation`
-     rows of the [1990 DEC RISC summary](../research/vendor-performance-reports.md)
-     and [MIPS Performance Brief 3.5](../research/vendor-performance-reports.md#mips-performance-brief-35-1988)
+     rows of the [1990 DEC RISC summary](../research/historical-sources.md#vendor-performance-reports)
+     and [MIPS Performance Brief 3.5](../research/historical-sources.md#mips-performance-brief-35-1988)
      the same day gave 103,192 observations, 56,561 results and 101,450 records;
-     [Richardson's Dhrystone lists](../research/usenet-result-lists.md) then gave
+     [Richardson's Dhrystone lists](../research/historical-sources.md#usenet-result-lists) then gave
      103,762 observations, 57,131 results and 102,020 records; the smaller
-     [Usenet result posts](../research/usenet-result-lists.md#smaller-result-posts-19901991)
+     [Usenet result posts](../research/historical-sources.md#smaller-result-posts-19901991)
      then gave 103,773 observations, 57,136 results and 102,025 records, and the
-     [printed SPEC89 means](../research/usenet-result-lists.md#printed-spec89-means-19901991)
+     [printed SPEC89 means](../research/historical-sources.md#printed-spec89-means-19901991)
      103,782 observations, 57,145 results and 102,034 records.
 
    By user decision (2026-10-02) step 5 is compared with the former products, not
@@ -459,8 +459,7 @@ changed.
 
 `data validate` and `data build` were implemented in step 1 and are extended per step.
 
-The [schema cleanup inventory](../research/schema-cleanup-inventory.md) lists what
-each step retires and the order of independent cleanup.
+Each step above names what it retires; the retired files remain in Git history.
 
 ## Decisions
 

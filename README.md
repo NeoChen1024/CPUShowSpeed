@@ -34,7 +34,7 @@ submission. Classical, SPEC89 and instruction-mix estimates are speed-VAXen.
 On a multi-core machine rate ÷ speed approximates effective parallelism; it is a
 diagnostic, not a conversion. `1 VAX`, `2 VAXen`, `1k VAXen`,
 `2M VAXen` and `26m VAX` are display labels; stored values are unprefixed numbers.
-See [unit definitions](research/tracks/vaxen.md) and the
+See [unit definitions](research/README.md#the-vaxen-unit) and the
 [SPEC CPU92 rate definition](https://www.spec.org/cpu92/specrate.txt).
 
 ## The fitting assumption: y = kx
@@ -65,12 +65,12 @@ fitted against rate and does not change the rate-VAXen definition.
 
 | Track | Purpose | Current position |
 | --- | --- | --- |
-| [1. VAXen reference](research/tracks/vaxen.md) | Define the common unit and evidence classes | Two parallel quantities: rate-VAXen (CPU92 rate normalization) and speed-VAXen (SPECint92 = 1) |
-| [2. SPEC92–2026 rate and speed chains](research/tracks/spec-rate.md) | Fit successive integer-rate and integer-speed suites, separately | Both implemented, conditional calibration; CPU2026 coverage remains limited |
-| [3. SPEC89 recovery and bridge](research/tracks/spec89.md) | Recover scattered scores and link SPECint89 → SPECint92 speed | Implemented one-edge peak estimate |
-| [4. Classical benchmark extension](research/tracks/classical.md) | Use early workloads to establish historical speed-VAXen calibration points | Direct and joint pair/triple experiments; older-machine extrapolation remains conditional |
+| [1. VAXen reference](research/README.md#the-vaxen-unit) | Define the common unit and evidence classes | Two parallel quantities: rate-VAXen (CPU92 rate normalization) and speed-VAXen (SPECint92 = 1) |
+| [2. SPEC92–2026 rate and speed chains](research/spec-chains.md) | Fit successive integer-rate and integer-speed suites, separately | Both implemented, conditional calibration; CPU2026 coverage remains limited |
+| [3. SPEC89 recovery and bridge](research/spec89.md) | Recover scattered scores and link SPECint89 → SPECint92 speed | Implemented one-edge peak estimate |
+| [4. Classical benchmark extension](research/classical-fits.md) | Use early workloads to establish historical speed-VAXen calibration points | Direct and joint pair/triple experiments; older-machine extrapolation remains conditional |
 
-Start with the [research overview](research/overview.md). The
+Start with the [research index](research/README.md). The
 [model registry](research/model-registry.json) records metric types, datasets,
 calculation dependencies and shared evidence; its [generated catalog](research/catalog.md)
 provides a readable map of every research document. There is no implication that
@@ -108,5 +108,5 @@ It uses the saved network calibration to estimate SPECint92 peak speed
   Initialize the `third-party/` submodules (decoder and theme sources) with `git submodule update --init`, then serve the Parquet-backed export over HTTP; no npm build is required.
 - [Documentation index](docs/README.md): contracts, methods and acquisition tools.
 - [Research index](research/README.md): current analyses, source evidence and diagnostics.
-- [Annual rate results](research/annual-rate-vaxen.md): configuration-year views.
+- [Annual rate results](research/spec-chains.md#annual-rate-view): configuration-year views.
 - [Roadmap](docs/TODO.md): remaining evidence and validation work.
