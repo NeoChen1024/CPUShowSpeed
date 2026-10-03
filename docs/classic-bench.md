@@ -1,10 +1,11 @@
 # Classical benchmark runner
 
 Status (2026-10-03): the `classic-bench` runner and its `cpushowspeed bench`
-wrapper are implemented and checked on Linux x86-64 with GCC 16.2 and Clang
-22.1. The FreeBSD, NetBSD and OpenBSD code paths are written but **not yet
-compiled or run on those systems**. Ingesting submitted results into the curated
-data and using them in calibration remain planned.
+wrapper are implemented. The runner is checked on Linux x86-64 (GCC 16.2,
+Clang 22.1) and FreeBSD 15.1 amd64 (Clang 19.1). The NetBSD and OpenBSD code
+paths are written but **not yet compiled or run on those systems**. Ingesting
+submitted results into the curated data and using them in calibration remain
+planned.
 
 This document owns the runner that executes Dhrystone 1.1/2.1, Whetstone and
 LINPACK n=100 on current hardware, as a benchmark or as a timed stress test.
@@ -83,9 +84,12 @@ in a `CPUShowSpeed:` comment.
 
 ```sh
 git submodule update --init third-party/nlohmann-json
-cmake -S classic-benchs -B classic-benchs/build -G Ninja
+cmake -S classic-benchs -B classic-benchs/build
 cmake --build classic-benchs/build
 ```
+
+Any CMake generator works; `-G Ninja` is optional. On FreeBSD, the default
+Makefile generator uses GNU make (`gmake`).
 
 The C++17 harness uses [nlohmann/json](https://github.com/nlohmann/json)
 v3.12.0 from the `third-party/nlohmann-json` submodule.
@@ -224,7 +228,8 @@ submitters to these commands.
 
 Unavailable values are reported as `null`, never estimated. The reported
 frequency is the OS's current value, not a measured clock; on NetBSD and
-OpenBSD it is system-wide.
+OpenBSD it is system-wide. Virtual machines often expose none: the FreeBSD test
+host, a KVM guest, has no `dev.cpu.N.freq`.
 
 ## Checks performed
 
@@ -233,23 +238,32 @@ OpenBSD it is system-wide.
 - All eight benchmarks pass their result checks:
   - with GCC and Clang reference builds, for one copy;
   - with the GCC reference build, for eight pinned and sixteen unpinned copies.
-- `bench report` is covered by unit tests and was checked on a real 16-copy
-  result.
+- On FreeBSD 15.1-RELEASE-p3 amd64, a KVM guest with a Xeon Platinum 8275CL
+  and 16 logical CPUs (2026-10-03):
+  - the CMake build succeeds with Clang 19.1.7 and gmake, with no warnings;
+  - the embedded source hashes match the repository;
+  - all eight benchmarks pass for one copy and for sixteen pinned copies;
+  - `cpuset -g` shows each copy bound to the CPU requested with `--cpus`;
+  - too many copies for the CPUs, and invalid options, exit with status 2;
+  - the CPU model is read correctly, and frequency is `null`.
+- `bench report` is covered by unit tests, and was checked on real Linux and
+  FreeBSD results.
 - Invalid options exit with status 2.
 - A Clang custom build (`-O3 -march=native`) runs and is labelled `custom`, and
   `-DCMAKE_C_FLAGS` is rejected at configure time.
 - Not yet checked:
   - a deliberately failing result check;
-  - the BSD code paths;
+  - the NetBSD and OpenBSD code paths, and FreeBSD frequency on real hardware;
   - agreement with published scores for a machine whose historical results are
     known.
 
 ## Data use (planned)
 
 A curated adapter would record accepted submissions as project measurements,
-with the machine's resolved system and processor identity. Only `copies=1` reference-profile results would be eligible as
-classical calibration inputs, and only after their machine has matching SPEC
-speed results; custom-profile and multi-copy results stay diagnostic.
+with the machine's resolved system and processor identity. Only `copies=1`
+reference-profile results would be eligible as classical calibration inputs, and
+only after their machine has matching SPEC speed results; custom-profile and
+multi-copy results stay diagnostic.
 
 ## Open items
 
@@ -258,4 +272,5 @@ speed results; custom-profile and multi-copy results stay diagnostic.
 - Compare netlib `linpackc.new` with the Longbottom `LINPACK.C` derivative.
 - Search for an original Richardson Dhrystone 1.1 file to compare with the
   Longbottom/Day copy.
-- Build and run on FreeBSD, NetBSD and OpenBSD.
+- Build and run on NetBSD and OpenBSD, and read FreeBSD frequency on real
+  hardware.
