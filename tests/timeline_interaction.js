@@ -87,7 +87,7 @@ if(process.argv[3]==='full'){
  inspectLineage('edge','speed-2017-to-2006');assert.equal(elements['#fit-edge'].value,'cpu2017-cpu2006');
  assert(elements['#lineage-card'].innerHTML.includes('Held-out absolute P95'));
  inspectLineage('edge','int92-rate-vaxen');assert(elements['#lineage-card'].innerHTML.includes('never chained'));
- inspectLineage('edge','instruction-mix-joint-network');assert(elements['#lineage-card'].innerHTML.includes('speed-VAXen / KIPS'));
+ inspectLineage('edge','instruction-mix-joint-network');assert(elements['#lineage-card'].innerHTML.includes('speed-VAXen at 1 KIPS'));
  assert(!lineage.nodes.some(n=>n.id.startsWith('predictor-')));
  assert.throws(()=>historicalPrediction({}),/at least one/);
  assert.throws(()=>historicalPrediction({'Dhrystone:v1.1_DMIPS':0}),/greater than zero/);

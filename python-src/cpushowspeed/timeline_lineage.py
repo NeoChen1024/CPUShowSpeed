@@ -190,7 +190,7 @@ def build_lineage(output):
         90,
         details="Six metrics retain version, native/SP/DP precision and original units. Training uses observed SPECint92 anchors and optional SPEC89-derived anchors.",
     )
-    node("classic-model", "Classical joint model", "Six per-benchmark coefficients", 465, 455, 275, 100, "model")
+    node("classic-model", "Classical joint model", "Family power laws through the VAX-11/780", 465, 455, 275, 100, "model")
     edge(
         "classical-sparse-network",
         "classical",
@@ -202,10 +202,10 @@ def build_lineage(output):
     stats = [
         dict(
             metric=r["metric"],
-            factor=float(r["coefficient_vaxen_per_score"]),
-            low=float(r["factor_ci95_low"]),
-            high=float(r["factor_ci95_high"]),
-            unit="speed-VAXen / " + r["score_unit"],
+            factor=float(r["exponent"]),
+            low=float(r["exponent_ci95_low"]),
+            high=float(r["exponent_ci95_high"]),
+            unit=f"family exponent; 1 speed-VAXen at the VAX-11/780's {float(r['vax780_anchor_score']):.4g} {r['score_unit']}",
         )
         for r in read_csv(classic_path)
         if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89"
@@ -217,7 +217,7 @@ def build_lineage(output):
         "Weighted geometric estimate",
         stats,
         kind="joint",
-        details="linear_clock / with_spec89. Original classical observations and SPECint92 anchors are jointly fitted over resolved systems; predicted speed-VAXen is not measured training evidence. CI95 retains shared draws and excludes model discrepancy.",
+        details="linear_clock / with_spec89. log speed-VAXen = b_family × (log score − log VAX-11/780 score). Original classical observations and SPECint92 anchors are jointly fitted over resolved systems; predicted speed-VAXen is not measured training evidence. CI95 retains shared draws, including the 780 anchor's run-sample error, and excludes model discrepancy and era drift.",
     )
 
     node(
@@ -230,7 +230,7 @@ def build_lineage(output):
         90,
         details="Ratings attach to every network node of their resolved system; plus_pending_links also attaches links still under review. No attached system has a SPEC target, so the mix coefficients rest on classical scores.",
     )
-    node("mix-model", "Classical + mix joint model", "Gibson and ADP share one family", 465, 615, 275, 100, "model")
+    node("mix-model", "Classical + mix joint model", "Gibson and ADP share one family exponent", 465, 615, 275, 100, "model")
     run = " / ".join(TIMELINE_RUN[k] for k in ("links", "scenario", "cohort"))
     mix_rows = [r for r in read_csv(mix_path) if all(r[k] == v for k, v in TIMELINE_RUN.items())]
     edge(
@@ -253,14 +253,14 @@ def build_lineage(output):
         "instruction-mix-joint-network",
         "mix-model",
         "speed-vaxen",
-        "kᵢ × rating",
+        "aᵢ × rating^b",
         [
             dict(
                 metric=MIX_LABELS[r["metric"]],
-                factor=float(r["coefficient_vaxen_per_score"]),
-                low=float(r["ci95_vaxen_low"]),
-                high=float(r["ci95_vaxen_high"]),
-                unit="speed-VAXen / KIPS",
+                factor=float(r["exponent"]),
+                low=float(r["exponent_ci95_low"]),
+                high=float(r["exponent_ci95_high"]),
+                unit=f"family exponent; {float(r['vaxen_at_unit_score']):.4g} speed-VAXen at 1 KIPS (free intercept)",
             )
             for r in mix_rows
             if r["metric"] in MIX_METRICS
@@ -412,7 +412,7 @@ function lineageStats(edges){return edges.map(e=>{
  let stats=e.stats||[];
  if(lineageRecord){const mode=modeOf(lineageRecord);stats=stats.filter(s=>!s.mode||s.mode===mode||s.mode==='peak_proxy');}
  return `<h4>${esc(e.label)}</h4><p><code>${esc(e.formula)}</code><br>${esc(e.details)}</p>`+
- (stats.length?'<table><thead><tr><th>Metric / mode</th><th>k · CI95</th></tr></thead><tbody>'+stats.map(r=>`<tr><td>${esc(r.metric||r.mode)}<br>${esc(r.unit)}</td><td>${lineageNumber(r.factor)}<br>${lineageNumber(r.low)}–${lineageNumber(r.high)}${r.groups!==undefined?`<br>${r.groups} models/groups · ${r.pairs} pairs`:''}${r.error!==undefined?`<br>${esc(r.error_label)}: ${lineageNumber(r.error)}`:''}</td></tr>`).join('')+'</tbody></table>':'')+
+ (stats.length?'<table><thead><tr><th>Metric / mode</th><th>Value · CI95</th></tr></thead><tbody>'+stats.map(r=>`<tr><td>${esc(r.metric||r.mode)}<br>${esc(r.unit)}</td><td>${lineageNumber(r.factor)}<br>${lineageNumber(r.low)}–${lineageNumber(r.high)}${r.groups!==undefined?`<br>${r.groups} models/groups · ${r.pairs} pairs`:''}${r.error!==undefined?`<br>${esc(r.error_label)}: ${lineageNumber(r.error)}`:''}</td></tr>`).join('')+'</tbody></table>':'')+
  `<p><a href="${esc(e.owner)}">Research / method notes</a> · ${esc(e.status)}</p>`;
  }).join('');}
 function openFit(edge,mode){

@@ -24,10 +24,11 @@ OPTIONS = {
 def write_prediction_manifest(output, runs):
     """Bind coefficient rows and draw column identities to their exact bytes."""
     manifest = dict(
-        schema_version=2,
+        schema_version=3,
         target_metric="SPECint92",
         mode="peak",
         unit="speed-VAXen",
+        form="log speed-VAXen = intercept + exponent * log(score)",
         files={
             name: hashlib.sha256((output / name).read_bytes()).hexdigest()
             for name in ("coefficients.csv", "coefficient-log-draws.npz")
@@ -37,6 +38,7 @@ def write_prediction_manifest(output, runs):
                 scenario=r["scenario"],
                 cohort=r["cohort"],
                 draw_key=r["scenario"] + "__" + r["cohort"],
+                draw_arrays=dict(intercept="__intercept", exponent="__exponent"),
                 metrics=r["calibrated_metrics"],
             )
             for r in runs
@@ -65,7 +67,7 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
         raise ValueError("calibration bundle missing; run cpushowspeed classic network-fit first")
     manifest = json.loads(manifest_path.read_text())
     if (
-        manifest.get("schema_version") != 2
+        manifest.get("schema_version") != 3
         or manifest.get("target_metric") != "SPECint92"
         or manifest.get("mode") != "peak"
         or manifest.get("unit") != "speed-VAXen"
@@ -98,29 +100,37 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
     if len(rows) != len(bymetric) or set(bymetric) != set(metrics):
         raise ValueError("coefficient rows disagree with declared draw columns")
     with np.load(io.BytesIO(files["coefficient-log-draws.npz"]), allow_pickle=False) as saved:
-        draws = np.asarray(saved[run["draw_key"]], dtype=float)
-    if draws.ndim != 2 or draws.shape[1] != len(metrics) or len(draws) < 100 or not np.isfinite(draws).all():
-        raise ValueError("invalid joint coefficient draw array")
-    if any(int(r["valid_bootstrap_draws"]) != len(draws) for r in rows):
+        intercepts, exponents = (
+            np.asarray(saved[run["draw_key"] + run["draw_arrays"][k]], dtype=float) for k in ("intercept", "exponent")
+        )
+    for draws in (intercepts, exponents):
+        if draws.shape != intercepts.shape or draws.ndim != 2 or draws.shape[1] != len(metrics) or len(draws) < 100:
+            raise ValueError("invalid joint coefficient draw arrays")
+        if not np.isfinite(draws).all():
+            raise ValueError("invalid joint coefficient draw arrays")
+    if any(int(r["valid_bootstrap_draws"]) != len(intercepts) for r in rows):
         raise ValueError("coefficient/draw sample counts disagree")
     weights = metric_weights(scores)
     point_log = 0.0
-    draw_logs = np.zeros(len(draws))
+    draw_logs = np.zeros(len(intercepts))
     components = []
     for metric in sorted(scores):
         score = scores[metric]
-        k = positive(bymetric[metric]["coefficient_vaxen_per_score"], "coefficient")
+        a = math.log(positive(bymetric[metric]["vaxen_at_unit_score"], "coefficient"))
+        b = positive(bymetric[metric]["exponent"], "exponent")
         weight = weights[metric]
-        point_log += weight * (math.log(score) + math.log(k))
-        draw_logs += weight * (math.log(score) + draws[:, metrics.index(metric)])
+        point_log += weight * (a + b * math.log(score))
+        i = metrics.index(metric)
+        draw_logs += weight * (intercepts[:, i] + exponents[:, i] * math.log(score))
         components.append(
             dict(
                 metric=metric,
                 score=score,
                 unit=bymetric[metric]["score_unit"],
                 weight=weight,
-                coefficient_vaxen_per_score=k,
-                individual_vaxen=positive(score * k, "component estimate"),
+                vaxen_at_unit_score=math.exp(a),
+                exponent=b,
+                individual_vaxen=positive(math.exp(a + b * math.log(score)), "component estimate"),
             )
         )
     point = positive(math.exp(point_log), "combined estimate")
@@ -139,7 +149,7 @@ def predict_scores(scores, calibration_dir, scenario="linear_clock", cohort="wit
         components=components,
         family_weighting="equal families, equal variants within each available family",
         confidence_level=0.95,
-        bootstrap_draws=len(draws),
+        bootstrap_draws=len(intercepts),
         uncertainty_scope="conditional_joint_calibration_not_individual_machine_prediction_interval",
         input_clock_policy="scores used at supplied target configuration; no additional frequency scaling",
         calibration_manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),

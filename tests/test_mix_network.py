@@ -63,12 +63,15 @@ class EstimateTests(unittest.TestCase):
             mix("m:tr:1:ADP Mix", "sys:a", A, 9.0),
             mix("m:tr:2:ADP Mix", "sys:b", A, 1.0),
         ]
-        alpha = {G: math.log(0.5), A: math.log(2.0)}
-        # Perfectly anticorrelated draws cancel in the two-mix combination.
-        samples = np.column_stack([np.linspace(-1, 1, 101) + alpha[G], -np.linspace(-1, 1, 101) + alpha[A]])
-        rows = {r["record_id"]: r for r in estimates(ratings, alpha, [G, A], samples, {})}
+        # One shared mix exponent with per-mix intercepts.
+        calib = {G: (math.log(0.5), 0.5), A: (math.log(2.0), 0.5)}
+        # Perfectly anticorrelated intercept draws cancel in the two-mix combination.
+        t = np.linspace(-1, 1, 101)
+        intercepts = np.column_stack([t + calib[G][0], -t + calib[A][0]])
+        exponents = np.full_like(intercepts, 0.5)
+        rows = {r["record_id"]: r for r in estimates(ratings, calib, [G, A], intercepts, exponents, {})}
         combined = rows["m:tr:1"]
-        self.assertAlmostEqual(combined["estimated_vaxen"], math.sqrt(4.0 * 0.5 * 9.0 * 2.0))
+        self.assertAlmostEqual(combined["estimated_vaxen"], math.sqrt(0.5 * 4.0**0.5 * 2.0 * 9.0**0.5))
         self.assertAlmostEqual(combined["ci95_low"], combined["ci95_high"])
         self.assertEqual(json.loads(combined["result_ids"]), ["m:tr:1:Gibson Mix", "m:tr:1:ADP Mix"])
         self.assertEqual(rows["m:tr:2"]["combination"], "single_available")

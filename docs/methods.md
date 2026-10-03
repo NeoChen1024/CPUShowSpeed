@@ -198,10 +198,12 @@ retaining shared-model dependence.
 ## Sparse benchmark network experiment
 
 The [network experiment](../research/classic-network-fitting.md) jointly fits
-per-benchmark log coefficients and latent unanchored configuration values.
-Targets fix observed rate-VAXen or qualified SPEC89-derived values. Unanchored
-co-observations constrain relative coefficients; disconnected metrics remain
-unidentified. This new experimental log-weighted-least-squares estimator is
+family power laws (one exponent per benchmark family, intercepts tied to the
+VAX-11/780's measured scores) and latent unanchored configuration values.
+Targets fix observed speed-VAXen or qualified SPEC89-derived values. Unanchored
+co-observations constrain exponents and intercepts; disconnected metrics remain
+unidentified. Era drift between classical scores and SPEC is a documented
+limitation, not a model term. This new experimental log-weighted-least-squares estimator is
 distinct from the ordinary model-median ratio fit above. Weight is equal per
 informative model, then per node, family and variant; repeated observations
 contribute to the within-node/metric log median.

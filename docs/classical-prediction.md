@@ -89,13 +89,15 @@ cohort, `target_metric` (`SPECint92`), `unit` (`speed-VAXen`), `vaxen`,
 
 ## Calculation and uncertainty
 
-Each score gives `V_b = k_b * score_b`. Give available benchmark families equal
+Each score gives `V_b = A_b * score_b^beta_f`: a power law with one exponent per
+benchmark family, whose intercept places the VAX-11/780's measured score at 1
+speed-VAXen. Give available benchmark families equal
 weight and split a family's weight equally across its supplied versions. The
 combined speed-VAXen estimate is the weighted geometric mean of `V_b`. For example,
 Dhrystone 1.1 + Dhrystone 2.1 + LINPACK get weights 1/4, 1/4 and 1/2.
 
-For CI95, apply those same weights to each **joint** log-coefficient bootstrap
-replicate and take the linear 2.5/97.5 percentiles of the final estimates. Do
+For CI95, apply those same weights to each **joint** bootstrap replicate of
+intercepts and exponents and take the linear 2.5/97.5 percentiles of the final estimates. Do
 not geometrically combine marginal interval endpoints or treat coefficients
 as independent. The interval describes conditional calibration uncertainty,
 not an individual-machine prediction interval, source-score error or unknown
@@ -112,9 +114,9 @@ again**. The original linear-clock fit applied its qualified CPU-identity rule.
 Default bundle directory: `data/derived/classic/network-fit/`.
 Use `--calibration-dir PATH` for another bundle. The three required files are:
 
-- `coefficients.csv` — point factors and score units.
-- `coefficient-log-draws.npz` — correlated coefficient draws.
-- `prediction-calibration.json` — schema, target metric, normalization, ordered
+- `coefficients.csv` — exponents, speed-VAXen at unit score and score units.
+- `coefficient-log-draws.npz` — correlated intercept and exponent draws.
+- `prediction-calibration.json` — schema (version 3), form, target metric, normalization, ordered
   metric columns for each scenario/cohort, and SHA-256 hashes of the two files.
 
 These derived files can be copied together to use the predictor elsewhere.

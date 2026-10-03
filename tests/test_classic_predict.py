@@ -23,16 +23,22 @@ class PredictionTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.metrics = sorted(m for m, u in OPTIONS.values())
         self.coefficients = {m: float(2 ** (i + 1)) for i, m in enumerate(self.metrics)}
+        self.exponent = 0.8
         t = np.linspace(-0.3, 0.3, 300)
         columns = [math.log(self.coefficients[m]) + (t if m.startswith("Dhrystone") else -t) for m in self.metrics]
         self.draws = np.array(columns).T
-        np.savez_compressed(self.root / "coefficient-log-draws.npz", linear_clock__with_spec89=self.draws)
+        np.savez_compressed(
+            self.root / "coefficient-log-draws.npz",
+            linear_clock__with_spec89__intercept=self.draws,
+            linear_clock__with_spec89__exponent=np.full_like(self.draws, self.exponent),
+        )
         rows = [
             dict(
                 scenario="linear_clock",
                 cohort="with_spec89",
                 metric=m,
-                coefficient_vaxen_per_score=self.coefficients[m],
+                exponent=self.exponent,
+                vaxen_at_unit_score=self.coefficients[m],
                 valid_bootstrap_draws=300,
                 score_unit=next(u for metric, u in OPTIONS.values() if metric == m),
             )
@@ -56,6 +62,12 @@ class PredictionTests(unittest.TestCase):
         self.assertEqual(w, dict(zip(keys, [0.25, 0.25, 0.5])))
         expected = (self.coefficients[keys[0]] * self.coefficients[keys[1]]) ** 0.25 * self.coefficients[keys[2]] ** 0.5
         self.assertAlmostEqual(r["vaxen"], expected)
+
+    def test_power_law_in_the_score(self):
+        metric = self.metrics[0]
+        r = predict_scores({metric: 4.0}, self.root)
+        self.assertAlmostEqual(r["vaxen"], self.coefficients[metric] * 4**self.exponent)
+        self.assertEqual(r["components"][0]["exponent"], self.exponent)
 
     def test_opposite_correlated_draws_cancel(self):
         keys = ["Dhrystone:v1.1_DMIPS", "LINPACK:n100_MFLOPS"]

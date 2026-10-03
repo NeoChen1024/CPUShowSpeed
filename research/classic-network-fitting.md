@@ -1,8 +1,9 @@
 # Sparse joint calibration of individual classical benchmarks
 
 Computed and reviewed: 2026-09-27; recomputed on resolved systems 2026-10-02;
-re-anchored to speed-VAXen 2026-10-03 (method
-`sparse-family-balanced-log-network-v3-speed-anchor`). This is an implemented
+re-anchored to speed-VAXen 2026-10-03; refitted as family power laws through
+the VAX-11/780 2026-10-03 (method
+`sparse-family-balanced-log-network-v4-family-power-law-vax780`). This is an implemented
 **experimental model**, alongside the fixed-composite multiplier fits. It does
 not replace measured SPEC observations or the SPEC chains.
 
@@ -13,32 +14,59 @@ separate quantity and is not an anchor here.
 
 ## Objective and model
 
-Estimate a separate coefficient for Dhrystone 1.1, Dhrystone 2.1, Whetstone
-native precision, Whetstone SP, Whetstone DP and LINPACK n=100. A machine with
-one available measurement can then obtain an estimate; multiple measurements
-combine on the log scale with equal family weight. Native Whetstone is not
-silently renamed SP.
+Calibrate Dhrystone 1.1, Dhrystone 2.1, Whetstone native precision, Whetstone
+SP, Whetstone DP and LINPACK n=100 to speed-VAXen. A machine with one available
+measurement can then obtain an estimate; multiple measurements combine on the
+log scale with equal family weight. Native Whetstone is not silently renamed SP.
 
-For configuration node i and benchmark b, let `s_ib = ln(score_ib)` and
-`alpha_b = ln(k_b)`. Each node has a common log-throughput `theta_i`. Minimize:
+Each metric b follows a **power law** with one exponent per benchmark family f
+(Dhrystone, Whetstone, LINPACK; selected 2026-10-03, user decision):
 
-`sum_i sum_b w_ib * (s_ib + alpha_b - theta_i)^2`.
+`ln V_b = a_b + beta_f * ln(score_b)`.
+
+The intercept is **tied to the VAX-11/780**: `a_b = -beta_f * c_b`, where `c_b`
+is the log median of the 780's own distinct classical runs for metric b. The 780
+therefore predicts exactly 1 speed-VAXen (its SPECint92 definition) by every
+metric. The 780's measured scores are used, not the definitional 1 DMIPS:
+
+| Metric | 780 runs | Median score | Run scores |
+| --- | ---: | ---: | --- |
+| Dhrystone 1.1 | 8 | 0.878 DMIPS | 0.744–0.933 |
+| Dhrystone 2.1 | 2 | 0.835 DMIPS | 0.807, 0.863 |
+| Whetstone native | 3 | 1.02 MWIPS | 0.494, 1.02, 1.18 |
+| Whetstone SP | 2 | 0.736 MWIPS | 0.5, 1.083 |
+| Whetstone DP | 3 | 0.715 MWIPS | 0.41, 0.715, 0.76 |
+| LINPACK n=100 | 3 | 0.14 MFLOPS | 0.11, 0.14, 0.14 |
+
+The power-law form replaces the proportional `V_b = k_b * score_b` (exponent 1,
+method v3). The [power-law sensitivity report](classic-power-law-sensitivity.md)
+found free exponents of 0.72–0.96 and a proportional underprediction of the 780
+by 41–55%. **The era effect is a limitation, not a model term**: at a fixed
+score, later systems earn less SPEC, and a pooled exponent below 1 absorbs both
+that drift and any true sub-linearity (see that report's findings).
+
+For configuration node i, let `s_ib = ln(score_ib)` and let `theta_i` be its log
+speed-VAXen. Minimize:
+
+`sum_i sum_b w_ib * (a_b + beta_f(b) * s_ib - theta_i)^2`.
 
 - Observed SPECint92 peak fixes theta to `ln(SPECint92)`.
 - In the SPEC89-enabled cohort, theta for an 89 node is the original log
   SPECint89 plus the fitted int89_to_int92 bridge log multiplier.
 - A node without a target has a free theta, eliminated analytically as its
-  weighted mean of `s + alpha`. Co-observations therefore constrain relative
-  benchmark coefficients without inventing measured SPEC values.
+  weighted mean of `a + beta * s`. Co-observations therefore constrain the
+  exponents and intercepts without inventing measured SPEC values. A one-family
+  node with several variants (Whetstone SP and DP, for example) also
+  constrains its family exponent.
 - A component disconnected from all anchored metrics gets no coefficient.
   Unanchored one-metric nodes provide no calibration information; once their
   metric is identified elsewhere, they can still receive predictions.
 
-This remains `V_b = k_b * score_b` for each benchmark: there is no intercept in
-ordinary score space. Unlike the previous separate composite fits, this uses
-**joint weighted least squares in log space**, not a single model-median
-log-ratio coefficient. Within each node/metric, source runs first contribute a
-median log score. All original observations remain in the export.
+With the 780 tie the model stays linear in its parameters (three exponents),
+so the fit is a single weighted least-squares solve. This is **joint weighted
+least squares in log space**, not a single model-median log-ratio coefficient.
+Within each node/metric, source runs first contribute a median log score. All
+original observations remain in the export.
 
 Each informative resolved system ("model" below) gets total weight one; its weight
 is split equally across informative configuration nodes, then across available
@@ -48,12 +76,12 @@ vote. Source frequency and configuration ambiguity remain visible.
 
 For a target with available metrics A:
 
-`ln(estimated speed-VAXen) = sum_b w_b * (ln(score_b) + alpha_b)`,
+`ln(estimated speed-VAXen) = sum_b w_b * (a_b + beta_f(b) * ln(score_b))`,
 
 where weights sum to one, balancing families first. With one benchmark this
-reduces to `k_b * score_b`. With a missing or unidentifiable metric, a partial
+reduces to `exp(a_b) * score_b^beta`. With a missing or unidentifiable metric, a partial
 single/subset result can be reported, but it is not labelled a full-availability
-prediction. Factor draws are combined jointly when calculating estimate CI95.
+prediction. Intercept and exponent draws are combined jointly when calculating estimate CI95.
 
 ## Input construction and clock assumption
 
@@ -118,17 +146,26 @@ sensitivity rule in this dataset. Full rows/qualifications are in
 
 Both clock scenarios are fitted with SPECint92 targets only (`spec92_only`) and
 with the additional SPEC89 estimated targets (`with_spec89`). The SPEC89 bridge
-is recomputed with the same system grouping and excluded-system rule. An `anchored_only` log-regression
-control uses the same anchor population but omits unanchored coupling; it is
-not identical to the previous pair/triple model with a different cohort.
+is recomputed with the same system grouping and excluded-system rule. Two
+holdout comparisons use the same anchor population:
+
+- `anchored_only` omits unanchored coupling; it is not identical to the previous
+  pair/triple model with a different cohort.
+- `free_intercept` keeps the network but frees every intercept instead of tying
+  it to the 780. It is a comparison only; no estimate uses it.
 
 10,000 bootstrap draws, seed 20260927, resample model groups jointly across the
 network and bridge edges. A shared model gets the same draw weight everywhere.
 Each draw refits the bridge factor and the network coefficients; rank-deficient
-draws are rejected and valid counts exported. CI95 is the linear percentile
+draws are rejected and valid counts exported. Each draw also redraws the 780
+anchor as `c_b + N(0, sd_b)`, with `sd_b` the standard error of the 780's median:
+the pooled within-(system, clock) log variance of distinct classical runs,
+divided by the number of 780 runs. Whetstone native replicates are especially
+inconsistent (pooled log variance 0.95), so its 780 anchor is loose
+(standard error 0.56 in log). CI95 is the linear percentile
 interval of coefficients or final VAXen estimates, not a prediction interval.
 It omits source bias, matching mistakes, within-model measurement uncertainty,
-unknown architecture transport error and uncertainty in the fixed clock exponent.
+unknown architecture transport error, era drift and uncertainty in the fixed clock exponent.
 
 All observations of each test model are removed from network training and from
 the bridge edge. Availability masks test each individual benchmark, each
@@ -153,45 +190,53 @@ unanchored nodes do not influence training.
 
 For `linear_clock / with_spec89`:
 
-| Input metric | Score unit | speed-VAXen coefficient k | Conditional factor CI95 |
-| --- | --- | ---: | --- |
-| Dhrystone 1.1 | DMIPS | 0.64373 | 0.59992–0.69174 |
-| Dhrystone 2.1 | DMIPS | 0.68387 | 0.63300–0.73892 |
-| Whetstone native | MWIPS | 0.56281 | 0.48386–0.64833 |
-| Whetstone SP | MWIPS | 0.63696 | 0.57663–0.69831 |
-| Whetstone DP | MWIPS | 1.00472 | 0.88640–1.13498 |
-| LINPACK n=100 | MFLOPS | 3.18432 | 2.79907–3.65652 |
+| Input metric | Score unit | Family exponent β (CI95) | speed-VAXen at score 1 (CI95) | At 10 units (proportional v3) |
+| --- | --- | --- | --- | ---: |
+| Dhrystone 1.1 | DMIPS | 0.864 (0.823–0.897) | 1.119 (0.982–1.269) | 8.18 (6.44) |
+| Dhrystone 2.1 | DMIPS | 0.864 | 1.169 (0.907–1.492) | 8.54 (6.84) |
+| Whetstone native | MWIPS | 0.775 (0.551–0.826) | 0.985 (0.455–1.931) | 5.86 (5.63) |
+| Whetstone SP | MWIPS | 0.775 | 1.268 (1.049–1.506) | 7.55 (6.37) |
+| Whetstone DP | MWIPS | 0.775 | 1.297 (0.827–1.949) | 7.72 (10.05) |
+| LINPACK n=100 | MFLOPS | 0.792 (0.736–0.851) | 4.747 (4.095–5.408) | 29.4 (31.8) |
 
-For example, a Dhrystone **1.1** score of **10 DMIPS** maps to approximately
-6.44 speed-VAXen (SPECint92 ≈ 6.4) using this experimental coefficient. Raw
-Dhrystones/second first need the declared /1757 DMIPS conversion; coefficients
+Variants of one family share its exponent and CI. For example, a Dhrystone
+**1.1** score of **10 DMIPS** maps to approximately 8.18 speed-VAXen (CI95
+7.14–9.05; v3: 6.44, 6.00–6.92), and the 780's own 0.878 DMIPS to 1.00
+(0.88–1.14). The wider intervals carry the 780 anchor's sampling error.
+Raw Dhrystones/second first need the declared /1757 DMIPS conversion; coefficients
 must not be applied to uninterpreted KIPS or printed unit labels with unresolved meaning.
 
 On the common 34-system, 79-node observed-SPECint92 holdout cohort with all three
 families (`linear_clock / with_spec89`):
 
-| Available inputs | Network P95 | Anchored-only control P95 |
-| --- | ---: | ---: |
-| Dhrystone 1.1 only | 26.36% | 24.15% |
-| Dhrystone 2.1 only | 31.34% | 29.83% |
-| Whetstone SP only (33 systems) | 21.22% | 33.46% |
-| Whetstone DP only | 62.11% | 52.71% |
-| LINPACK only | 44.00% | 45.56% |
-| Dhrystone + Whetstone families | 32.17% | 32.46% |
-| Dhrystone + LINPACK families | 27.36% | 26.71% |
-| Whetstone + LINPACK families | 22.83% | 26.47% |
-| All available measurements | 21.13% | 23.66% |
+| Available inputs | Network P95 | Anchored-only P95 | Free-intercept P95 | v3 network P95 |
+| --- | ---: | ---: | ---: | ---: |
+| Dhrystone 1.1 only | 26.67% | 26.56% | 37.38% | 26.36% |
+| Dhrystone 2.1 only | 25.35% | 25.24% | 31.97% | 31.34% |
+| Whetstone SP only (33 systems) | 50.89% | 47.58% | 65.40% | 21.22% |
+| Whetstone DP only | 55.14% | 30.27% | 60.14% | 62.11% |
+| LINPACK only | 41.85% | 39.93% | 53.39% | 44.00% |
+| Dhrystone + Whetstone families | 40.73% | 28.21% | 50.29% | 32.17% |
+| Dhrystone + LINPACK families | 33.43% | 32.29% | 43.65% | 27.36% |
+| Whetstone + LINPACK families | 47.93% | 29.05% | 58.74% | 22.83% |
+| All available measurements | 41.18% | 26.86% | 51.35% | 21.13% |
 
-The proportional form (exponent 1) is tested against power laws in the
-[power-law sensitivity report](classic-power-law-sensitivity.md): free exponents
-are 0.72–0.96, and the proportional coefficients underpredict the VAX-11/780.
+On this cohort the power law **worsens** the Whetstone-bearing subsets: the
+all-available P95 doubles (21.13% → 41.18%). The cause is the shared Whetstone
+exponent under unanchored coupling. The 281 unanchored Whetstone-only nodes with
+several precision variants constrain the exponent through their SP/DP/native
+ratios, which drift across eras. They pull β from 0.88 (anchored-only 0.881;
+0.879 without those nodes) to 0.775. Dhrystone 2.1 alone and LINPACK alone improve.
+Freeing the intercepts is worse than the 780 tie on every subset. These are
+findings for review; the family-shared exponent is unchanged.
 
 More available workloads do not guarantee a lower error, and the unanchored
 coupling does not uniformly beat the anchored-only control on this population.
 All combinations remain; the table is not a residual-based selection rule.
 
 Over all 114 observed-SPECint92 nodes (58 systems), the all-available network
-P95 is 89.3% (88.1% before the HP 9000/720 rejection, 87.9% before the N3909 curated records, 85.1% before the printed SPEC89 means, 84.4% before the smaller
+P95 is 65.8% (anchored-only 69.3%, free intercept 69.2%); the inferred-89 P95 is
+84.4% (v3: 139.8%). Under the v3 proportional form it was 89.3% (88.1% before the HP 9000/720 rejection, 87.9% before the N3909 curated records, 85.1% before the printed SPEC89 means, 84.4% before the smaller
 Usenet posts, 83.5% before Richardson's lists). Before the 2026-10-03
 vendor-report rows (82.3%), on the 48 nodes that also carry a one-processor rate (the former
 anchor population) it is 31.5%; on 42 further DEC, multi-processor and
@@ -205,6 +250,25 @@ The network emits full-availability estimates for **1,415 unanchored nodes on
 not 1,415 newly verified machines: configuration identity and source
 interpretation still need source-specific review. Their estimates are stored
 separately from observed SPEC targets.
+
+### Family power law through the VAX-11/780 (2026-10-03)
+
+Method v4 replaces the proportional coefficients with one exponent per family
+and intercepts tied to the 780's measured scores (see
+[the model](#objective-and-model); user decision). The inputs are unchanged.
+
+- Every metric now predicts the VAX-11/780 at 1 speed-VAXen. v3 predicted
+  0.45 (LINPACK) to 0.72 (Whetstone DP) at the same 780 scores.
+- Estimates rise for slow machines and fall for fast ones. A Dhrystone 1.1 rating
+  gains 74% at 1 DMIPS and 27% at 10 DMIPS. The v4 and v3 estimates cross near
+  60 DMIPS, and v4 is 7% lower at 100 DMIPS. LINPACK estimates rise below about
+  7 MFLOPS and fall above it.
+- Observed all-available P95 falls 89.3% → 65.8%. Inferred-89 P95 falls
+  139.8% → 84.4%, and LINPACK alone falls 120.4% → 73.6% on observed nodes.
+- The common-cohort all-available P95 rises 21.13% → 41.18%, and Whetstone SP
+  alone 21.22% → 50.89%; see the results above.
+- Intervals widen: Dhrystone 1.1 at 10 DMIPS from about ±7% to ±12%.
+- The node and key counts are unchanged.
 
 ### HP 9000/720 rejection and VAX 6000 names (2026-10-03)
 
@@ -393,7 +457,8 @@ Options `--database`, `--output`, `--research-dir`, `--bootstrap` and `--seed`
 select the built database, outputs and resampling. The default output is
 `data/derived/classic/network-fit/`.
 
-- `coefficients.csv`: per-benchmark coefficients, units, cohort/scenario and CI95.
+- `coefficients.csv`: per-benchmark family exponent, speed-VAXen at unit score,
+  780 anchor score, units, cohort/scenario and CI95.
 - `nodes.csv`, `observations.csv`: original/adjusted values, classical result
   IDs, pairing status, target kind and whether an observation enters its node summary.
 - `clock-audit.csv`, `frequency-checks.csv`: every target/classical pairing
@@ -402,14 +467,16 @@ select the built database, outputs and resampling. The default output is
   evaluations; observed and inferred targets remain distinct.
 - `hardware-estimates.csv`: single, family, pair and available-input estimates
   with conditional calibration intervals, never labelled measured SPEC scores.
-- `coefficient-log-draws.npz`: correlated coefficient samples for combining inputs.
-- `availability-comparison.png/.svg`: joint/control errors on complete-family nodes.
+- `coefficient-log-draws.npz`: correlated intercept and exponent samples for combining inputs.
+- `availability-comparison.png/.svg`: network, anchored-only and free-intercept errors on complete-family nodes.
 - `prediction-calibration.json`: hash-bound coefficient/draw bundle, with ordered metric columns for the predictor.
 
 Compact coefficients, summary, frequency checks and audit (database input
 digest, counts and assumptions) are retained under
-`research/data/classic/network-*`. Tests cover known analytic coefficients from
-an unanchored bridge, disconnected metrics, shared bridge covariance,
+`research/data/classic/network-*`; the 780 anchor table is `vax780-anchor.csv`
+in the output directory. Tests cover a recovered power law through the 780 anchor,
+a shared family exponent, a free intercept identified by unanchored overlap, the
+780 anchor median, anchor draws in the bootstrap, disconnected metrics, shared bridge covariance,
 family/variant weights, single/partial prediction, held-out bridge exclusion and
 processor-change rejection (`tests/test_classic_network.py`,
 `tests/test_classical_store.py`).

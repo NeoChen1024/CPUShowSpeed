@@ -18,12 +18,11 @@ from cpushowspeed.calibration import error_summary
 from cpushowspeed.classic_network import build
 from cpushowspeed.classic_network_model import bridge_log
 from cpushowspeed.classical_fit import DERIVED, RESEARCH, bridge_evidence, speed_edges
-from cpushowspeed.classical_store import BRIDGE_SCOPE, SCOPES, results
+from cpushowspeed.classical_store import BRIDGE_SCOPE, SCOPES, VAX780, results
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import connect, inputs_digest
 from cpushowspeed.research_io import code_hashes, write_csv
 
-VAX780 = "sys:vax11/780"
 YEAR0 = 1990
 # Announced 1977; the year methods predict it there.
 VAX780_YEAR = 1977 - YEAR0

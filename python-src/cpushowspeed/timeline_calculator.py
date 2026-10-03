@@ -6,6 +6,7 @@ Speed and rate are separate results and are never combined.
 
 import hashlib
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -32,23 +33,29 @@ RATE_SCENARIO = "same_os"
 SPEC89_AUDIT = Path("research/data/classic/spec89-audit.json")
 
 
-def _network(draws, metrics, rows, low_key, high_key, name):
-    """Coefficients and aligned log draws of one saved network, after checking draws reproduce its intervals."""
-    coefficients = {r["metric"]: float(r["coefficient_vaxen_per_score"]) for r in rows}
+def _network(archive, key, metrics, rows, name):
+    """Power-law calibrations and aligned (intercept, exponent) draws of one saved network, after checking the draws
+    reproduce its intervals."""
+    intercepts, exponents = archive[key + "__intercept"], archive[key + "__exponent"]
+    coefficients = {r["metric"]: [math.log(float(r["vaxen_at_unit_score"])), float(r["exponent"])] for r in rows}
     if (
         set(metrics) != set(coefficients)
-        or (draws.ndim != 2 or draws.shape[1] != len(metrics) or len(draws) < 100)
-        or not np.isfinite(draws).all()
+        or any(d.shape != intercepts.shape or d.ndim != 2 or d.shape[1] != len(metrics) for d in (intercepts, exponents))
+        or len(intercepts) < 100
+        or not (np.isfinite(intercepts).all() and np.isfinite(exponents).all())
     ):
         raise ValueError("inconsistent historical predictor bundle: " + name)
     by_metric = {r["metric"]: r for r in rows}
     for i, metric in enumerate(metrics):
-        low, high = np.quantile(np.exp(draws[:, i]), [0.025, 0.975])
-        if not np.allclose(
-            [low, high], [float(by_metric[metric][low_key]), float(by_metric[metric][high_key])], rtol=1e-12, atol=0
-        ):
+        saved = [float(by_metric[metric][k]) for k in ("unit_score_ci95_low", "unit_score_ci95_high")]
+        saved += [float(by_metric[metric][k]) for k in ("exponent_ci95_low", "exponent_ci95_high")]
+        drawn = [*np.exp(np.quantile(intercepts[:, i], [0.025, 0.975])), *np.quantile(exponents[:, i], [0.025, 0.975])]
+        if not np.allclose(drawn, saved, rtol=1e-12, atol=0):
             raise ValueError(f"{name} draw column / interval mismatch: {metric}")
-    return dict(coefficients=coefficients, draws={m: draws[:, i].tolist() for i, m in enumerate(metrics)})
+    return dict(
+        coefficients=coefficients,
+        draws={m: [intercepts[:, i].tolist(), exponents[:, i].tolist()] for i, m in enumerate(metrics)},
+    )
 
 
 def calculator_payload():
@@ -63,16 +70,12 @@ def calculator_payload():
     predict_scores({run["metrics"][0]: 1}, root)
     rows = [r for r in read_csv(paths[0]) if r["scenario"] == "linear_clock" and r["cohort"] == "with_spec89"]
     with np.load(paths[1], allow_pickle=False) as archive:
-        networks["classical"] = _network(
-            archive["linear_clock__with_spec89"], run["metrics"], rows, "factor_ci95_low", "factor_ci95_high", "classical"
-        )
+        networks["classical"] = _network(archive, run["draw_key"], run["metrics"], rows, "classical")
     mix_paths = [MIX_OUTPUT / "coefficients.csv", MIX_OUTPUT / "coefficient-log-draws.npz", MIX_OUTPUT / "audit.json"]
     mix_run = next(r for r in json.loads(mix_paths[2].read_text())["runs"] if all(r[k] == v for k, v in TIMELINE_RUN.items()))
     mix_rows = [r for r in read_csv(mix_paths[0]) if all(r[k] == v for k, v in TIMELINE_RUN.items())]
     with np.load(mix_paths[1], allow_pickle=False) as archive:
-        networks["mixes"] = _network(
-            archive[mix_run["draw_key"]], mix_run["metrics"], mix_rows, "ci95_vaxen_low", "ci95_vaxen_high", "mixes"
-        )
+        networks["mixes"] = _network(archive, mix_run["draw_key"], mix_run["metrics"], mix_rows, "mixes")
     for path in [*paths, *mix_paths, SPEC89_AUDIT, RATE_CHAIN, SPEED_CHAIN]:
         hashes[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
     # The timeline's SPEC89 rows use the bridge's joint-bootstrap interval, so the calculator does too.
@@ -217,11 +220,11 @@ function historicalPrediction(scores){
  const network=calibration.networks[metrics.some(m=>m.startsWith('InstructionMix:'))?'mixes':'classical'];
  const families={};for(const m of metrics){if(!(m in network.coefficients))throw Error('Unsupported benchmark: '+m);const f=m.split(':')[0];families[f]=(families[f]||0)+1;}
  const count=Object.keys(families).length,weights=Object.fromEntries(metrics.map(m=>[m,1/count/families[m.split(':')[0]]]));
- const point=Math.exp(metrics.reduce((z,m)=>z+weights[m]*(Math.log(scores[m])+Math.log(network.coefficients[m])),0));
- const n=network.draws[metrics[0]].length,draws=Array.from({length:n},(_,i)=>Math.exp(metrics.reduce((z,m)=>z+weights[m]*(Math.log(scores[m])+network.draws[m][i]),0)));
+ const point=Math.exp(metrics.reduce((z,m)=>z+weights[m]*(network.coefficients[m][0]+network.coefficients[m][1]*Math.log(scores[m])),0));
+ const n=network.draws[metrics[0]][0].length,draws=Array.from({length:n},(_,i)=>Math.exp(metrics.reduce((z,m)=>z+weights[m]*(network.draws[m][0][i]+network.draws[m][1][i]*Math.log(scores[m])),0)));
  const values=[point,calcQuantile(draws,.025),calcQuantile(draws,.975)];
  if(!values.every(v=>Number.isFinite(v)&&v>0))throw Error('Result exceeds the supported numeric range.');
- return {label:'Historical estimate',values,details:metrics.map(m=>({metric:m,weight:weights[m],vaxen:scores[m]*network.coefficients[m]})),
+ return {label:'Historical estimate',values,details:metrics.map(m=>({metric:m,weight:weights[m],vaxen:Math.exp(network.coefficients[m][0]+network.coefficients[m][1]*Math.log(scores[m]))})),
   quantity:'speed',path:metrics.some(m=>m.startsWith('InstructionMix:'))?'Mix + classical joint model → speed-VAXen':'Classical joint model → speed-VAXen'};
 }
 function specPrediction(generation,mode,speed,rate){

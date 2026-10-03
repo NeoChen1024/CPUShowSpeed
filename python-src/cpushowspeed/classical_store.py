@@ -41,6 +41,8 @@ SCOPES = (
     "spec:cpu92",
 )
 BRIDGE_SCOPE = "historical-spec:spec89-bridge"
+# The SPEC reference machine: 1 speed-VAXen by definition.
+VAX780 = "sys:vax11/780"
 CLOCK_TOLERANCE = 0.01
 
 

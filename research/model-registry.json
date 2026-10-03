@@ -1326,7 +1326,7 @@
       ],
       "target_metric": "speed-vaxen",
       "relationship": "joint-fit",
-      "formula": "family/node/model-balanced log WLS with eliminated latent unanchored targets; per-benchmark y=k_b*x_b",
+      "formula": "family/node/model-balanced log WLS with eliminated latent unanchored targets; ln y = a_b + beta_f*ln x_b, one exponent per family, a_b = -beta_f*ln(VAX-11/780 median score)",
       "variants": [
         "peak; reported_clock/linear_clock; spec92_only/with_spec89"
       ],
@@ -1414,7 +1414,7 @@
       ],
       "target_metric": "speed-vaxen",
       "relationship": "joint-fit",
-      "formula": "Classical sparse family/node/model-balanced log WLS; InstructionMix variants share a family; y=k_b*x_b",
+      "formula": "Classical family power-law network through the VAX-11/780; InstructionMix variants share a family and exponent with free intercepts",
       "variants": [
         "CCTA/TSU only; peak; resolved_system/plus_pending_links; reported_clock/linear_clock; spec92_only/with_spec89"
       ],

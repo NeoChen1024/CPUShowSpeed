@@ -1,5 +1,5 @@
 {
-  "method": "instruction-mix-joint-network-v3-speed-anchor",
+  "method": "instruction-mix-joint-network-v4-family-power-law",
   "draws": 10000,
   "seed": 20260928,
   "runs": [
@@ -18,7 +18,7 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "valid_draws": 9999,
+      "valid_draws": 9994,
       "informative_models": 509,
       "mix_nodes": 11,
       "mix_models": 10,
@@ -40,7 +40,7 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "valid_draws": 9996,
+      "valid_draws": 9988,
       "informative_models": 520,
       "mix_nodes": 11,
       "mix_models": 10,
@@ -84,7 +84,7 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "valid_draws": 10000,
+      "valid_draws": 9999,
       "informative_models": 519,
       "mix_nodes": 17,
       "mix_models": 15,
@@ -106,7 +106,7 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "valid_draws": 9999,
+      "valid_draws": 9994,
       "informative_models": 509,
       "mix_nodes": 11,
       "mix_models": 10,
@@ -128,7 +128,7 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "valid_draws": 9996,
+      "valid_draws": 9988,
       "informative_models": 520,
       "mix_nodes": 11,
       "mix_models": 10,
@@ -172,7 +172,7 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "valid_draws": 10000,
+      "valid_draws": 9999,
       "informative_models": 519,
       "mix_nodes": 17,
       "mix_models": 15,
@@ -185,7 +185,7 @@
     "scenario": "linear_clock",
     "cohort": "with_spec89"
   },
-  "fit": "classical network (family/variant/node/model balanced sparse log least squares) with Gibson/ADP sharing the InstructionMix family weight",
+  "fit": "classical network (family power laws through the VAX-11/780; family/variant/node/model balanced sparse log least squares) with Gibson/ADP sharing the InstructionMix family weight and exponent; mix intercepts free (the 780 has no mix rating)",
   "attachment": "a rating attaches to every node of its resolved system, or also of needs_review linked systems; nodes sharing a rating form one cluster",
   "target": "speed-VAXen: SPECint92 peak (VAX-11/780 = 1); SPECint89 through the int89_to_int92 bridge",
   "qualification": "all system links unapproved; observed-target holdouts exist only where a mix system has a SPEC target; CI95 omits model discrepancy; no mix clock scaling",
@@ -194,13 +194,13 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration_edges.py": "b6e4cbe854b1fa3b36f9490ed8f253af05899c826a658726b5c4b9a441a785d6",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network.py": "7526a8ec3cb59675834b4012fddcad3937648433df3a00bc69235b803525733a",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network_model.py": "fb7d44cb1d2b67df3d0a686a578dbe1ffc5e754d29fd05e8f24ceed95cb8c9d0",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network.py": "857341aa68af34df653b18922d60f72797bbbd33f18a1ca978d7fac69e67ad18",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network_model.py": "43ac6d99458bd1b2995205e975d9051131674338892ba6901f38f5f2149add31",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "169d21f7160d99a6b8414043ece5cf140c6861b7eda3ed89929792d1e11b7c9c",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_predict.py": "977dc8a668ca44453597f0ae6641a4b05a38a56f511aa5db91d646afdf4b89ff",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_predict.py": "e5856523920629a34df7e6989556405e2b798a192262a1b4be8c968d66b01ea9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_fit.py": "c2f7f6fd48bd5e5ada5bf17bf3c80d67a9cc432b476ccb33397e4c2e200a5157",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "28ad13427f9fa4c23319fa0facab13518c52ba06d1168f7f172df14055008dba",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "73f1ed829be9ec19a33c9d15524414309a41180e9da8cc755de767ee49674541",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated.py": "7c35f291c6a275114c1c1ed3c2ce7be017ab59692a1a94e4a5bdb214cddddfdb",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "481fc3b5d600caf5b76209672a6ccdeb1a3c64b37a51f915204de173cfa336f9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_identity.py": "686c50a95e11fece1eba1410d399f073c988a43ab719f5a728702bd38b1de87c",
@@ -210,7 +210,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/execution_policy.py": "c482cf4e5cd22c52cb0246af192407851b48c3daec77cf2ec279175f9d65800d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_catalog.py": "5d9733d8fb70d49fba76a2d64dbc09481ae8e2a81d19d399ccec4bb122c807e0",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_bridge.py": "70b54d9cc50662a053c789a0379ee5e17887ced2669255e225a15e15f4ce221e",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_network.py": "b4d83524da3085e8e6e854cfb86a8d0d80e65b64d7d11841749978667b801b7d",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_network.py": "e37aea50385cd23a08b8d04f4a6b2c5d8284e85aa3363e7c0b43fd27a96c7336",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/observation_store.py": "ecc52313bb5b1975788ce07a30b3633aecaf8ce4a01b760bc903b345c1938347",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/processor_keys.py": "c3b6ec67bbf4df3abab32167ad8758882cef20eeb876152ab796daaa7907eb82",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/rate_convert.py": "68a78857870729098bd83715d9d3cab25b99364531a6e59ba7dbebac1c2740de",

@@ -1,8 +1,8 @@
 # Gibson/ADP ratings in the classical network
 
-Reviewed: 2026-10-02; re-anchored to speed-VAXen 2026-10-03. Status:
-implemented conditional fit on the schema database
-(`instruction-mix-joint-network-v3-speed-anchor`). It replaces the
+Reviewed: 2026-10-02; re-anchored to speed-VAXen 2026-10-03; refitted as a
+family power law 2026-10-03. Status: implemented conditional fit on the schema
+database (`instruction-mix-joint-network-v4-family-power-law`). It replaces the
 name-matched mix network experiment removed on 2026-10-02, which remains in Git
 history. Source definitions and the pairing review queue are in the
 [instruction-mix bridge](instruction-mix-bridge.md).
@@ -22,16 +22,20 @@ history. Source definitions and the pairing review queue are in the
   bootstrap and holdouts, and SPEC89 bridge evidence is merged into the same
   clusters.
 - **Fit.** The classical network's family-, variant-, node- and model-balanced log
-  least squares. Gibson and ADP share one `InstructionMix` family weight. Every
-  scenario is fitted for both clock policies and both cohorts (`spec92_only`,
-  `with_spec89`).
-- **Estimates.** Each rating is scaled by its coefficient. Each source table row
+  least squares with
+  [family power laws](classic-network-fitting.md#objective-and-model).
+  - Gibson and ADP share one `InstructionMix` family weight and one exponent.
+  - The VAX-11/780 has no mix rating, so each mix keeps a **free intercept**
+    rather than the 780 tie of the classical metrics.
+  - Every scenario is fitted for both clock policies and both cohorts
+    (`spec92_only`, `with_spec89`).
+- **Estimates.** Each rating gives `exp(a_mix) * KIPS^beta`. Each source table row
   also gets a combined estimate: the equal-log-weight mean of its available ratings.
-  Its CI95 comes from the aligned coefficient draws, so the two coefficients'
+  Its CI95 comes from the aligned intercept and exponent draws, so their
   dependence is kept.
 
 Without mixes, `resolved_system` reproduces the saved network coefficients
-exactly. Merging pending-linked clusters moves them by at most 0.34%.
+exactly. Merging pending-linked clusters moves them by at most 0.27%.
 
 ## Results
 
@@ -42,18 +46,25 @@ under `resolved_system`. These are CDC 6600/7600, IBM 360/30, 360/50, 370/145,
 target. Every mix coefficient therefore rests on classical scores alone, and
 there is no observed-SPEC holdout.
 
-Speed-VAXen per KIPS, `linear_clock / with_spec89`:
+`linear_clock / with_spec89`; speed-VAXen at 1,000 KIPS shows the scale of the
+attached machines, since the intercept at 1 KIPS lies far outside the data:
 
-| Links | Gibson | ADP |
-| --- | --- | --- |
-| `resolved_system` | 0.00046671 (0.00032827–0.00061901) | 0.00024426 (0.00012449–0.00037302) |
-| `plus_pending_links` | 0.00039882 (0.00028672–0.00052743) | 0.00019669 (0.00011596–0.00030855) |
+| Links | Shared exponent β (CI95) | Gibson at 1,000 KIPS | ADP at 1,000 KIPS |
+| --- | --- | ---: | ---: |
+| `resolved_system` | 0.836 (0.570–0.995) | 0.89 | 0.52 |
+| `plus_pending_links` | 0.846 (0.592–0.989) | 0.79 | 0.44 |
+
+The v3 proportional coefficients gave 0.47 / 0.24 (`resolved_system`) and
+0.40 / 0.20 (`plus_pending_links`) at 1,000 KIPS. The intercepts and their CI95
+are in the coefficient table. The exponent interval is wide: ten to fifteen
+clusters span a narrow range of ratings.
 
 The whole-cluster holdout compares a mix-only prediction with the held-out
 node's classical-network prediction (a proxy, not a SPEC measurement). The
-model-center P95 is 194.6% for `resolved_system` (10 clusters) and 187.4% for
-`plus_pending_links` (15 clusters). On the 58 observed-SPECint92 models, adding
-the mixes changes the network's held-out P95 from 89.3% to 88.9% / 88.7%.
+model-center P95 is 123.9% for `resolved_system` (10 clusters; v3 194.6%) and
+98.6% for `plus_pending_links` (15 clusters; v3 187.4%). On the 58
+observed-SPECint92 models, adding the mixes changes the network's held-out P95
+from 65.8% to 65.5% under either link scenario (v3: 89.3% to 88.9% / 88.7%).
 
 The timeline uses `plus_pending_links / linear_clock / with_spec89`, as the
 former experiment used its unapproved name candidates. `resolved_system` is the
@@ -67,7 +78,15 @@ eight runs are saved in:
 
 ## Changes
 
-The 2026-10-03 re-anchoring to speed-VAXen raised the timeline run's
+The 2026-10-03 family power law (method v4) replaced the per-mix proportional
+coefficients with a shared mix exponent and free intercepts. In the timeline run
+(`plus_pending_links`) the v4 and v3 estimates would cross near 82,000 KIPS
+(Gibson) and 172,000 KIPS (ADP), far above the largest ratings (7,000 and 3,418
+KIPS). Every mix estimate therefore rises: at least 46% (Gibson) and 83% (ADP),
+and about 180% at 100 KIPS. This follows the classical estimates for slow machines, which
+rise toward the 780 anchor.
+
+Before that, the 2026-10-03 re-anchoring to speed-VAXen raised the timeline run's
 coefficients by 1.9% (Gibson 0.00037246 → 0.00037966) and 2.0% (ADP
 0.00018340 → 0.00018706), following the classical coefficients they are
 calibrated through. Adding the [1990 DEC report rows](vendor-performance-reports.md)
@@ -105,3 +124,6 @@ mixes are calibrated through (see
 - The proxy holdout measures consistency with the classical network, not SPEC
   error. Its large tail is reported, not grounds for removing ratings.
 - CI95 covers coefficient sampling, not individual prediction error.
+- The mix exponent is identified by classical co-observations of a few
+  1960s–1970s systems. Era drift, a limitation of the classical network, is not
+  modeled here either.

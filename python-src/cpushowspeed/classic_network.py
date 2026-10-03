@@ -1,9 +1,11 @@
 """Sparse joint classical calibration and availability-masked holdouts, from the built database.
 
-Nodes are SPEC targets in speed-VAXen (observed SPECint92 peak, one point per
-VAXen, or SPECint89 carried through the int89_to_int92 bridge) with the classical scores of their paired results,
+Nodes are SPEC targets in speed-VAXen (observed SPECint92 peak, or SPECint89 carried
+through the int89_to_int92 bridge) with the classical scores of their paired results,
 plus unanchored classical configurations whose co-measured scores constrain
-relative benchmark scales. Folds and bootstrap clusters are resolved systems.
+relative benchmark scales. Each benchmark family has one power-law exponent, and every
+metric passes through the VAX-11/780's own measured score at 1 speed-VAXen
+(`classic_network_model`). Folds and bootstrap clusters are resolved systems.
 """
 
 import json
@@ -28,6 +30,7 @@ from cpushowspeed.classical_fit import DERIVED, RESEARCH, bridge_evidence, speed
 from cpushowspeed.classical_store import (
     BRIDGE_SCOPE,
     SCOPES,
+    VAX780,
     family,
     pairings,
     recovered_int89,
@@ -38,6 +41,46 @@ from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import connect, inputs_digest
 from cpushowspeed.research_io import code_hashes, write_csv
 from cpushowspeed.research_plot import save_figure
+
+
+def vax780_anchor(rows):
+    """The 780's median log score per metric, and the standard error of that median's run sample.
+
+    Run-to-run spread is the pooled variance of distinct classical results of one system at one
+    reported clock (compiler, OS and option differences included); the anchor's standard error
+    is that spread over the 780's run count.
+    """
+    runs, groups = defaultdict(list), defaultdict(lambda: defaultdict(list))
+    for r in rows:
+        if not r.classical or r.cpu_count not in (None, 1) or not r.system_id:
+            continue
+        for metric, score in r.classical.items():
+            groups[metric][r.system_id, r.clock_mhz].append(math.log(score))
+            if r.system_id == VAX780:
+                runs[metric].append(math.log(score))
+    anchor, sd, audit = {}, {}, []
+    for metric, logs in sorted(runs.items()):
+        ss, df = 0.0, 0
+        for values in groups[metric].values():
+            if len(values) > 1:
+                mean = statistics.fmean(values)
+                ss += sum((v - mean) ** 2 for v in values)
+                df += len(values) - 1
+        variance = ss / df if df else 0.0
+        anchor[metric] = statistics.median(logs)
+        sd[metric] = math.sqrt(variance / len(logs))
+        audit.append(
+            dict(
+                metric=metric,
+                vax780_runs=len(logs),
+                vax780_median_score=math.exp(anchor[metric]),
+                vax780_run_scores=";".join(f"{math.exp(v):.4g}" for v in sorted(logs)),
+                run_log_variance=variance,
+                run_variance_df=df,
+                anchor_log_sd=sd[metric],
+            )
+        )
+    return anchor, sd, audit
 
 
 def build(rows, scaling):
@@ -171,15 +214,20 @@ def frequency_checks(rows):
     return out
 
 
-def evaluate(nodes, edges, enabled):
+METHODS = ("network", "anchored_only", "free_intercept")
+
+
+def evaluate(nodes, edges, enabled, anchor, methods=METHODS):
     models = sorted(
         {n["model_key"] for n in nodes if n["target_kind"] == "observed_speed" or (enabled and n["target_kind"] == "estimated_89")}
     )
     predictions = []
     coverage = []
     for model in models:
-        for method, latent in [("network", True), ("anchored_only", False)]:
-            alpha, _ = train(nodes, edges, enabled, exclude=model, latent=latent)
+        for method, latent, tie in [("network", True, anchor), ("anchored_only", False, anchor), ("free_intercept", True, {})]:
+            if method not in methods:
+                continue
+            calib, _ = train(nodes, edges, enabled, tie, exclude=model, latent=latent)
             b = bridge_log(edges, exclude=model) if enabled else 0.0
             for n in nodes:
                 if n["model_key"] != model or n["target"] is None:
@@ -187,7 +235,7 @@ def evaluate(nodes, edges, enabled):
                 if n["target_kind"] == "estimated_89" and not enabled:
                     continue
                 y = math.log(n["target"]) + (b if n["target_kind"] == "estimated_89" else 0)
-                rows = estimates(n, alpha)
+                rows = estimates(n, calib)
                 coverage.append(
                     dict(
                         model_key=model,
@@ -195,7 +243,7 @@ def evaluate(nodes, edges, enabled):
                         method=method,
                         target_kind=n["target_kind"],
                         available_metrics=len(n["log_scores"]),
-                        calibrated_metrics=sum(m in alpha for m in n["log_scores"]),
+                        calibrated_metrics=sum(m in calib for m in n["log_scores"]),
                         subsets_evaluated=len(rows),
                     )
                 )
@@ -268,11 +316,11 @@ def plot(output, summary):
             and (r["subset"].startswith("single:") or r["subset"].startswith("two_families:") or r["subset"] == "all_available")
         ]
         subsets = sorted({r["subset"] for r in rows})
-        for j, method in enumerate(("anchored_only", "network")):
+        for j, method in enumerate(("anchored_only", "network", "free_intercept")):
             selected = {r["subset"]: r for r in rows if r["method"] == method}
             ax.scatter(
                 [selected[s]["model_center_p95_percent"] for s in subsets if s in selected],
-                [i + (j - 0.5) * 0.18 for i, s in enumerate(subsets) if s in selected],
+                [i + (j - 1) * 0.18 for i, s in enumerate(subsets) if s in selected],
                 label=method,
             )
         ax.set_yticks(
@@ -306,7 +354,7 @@ def plot(output, summary):
 @click.option("--bootstrap", "draws", type=click.IntRange(min=100), default=10000, show_default=True)
 @click.option("--seed", type=int, default=20260927, show_default=True)
 def network_fit(database, output, research_dir, draws, seed):
-    """Calibrate individual benchmark coefficients jointly with missing measurements."""
+    """Calibrate per-family power laws through the VAX-11/780 jointly with missing measurements."""
     with connect(database) as db:
         rows = results(db, SCOPES + (BRIDGE_SCOPE,))
         digest = inputs_digest(db)
@@ -315,6 +363,8 @@ def network_fit(database, output, research_dir, draws, seed):
     research_dir.mkdir(parents=True, exist_ok=True)
     clock_checks = frequency_checks(rows)
     write_csv(output / "frequency-checks.csv", clock_checks)
+    anchor, anchor_sd, anchor_rows = vax780_anchor(rows)
+    write_csv(output / "vax780-anchor.csv", anchor_rows)
     coefficients = []
     summary = []
     predictions = []
@@ -351,32 +401,40 @@ def network_fit(database, output, research_dir, draws, seed):
             cohort = "with_spec89" if enabled else "spec92_only"
             context = dict(scenario=scenario, cohort=cohort)
             click.echo("Fitting " + scenario + " / " + cohort, err=True)
-            alpha, grouped = train(nodes, edges, enabled)
-            metrics, samples = bootstrap(nodes, edges, enabled, draws, seed)
-            bootstrap_arrays[scenario + "__" + cohort] = samples
+            calib, grouped = train(nodes, edges, enabled, anchor)
+            metrics, intercepts, exponents = bootstrap(nodes, edges, enabled, anchor, anchor_sd, draws, seed)
+            bootstrap_arrays[scenario + "__" + cohort + "__intercept"] = intercepts
+            bootstrap_arrays[scenario + "__" + cohort + "__exponent"] = exponents
             for i, m in enumerate(metrics):
-                scores = np.exp(samples[:, i])
                 coefficients.append(
                     dict(
                         context,
                         metric=m,
-                        coefficient_vaxen_per_score=math.exp(alpha[m]),
-                        factor_ci95_low=float(np.quantile(scores, 0.025)),
-                        factor_ci95_high=float(np.quantile(scores, 0.975)),
-                        valid_bootstrap_draws=len(samples),
-                        informative_models=len(grouped),
+                        family=family(m),
                         score_unit="DMIPS" if family(m) == "Dhrystone" else "MWIPS" if family(m) == "Whetstone" else "MFLOPS",
+                        exponent=calib[m][1],
+                        exponent_ci95_low=float(np.quantile(exponents[:, i], 0.025)),
+                        exponent_ci95_high=float(np.quantile(exponents[:, i], 0.975)),
+                        vaxen_at_unit_score=math.exp(calib[m][0]),
+                        unit_score_ci95_low=float(np.exp(np.quantile(intercepts[:, i], 0.025))),
+                        unit_score_ci95_high=float(np.exp(np.quantile(intercepts[:, i], 0.975))),
+                        vax780_anchor_score=math.exp(anchor[m]) if m in anchor else "",
+                        valid_bootstrap_draws=len(intercepts),
+                        informative_models=len(grouped),
                     )
                 )
-            sm, pr, cv = evaluate(nodes, edges, enabled)
+            sm, pr, cv = evaluate(nodes, edges, enabled, anchor)
             summary.extend(dict(context, **r) for r in sm)
             predictions.extend(dict(context, **r) for r in pr)
             coverage.extend(dict(context, **r) for r in cv)
             for n in nodes:
-                for estimate in estimates(n, alpha):
+                for estimate in estimates(n, calib):
                     members = estimate["metrics"].split(";")
                     w = metric_weights(members)
-                    boot = sum(w[m] * (samples[:, metrics.index(m)] + n["log_scores"][m]) for m in members)
+                    boot = sum(
+                        w[m] * (intercepts[:, metrics.index(m)] + exponents[:, metrics.index(m)] * n["log_scores"][m])
+                        for m in members
+                    )
                     hardware.append(
                         dict(
                             context,
@@ -422,7 +480,7 @@ def network_fit(database, output, research_dir, draws, seed):
     write_csv(research_dir / "network-summary.csv", summary)
     write_csv(research_dir / "network-frequency-checks.csv", clock_checks)
     audit = dict(
-        method="sparse-family-balanced-log-network-v3-speed-anchor",
+        method="sparse-family-balanced-log-network-v4-family-power-law-vax780",
         bootstrap=draws,
         seed=seed,
         runs=runs,
@@ -430,8 +488,12 @@ def network_fit(database, output, research_dir, draws, seed):
         target="speed-VAXen: SPECint92 peak (VAX-11/780 = 1); SPECint89 through the int89_to_int92 bridge",
         pairing="same resolved system_id; reported clocks agree within 1% or one is unknown; reviewed result_pair rejections drop a pairing and acceptances admit it unscaled",
         clock_assumption="linear_clock scales Dhrystone/Whetstone to the target clock only when both results resolve to one processor; unknown clocks unscaled; LINPACK never scaled",
+        model="log speed-VAXen = a_m + b_f log score_m; one exponent b_f per family; a_m = -b_f log c_m where c_m is the VAX-11/780's median measured score",
+        vax780_anchor=anchor_rows,
         fit="family/variant/node/model balanced log least squares; unanchored node values eliminated analytically",
-        qualification="hardware/clock/FPU/cache/software equivalence unverified across sources; coefficient intervals omit model discrepancy and scaling exponent uncertainty",
+        uncertainty="model-cluster bootstrap with the 780 anchor redrawn per draw from its run-sample standard error",
+        free_intercept="LOSO comparison only: the same family exponents with free per-metric intercepts",
+        qualification="hardware/clock/FPU/cache/software equivalence unverified across sources; intervals omit model discrepancy and clock-scaling exponent uncertainty; era drift of score versus SPEC is not modeled (see the power-law sensitivity report)",
         inputs_sha256=digest,
         shared_code_sha256=code_hashes(Path(__file__)),
     )

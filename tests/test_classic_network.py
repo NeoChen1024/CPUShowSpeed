@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 from classical_fixture import result
-from cpushowspeed.classic_network import build
+from cpushowspeed.classic_network import build, vax780_anchor
 from cpushowspeed.classic_network_model import (
     bootstrap,
     estimates,
@@ -48,46 +48,94 @@ class NetworkTests(unittest.TestCase):
         self.assertAlmostEqual(w["Dhrystone:1"] + w["Dhrystone:2"], 1 / 3)
         self.assertAlmostEqual(w["LINPACK:100"], 1 / 3)
 
-    def test_unanchored_overlap_identifies_missing_benchmark_coefficient(self):
-        # D coefficient = 2 from measured target; no L/target pair exists.
-        # Common unanchored hardware gives D=6, L=3, so L coefficient must be 4.
+    def test_anchored_power_law_is_recovered_through_the_780(self):
+        # Exact y = 0.8 (log x - log 0.5): the 780 scores 0.5 and predicts 1 speed-VAXen.
+        anchor = {"Dhrystone:1": math.log(0.5)}
+        rows = [node(k, {"Dhrystone:1": x}, (2 * x) ** 0.8) for k, x in [("a", 4), ("b", 16), ("c", 64)]]
+        calib, _ = train(rows, {}, False, anchor)
+        a, b = calib["Dhrystone:1"]
+        self.assertAlmostEqual(b, 0.8)
+        self.assertAlmostEqual(a + b * anchor["Dhrystone:1"], 0)
+
+    def test_variants_of_a_family_share_one_exponent(self):
+        anchor = {"Dhrystone:1": 0.0, "Dhrystone:2": math.log(2)}
+        rows = [node(k, {"Dhrystone:1": x, "Dhrystone:2": 2 * x}, x**0.9) for k, x in [("a", 3), ("b", 9), ("c", 27)]]
+        calib, _ = train(rows, {}, False, anchor)
+        self.assertAlmostEqual(calib["Dhrystone:1"][1], calib["Dhrystone:2"][1])
+        self.assertAlmostEqual(calib["Dhrystone:1"][1], 0.9)
+        self.assertAlmostEqual(calib["Dhrystone:2"][0], -0.9 * math.log(2))
+
+    def test_unanchored_overlap_identifies_a_free_intercept(self):
+        # Dhrystone is anchored at the 780 (score 1, exponent 1 from a and b); LINPACK has no
+        # 780 rating and no target pair, so its free intercept comes from unanchored overlap
+        # with a shared LINPACK exponent identified by two overlap nodes.
+        anchor = {"Dhrystone:1": 0.0}
         rows = [
-            node("a", {"Dhrystone:1": 5}, 10),
-            node("b", {"Dhrystone:1": 6, "LINPACK:100": 3}),
+            node("a", {"Dhrystone:1": 5}, 5),
+            node("b", {"Dhrystone:1": 10}, 10),
+            node("c", {"Dhrystone:1": 6, "LINPACK:100": 3}),
+            node("d", {"Dhrystone:1": 12, "LINPACK:100": 6}),
             node("disconnected", {"Unknown:one": 1, "Unknown:two": 2}),
         ]
-        alpha, _ = train(rows, {}, False)
-        self.assertAlmostEqual(math.exp(alpha["Dhrystone:1"]), 2)
-        self.assertAlmostEqual(math.exp(alpha["LINPACK:100"]), 4)
-        self.assertNotIn("Unknown:one", alpha)
-        baseline, _ = train(rows, {}, False, latent=False)
+        calib, _ = train(rows, {}, False, anchor)
+        a, b = calib["LINPACK:100"]
+        self.assertAlmostEqual(b, 1)
+        self.assertAlmostEqual(math.exp(a), 2)
+        self.assertNotIn("Unknown:one", calib)
+        baseline, _ = train(rows, {}, False, anchor, latent=False)
         self.assertNotIn("LINPACK:100", baseline)
 
     def test_removing_holdout_also_removes_its_bridge_information(self):
         rows = [
             node("a", {"Dhrystone:1": 1}, 1, "estimated_89"),
             node("b", {"Dhrystone:1": 2}, 2, "estimated_89"),
-            node("c", {"Dhrystone:1": 3}, 3, "estimated_89"),
+            node("c", {"Dhrystone:1": 4}, 4, "estimated_89"),
         ]
         edges = {"first": {"a": 0, "b": math.log(2), "c": math.log(2)}}
-        alpha, _ = train(rows, edges, True, exclude="a")
+        anchor = {"Dhrystone:1": math.log(0.5)}
+        calib, _ = train(rows, edges, True, anchor, exclude="a")
         rows[0]["log_scores"]["Dhrystone:1"] = 100
         edges["first"]["a"] = 100
-        changed, _ = train(rows, edges, True, exclude="a")
-        self.assertEqual(alpha, changed)
-        self.assertAlmostEqual(math.exp(alpha["Dhrystone:1"]), 2)
+        changed, _ = train(rows, edges, True, anchor, exclude="a")
+        self.assertEqual(calib, changed)
+        # Bridged targets 4 and 8 at scores 2 and 4, through (0.5, 1): exponent 1, intercept log 2.
+        self.assertAlmostEqual(calib["Dhrystone:1"][1], 1)
+        self.assertAlmostEqual(math.exp(calib["Dhrystone:1"][0]), 2)
 
     def test_one_measurement_and_partial_predictions(self):
         n = node("a", {"Dhrystone:1": 10, "LINPACK:100": 3})
-        r = estimates(n, {"Dhrystone:1": math.log(2), "LINPACK:100": math.log(4)})
+        calib = {"Dhrystone:1": (math.log(2), 1.0), "LINPACK:100": (math.log(4), 0.5)}
+        r = estimates(n, calib)
         full = next(x for x in r if x["subset"] == "all_available")
-        self.assertAlmostEqual(math.exp(full["predicted_log"]), math.sqrt(20 * 12))
-        partial = estimates(n, {"Dhrystone:1": math.log(2)})
+        self.assertAlmostEqual(math.exp(full["predicted_log"]), math.sqrt(20 * 4 * math.sqrt(3)))
+        partial = estimates(n, {"Dhrystone:1": calib["Dhrystone:1"]})
         self.assertNotIn("all_available", {r["subset"] for r in partial})
 
-    def test_joint_bootstrap_uses_correlated_bridge_edges(self):
+    def test_joint_bootstrap_uses_correlated_bridge_edges_and_anchor_draws(self):
         rows = [node(k, {"Dhrystone:1": v}, v, "estimated_89") for k, v in [("a", 1), ("b", 2), ("c", 3)]]
         edges = {"one": {"a": -1, "b": 1, "c": 0}, "two": {"a": 1, "b": -1, "c": 0}}
-        metrics, draws = bootstrap(rows, edges, True, 300, 5)
+        anchor = {"Dhrystone:1": math.log(0.5)}
+        metrics, intercepts, exponents = bootstrap(rows, edges, True, anchor, {}, 300, 5)
         self.assertEqual(metrics, ["Dhrystone:1"])
-        self.assertTrue(np.allclose(draws, 0, atol=1e-12))
+        self.assertEqual(intercepts.shape, exponents.shape)
+        # Without anchor error every draw passes through the 780 anchor.
+        self.assertTrue(np.allclose(intercepts[:, 0] + exponents[:, 0] * anchor["Dhrystone:1"], 0))
+        _, noisy, slopes = bootstrap(rows, edges, True, anchor, {"Dhrystone:1": 0.2}, 300, 5)
+        self.assertGreater(np.std(noisy[:, 0] + slopes[:, 0] * anchor["Dhrystone:1"]), 0.01)
+
+    def test_vax780_anchor_is_the_median_of_distinct_runs(self):
+        rows = [
+            result("r1", "sys:vax11/780", {"Dhrystone:v1.1_DMIPS": 0.8}, clock=5),
+            result("r2", "sys:vax11/780", {"Dhrystone:v1.1_DMIPS": 1.0}, clock=5),
+            result("r3", "sys:vax11/780", {"Dhrystone:v1.1_DMIPS": 0.9}, clock=5),
+            result("x", "sys:other", {"Dhrystone:v1.1_DMIPS": 5, "LINPACK:n100_MFLOPS": 1}, clock=5),
+        ]
+        anchor, sd, audit = vax780_anchor(rows)
+        self.assertEqual(set(anchor), {"Dhrystone:v1.1_DMIPS"})
+        self.assertAlmostEqual(anchor["Dhrystone:v1.1_DMIPS"], math.log(0.9))
+        self.assertGreater(sd["Dhrystone:v1.1_DMIPS"], 0)
+        self.assertEqual(audit[0]["vax780_runs"], 3)
+
+
+if __name__ == "__main__":
+    unittest.main()

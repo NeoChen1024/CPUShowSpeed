@@ -1,8 +1,9 @@
 # Power-law sensitivity of classical calibrations
 
-Reviewed 2026-10-03. A sensitivity report, not a change to the main model: the
-[network fit](classic-network-fitting.md) still uses proportional coefficients
-(log target = log score + α, exponent 1).
+Reviewed 2026-10-03. A single-metric sensitivity report. Its findings led the
+[network fit](classic-network-fitting.md) (method v4, 2026-10-03) to adopt one
+power-law exponent per family through the VAX-11/780, with era drift left as a
+limitation.
 
 ## Question
 
@@ -129,14 +130,12 @@ rows and every CI are in the
 - Replicate variances mix compiler, OS and configuration differences, so δ is
   approximate. Deming and OLS slopes differ by at most 0.11, but other δ values
   were not run.
-- No result here changes any published estimate or the timeline.
+- This report's own outputs change no estimate; the network change is reported
+  in [its own section](classic-network-fitting.md#family-power-law-through-the-vax-11780-2026-10-03).
 
-## Next steps
+## Decisions and next steps
 
-Extending a power-law form into the network (and the composite and SPEC89
-stages) would need:
-- a shared exponent or one per family
-- a decision between the 780 anchor and a free intercept
-- a decision on whether the year confounding is modeled or left as a caveat
-
-These are decisions for review, not implemented.
+Selected 2026-10-03 (user decision): one exponent per benchmark family, the
+VAX-11/780 anchor, and the year confounding left as a limitation. The network
+and mix network implement it. The composite and SPEC89 fits still use the
+proportional form; extending the power law to them is the next planned step.
