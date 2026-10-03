@@ -24,6 +24,9 @@ class Element {
  getBoundingClientRect(){return {width:340,height:260};}
  getScreenCTM(){return {a:scale,b:0,c:0,d:scale,e:20,f:10,inverse(){return {a:1/scale,b:0,c:0,d:1/scale,e:-20/scale,f:-10/scale};}};}
  setPointerCapture(){}
+ // A recording 2D context: each paint resets the counts at setTransform.
+ getContext(){return this.context??={markers:0,paints:0,setTransform(){this.markers=0;this.paints++;},arc(){this.markers++;},closePath(){this.markers++;},
+  fillRect(){},beginPath(){},moveTo(){},lineTo(){},stroke(){},fill(){},save(){},restore(){},rect(){},clip(){}};}
 }
 let scale=1;
 const elements=Object.fromEntries([...(html+script).matchAll(/id="([^"]+)"/g)].map(m=>m[1]).concat(['highlight']).map(k=>['#'+k,new Element()]));
@@ -42,6 +45,7 @@ if(process.argv[3]==='full'){
  assert(data.every(r=>['rate','speed'].includes(r.quantity)));
  assert(data.every(r=>quantityOf(r)==='speed'||(r.generation.startsWith('cpu')&&r.generation!=='cpu89')));
  assert.equal(filtered.length,count('baseline')+count('mix_combined'));
+ assert.equal(elements['#plot-canvas'].context.markers,points.length);
  assert.equal((elements['#body'].innerHTML.match(/<tr>/g)||[]).length,200);
  const baselineCount=filtered.length;
  elements['#quantities'].events.change({target:{dataset:{quantity:'speed'},checked:false}});
@@ -230,7 +234,7 @@ assert.equal(tip.hidden,true);assert.equal(points.length,0);assert.equal(body(),
 elements['#q'].value='';elements['#q'].events.input();
 const width=viewMax-viewMin;elements['#zoom-in'].events.click();assert(viewMax-viewMin<width);
 elements['#reset'].events.click();assert.equal(viewMax-viewMin,width);
-setRange(1979,1981);assert(points.every(p=>p.r.year===1980));assert(body().includes('Unknown machine'));assert(!body().includes('High machine'));
+setRange(1979,1981);assert(points.every(p=>p.r.year===1980));assert.equal(elements['#plot-canvas'].context.markers,points.length);assert(body().includes('Unknown machine'));assert(!body().includes('High machine'));
 move(8);assert(!tip.hidden);elements['#reset'].events.click();
 let prevented=false;const anchor=center();plot.events.wheel({clientX:anchor.x,clientY:anchor.y,deltaY:-100,preventDefault(){prevented=true;}});assert(prevented);assert(viewMax-viewMin<width);
 elements['#reset'].events.click();

@@ -224,14 +224,22 @@ intervals. CPU2026 remains explicitly exploratory.
 - Wheel zoom anchors on the cursor; drag pans; +/- buttons, presets and overview
   range handles provide alternative controls. Only time changes; the log VAXen
   axis stays fixed. Unknown years remain in the list regardless of time window.
-- All visible observations contribute marker geometry; batching per route reduces
-  DOM elements without aggregating or deleting points. The overview is a navigation
+- All visible observations are drawn, without aggregating or deleting points, on
+  a `<canvas>` under the SVG plot. Each route is drawn opaque on an offscreen layer
+  and composited at the theme's interval and point alpha, so overlapping markers of
+  one route do not darken, as with one translucent path per route. The SVG keeps
+  axes, labels, the hover highlight and personal predictions. The overview is a navigation
   histogram of yearly record counts for the selected routes/mode/search, across
   the full time extent. Its bar height uses a labelled square-root scale; it is
   not an additional performance metric.
 - A screen-space index finds point centers within 12 CSS pixels. Nearby centers
   within 6 pixels can be cycled after pinning. Markers and intervals highlight;
   clicking outside, Close or Escape dismisses the selection.
+- Zoom and pan redraw at most once per animation frame; search waits 120 ms after
+  the last keystroke; while zooming or panning the list follows 150 ms after the
+  plot. Columns used by filters, sorts and source counting are precomputed once,
+  and global sort orders and overview counts are cached. Each redraw records a
+  `timeline render` User Timing measure for the browser's performance panel.
 
 Offline JavaScript tests cover state transitions, sorting, scale-independent
 snapping, mode/route filters and time navigation (`tests/timeline_interaction.js`,
@@ -248,7 +256,6 @@ scatterplots, lineage traces, pagination, and that the calculator reproduces
 timeline rows in their own quantity (CPU2017 rate; CPU92, CPU95, CPU2006 and
 CPU2026 speed; SPEC89; a multi-score classical row; a Gibson rating; a two-rating
 combined mix) to 1e-6 or better. Its counts change whenever the data does.
-Its counts change whenever the data does.
 
 ### Layout, numbers and overview brush
 
@@ -368,6 +375,11 @@ of full browser visual interaction verification.
 Use solid backgrounds throughout: page and cards, a pathway panel distinct from
 the page, and tinted model/unit nodes. Avoid gradients.
 
+The unit definition and calibration-CI explanation live inside **How scores
+become VAXen**, above the graph. The VAXen node holds plural, SI-prefix and speed-versus-rate details.
+The main page keeps short scope, chronology and interaction hints; individual
+record qualifications remain in the tooltip and path details.
+
 ### Themes (2026-10-03)
 
 Every colour the page draws reads a CSS custom property defined in
@@ -376,11 +388,7 @@ Every colour the page draws reads a CSS custom property defined in
 preference), Light and Dark. A chosen theme is stored in `localStorage` under
 `cpushowspeed-theme` and applied by a small head script before the first paint;
 Auto clears it. Changing the theme or the system preference fires a `themechange`
-event for drawing code that cannot read CSS directly. The unit definition and
-calibration-CI explanation live inside **How scores become VAXen**, above the
-graph. The VAXen node holds plural, SI-prefix and speed-versus-rate details.
-The main page keeps short scope, chronology and interaction hints; individual
-record qualifications remain in the tooltip and path details.
+event; the canvas rereads its colours and redraws.
 
 ## Offline VAXen calculator (2026-09-29)
 

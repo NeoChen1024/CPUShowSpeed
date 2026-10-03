@@ -91,7 +91,8 @@ input{width:min(36em,85vw)}button{cursor:pointer}svg{width:100%;background:var(-
 #plot{height:auto;aspect-ratio:1400/760}#overview{height:80px;touch-action:none;user-select:none;cursor:crosshair}
 #overview [data-brush="move"]{cursor:grab}#overview [data-brush="left"],#overview [data-brush="right"]{cursor:ew-resize}
 #overview [role="slider"]:focus{outline:none;stroke:var(--focus);stroke-width:3}
-.chart{overflow:hidden}td,th{padding:7px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+.chart{overflow:hidden}.plot-stack{position:relative;background:var(--plot-bg)}
+#plot-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}#plot{position:relative;background:transparent}td,th{padding:7px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
 .score-input{display:block;margin:3px 0;overflow-wrap:anywhere}.score-input strong{font-weight:500;color:var(--fg)}
 table{border-collapse:collapse;width:100%}small,.hint{color:var(--muted)}.table-tools{margin:20px 0 10px}
 #tip{position:fixed;z-index:10;width:340px;max-width:calc(100vw - 36px);max-height:calc(100vh - 24px);
@@ -131,7 +132,7 @@ __LINEAGE_MARKUP__
 <p class="hint">Hover to inspect · click to pin · scroll to zoom · drag to pan</p>
 <p><button id="zoom-in">Zoom in</button> <button id="zoom-out">Zoom out</button> <button id="reset">All years</button>
 <button id="early">Early hardware</button> <button id="modern">SPEC era</button> <span id="range-label"></span></p>
-<div class="timeline-chart"><div class="chart"><svg id="plot" viewBox="0 0 1400 760" aria-label="Historical VAXen scatterplot"></svg></div>
+<div class="timeline-chart"><div class="chart plot-stack"><canvas id="plot-canvas" aria-hidden="true"></canvas><svg id="plot" viewBox="0 0 1400 760" aria-label="Historical VAXen scatterplot"></svg></div>
 <svg id="overview" viewBox="0 0 1400 90" preserveAspectRatio="none" aria-label="Record counts and time-range selection"></svg></div>
 <p class="hint" style="text-align:center">Displayed points per year. Drag the handles to resize the time window; drag its center to move it. Arrow keys adjust focused handles.</p>
 <div id="tip" role="region" aria-label="Selected data point" hidden><div id="tip-content"></div>
@@ -164,7 +165,7 @@ function fmt(value,quantity){const x=Number(value);if(!Number.isFinite(x))return
  const prefix=prefixes[(e+12)/3];
  if(quantity!=='rate'&&quantity!=='speed')return `${scaled.toFixed(3)} ${prefix}VAXen`;
  return `${scaled.toFixed(3)} ${prefix?prefix+' ':''}${quantity}-VAXen`;}
-const plot=document.querySelector('#plot'), tip=document.querySelector('#tip'), overviewPlot=document.querySelector('#overview');
+const plot=document.querySelector('#plot'), tip=document.querySelector('#tip'), overviewPlot=document.querySelector('#overview'), canvas=document.querySelector('#plot-canvas');
 const dated=data.filter(r=>r.year);let ymin=Math.floor(Math.log10(data.reduce((m,r)=>Math.min(m,r.ci95_low),Infinity))),
  ymax=Math.ceil(Math.log10(data.reduce((m,r)=>Math.max(m,r.ci95_high),0))),
  xmin=dated.reduce((m,r)=>Math.min(m,r.year),Infinity)-1,xmax=dated.reduce((m,r)=>Math.max(m,r.year),-Infinity)+1;
@@ -172,26 +173,42 @@ const originalBounds={xmin,xmax,ymin,ymax};let userPredictions=[];
 let viewMin=xmin,viewMax=xmax,page=0;const PAGE_SIZE=200;
 const X=x=>90+(x-viewMin)/(viewMax-viewMin)*1270,Y=y=>680-(Math.log10(y)-ymin)/(ymax-ymin)*640;
 const palette=[0,1,2,3,4,5,6,7].map(i=>`var(--route-${i})`);
-const routeNames=[...new Set(data.map(r=>r.route))],enabled=new Set(routeNames);
-const color=r=>palette[routeNames.indexOf(r.route)%palette.length];
+const routeNames=[...new Set(data.map(r=>r.route))],enabled=new Set(routeNames),routeCode=new Map(routeNames.map((n,i)=>[n,i]));
+const color=r=>palette[routeCode.get(r.route)%palette.length];
 const modeOf=r=>r.mode||'peak_proxy';
 const configurationDetails=r=>[Number(r.clock_mhz)>0?`clock: ${r.clock_mhz} MHz`:'',r.os,r.configuration].filter(Boolean).join('; ');
 let sortOrder='year-asc';
 const browsingSuffixes=['','-bottom'];
 const enabledModes=new Set(['base','peak','peak_proxy']);
 const searchable=data.map(r=>[r.system,r.cpu,r.configuration,r.os,r.scores,r.route,modeOf(r)].join(' ').toLowerCase());
+// Column arrays: filtering, time windows, counts and drawing read these instead of row objects.
+const N=data.length,codes=values=>{const names=[...new Set(values)];const map=new Map(names.map((n,i)=>[n,i]));return [names,Uint8Array.from(values,v=>map.get(v))];};
+const [kindNames,rowKind]=codes(data.map(kind)),[modeNames,rowMode]=codes(data.map(modeOf)),[quantityNames,rowQuantity]=codes(data.map(quantityOf));
+const rowRoute=Uint16Array.from(data,r=>routeCode.get(r.route)),rowShape=Uint8Array.from(data,r=>kind(r).startsWith('mix')?2:quantityOf(r)==='speed'?1:0);
+const column=f=>Float64Array.from(data,f),rowYear=column(r=>r.year?Number(r.year):NaN),rowYearLow=column(r=>Number(r.year_low)),rowYearHigh=column(r=>Number(r.year_high));
+const rowLog=column(r=>Math.log10(r.vaxen)),rowLogLow=column(r=>Math.log10(r.ci95_low)),rowLogHigh=column(r=>Math.log10(r.ci95_high));
+const byYear=Int32Array.from(data.keys()).filter(i=>!Number.isNaN(rowYear[i])).sort((a,b)=>rowYear[a]-rowYear[b]);
+// Distinct source records are counted through interned keys and a stamp per key.
+const sourceStart=new Int32Array(N+1),sourceKeys=[],sourceCode=new Map();
+data.forEach((r,i)=>{sourceStart[i]=sourceKeys.length;for(const id of r.source_record_ids||[r.configuration_id]){const key=(r.generation||r.route)+':'+id;
+ if(!sourceCode.has(key))sourceCode.set(key,sourceCode.size);sourceKeys.push(sourceCode.get(key));}});sourceStart[N]=sourceKeys.length;
+const sourceSeen=new Uint32Array(sourceCode.size),rowSeen=new Uint32Array(N);let stamp=0;
 const spans=r=>`M${X(r.year)} ${Y(r.ci95_low)}V${Y(r.ci95_high)} M${X(r.year_low)} ${Y(r.vaxen)}H${X(r.year_high)}`;
-let visiblePoints=new Map();
-let filtered=data,points=[],candidates=[],active=0,pinned=false,grid=new Map(),drag=null,dragged=false;
+// Built on first use after each draw: hover lookups and related-row highlights.
+let visibleCache=null;const visiblePoint=id=>(visibleCache??=new Map(points.map(p=>[p.r.record_id,p]))).get(id);
+let filtered=data,filteredIndex=[],points=[],candidates=[],active=0,pinned=false,grid=null,drag=null,dragged=false;
 function clearSelection(){candidates=[];active=0;pinned=false;tip.hidden=true;tip.classList.remove('pinned');
  document.querySelector('#highlight')?.replaceChildren();}
 function screenPoint(p){return new DOMPoint(p.x,p.y).matrixTransform(plot.getScreenCTM());}
-function indexPoints(){grid=new Map();const m=plot.getScreenCTM();if(!m)return;
- for(const p of points){const sx=m.a*p.x+m.c*p.y,sy=m.b*p.x+m.d*p.y,key=Math.floor(sx/12)+','+Math.floor(sy/12);
- const cell=grid.get(key)||[];cell.push({p,sx,sy});grid.set(key,cell);}}
-function nearby(x,y){const m=plot.getScreenCTM();if(!m)return [];x-=m.e;y-=m.f;
+// The screen-space grid is rebuilt lazily, on the first lookup after a draw or resize.
+const cellKey=(gx,gy)=>(gx+32768)*65536+gy+32768;
+function indexPoints(){grid=null;}
+function buildGrid(){grid=new Map();const m=plot.getScreenCTM();if(!m)return;
+ for(const p of points){const sx=m.a*p.x+m.c*p.y,sy=m.b*p.x+m.d*p.y,key=cellKey(Math.floor(sx/12),Math.floor(sy/12));
+ const cell=grid.get(key);if(cell)cell.push({p,sx,sy});else grid.set(key,[{p,sx,sy}]);}}
+function nearby(x,y){const m=plot.getScreenCTM();if(!m)return [];if(!grid)buildGrid();x-=m.e;y-=m.f;
  const gx=Math.floor(x/12),gy=Math.floor(y/12),hits=[];
- for(let i=-1;i<=1;i++)for(let j=-1;j<=1;j++)for(const h of grid.get((gx+i)+','+(gy+j))||[]){
+ for(let i=-1;i<=1;i++)for(let j=-1;j<=1;j++)for(const h of grid.get(cellKey(gx+i,gy+j))||[]){
  const d=Math.hypot(h.sx-x,h.sy-y);if(d<=12)hits.push({...h,d});}
  hits.sort((a,b)=>a.d-b.d||a.p.r.configuration_id.localeCompare(b.p.r.configuration_id));
  if(!hits.length)return [];
@@ -255,7 +272,7 @@ function resourceDescription(r){
 }
 function showSelection(){if(!candidates.length){clearSelection();return;}
  const p=candidates[active],r=p.r,c=color(r),m=plot.getScreenCTM(),scale=Math.hypot(m.a,m.b)||1;
- const related=relatives(r),others=[...sameSystem(r)].sort((a,b)=>(a.route===r.route)-(b.route===r.route)),visible=[r,...related].map(q=>visiblePoints.get(q.record_id)).filter(Boolean);
+ const related=relatives(r),others=[...sameSystem(r)].sort((a,b)=>(a.route===r.route)-(b.route===r.route)),visible=[r,...related].map(q=>visiblePoint(q.record_id)).filter(Boolean);
  const connections=visible.length>1?`<path d="${visible.map((q,i)=>(i?'L':'M')+q.x+' '+q.y).join(' ')}" style="stroke:${c}" fill="none" opacity=".7"/>`:'';
  document.querySelector('#highlight').innerHTML=connections+visible.map(q=>`<path d="${spans(q.r)}" style="stroke:${c}" opacity=".35"/><path d="${marker(q,5)}" style="fill:${c}"/>`).join('')+`<path d="${spans(r)}" style="stroke:${c}" opacity=".75" stroke-width="3" vector-effect="non-scaling-stroke"/>
  <circle cx="${p.x}" cy="${p.y}" r="${10/scale}" style="fill:var(--halo);stroke:${c}" stroke-width="2" vector-effect="non-scaling-stroke"/>
@@ -284,23 +301,34 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')clearSelection();});
 for(const [id,delta] of [['prev',-1],['next',1]])document.querySelector('#'+id).addEventListener('click',()=>{
  active=(active+delta+candidates.length)%candidates.length;showSelection();});
 document.querySelector('#close').addEventListener('click',clearSelection);
-window.addEventListener('resize',()=>{indexPoints();if(pinned)showSelection();else clearSelection();});
+window.addEventListener('resize',()=>{indexPoints();paintCanvas();if(pinned)showSelection();else clearSelection();});
 window.addEventListener('scroll',()=>{if(pinned)positionTip();else clearSelection();},true);
-function renderTable(){const order=sortOrder;
- const rows=[...filtered].sort((a,b)=>{let d=0;
- if(order.startsWith('year')){if(!a.year!==!b.year)return a.year?-1:1;d=(Number(a.year)-Number(b.year))*(order.endsWith('desc')?-1:1);}
- else if(order.startsWith('vaxen'))d=(a.vaxen-b.vaxen)*(order.endsWith('desc')?-1:1);
- return d||a.system.localeCompare(b.system)||a.configuration_id.localeCompare(b.configuration_id);});
- const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));page=Math.max(0,Math.min(page,pages-1));
+// Global row orders, sorted once per sort key; a page scans one for rows of the current selection.
+const orders={};let nameRank=null;
+function sortedRows(order){
+ if(!nameRank){const byName=[...data.keys()].sort((a,b)=>data[a].system.localeCompare(data[b].system)||data[a].configuration_id.localeCompare(data[b].configuration_id));
+  nameRank=new Int32Array(N);byName.forEach((i,k)=>nameRank[i]=k);}
+ if(orders[order])return orders[order];
+ const sign=order.endsWith('desc')?-1:1,vaxen=data.map(r=>r.vaxen);
+ return orders[order]=Int32Array.from(data.keys()).sort((a,b)=>{let d=0;
+  if(order.startsWith('year')){const ua=Number.isNaN(rowYear[a]),ub=Number.isNaN(rowYear[b]);if(ua!==ub)return ua?1:-1;if(!ua)d=(rowYear[a]-rowYear[b])*sign;}
+  else if(order.startsWith('vaxen'))d=(vaxen[a]-vaxen[b])*sign;
+  return d||nameRank[a]-nameRank[b];});
+}
+let tableTimer=null;
+function renderTable(){if(tableTimer!==null){clearTimeout(tableTimer);tableTimer=null;}
+ const total=filteredIndex.length,pages=Math.max(1,Math.ceil(total/PAGE_SIZE));page=Math.max(0,Math.min(page,pages-1));
  for(const suffix of browsingSuffixes){
- document.querySelector('#page-count'+suffix).textContent=`Page ${page+1} / ${pages} · ${rows.length} rows`;
+ document.querySelector('#page-count'+suffix).textContent=`Page ${page+1} / ${pages} · ${total} rows`;
  document.querySelector('#table-prev'+suffix).disabled=page===0;
  document.querySelector('#table-next'+suffix).disabled=page===pages-1;
  document.querySelector('#sort'+suffix).value=sortOrder;
- const goto=document.querySelector('#goto-page'+suffix);goto.max=pages;goto.value=page+1;goto.disabled=rows.length===0;
- document.querySelector('#goto-submit'+suffix).disabled=rows.length===0;
+ const goto=document.querySelector('#goto-page'+suffix);goto.max=pages;goto.value=page+1;goto.disabled=total===0;
+ document.querySelector('#goto-submit'+suffix).disabled=total===0;
  }
- document.querySelector('#body').innerHTML=rows.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE).map(r=>`<tr><td>${esc(r.year||'Unknown')}<br><small>${esc(r.date_method)} ${esc(r.year_low)}–${esc(r.year_high)}</small></td>
+ const rows=[],first=page*PAGE_SIZE;let seen=0;
+ if(total)for(const i of sortedRows(sortOrder)){if(rowSeen[i]!==stamp)continue;if(seen++>=first)rows.push(data[i]);if(rows.length===PAGE_SIZE)break;}
+ document.querySelector('#body').innerHTML=rows.map(r=>`<tr><td>${esc(r.year||'Unknown')}<br><small>${esc(r.date_method)} ${esc(r.year_low)}–${esc(r.year_high)}</small></td>
  <td>${esc(r.system)}${r.cpu?'<br>'+esc(r.cpu):''}<br><small>${esc(configurationDetails(r))}</small></td>
  <td>${esc(r.route)} · ${esc(modeOf(r))}<br>${esc(quantityLabel(r))} · ${esc(estimateLabel(r))}<br><small>${scoreDetails(r)}</small></td><td>${fmt(r.vaxen,quantityOf(r))}<br><small>${fmt(r.ci95_low,quantityOf(r))}–${fmt(r.ci95_high,quantityOf(r))}</small></td>
  <td>${(r.benchmark_sources||[r.source_url]).map(u=>`<a href="${esc(u)}">Benchmark</a>`).join(' · ')}<br>${r.date_sources.split(';').filter(Boolean).map(u=>`<a href="${esc(u)}">Year source</a>`).join(' ')}<br><small>${esc(r.date_notes)}</small></td></tr>`).join('');
@@ -309,28 +337,40 @@ function marker(p,size){const x=p.x,y=p.y,s=size;
  if(kind(p.r).startsWith('mix'))return `M${x-s} ${y-s}h${s*2}v${s*2}h${-s*2}z`;
  if(quantityOf(p.r)==='speed')return `M${x} ${y-s}l${s} ${s*2}h${-s*2}z`;
  return `M${x-s},${y}a${s},${s} 0 1,0 ${s*2},0a${s},${s} 0 1,0 ${-s*2},0`;}
-function draw(){clearSelection();const query=document.querySelector('#q').value.toLowerCase();
- const selected=data.filter((r,i)=>searchable[i].includes(query)&&enabled.has(r.route)&&enabledModes.has(modeOf(r))&&enabledEstimates.has(kind(r))&&enabledQuantities.has(quantityOf(r)));
- const cohort=selected;
- const estimates=selected.filter(r=>kind(r)!=='baseline').length;
- document.querySelector('#estimate-status').textContent=`${estimates} mix estimates shown alongside ${selected.length-estimates} baseline rows. Mix estimates are correlated with the classical route, not extra evidence.`;
- filtered=cohort.filter(r=>!r.year||(r.year>=viewMin&&r.year<=viewMax));
- const sourceCount=new Set(filtered.flatMap(r=>(r.source_record_ids||[r.configuration_id]).map(id=>(r.generation||r.route)+':'+id))).size;
- document.querySelector('#count').textContent=`${sourceCount} source records · ${filtered.filter(r=>quantityOf(r)==='rate').length} rate · ${filtered.filter(r=>quantityOf(r)==='speed').length} speed · ${filtered.length} displayed points`;
- let s='<defs><clipPath id="plot-region"><rect x="90" y="40" width="1270" height="640"/></clipPath></defs>';for(let y=ymin;y<=ymax;y++){let p=Y(10**y);s+=`<path d="M90 ${p}H1360" style="stroke:var(--grid)"/><text x="8" y="${p+5}">10^${y} VAXen</text>`;}
- const step=viewMax-viewMin<12?1:5;for(let x=Math.ceil(viewMin/step)*step;x<=viewMax;x+=step)s+=`<path d="M${X(x)} 40V680" style="stroke:var(--grid-minor)"/><text x="${X(x)-17}" y="710">${x}</text>`;
- points=filtered.filter(r=>r.year).map(r=>({r,x:X(r.year),y:Y(r.vaxen)}));
- visiblePoints=new Map(points.map(p=>[p.r.record_id,p]));
- // Batch vector geometry per route: all observations retained, without thousands of DOM circles.
- for(const route of routeNames){const ps=points.filter(p=>p.r.route===route);if(!ps.length)continue;const c=color(ps[0].r);
- const intervals=ps.map(p=>spans(p.r)).join(' '),marks=ps.map(p=>marker(p,3)).join(' ');
- s+=`<g clip-path="url(#plot-region)"><path d="${intervals}" style="stroke:${c};opacity:var(--interval-alpha)" fill="none" stroke-width="2"/><path d="${marks}" style="fill:${c};opacity:var(--point-alpha)"/></g>`;}
- plot.innerHTML=s+'<g id="highlight" clip-path="url(#plot-region)" pointer-events="none"></g>'+predictionMarkup();indexPoints();renderTable();
+// The selection without the time window, cached until a filter or the search changes.
+let cohort=null;
+function selectCohort(query){
+ const key=JSON.stringify([query,...[enabled,enabledModes,enabledEstimates,enabledQuantities].map(set=>[...set].sort())]);
+ if(cohort&&cohort.key===key)return cohort;
+ const on=(names,set)=>names.map(n=>set.has(n)),route=on(routeNames,enabled),mode=on(modeNames,enabledModes),est=on(kindNames,enabledEstimates),qty=on(quantityNames,enabledQuantities);
+ const keep=new Uint8Array(N),undated=[],baseline=kindNames.indexOf('baseline');let estimates=0,total=0;
+ for(let i=0;i<N;i++)if(route[rowRoute[i]]&&mode[rowMode[i]]&&est[rowKind[i]]&&qty[rowQuantity[i]]&&(!query||searchable[i].includes(query))){
+  keep[i]=1;total++;if(rowKind[i]!==baseline)estimates++;if(Number.isNaN(rowYear[i]))undated.push(i);}
+ const dated=byYear.filter(i=>keep[i]),bins=new Map();for(const i of dated)bins.set(rowYear[i],(bins.get(rowYear[i])||0)+1);
+ return cohort={key,dated,undated,bins,estimates,total};
+}
+// First position in year order whose year is not below (or, with `after`, not at or below) the value.
+const bound=(rows,value,after)=>{let lo=0,hi=rows.length;while(lo<hi){const mid=(lo+hi)>>1,y=rowYear[rows[mid]];if(y<value||(after&&y===value))lo=mid+1;else hi=mid;}return lo;};
+// Time window, points, counts and every drawn layer; the table may be deferred while dragging.
+function render(deferTable){const started=typeof performance==='object'?performance.now():0;clearSelection();const query=document.querySelector('#q').value.toLowerCase();
+ const c=selectCohort(query);
+ document.querySelector('#estimate-status').textContent=`${c.estimates} mix estimates shown alongside ${c.total-c.estimates} baseline rows. Mix estimates are correlated with the classical route, not extra evidence.`;
+ const visible=c.dated.subarray(bound(c.dated,viewMin,false),bound(c.dated,viewMax,true));
+ filteredIndex=[...c.undated,...visible];filtered=filteredIndex.map(i=>data[i]);
+ stamp++;let sources=0,rate=0;const rateCode=quantityNames.indexOf('rate');
+ for(const i of filteredIndex){rowSeen[i]=stamp;if(rowQuantity[i]===rateCode)rate++;
+  for(let k=sourceStart[i];k<sourceStart[i+1];k++)if(sourceSeen[sourceKeys[k]]!==stamp){sourceSeen[sourceKeys[k]]=stamp;sources++;}}
+ document.querySelector('#count').textContent=`${sources} source records · ${rate} rate · ${filtered.length-rate} speed · ${filtered.length} displayed points`;
+ points=Array.from(visible,i=>({r:data[i],i,x:X(rowYear[i]),y:Y(data[i].vaxen)}));visibleCache=null;indexPoints();
+ paintCanvas();
+ let s='<defs><clipPath id="plot-region"><rect x="90" y="40" width="1270" height="640"/></clipPath></defs>';for(let y=ymin;y<=ymax;y++)s+=`<text x="8" y="${Y(10**y)+5}">10^${y} VAXen</text>`;
+ for(const x of yearTicks())s+=`<text x="${X(x)-17}" y="710">${x}</text>`;
+ plot.innerHTML=s+'<g id="highlight" clip-path="url(#plot-region)" pointer-events="none"></g>'+predictionMarkup();
+ if(deferTable&&typeof setTimeout==='function'){if(tableTimer!==null)clearTimeout(tableTimer);tableTimer=setTimeout(renderTable,150);}else renderTable();
  document.querySelector('#range-label').textContent=`${viewMin.toFixed(1)}–${viewMax.toFixed(1)}`;
- const bins=new Map();for(const r of cohort)if(r.year)bins.set(r.year,(bins.get(r.year)||0)+1);
- const maxCount=Math.max(0,...bins.values()),left=overviewX(viewMin),right=overviewX(viewMax);
+ const maxCount=Math.max(0,...c.bins.values()),left=overviewX(viewMin),right=overviewX(viewMax);
  let overview=`<text x="90" y="13" font-size="12">Points/year · max ${maxCount} · √ height</text>`;
- for(const [yr,n] of bins)overview+=`<path d="M${overviewX(yr)} 65V${65-42*Math.sqrt(n/Math.max(1,maxCount))}" style="stroke:var(--overview-bar)" stroke-width="5" pointer-events="none"/>`;
+ for(const [yr,n] of c.bins)overview+=`<path d="M${overviewX(yr)} 65V${65-42*Math.sqrt(n/Math.max(1,maxCount))}" style="stroke:var(--overview-bar)" stroke-width="5" pointer-events="none"/>`;
  overview+=`<rect x="90" y="18" width="${left-90}" height="49" style="fill:var(--overview-mask)" pointer-events="none"/>
  <rect x="${right}" y="18" width="${1360-right}" height="49" style="fill:var(--overview-mask)" pointer-events="none"/>
  <rect data-brush="move" x="${left}" y="18" width="${right-left}" height="49" style="fill:var(--accent-wash);stroke:var(--accent)"/>
@@ -340,9 +380,53 @@ function draw(){clearSelection();const query=document.querySelector('#q').value.
  for(const [id,x,value,min,max] of [['brush-left',left,viewMin,xmin,viewMax-1],['brush-right',right,viewMax,viewMin+1,xmax]]){
  const handle=document.querySelector('#'+id);handle.setAttribute('x',x-7);handle.setAttribute('aria-valuenow',value.toFixed(2));
  handle.setAttribute('aria-valuetext',`Year ${value.toFixed(1)}`);handle.setAttribute('aria-valuemin',min);handle.setAttribute('aria-valuemax',max);}
-
+ // Visible in browser performance tools as a User Timing measure.
+ if(started)performance.measure?.('timeline render',{start:started});
 }
-function setRange(lo,hi){let width=Math.max(1,Math.min(xmax-xmin,hi-lo));lo=Math.max(xmin,Math.min(lo,xmax-width));viewMin=lo;viewMax=lo+width;page=0;draw();}
+function yearTicks(){const step=viewMax-viewMin<12?1:5,out=[];for(let x=Math.ceil(viewMin/step)*step;x<=viewMax;x+=step)out.push(x);return out;}
+function draw(){if(frame!==null){cancelAnimationFrame(frame);frame=null;}render(false);}
+// Pointer, wheel and brush changes coalesce into one render per animation frame.
+let frame=null;
+function requestDraw(){if(typeof requestAnimationFrame!=='function'){render(false);return;}
+ if(frame===null)frame=requestAnimationFrame(()=>{frame=null;render(true);});}
+// Theme colours for the canvas, reread when the theme or system preference changes.
+let themeColors=null;
+function colors(){if(themeColors)return themeColors;const style=typeof getComputedStyle==='function'?getComputedStyle(canvas):null;
+ const v=(name,fallback)=>style?.getPropertyValue('--'+name).trim()||fallback;
+ return themeColors={bg:v('plot-bg','#fafbfd'),grid:v('grid','#dde3e8'),minor:v('grid-minor','#eee'),interval:Number(v('interval-alpha','.12')),
+  point:Number(v('point-alpha','.45')),routes:palette.map((_,i)=>v('route-'+i,'#888'))};}
+window.addEventListener('themechange',()=>{themeColors=null;paintCanvas();});
+// Grid, intervals and markers in viewBox units on a canvas sized to device pixels.
+// Each route's intervals and markers are painted opaque on an offscreen layer and composited
+// with the theme alpha: overlaps within a route do not darken (as one translucent SVG path),
+// while a translucent stroke over tens of thousands of overlapping segments would be very slow.
+let layer=null;
+function offscreen(w,h){const c=layer?.canvas||document.createElement?.('canvas');if(!c)return null;
+ if(c.width!==w)c.width=w;if(c.height!==h)c.height=h;return layer??={canvas:c,ctx:c.getContext('2d')};}
+function paintCanvas(){const ctx=canvas.getContext?.('2d');if(!ctx)return;
+ const box=canvas.getBoundingClientRect(),ratio=window.devicePixelRatio||1,w=Math.max(1,Math.round(box.width*ratio)),h=Math.max(1,Math.round(box.height*ratio));
+ if(canvas.width!==w)canvas.width=w;if(canvas.height!==h)canvas.height=h;
+ const theme=colors(),view=[w/1400,0,0,h/760,0,0];ctx.setTransform(...view);ctx.globalAlpha=1;ctx.fillStyle=theme.bg;ctx.fillRect(0,0,1400,760);
+ ctx.lineWidth=1;ctx.strokeStyle=theme.grid;ctx.beginPath();for(let y=ymin;y<=ymax;y++){const p=Y(10**y);ctx.moveTo(90,p);ctx.lineTo(1360,p);}ctx.stroke();
+ ctx.strokeStyle=theme.minor;ctx.beginPath();for(const x of yearTicks()){ctx.moveTo(X(x),40);ctx.lineTo(X(x),680);}ctx.stroke();
+ const off=offscreen(w,h);
+ function composite(alpha,paint){
+  if(!off){ctx.save();ctx.beginPath();ctx.rect(90,40,1270,640);ctx.clip();ctx.globalAlpha=alpha;paint(ctx);ctx.restore();return;}
+  const g=off.ctx;g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,w,h);g.setTransform(...view);g.save();g.beginPath();g.rect(90,40,1270,640);g.clip();paint(g);g.restore();
+  ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=alpha;ctx.drawImage(off.canvas,0,0);ctx.globalAlpha=1;ctx.setTransform(...view);}
+ const groups=routeNames.map(()=>[]);for(const p of points)groups[rowRoute[p.i]].push(p);
+ const scaleY=640/(ymax-ymin),yOf=l=>680-(l-ymin)*scaleY,s=3,CHUNK=512;
+ groups.forEach((group,route)=>{if(!group.length)return;const color=theme.routes[route%theme.routes.length];
+  composite(theme.interval,g=>{g.strokeStyle=color;g.lineWidth=2;
+   for(let k=0;k<group.length;k+=CHUNK){g.beginPath();for(let n=k;n<Math.min(k+CHUNK,group.length);n++){const {i,x}=group[n],y=yOf(rowLog[i]);
+    g.moveTo(x,yOf(rowLogLow[i]));g.lineTo(x,yOf(rowLogHigh[i]));g.moveTo(X(rowYearLow[i]),y);g.lineTo(X(rowYearHigh[i]),y);}g.stroke();}});
+  composite(theme.point,g=>{g.fillStyle=color;
+   for(let k=0;k<group.length;k+=CHUNK){g.beginPath();for(let n=k;n<Math.min(k+CHUNK,group.length);n++){const {i,x,y}=group[n],shape=rowShape[i];
+    if(shape===0){g.moveTo(x+s,y);g.arc(x,y,s,0,2*Math.PI);}
+    else if(shape===1){g.moveTo(x,y-s);g.lineTo(x+s,y+s);g.lineTo(x-s,y+s);g.closePath();}
+    else{g.moveTo(x-s,y-s);g.lineTo(x+s,y-s);g.lineTo(x+s,y+s);g.lineTo(x-s,y+s);g.closePath();}}g.fill();}});});
+}
+function setRange(lo,hi){let width=Math.max(1,Math.min(xmax-xmin,hi-lo));lo=Math.max(xmin,Math.min(lo,xmax-width));viewMin=lo;viewMax=lo+width;page=0;requestDraw();}
 function zoom(factor,anchor=(viewMin+viewMax)/2){const fraction=(anchor-viewMin)/(viewMax-viewMin),width=Math.max(1,Math.min(xmax-xmin,(viewMax-viewMin)*factor));setRange(anchor-fraction*width,anchor+(1-fraction)*width);}
 plot.addEventListener('wheel',e=>{e.preventDefault();const m=plot.getScreenCTM(),local=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse());
  const fraction=Math.max(0,Math.min(1,(local.x-90)/1270));zoom(Math.exp(Math.max(-.5,Math.min(.5,e.deltaY*.002))),viewMin+fraction*(viewMax-viewMin));},{passive:false});
@@ -380,7 +464,10 @@ function bindListBrowsing(suffix){
  document.querySelector('#sort'+suffix).addEventListener('change',()=>{sortOrder=document.querySelector('#sort'+suffix).value;page=0;renderTable();});
 }
 browsingSuffixes.forEach(bindListBrowsing);
-document.querySelector('#q').addEventListener('input',()=>{page=0;draw();});
+// Typing settles for 120 ms before the selection is recomputed.
+let searchTimer=null;
+document.querySelector('#q').addEventListener('input',()=>{page=0;if(typeof setTimeout!=='function'){draw();return;}
+ clearTimeout(searchTimer);searchTimer=setTimeout(draw,120);});
 __LINEAGE_SCRIPT__
 __CALCULATOR_SCRIPT__
 draw();
