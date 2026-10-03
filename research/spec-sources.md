@@ -140,7 +140,7 @@ adapters. Detailed extraction targets integer speed and rate; floating-point
 columns are inventoried only. Tracked outputs are in
 [`data/spec/field-audit/`](data/spec/field-audit/) (field inventory and
 consumers, generation coverage, resource flags, bulk/detail crosschecks,
-execution coverage, sampled tuples, Netlib speed coverage, sample manifest,
+execution coverage, Netlib speed coverage, sample manifest,
 verified findings and audit hashes); full per-benchmark resources are generated
 in `data/derived/spec/field-audit/disclosures.jsonl`.
 

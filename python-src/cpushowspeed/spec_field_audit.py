@@ -258,54 +258,12 @@ def audit_fields(raw_dir, output, research_output, fetch_samples):
                 qualification="Existing speed adapter audited; see cpu92-speed-coverage.csv for each source hash",
             )
         )
-    lookup = {r["source_url"]: r for r in details}
-    for r in read_csv(Path("data/derived/spec/cpu92-rate/cpu92-rate-records.csv")):
-        lookup[r["source_url"]] = dict(
-            modes={
-                mode: dict(
-                    status="reported" if r.get(mode + "_copies_min") else "not_reported_in_parsed_table",
-                    minimum=r.get(mode + "_copies_min"),
-                    maximum=r.get(mode + "_copies_max"),
-                )
-                for mode in ("base", "peak")
-            }
-        )
-    matching, matching_samples = [], []
-    for policy in ("strict", "ram-aliases", "cpu-clock"):
-        path = Path("data/derived/spec/joint-tracks") / (policy if policy != "strict" else "") / "triples.csv"
-        if not path.exists():
-            continue
-        counts = {}
-        for row in read_csv(path):
-            c = counts.setdefault((row["old_generation"], row["new_generation"], row["mode"]), Counter())
-            c["tuples"] += 1
-            for field in ("cores", "enabled_threads_per_core"):
-                c["any_missing_" + field] += any(row.get(role + "_" + field, "") == "" for role in ("target", "speed", "rate"))
-            known = []
-            sample = dict(
-                policy=policy, old_generation=row["old_generation"], new_generation=row["new_generation"], mode=row["mode"]
-            )
-
-            for role in ("target", "speed", "rate"):
-                detail = lookup.get(row[role + "_url"])
-                m = detail["modes"][row["mode"]] if detail else {}
-                known.append(m.get("status") == "reported")
-                sample[role + "_url"] = row[role + "_url"]
-                sample[role + "_status"] = m.get("status", "not_collected")
-                sample[role + "_minimum"] = m.get("minimum")
-                sample[role + "_maximum"] = m.get("maximum")
-            if c["tuples"] <= 2:
-                matching_samples.append(sample)
-            c["all_three_runtime_counts_collected"] += all(known)
-        matching.extend(dict(policy=policy, old_generation=k[0], new_generation=k[1], mode=k[2], **v) for k, v in counts.items())
     for name, rows in (
         ("field-inventory", inventory),
         ("generation-summary", summaries),
         ("resource-anomalies", anomalies),
         ("detail-crosschecks", reviews),
         ("execution-coverage", coverage),
-        ("matching-resource-coverage", matching),
-        ("matching-resource-samples", matching_samples),
     ):
         write_csv(research_output / (name + ".csv"), rows)
     (output / "disclosures.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in details))
