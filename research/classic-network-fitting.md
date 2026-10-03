@@ -1,9 +1,9 @@
 # Sparse joint calibration of individual classical benchmarks
 
 Computed and reviewed: 2026-09-27; recomputed on resolved systems 2026-10-02;
-re-anchored to speed-VAXen 2026-10-03; refitted as family power laws through
-the VAX-11/780 2026-10-03 (method
-`sparse-family-balanced-log-network-v4-family-power-law-vax780`). This is an implemented
+re-anchored to speed-VAXen 2026-10-03; refitted as power laws through the
+VAX-11/780 2026-10-03, with separate Whetstone precision exponents the same day
+(method `sparse-family-balanced-log-network-v5-grouped-power-law-vax780`). This is an implemented
 **experimental model**, alongside the fixed-composite multiplier fits. It does
 not replace measured SPEC observations or the SPEC chains.
 
@@ -19,12 +19,16 @@ SP, Whetstone DP and LINPACK n=100 to speed-VAXen. A machine with one available
 measurement can then obtain an estimate; multiple measurements combine on the
 log scale with equal family weight. Native Whetstone is not silently renamed SP.
 
-Each metric b follows a **power law** with one exponent per benchmark family f
-(Dhrystone, Whetstone, LINPACK; selected 2026-10-03, user decision):
+Each metric b follows a **power law** with one exponent per exponent group g
+(user decisions 2026-10-03):
 
-`ln V_b = a_b + beta_f * ln(score_b)`.
+- Dhrystone 1.1 and 2.1 share one exponent.
+- Whetstone native, SP and DP each have their own exponent.
+- LINPACK n=100 has one exponent.
 
-The intercept is **tied to the VAX-11/780**: `a_b = -beta_f * c_b`, where `c_b`
+`ln V_b = a_b + beta_g * ln(score_b)`.
+
+The intercept is **tied to the VAX-11/780**: `a_b = -beta_g * c_b`, where `c_b`
 is the log median of the 780's own distinct classical runs for metric b. The 780
 therefore predicts exactly 1 speed-VAXen (its SPECint92 definition) by every
 metric. The 780's measured scores are used, not the definitional 1 DMIPS:
@@ -48,7 +52,7 @@ that drift and any true sub-linearity (see that report's findings).
 For configuration node i, let `s_ib = ln(score_ib)` and let `theta_i` be its log
 speed-VAXen. Minimize:
 
-`sum_i sum_b w_ib * (a_b + beta_f(b) * s_ib - theta_i)^2`.
+`sum_i sum_b w_ib * (a_b + beta_g(b) * s_ib - theta_i)^2`.
 
 - Observed SPECint92 peak fixes theta to `ln(SPECint92)`.
 - In the SPEC89-enabled cohort, theta for an 89 node is the original log
@@ -57,12 +61,12 @@ speed-VAXen. Minimize:
   weighted mean of `a + beta * s`. Co-observations therefore constrain the
   exponents and intercepts without inventing measured SPEC values. A one-family
   node with several variants (Whetstone SP and DP, for example) also
-  constrains its family exponent.
+  constrains those variants' exponents relative to each other.
 - A component disconnected from all anchored metrics gets no coefficient.
   Unanchored one-metric nodes provide no calibration information; once their
   metric is identified elsewhere, they can still receive predictions.
 
-With the 780 tie the model stays linear in its parameters (three exponents),
+With the 780 tie the model stays linear in its parameters (five exponents),
 so the fit is a single weighted least-squares solve. This is **joint weighted
 least squares in log space**, not a single model-median log-ratio coefficient.
 Within each node/metric, source runs first contribute a median log score. All
@@ -76,7 +80,7 @@ vote. Source frequency and configuration ambiguity remain visible.
 
 For a target with available metrics A:
 
-`ln(estimated speed-VAXen) = sum_b w_b * (a_b + beta_f(b) * ln(score_b))`,
+`ln(estimated speed-VAXen) = sum_b w_b * (a_b + beta_g(b) * ln(score_b))`,
 
 where weights sum to one, balancing families first. With one benchmark this
 reduces to `exp(a_b) * score_b^beta`. With a missing or unidentifiable metric, a partial
@@ -190,16 +194,16 @@ unanchored nodes do not influence training.
 
 For `linear_clock / with_spec89`:
 
-| Input metric | Score unit | Family exponent β (CI95) | speed-VAXen at score 1 (CI95) | At 10 units (proportional v3) |
+| Input metric | Score unit | Exponent β (CI95) | speed-VAXen at score 1 (CI95) | At 10 units (proportional v3) |
 | --- | --- | --- | --- | ---: |
-| Dhrystone 1.1 | DMIPS | 0.864 (0.823–0.897) | 1.119 (0.982–1.269) | 8.18 (6.44) |
-| Dhrystone 2.1 | DMIPS | 0.864 | 1.169 (0.907–1.492) | 8.54 (6.84) |
-| Whetstone native | MWIPS | 0.775 (0.551–0.826) | 0.985 (0.455–1.931) | 5.86 (5.63) |
-| Whetstone SP | MWIPS | 0.775 | 1.268 (1.049–1.506) | 7.55 (6.37) |
-| Whetstone DP | MWIPS | 0.775 | 1.297 (0.827–1.949) | 7.72 (10.05) |
-| LINPACK n=100 | MFLOPS | 0.792 (0.736–0.851) | 4.747 (4.095–5.408) | 29.4 (31.8) |
+| Dhrystone 1.1 | DMIPS | 0.864 (0.824–0.896) | 1.119 (0.982–1.268) | 8.18 (6.44) |
+| Dhrystone 2.1 | DMIPS | 0.864 (shared) | 1.169 (0.906–1.492) | 8.55 (6.84) |
+| Whetstone native | MWIPS | 0.810 (0.434–0.906) | 0.984 (0.473–1.733) | 6.36 (5.63) |
+| Whetstone SP | MWIPS | 0.811 (0.755–0.862) | 1.282 (1.056–1.528) | 8.29 (6.37) |
+| Whetstone DP | MWIPS | 0.747 (0.472–0.825) | 1.285 (0.841–1.862) | 7.17 (10.05) |
+| LINPACK n=100 | MFLOPS | 0.792 (0.736–0.851) | 4.748 (4.102–5.412) | 29.4 (31.8) |
 
-Variants of one family share its exponent and CI. For example, a Dhrystone
+For example, a Dhrystone
 **1.1** score of **10 DMIPS** maps to approximately 8.18 speed-VAXen (CI95
 7.14–9.05; v3: 6.44, 6.00–6.92), and the 780's own 0.878 DMIPS to 1.00
 (0.88–1.14). The wider intervals carry the 780 anchor's sampling error.
@@ -211,32 +215,35 @@ families (`linear_clock / with_spec89`):
 
 | Available inputs | Network P95 | Anchored-only P95 | Free-intercept P95 | v3 network P95 |
 | --- | ---: | ---: | ---: | ---: |
-| Dhrystone 1.1 only | 26.67% | 26.56% | 37.38% | 26.36% |
-| Dhrystone 2.1 only | 25.35% | 25.24% | 31.97% | 31.34% |
-| Whetstone SP only (33 systems) | 50.89% | 47.58% | 65.40% | 21.22% |
-| Whetstone DP only | 55.14% | 30.27% | 60.14% | 62.11% |
-| LINPACK only | 41.85% | 39.93% | 53.39% | 44.00% |
-| Dhrystone + Whetstone families | 40.73% | 28.21% | 50.29% | 32.17% |
-| Dhrystone + LINPACK families | 33.43% | 32.29% | 43.65% | 27.36% |
-| Whetstone + LINPACK families | 47.93% | 29.05% | 58.74% | 22.83% |
-| All available measurements | 41.18% | 26.86% | 51.35% | 21.13% |
+| Dhrystone 1.1 only | 26.58% | 26.56% | 37.02% | 26.36% |
+| Dhrystone 2.1 only | 25.26% | 25.24% | 31.89% | 31.34% |
+| Whetstone SP only (33 systems) | 40.14% | 29.86% | 40.65% | 21.22% |
+| Whetstone DP only | 61.55% | 35.21% | 64.72% | 62.11% |
+| LINPACK only | 41.79% | 39.93% | 53.34% | 44.00% |
+| Dhrystone + Whetstone families | 38.37% | 23.23% | 45.42% | 32.17% |
+| Dhrystone + LINPACK families | 33.35% | 32.29% | 43.60% | 27.36% |
+| Whetstone + LINPACK families | 46.07% | 26.41% | 54.63% | 22.83% |
+| All available measurements | 39.46% | 25.27% | 48.29% | 21.13% |
 
 On this cohort the power law **worsens** the Whetstone-bearing subsets: the
-all-available P95 doubles (21.13% → 41.18%). The cause is the shared Whetstone
-exponent under unanchored coupling. The 281 unanchored Whetstone-only nodes with
-several precision variants constrain the exponent through their SP/DP/native
-ratios, which drift across eras. They pull β from 0.88 (anchored-only 0.881;
-0.879 without those nodes) to 0.775. Dhrystone 2.1 alone and LINPACK alone improve.
-Freeing the intercepts is worse than the 780 tie on every subset. These are
-findings for review; the family-shared exponent is unchanged.
+all-available P95 nearly doubles (21.13% → 39.46%). The cause is unanchored
+coupling of the Whetstone precisions:
 
-More available workloads do not guarantee a lower error, and the unanchored
-coupling does not uniformly beat the anchored-only control on this population.
-All combinations remain; the table is not a residual-based selection rule.
+- The unanchored Whetstone-only nodes carry several precisions each. Their
+  SP/DP/native ratios drift across eras, and with each intercept tied to the 780
+  they pull the exponents down.
+- With those nodes removed, or in the anchored-only control, the exponents are
+  SP 0.839, DP 0.887–0.889 and native 0.963–0.968. The network gives 0.811,
+  0.747 and 0.810.
+- Separate precision exponents (v5) relieve this only partly. All-available
+  P95 was 41.18% and SP alone 50.89% with one shared Whetstone exponent (v4).
+
+Dhrystone 2.1 alone and LINPACK alone improve on v3. Freeing the intercepts is
+worse than the 780 tie on every subset. These are findings for review.
 
 Over all 114 observed-SPECint92 nodes (58 systems), the all-available network
-P95 is 65.8% (anchored-only 69.3%, free intercept 69.2%); the inferred-89 P95 is
-84.4% (v3: 139.8%). Under the v3 proportional form it was 89.3% (88.1% before the HP 9000/720 rejection, 87.9% before the N3909 curated records, 85.1% before the printed SPEC89 means, 84.4% before the smaller
+P95 is 65.9% (anchored-only 69.3%, free intercept 69.3%); the inferred-89 P95 is
+84.5% (v3: 139.8%). Under the v3 proportional form it was 89.3% (88.1% before the HP 9000/720 rejection, 87.9% before the N3909 curated records, 85.1% before the printed SPEC89 means, 84.4% before the smaller
 Usenet posts, 83.5% before Richardson's lists). Before the 2026-10-03
 vendor-report rows (82.3%), on the 48 nodes that also carry a one-processor rate (the former
 anchor population) it is 31.5%; on 42 further DEC, multi-processor and
@@ -250,6 +257,21 @@ The network emits full-availability estimates for **1,415 unanchored nodes on
 not 1,415 newly verified machines: configuration identity and source
 interpretation still need source-specific review. Their estimates are stored
 separately from observed SPEC targets.
+
+### Separate Whetstone precision exponents (2026-10-03)
+
+Method v5 gives Whetstone native, SP and DP their own exponents (user decision)
+instead of the one shared Whetstone exponent of v4. Dhrystone and LINPACK are
+unchanged within 0.04%.
+
+- Exponents: SP 0.775 → 0.811, native → 0.810, DP → 0.747. At 10 MWIPS, SP
+  estimates rise 9.9%, native 8.6%, and DP falls 7.1%.
+- The common-cohort all-available P95 falls 41.18% → 39.46%, Whetstone SP alone
+  50.89% → 40.14%, and DP alone rises 55.14% → 61.55%.
+- The anchored-only control improves more (all-available 26.86% → 25.27%;
+  Whetstone family 38.66% → 28.11%), because no unanchored coupling acts on it.
+- Inferred-89 Whetstone SP alone improves 42.82% → 34.25%. Observed and
+  inferred-89 all-available P95 are within 0.15 points (65.86%, 84.53%).
 
 ### Family power law through the VAX-11/780 (2026-10-03)
 

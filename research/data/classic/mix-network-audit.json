@@ -1,5 +1,5 @@
 {
-  "method": "instruction-mix-joint-network-v4-family-power-law",
+  "method": "instruction-mix-joint-network-v5-grouped-power-law",
   "draws": 10000,
   "seed": 20260928,
   "runs": [
@@ -185,7 +185,7 @@
     "scenario": "linear_clock",
     "cohort": "with_spec89"
   },
-  "fit": "classical network (family power laws through the VAX-11/780; family/variant/node/model balanced sparse log least squares) with Gibson/ADP sharing the InstructionMix family weight and exponent; mix intercepts free (the 780 has no mix rating)",
+  "fit": "classical network (power laws through the VAX-11/780, one exponent per group with each Whetstone precision alone; family/variant/node/model balanced sparse log least squares) with Gibson/ADP sharing the InstructionMix family weight and exponent; mix intercepts free (the 780 has no mix rating)",
   "attachment": "a rating attaches to every node of its resolved system, or also of needs_review linked systems; nodes sharing a rating form one cluster",
   "target": "speed-VAXen: SPECint92 peak (VAX-11/780 = 1); SPECint89 through the int89_to_int92 bridge",
   "qualification": "all system links unapproved; observed-target holdouts exist only where a mix system has a SPEC target; CI95 omits model discrepancy; no mix clock scaling",
@@ -194,8 +194,8 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration_edges.py": "b6e4cbe854b1fa3b36f9490ed8f253af05899c826a658726b5c4b9a441a785d6",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network.py": "857341aa68af34df653b18922d60f72797bbbd33f18a1ca978d7fac69e67ad18",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network_model.py": "43ac6d99458bd1b2995205e975d9051131674338892ba6901f38f5f2149add31",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network.py": "5beca504f6f73e9493a87b2c6e8577a12a96373609214f1af5ba1afc8dc88597",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_network_model.py": "01a05e9048adca2ca31a30110d968cfb8582d91c74b9d661961b2030e6e4aa62",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_overlap.py": "169d21f7160d99a6b8414043ece5cf140c6861b7eda3ed89929792d1e11b7c9c",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_predict.py": "e5856523920629a34df7e6989556405e2b798a192262a1b4be8c968d66b01ea9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
@@ -210,7 +210,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/execution_policy.py": "c482cf4e5cd22c52cb0246af192407851b48c3daec77cf2ec279175f9d65800d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_catalog.py": "5d9733d8fb70d49fba76a2d64dbc09481ae8e2a81d19d399ccec4bb122c807e0",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_bridge.py": "70b54d9cc50662a053c789a0379ee5e17887ced2669255e225a15e15f4ce221e",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_network.py": "e37aea50385cd23a08b8d04f4a6b2c5d8284e85aa3363e7c0b43fd27a96c7336",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_network.py": "448e7d85a8abe4eeef788d4759564554a56455fddb6a4d04ea2197de7175bd20",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/observation_store.py": "ecc52313bb5b1975788ce07a30b3633aecaf8ce4a01b760bc903b345c1938347",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/processor_keys.py": "c3b6ec67bbf4df3abab32167ad8758882cef20eeb876152ab796daaa7907eb82",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/rate_convert.py": "68a78857870729098bd83715d9d3cab25b99364531a6e59ba7dbebac1c2740de",

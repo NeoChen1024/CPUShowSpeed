@@ -89,8 +89,8 @@ cohort, `target_metric` (`SPECint92`), `unit` (`speed-VAXen`), `vaxen`,
 
 ## Calculation and uncertainty
 
-Each score gives `V_b = A_b * score_b^beta_f`: a power law with one exponent per
-benchmark family, whose intercept places the VAX-11/780's measured score at 1
+Each score gives `V_b = A_b * score_b^beta_f`: a power law (Dhrystone versions share an
+exponent; each Whetstone precision has its own), whose intercept places the VAX-11/780's measured score at 1
 speed-VAXen. Give available benchmark families equal
 weight and split a family's weight equally across its supplied versions. The
 combined speed-VAXen estimate is the weighted geometric mean of `V_b`. For example,

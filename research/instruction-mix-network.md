@@ -1,8 +1,8 @@
 # Gibson/ADP ratings in the classical network
 
-Reviewed: 2026-10-02; re-anchored to speed-VAXen 2026-10-03; refitted as a
-family power law 2026-10-03. Status: implemented conditional fit on the schema
-database (`instruction-mix-joint-network-v4-family-power-law`). It replaces the
+Reviewed: 2026-10-02; re-anchored to speed-VAXen 2026-10-03; refitted as power
+laws 2026-10-03. Status: implemented conditional fit on the schema database
+(`instruction-mix-joint-network-v5-grouped-power-law`). It replaces the
 name-matched mix network experiment removed on 2026-10-02, which remains in Git
 history. Source definitions and the pairing review queue are in the
 [instruction-mix bridge](instruction-mix-bridge.md).
@@ -23,7 +23,8 @@ history. Source definitions and the pairing review queue are in the
   clusters.
 - **Fit.** The classical network's family-, variant-, node- and model-balanced log
   least squares with
-  [family power laws](classic-network-fitting.md#objective-and-model).
+  [power laws](classic-network-fitting.md#objective-and-model) (separate
+  Whetstone precision exponents).
   - Gibson and ADP share one `InstructionMix` family weight and one exponent.
   - The VAX-11/780 has no mix rating, so each mix keeps a **free intercept**
     rather than the 780 tie of the classical metrics.
@@ -51,8 +52,8 @@ attached machines, since the intercept at 1 KIPS lies far outside the data:
 
 | Links | Shared exponent β (CI95) | Gibson at 1,000 KIPS | ADP at 1,000 KIPS |
 | --- | --- | ---: | ---: |
-| `resolved_system` | 0.836 (0.570–0.995) | 0.89 | 0.52 |
-| `plus_pending_links` | 0.846 (0.592–0.989) | 0.79 | 0.44 |
+| `resolved_system` | 0.852 (0.492–1.038) | 0.89 | 0.51 |
+| `plus_pending_links` | 0.856 (0.508–1.020) | 0.79 | 0.44 |
 
 The v3 proportional coefficients gave 0.47 / 0.24 (`resolved_system`) and
 0.40 / 0.20 (`plus_pending_links`) at 1,000 KIPS. The intercepts and their CI95
@@ -61,10 +62,10 @@ clusters span a narrow range of ratings.
 
 The whole-cluster holdout compares a mix-only prediction with the held-out
 node's classical-network prediction (a proxy, not a SPEC measurement). The
-model-center P95 is 123.9% for `resolved_system` (10 clusters; v3 194.6%) and
-98.6% for `plus_pending_links` (15 clusters; v3 187.4%). On the 58
-observed-SPECint92 models, adding the mixes changes the network's held-out P95
-from 65.8% to 65.5% under either link scenario (v3: 89.3% to 88.9% / 88.7%).
+model-center P95 is 149.5% for `resolved_system` (10 clusters; v4 123.9%, v3
+194.6%) and 108.3% for `plus_pending_links` (15 clusters; v4 98.6%, v3 187.4%).
+On the 58 observed-SPECint92 models, adding the mixes changes the network's
+held-out P95 from 65.9% to 65.7% / 65.6% (v3: 89.3% to 88.9% / 88.7%).
 
 The timeline uses `plus_pending_links / linear_clock / with_spec89`, as the
 former experiment used its unapproved name candidates. `resolved_system` is the
@@ -78,12 +79,13 @@ eight runs are saved in:
 
 ## Changes
 
-The 2026-10-03 family power law (method v4) replaced the per-mix proportional
-coefficients with a shared mix exponent and free intercepts. In the timeline run
-(`plus_pending_links`) the v4 and v3 estimates would cross near 82,000 KIPS
-(Gibson) and 172,000 KIPS (ADP), far above the largest ratings (7,000 and 3,418
-KIPS). Every mix estimate therefore rises: at least 46% (Gibson) and 83% (ADP),
-and about 180% at 100 KIPS. This follows the classical estimates for slow machines, which
+The 2026-10-03 power law (methods v4 and v5) replaced the per-mix proportional
+coefficients with a shared mix exponent and free intercepts. v5's separate
+Whetstone precision exponents moved the mix exponent 0.846 → 0.856 and the
+proxy holdout P95 98.6% → 108.3% (`plus_pending_links`). In the timeline run the v5 and
+v3 estimates would cross near 115,000 KIPS (Gibson) and 248,000 KIPS (ADP), far
+above the largest ratings (7,000 and 3,418 KIPS). Every mix estimate therefore
+rises against v3: at least 50% (Gibson) and 86% (ADP), and 177% / 209% at 100 KIPS. This follows the classical estimates for slow machines, which
 rise toward the 780 anchor.
 
 Before that, the 2026-10-03 re-anchoring to speed-VAXen raised the timeline run's

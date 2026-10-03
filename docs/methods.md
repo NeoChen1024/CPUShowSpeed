@@ -198,7 +198,8 @@ retaining shared-model dependence.
 ## Sparse benchmark network experiment
 
 The [network experiment](../research/classic-network-fitting.md) jointly fits
-family power laws (one exponent per benchmark family, intercepts tied to the
+power laws (Dhrystone versions share an exponent, each Whetstone precision has
+its own, LINPACK has one; intercepts tied to the
 VAX-11/780's measured scores) and latent unanchored configuration values.
 Targets fix observed speed-VAXen or qualified SPEC89-derived values. Unanchored
 co-observations constrain exponents and intercepts; disconnected metrics remain

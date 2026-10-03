@@ -1,8 +1,9 @@
 """Family power-law calibration with eliminated missing target nodes.
 
-Metric m predicts log speed-VAXen as a_m + b_f log x_m, with one exponent b_f per
-benchmark family. Where the VAX-11/780 measured metric m, the intercept is tied to it,
-a_m = -b_f c_m (c_m its median log score), so the 780 predicts 1 speed-VAXen by that
+Metric m predicts log speed-VAXen as a_m + b_g log x_m, with one exponent b_g per
+exponent group: the benchmark family, except that each Whetstone precision is its own
+group. Where the VAX-11/780 measured metric m, the intercept is tied to it,
+a_m = -b_g c_m (c_m its median log score), so the 780 predicts 1 speed-VAXen by that
 metric; other metrics (the instruction mixes) keep a free intercept. Both forms are
 linear in the parameters, so the family/variant/node/model balanced least squares stays
 a linear solve: per-node normal equations are built for the unconstrained (a_m, b_m)
@@ -15,6 +16,14 @@ from collections import defaultdict
 
 import numpy as np
 from cpushowspeed.classical_store import family
+
+# Whetstone native/SP/DP ratios drift by era, and one shared exponent let unanchored
+# Whetstone-only nodes pull it down (user decision 2026-10-03).
+SEPARATE_EXPONENTS = {"Whetstone"}
+
+
+def exponent_group(metric):
+    return metric if family(metric) in SEPARATE_EXPONENTS else family(metric)
 
 
 def metric_weights(metrics):
@@ -80,8 +89,8 @@ def matrices(nodes, metrics, bridge_enabled, latent=True):
 
 
 def parameters(metrics, anchor):
-    """Parameter names: one exponent per family, and an intercept for each metric the anchor does not tie."""
-    names = [("exponent", f) for f in sorted({family(m) for m in metrics})]
+    """Parameter names: one exponent per exponent group, and an intercept for each metric the anchor does not tie."""
+    names = [("exponent", g) for g in sorted({exponent_group(m) for m in metrics})]
     return names + [("intercept", m) for m in metrics if m not in anchor]
 
 
@@ -91,7 +100,7 @@ def transform(metrics, names, anchor, anchor_logs=None):
     base = np.zeros((2 * len(metrics), len(names)))
     tied = []
     for i, m in enumerate(metrics):
-        j = index["exponent", family(m)]
+        j = index["exponent", exponent_group(m)]
         base[2 * i + 1, j] = 1.0
         if m in anchor:
             base[2 * i, j] = -anchor[m]

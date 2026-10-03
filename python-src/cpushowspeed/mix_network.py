@@ -34,7 +34,7 @@ from cpushowspeed.mix_bridge import MIX_SCOPE, _rows, pending_links
 from cpushowspeed.observation_store import connect, inputs_digest
 from cpushowspeed.research_io import code_hashes, write_csv
 
-METHOD_VERSION = "instruction-mix-joint-network-v4-family-power-law"
+METHOD_VERSION = "instruction-mix-joint-network-v5-grouped-power-law"
 MIX_METRICS = ("InstructionMix:Gibson_KIPS", "InstructionMix:ADP_KIPS")
 LINKS = ("resolved_system", "plus_pending_links")
 TIMELINE_RUN = dict(links="plus_pending_links", scenario="linear_clock", cohort="with_spec89")
@@ -297,7 +297,7 @@ def mix_network_fit(database, output, research_dir, draws, seed):
         seed=seed,
         runs=runs,
         timeline_run=TIMELINE_RUN,
-        fit="classical network (family power laws through the VAX-11/780; family/variant/node/model balanced sparse log least squares) with Gibson/ADP sharing the InstructionMix family weight and exponent; mix intercepts free (the 780 has no mix rating)",
+        fit="classical network (power laws through the VAX-11/780, one exponent per group with each Whetstone precision alone; family/variant/node/model balanced sparse log least squares) with Gibson/ADP sharing the InstructionMix family weight and exponent; mix intercepts free (the 780 has no mix rating)",
         attachment="a rating attaches to every node of its resolved system, or also of needs_review linked systems; nodes sharing a rating form one cluster",
         target="speed-VAXen: SPECint92 peak (VAX-11/780 = 1); SPECint89 through the int89_to_int92 bridge",
         qualification="all system links unapproved; observed-target holdouts exist only where a mix system has a SPEC target; CI95 omits model discrepancy; no mix clock scaling",

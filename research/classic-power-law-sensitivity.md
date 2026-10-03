@@ -1,9 +1,8 @@
 # Power-law sensitivity of classical calibrations
 
 Reviewed 2026-10-03. A single-metric sensitivity report. Its findings led the
-[network fit](classic-network-fitting.md) (method v4, 2026-10-03) to adopt one
-power-law exponent per family through the VAX-11/780, with era drift left as a
-limitation.
+[network fit](classic-network-fitting.md) (2026-10-03) to adopt power laws through the
+VAX-11/780, with era drift left as a limitation.
 
 ## Question
 
@@ -135,7 +134,9 @@ rows and every CI are in the
 
 ## Decisions and next steps
 
-Selected 2026-10-03 (user decision): one exponent per benchmark family, the
-VAX-11/780 anchor, and the year confounding left as a limitation. The network
-and mix network implement it. The composite and SPEC89 fits still use the
+Selected 2026-10-03 (user decisions): the VAX-11/780 anchor, and the year
+confounding left as a limitation. Exponents were first one per benchmark family
+(v4); Whetstone native, SP and DP then got their own exponents (v5), because one
+shared exponent worsened Whetstone holdouts. The network and mix network
+implement it. The composite and SPEC89 fits still use the
 proportional form; extending the power law to them is the next planned step.

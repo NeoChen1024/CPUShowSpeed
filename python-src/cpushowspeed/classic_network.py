@@ -3,7 +3,8 @@
 Nodes are SPEC targets in speed-VAXen (observed SPECint92 peak, or SPECint89 carried
 through the int89_to_int92 bridge) with the classical scores of their paired results,
 plus unanchored classical configurations whose co-measured scores constrain
-relative benchmark scales. Each benchmark family has one power-law exponent, and every
+relative benchmark scales. Each exponent group (a benchmark family, but each Whetstone
+precision alone) has one power-law exponent, and every
 metric passes through the VAX-11/780's own measured score at 1 speed-VAXen
 (`classic_network_model`). Folds and bootstrap clusters are resolved systems.
 """
@@ -22,6 +23,7 @@ from cpushowspeed.classic_network_model import (
     bootstrap,
     bridge_log,
     estimates,
+    exponent_group,
     metric_weights,
     train,
 )
@@ -411,6 +413,7 @@ def network_fit(database, output, research_dir, draws, seed):
                         context,
                         metric=m,
                         family=family(m),
+                        exponent_group=exponent_group(m),
                         score_unit="DMIPS" if family(m) == "Dhrystone" else "MWIPS" if family(m) == "Whetstone" else "MFLOPS",
                         exponent=calib[m][1],
                         exponent_ci95_low=float(np.quantile(exponents[:, i], 0.025)),
@@ -480,7 +483,7 @@ def network_fit(database, output, research_dir, draws, seed):
     write_csv(research_dir / "network-summary.csv", summary)
     write_csv(research_dir / "network-frequency-checks.csv", clock_checks)
     audit = dict(
-        method="sparse-family-balanced-log-network-v4-family-power-law-vax780",
+        method="sparse-family-balanced-log-network-v5-grouped-power-law-vax780",
         bootstrap=draws,
         seed=seed,
         runs=runs,
@@ -488,11 +491,11 @@ def network_fit(database, output, research_dir, draws, seed):
         target="speed-VAXen: SPECint92 peak (VAX-11/780 = 1); SPECint89 through the int89_to_int92 bridge",
         pairing="same resolved system_id; reported clocks agree within 1% or one is unknown; reviewed result_pair rejections drop a pairing and acceptances admit it unscaled",
         clock_assumption="linear_clock scales Dhrystone/Whetstone to the target clock only when both results resolve to one processor; unknown clocks unscaled; LINPACK never scaled",
-        model="log speed-VAXen = a_m + b_f log score_m; one exponent b_f per family; a_m = -b_f log c_m where c_m is the VAX-11/780's median measured score",
+        model="log speed-VAXen = a_m + b_g log score_m; one exponent b_g per group (Dhrystone versions share one, each Whetstone precision has its own, LINPACK one); a_m = -b_g log c_m where c_m is the VAX-11/780's median measured score",
         vax780_anchor=anchor_rows,
         fit="family/variant/node/model balanced log least squares; unanchored node values eliminated analytically",
         uncertainty="model-cluster bootstrap with the 780 anchor redrawn per draw from its run-sample standard error",
-        free_intercept="LOSO comparison only: the same family exponents with free per-metric intercepts",
+        free_intercept="LOSO comparison only: the same exponent groups with free per-metric intercepts",
         qualification="hardware/clock/FPU/cache/software equivalence unverified across sources; intervals omit model discrepancy and clock-scaling exponent uncertainty; era drift of score versus SPEC is not modeled (see the power-law sensitivity report)",
         inputs_sha256=digest,
         shared_code_sha256=code_hashes(Path(__file__)),

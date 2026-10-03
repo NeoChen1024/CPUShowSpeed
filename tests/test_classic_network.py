@@ -65,6 +65,15 @@ class NetworkTests(unittest.TestCase):
         self.assertAlmostEqual(calib["Dhrystone:1"][1], 0.9)
         self.assertAlmostEqual(calib["Dhrystone:2"][0], -0.9 * math.log(2))
 
+    def test_whetstone_precisions_have_their_own_exponents(self):
+        anchor = {"Whetstone:SP": 0.0, "Whetstone:DP": 0.0}
+        rows = [node(k, {"Whetstone:SP": x, "Whetstone:DP": x}) for k, x in [("u", 2), ("v", 8)]]
+        rows += [node(k, {"Whetstone:SP": x}, x**0.9) for k, x in [("a", 3), ("b", 9)]]
+        rows += [node(k, {"Whetstone:DP": x}, x**0.6) for k, x in [("c", 3), ("d", 9)]]
+        calib, _ = train(rows, {}, False, anchor, latent=False)
+        self.assertAlmostEqual(calib["Whetstone:SP"][1], 0.9)
+        self.assertAlmostEqual(calib["Whetstone:DP"][1], 0.6)
+
     def test_unanchored_overlap_identifies_a_free_intercept(self):
         # Dhrystone is anchored at the 780 (score 1, exponent 1 from a and b); LINPACK has no
         # 780 rating and no target pair, so its free intercept comes from unanchored overlap
