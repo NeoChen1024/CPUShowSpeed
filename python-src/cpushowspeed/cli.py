@@ -5,6 +5,7 @@ from cpushowspeed.bridge import bridge
 from cpushowspeed.caption import caption_command
 from cpushowspeed.caption_backfill import backfill_captions_command
 from cpushowspeed.classic import classic
+from cpushowspeed.classic_bench import bench
 from cpushowspeed.classic_mix import mix_inventory
 from cpushowspeed.classic_network import network_fit
 from cpushowspeed.classic_overlap import overlap_spec
@@ -73,3 +74,4 @@ classic.add_command(mix_network_fit)
 classic.add_command(mix_evidence)
 classic.add_command(mix_bridge)
 cli.add_command(classic)
+cli.add_command(bench)

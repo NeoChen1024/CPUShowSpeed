@@ -1,9 +1,10 @@
 # Classical benchmark runner
 
-Status (2026-10-03): the `classic-bench` runner is implemented and checked on
-Linux x86-64 with GCC 16.2 and Clang 22.1. The FreeBSD, NetBSD and OpenBSD code
-paths are written but **not yet compiled or run on those systems**. A Click
-wrapper, storage of results and their use in calibration remain planned.
+Status (2026-10-03): the `classic-bench` runner and its `cpushowspeed bench`
+wrapper are implemented and checked on Linux x86-64 with GCC 16.2 and Clang
+22.1. The FreeBSD, NetBSD and OpenBSD code paths are written but **not yet
+compiled or run on those systems**. Ingesting submitted results into the curated
+data and using them in calibration remain planned.
 
 This document owns the runner that executes Dhrystone 1.1/2.1, Whetstone and
 LINPACK n=100 on current hardware, as a benchmark or as a timed stress test.
@@ -98,11 +99,14 @@ v3.12.0 from the `third-party/nlohmann-json` submodule.
   effective kernel flags, the dialect, and the SHA-256 of each original and
   modified source.
 
-The reference flags are provisional. On the development machine (Ryzen 7
-5700X3D), switching the reference build from GCC 16 to Clang 22 changes results
-substantially, so results from different compilers are not interchangeable:
+No compiler is prescribed: like the original programs, the runner must build
+with whatever C compiler a system has. The reference profile therefore uses only
+the generic `-O2` and no compiler-specific options (for example to limit
+inlining or vectorization). Compiler effects are recorded, not suppressed, and
+results are compared within the same compiler and version. On the development
+machine (Ryzen 7 5700X3D) they are large:
 
-| Benchmark | GCC 16 | Clang 22 |
+| Benchmark (reference profile, one copy) | GCC 16 | Clang 22 |
 | --- | --- | --- |
 | Dhrystone 1.1 | ≈ 32,000 DMIPS | ≈ 76,000 DMIPS (the single file is inlined) |
 | Dhrystone 2.1 | ≈ 28,000–32,000 DMIPS | ≈ 30,000 DMIPS |
@@ -139,13 +143,16 @@ sequence.
 | Whetstone SP / DP | MWIPS | As computed by `whets.c` |
 | LINPACK n=100 | MFLOPS | (2/3·n³ + 2·n²) operations per solve ÷ (`dgefa` + `dgesl` time) ÷ 10⁶ |
 
-- **Intervals**: every `--interval` seconds (default 1), the runner records:
-  - each copy's rate over the units that ended in that interval;
-  - the sum of those rates;
-  - the OS-reported frequency of each copy's CPU.
-
-  It also reports the median, minimum and maximum of the complete interval
-  sums, so a long run shows throttling or decay.
+- **Intervals**: every `--interval` seconds (default 1), the runner records the
+  sum of the copies' rates over the units that ended in that interval, and the
+  median, minimum and maximum of those sums over the run, so a long run shows
+  throttling or decay. Each copy reports the median, minimum and maximum of its
+  own interval rates; `--per-copy-series` also stores every copy's rate in
+  every interval.
+- **Frequency**: the OS-reported frequency is read at every interval boundary,
+  but only its mean over the run is kept: per pinned copy, and over all sampled
+  CPUs. Unpinned copies migrate, so every allowed CPU is sampled and no
+  per-copy value is given.
 
 LINPACK n=100 fits in cache on current CPUs; its result describes in-cache
 dense solve speed.
@@ -159,21 +166,53 @@ and progress and errors to stderr. The exit status is:
 - 1 when any result check fails or a copy fails;
 - 2 for invalid options.
 
-The JSON document contains:
+Times are rounded to the microsecond, scores and rates to five significant
+digits, and frequencies to the MHz. Score definitions are given in this
+document, not repeated in each result. The JSON document contains:
 
 - `tool`: version, build profile, compilers, kernel flags and dialect, and
   source hashes.
 - `host`: OS, release, machine, CPU model, logical CPU count, and frequency
   source.
 - `settings`: copies, pinning and CPU list, duration, warm-up, interval, unit
-  target, and timer.
+  target, `per_copy_series`, and timer.
 - `results[]`, one entry per benchmark:
-  - benchmark, family, unit, precision, variant and score definition;
+  - benchmark, family, unit, precision and variant;
   - UTC start and end times;
   - `valid`, `errors` and `aggregate_score`;
-  - per-copy CPU, passes per unit, units, program and wall seconds, check
-    status and score;
-  - the interval summary and series, and frequency samples.
+  - `copies[]`: CPU, passes per unit, units, program and wall seconds, check
+    status, score, interval median/minimum/maximum and `mean_mhz`;
+  - `intervals` (summary) and `interval_series` (`t_s`, `aggregate`,
+    `complete`, and per-copy rates only with `--per-copy-series`);
+  - `frequency`: sampled CPUs (`null` for a system-wide source), sample count
+    and `mean_mhz`.
+
+Eight benchmarks with 16 copies for 20 s each produce about 43 KB of compact
+JSON.
+
+## Submitting results
+
+```sh
+uv run cpushowspeed bench build
+uv run cpushowspeed bench run -- --copies 1 --duration 60
+uv run cpushowspeed bench report data/derived/bench/<UTC time>.json > issue.md
+```
+
+- `bench build` configures and builds with CMake; the compiler comes from
+  `CC`/`CXX`, and `--profile custom --kernel-flags …` selects a custom build.
+- `bench run` passes the arguments after `--` to `classic-bench`, saves its JSON
+  under `data/derived/bench/` (or `--output`), prints the path and exits with the
+  runner's status.
+- `bench report` prints a GitHub issue body to stdout: blank lines for what the
+  JSON cannot know (system or board, memory, cooling and firmware settings),
+  the run settings, a results table, warnings, and the compact JSON in a
+  collapsed block. Warnings flag a custom profile, multiple copies, unpinned
+  copies and failed checks. The suggested title goes to stderr. If the body
+  would exceed GitHub's 65,536-character limit, the JSON is left out and the
+  body asks for the gzipped result file as an attachment.
+
+The [issue template](../.github/ISSUE_TEMPLATE/classic-bench-result.md) points
+submitters to these commands.
 
 ## Platform support
 
@@ -193,7 +232,9 @@ OpenBSD it is system-wide.
   programs, and LINPACK's `matgen` through `idamax`, are unchanged.
 - All eight benchmarks pass their result checks:
   - with GCC and Clang reference builds, for one copy;
-  - with the GCC reference build, for eight pinned copies.
+  - with the GCC reference build, for eight pinned and sixteen unpinned copies.
+- `bench report` is covered by unit tests and was checked on a real 16-copy
+  result.
 - Invalid options exit with status 2.
 - A Clang custom build (`-O3 -march=native`) runs and is labelled `custom`, and
   `-DCMAKE_C_FLAGS` is rejected at configure time.
@@ -205,18 +246,15 @@ OpenBSD it is system-wide.
 
 ## Data use (planned)
 
-A `cpushowspeed` Click command would build the runner and store the raw JSON
-under `data/derived/bench/`. A curated adapter would record accepted runs as
-project measurements, with the machine's resolved system and processor
-identity. Only `copies=1` reference-profile results would be eligible as
+A curated adapter would record accepted submissions as project measurements,
+with the machine's resolved system and processor identity. Only `copies=1` reference-profile results would be eligible as
 classical calibration inputs, and only after their machine has matching SPEC
 speed results; custom-profile and multi-copy results stay diagnostic.
 
 ## Open items
 
-- Choose the reference compiler and flags, including whether to limit inlining
-  for single-file Dhrystone 1.1 and vectorization for LINPACK. Check the choice
-  against how the historical calibration scores were compiled.
+- Decide how calibration treats compiler differences (for example Clang's
+  inlined Dhrystone 1.1), given that no compiler is prescribed.
 - Compare netlib `linpackc.new` with the Longbottom `LINPACK.C` derivative.
 - Search for an original Richardson Dhrystone 1.1 file to compare with the
   Longbottom/Day copy.
