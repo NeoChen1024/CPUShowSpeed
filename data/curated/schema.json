@@ -80,6 +80,16 @@
       "row": "#/$defs/metric",
       "primary_key": "metric_id",
       "description": "Observation metric strings and the registry metric each measures."
+    },
+    "curated_observation": {
+      "file": "observation.jsonl",
+      "row": "#/$defs/curated_observation",
+      "primary_key": "observation_id",
+      "foreign_keys": {
+        "source_id": "source",
+        "metric_id": "metric"
+      },
+      "description": "Hand-transcribed benchmark values: the printed value and unit, conditions and whether the value enters calibration."
     }
   },
   "$defs": {
@@ -990,6 +1000,119 @@
             "classical",
             "instruction_mix"
           ]
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "curated_observation_id": {
+      "type": "string",
+      "pattern": "^cobs:[a-z0-9][a-z0-9._:/+-]*$"
+    },
+    "curated_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_id",
+        "result_id",
+        "source_id",
+        "locator",
+        "system",
+        "metric_id",
+        "value_printed",
+        "value",
+        "unit_printed",
+        "conditions",
+        "measured_by",
+        "use",
+        "verification",
+        "reviewed_on"
+      ],
+      "properties": {
+        "observation_id": {
+          "$ref": "#/$defs/curated_observation_id"
+        },
+        "result_id": {
+          "description": "Values reported together for one system, configuration and run; one source column or row.",
+          "$ref": "#/$defs/text"
+        },
+        "source_id": {
+          "$ref": "#/$defs/source_id"
+        },
+        "locator": {
+          "description": "Page or section and the table or figure, as printed.",
+          "$ref": "#/$defs/text"
+        },
+        "system": {
+          "description": "System name exactly as printed.",
+          "$ref": "#/$defs/text"
+        },
+        "metric_id": {
+          "$ref": "#/$defs/metric_id"
+        },
+        "value_printed": {
+          "description": "The cell exactly as printed.",
+          "$ref": "#/$defs/text"
+        },
+        "value": {
+          "description": "The printed number in the printed unit; never rescaled here.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "unit_printed": {
+          "description": "Unit as printed; extraction converts it to the metric unit by a named rule.",
+          "enum": [
+            "DMIPS",
+            "Dhrystones/s",
+            "MWIPS",
+            "KWIPS",
+            "MFLOPS",
+            "native_suite_points"
+          ]
+        },
+        "conditions": {
+          "description": "Source-stated configuration and run conditions (clock_mhz, memory_mb, os, compiler, optimization, precision, blas, fpu). Absent keys are unknown, not equal.",
+          "type": "object"
+        },
+        "measured_by": {
+          "description": "Who ran it, per the source: its author, a third party it cites, or not stated.",
+          "enum": [
+            "source_author",
+            "cited_third_party",
+            "unattributed"
+          ]
+        },
+        "cited_reference": {
+          "$ref": "#/$defs/text"
+        },
+        "use": {
+          "description": "calibration_input rows are extracted as observations; context rows stay in this table only.",
+          "enum": [
+            "calibration_input",
+            "context"
+          ]
+        },
+        "use_note": {
+          "$ref": "#/$defs/text"
+        },
+        "duplicates": {
+          "description": "Other sources printing the same value for the same system, likely one measurement.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_id"
+          },
+          "uniqueItems": true
+        },
+        "verification": {
+          "enum": [
+            "original_page_visual_check",
+            "pdf_text_layer_checked",
+            "usenet_text_checked"
+          ]
+        },
+        "reviewed_on": {
+          "$ref": "#/$defs/iso_day"
         },
         "note": {
           "$ref": "#/$defs/text"

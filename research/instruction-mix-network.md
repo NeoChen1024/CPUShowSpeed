@@ -46,14 +46,14 @@ Speed-VAXen per KIPS, `linear_clock / with_spec89`:
 
 | Links | Gibson | ADP |
 | --- | --- | --- |
-| `resolved_system` | 0.00044477 (0.00030618–0.00060098) | 0.00023247 (0.00011841–0.00036162) |
-| `plus_pending_links` | 0.00037966 (0.00026712–0.00051255) | 0.00018706 (0.00010934–0.00030171) |
+| `resolved_system` | 0.00045033 (0.00031156–0.00060153) | 0.00023537 (0.00012169–0.00036403) |
+| `plus_pending_links` | 0.00038447 (0.00027474–0.00051072) | 0.00018943 (0.00011088–0.00030006) |
 
 The whole-cluster holdout compares a mix-only prediction with the held-out
 node's classical-network prediction (a proxy, not a SPEC measurement). The
-model-center P95 is 194.5% for `resolved_system` (10 clusters) and 187.6% for
+model-center P95 is 194.7% for `resolved_system` (10 clusters) and 187.6% for
 `plus_pending_links` (15 clusters). On the 59 observed-SPECint92 models, adding
-the mixes changes the network's held-out P95 from 82.3% to 82.0% / 81.9%.
+the mixes changes the network's held-out P95 from 83.8% to 83.5% / 83.4%.
 
 The timeline uses `plus_pending_links / linear_clock / with_spec89`, as the
 former experiment used its unapproved name candidates. `resolved_system` is the
@@ -70,7 +70,9 @@ eight runs are saved in:
 The 2026-10-03 re-anchoring to speed-VAXen raised the timeline run's
 coefficients by 1.9% (Gibson 0.00037246 → 0.00037966) and 2.0% (ADP
 0.00018340 → 0.00018706), following the classical coefficients they are
-calibrated through.
+calibrated through. Adding the [1990 DEC report rows](vendor-performance-reports.md)
+the same day raised them a further 1.3% (Gibson 0.00037966 → 0.00038447, ADP
+0.00018706 → 0.00018943).
 
 ### Name-matched experiment
 

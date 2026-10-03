@@ -111,6 +111,49 @@ def dec_vectors():
     return source_vectors(tables, read_csv(root / "dec-interpreted.csv"))[0]
 
 
+# Printed unit -> metric unit. Dhrystone 1 DMIPS = 1757 Dhrystones/s (VAX-11/780, VMS).
+CONVERSIONS = {
+    ("Dhrystones/s", "DMIPS"): ("dhrystones-per-second-to-dmips", 1 / 1757),
+    ("KWIPS", "MWIPS"): ("kwips-to-mwips", 1 / 1000),
+}
+
+
+def curated_observations():
+    """Hand-transcribed `calibration_input` rows of data/curated/observation.jsonl, one result per report column."""
+    from cpushowspeed.curated import CURATED
+
+    metrics = {m["metric_id"]: m for m in map(json.loads, (CURATED / "metric.jsonl").read_text().splitlines())}
+    sources = {s["source_id"]: s for s in map(json.loads, (CURATED / "source.jsonl").read_text().splitlines())}
+    for row in map(json.loads, (CURATED / "observation.jsonl").read_text().splitlines()):
+        if row["use"] != "calibration_input":
+            continue
+        metric, source, conditions = metrics[row["metric_id"]], sources[row["source_id"]], row["conditions"]
+        if row["unit_printed"] == metric["unit"]:
+            rule, factor = "none", 1.0
+        else:
+            rule, factor = CONVERSIONS[row["unit_printed"], metric["unit"]]
+        yield observation(
+            "reviewed-vector:" + row["observation_id"].removeprefix("cobs:"),
+            row["metric_id"],
+            row["value"] * factor,
+            result_id="reviewed-vector:" + row["result_id"].removeprefix("src:"),
+            unit=metric["unit"],
+            track=metric["track"],
+            mode=metric["mode"],
+            system=row["system"],
+            source=dict(url=source["url"], locator=row["locator"], blake3=source.get("hash"), legacy_id=None),
+            hardware=dict(
+                processor=conditions.get("processor"),
+                nominal_mhz=conditions.get("clock_mhz"),
+                memory_mib=conditions.get("memory_mb"),
+            ),
+            run=dict(os=conditions.get("os"), compiler=conditions.get("compiler"), optimization=conditions.get("optimization")),
+            evidence=row["measured_by"],
+            verification=row["verification"],
+            raw=dict(row, conversion=dict(rule=rule, factor=factor)),
+        )
+
+
 def records(raw):
     for track in ("rate", "speed"):
         for group in collect_integer(raw, track).values():
@@ -140,6 +183,7 @@ def records(raw):
         for metric in ("SPECmark89", "SPECint89", "SPECfp89", "SPECint92", "SPECfp92"):
             if numeric(r[metric]):
                 yield historical_observation(r, metric, numeric(r[metric]), "historical-spec")
+    yield from curated_observations()
     for r in dec_vectors():
         for metric, score in {**r["scores"], **r["targets"]}.items():
             yield historical_observation(r, metric, score, "reviewed-vector")

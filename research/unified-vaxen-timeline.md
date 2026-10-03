@@ -2,7 +2,7 @@
 
 Reviewed: 2026-10-03. Status: rebuilt on the schema database
 (`vaxen-timeline-v4`): rate-VAXen and speed-VAXen are parallel quantities
-([latest section](#parallel-rate-and-speed-quantities--2026-10-03)). Earlier
+([quantities section](#parallel-rate-and-speed-quantities--2026-10-03); [latest change](#1990-dec-report-rows--2026-10-03)). Earlier
 sections record the v3 exports; the speed predictor and joint rows they describe
 were removed. Sections from "Checked population (2026-09-28)" on describe
 earlier exports.
@@ -161,6 +161,18 @@ CPU92/CPU95/CPU2006/CPU2026 speed, SPEC89, a multi-score classical row, a Gibson
 row and a two-rating combined mix through the calculator, and checks that a speed
 trace lights no rate node. In Chromium (2026-10-03) the page loaded with no
 console errors.
+
+## 1990 DEC report rows — 2026-10-03
+
+The [1990 DEC RISC summary](vendor-performance-reports.md) adds nine classical
+results (one per report column): 101,427 → 101,436 records (classical 1,641 →
+1,650; speed 42,614 → 42,623). Seven are dated by hardware; SPARCstation 330 and
+HP 9000/835 have no year evidence (hardware 26,204 → 26,211, unknown 731 → 733).
+The new rows estimate 4.43 (Sun-4/260) to 12.72 (DECstation 5000/200)
+speed-VAXen. The refit moved the other classical and mix rows by the coefficient
+changes in the [network report](classic-network-fitting.md#changes-from-the-1990-dec-report-rows-2026-10-03);
+SPEC rows and SPEC89 bridge estimates are unchanged. The full-population Node
+test passed (2026-10-03).
 
 ## Checked population (2026-09-28)
 

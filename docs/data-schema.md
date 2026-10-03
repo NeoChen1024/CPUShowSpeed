@@ -225,9 +225,32 @@ source block, raw record, qualification) plus
 `source_id` (by content hash, then a registry key the adapter cites such as a
 SPEC89 package source ID, then an address claimed by one source, then a dataset's
 `member_url_prefix`), the result's `hardware_id`, `system_id` and
-`processor_entity`, and its selected chronology year. All 103,119 observations
-(56,538 results, after step 5c) resolve to a source. Curated observations (`historical/observations.jsonl`,
-future KIPS/Auerbach/VUP values) are not yet loaded.
+`processor_entity`, and its selected chronology year. All 103,162 observations
+(56,547 results, after the 2026-10-03 DEC report rows) resolve to a source.
+
+### `curated_observation`
+
+Implemented 2026-10-03 as `data/curated/observation.jsonl`: values transcribed by
+hand from a report table or post, one row per printed cell.
+
+| Column | Meaning |
+| --- | --- |
+| `observation_id`, `result_id` | Row key (`cobs:…`); the values one source reports together for one system, configuration and run |
+| `source_id`, `locator`, `system` | Source row, printed page and table or figure, and the system name as printed |
+| `metric_id`, `value_printed`, `value`, `unit_printed` | Metric table key; the cell as printed and its number in the printed unit (never rescaled in the table) |
+| `conditions` | Source-stated configuration and run conditions (clock, memory, OS, compiler, optimization, precision, BLAS form); absent keys are unknown |
+| `measured_by`, `cited_reference` | `source_author`, `cited_third_party` (with the citation) or `unattributed` |
+| `use`, `use_note` | `calibration_input` rows become observations; `context` rows stay here, with the reason |
+| `duplicates` | Other sources printing the same value for the same system, probably one measurement |
+| `verification`, `reviewed_on`, `note` | How the transcription was checked, and when |
+
+`data extract` emits each `calibration_input` row as an observation in scope
+`reviewed-vector:<source>`, converting the printed unit to the metric's unit by a
+named rule (Dhrystones/s ÷ 1757 = DMIPS; KWIPS ÷ 1000 = MWIPS) recorded in the
+observation. The first rows are the
+[Digital RISC Family Performance Summary](../research/vendor-performance-reports.md)
+(2026-10-03). The older `research/data/historical/observations.jsonl` rows
+(Honeywell 300, DEC benchmark memo) are not yet migrated.
 
 ### `date_event`
 
@@ -415,7 +438,9 @@ changed.
      (`composite-fit`, `spec89-fit`, `predict-speed` replace the rate-named
      commands); the speed/rate predictors and their joint rows are removed; and
      `plot timeline` writes `vaxen-timeline-v4` with a `quantity` per row:
-     101,427 records (58,813 rate, 42,614 speed).
+     101,427 records (58,813 rate, 42,614 speed). Adding the `curated_observation`
+     rows of the [1990 DEC RISC summary](../research/vendor-performance-reports.md)
+     the same day gave 103,162 observations, 56,547 results and 101,436 records.
 
    By user decision (2026-10-02) step 5 is compared with the former products, not
    held to parity: identity and dates were redesigned in steps 2–4, so coefficients

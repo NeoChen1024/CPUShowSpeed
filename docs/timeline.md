@@ -50,9 +50,9 @@ The population is:
 Every record carries `quantity` (`rate` or `speed`). The SPEC and historical
 routes are the **baseline** (`estimate_kind = baseline`); the mix rows are model
 estimates (`mix`, `mix_combined`), correlated with the classical route and never
-counted as extra evidence. On 2026-10-03 this gave 101,427 records: 58,813 SPEC
-rate, 40,248 SPEC speed, 1,641 classical, 179 SPEC89, 360 mix and 186 combined
-mix (58,813 rate and 42,614 speed). The former speed-only and speed + rate
+counted as extra evidence. On 2026-10-03 this gave 101,436 records: 58,813 SPEC
+rate, 40,248 SPEC speed, 1,650 classical, 179 SPEC89, 360 mix and 186 combined
+mix (58,813 rate and 42,623 speed). The former speed-only and speed + rate
 predictor rows (and their 17,039 joint rows) were removed on 2026-10-03.
 
 ## Static website export
@@ -183,8 +183,8 @@ owns date interpretation. `date_kind` is `cpu`, `hardware`, `fallback` or
 candidate event; and `date_sources` lists the URLs of the candidate events'
 sources. The year range is the evidence span, not a statistical interval.
 
-On 2026-10-03: 74,475 rows were dated by CPU, 26,204 by hardware, 17 by a
-reviewed fallback and 731 were unknown. Unknown rows are concentrated in
+On 2026-10-03: 74,475 rows were dated by CPU, 26,211 by hardware, 17 by a
+reviewed fallback and 733 were unknown. Unknown rows are concentrated in
 classical sources without model-year evidence (Netlib LINPACK alone has 573
 of its 815 rows unknown) and in SPEC89; they stay in the list but are not plotted.
 The former per-pass date tables are archived in
@@ -242,7 +242,7 @@ generated page's actual Parquet through the pinned JavaScript decoder:
 node tests/timeline_interaction.js data/derived/figures/timeline/vaxen-timeline.html full
 ```
 
-It asserts the 2026-10-03 population (101,427 rows by estimate kind and
+It asserts the 2026-10-03 population (101,436 rows by estimate kind and
 quantity), quantity and estimate filters, related rows, speed-chain fit
 scatterplots, lineage traces, pagination, and that the calculator reproduces
 timeline rows in their own quantity (CPU2017 rate; CPU92, CPU95, CPU2006 and

@@ -18,8 +18,8 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "valid_draws": 9996,
-      "informative_models": 479,
+      "valid_draws": 9995,
+      "informative_models": 485,
       "mix_nodes": 11,
       "mix_models": 10,
       "mix_nodes_with_observed_speed": 0,
@@ -41,7 +41,7 @@
         "Whetstone:MWIPS_SP"
       ],
       "valid_draws": 9997,
-      "informative_models": 490,
+      "informative_models": 495,
       "mix_nodes": 11,
       "mix_models": 10,
       "mix_nodes_with_observed_speed": 0,
@@ -63,7 +63,7 @@
         "Whetstone:MWIPS_SP"
       ],
       "valid_draws": 10000,
-      "informative_models": 478,
+      "informative_models": 484,
       "mix_nodes": 17,
       "mix_models": 15,
       "mix_nodes_with_observed_speed": 0,
@@ -85,7 +85,7 @@
         "Whetstone:MWIPS_SP"
       ],
       "valid_draws": 10000,
-      "informative_models": 489,
+      "informative_models": 494,
       "mix_nodes": 17,
       "mix_models": 15,
       "mix_nodes_with_observed_speed": 0,
@@ -106,8 +106,8 @@
         "Whetstone:MWIPS_DP",
         "Whetstone:MWIPS_SP"
       ],
-      "valid_draws": 9996,
-      "informative_models": 479,
+      "valid_draws": 9995,
+      "informative_models": 485,
       "mix_nodes": 11,
       "mix_models": 10,
       "mix_nodes_with_observed_speed": 0,
@@ -129,7 +129,7 @@
         "Whetstone:MWIPS_SP"
       ],
       "valid_draws": 9997,
-      "informative_models": 490,
+      "informative_models": 495,
       "mix_nodes": 11,
       "mix_models": 10,
       "mix_nodes_with_observed_speed": 0,
@@ -151,7 +151,7 @@
         "Whetstone:MWIPS_SP"
       ],
       "valid_draws": 10000,
-      "informative_models": 478,
+      "informative_models": 484,
       "mix_nodes": 17,
       "mix_models": 15,
       "mix_nodes_with_observed_speed": 0,
@@ -173,7 +173,7 @@
         "Whetstone:MWIPS_SP"
       ],
       "valid_draws": 10000,
-      "informative_models": 489,
+      "informative_models": 494,
       "mix_nodes": 17,
       "mix_models": 15,
       "mix_nodes_with_observed_speed": 0,
@@ -189,7 +189,7 @@
   "attachment": "a rating attaches to every node of its resolved system, or also of needs_review linked systems; nodes sharing a rating form one cluster",
   "target": "speed-VAXen: SPECint92 peak (VAX-11/780 = 1); SPECint89 through the int89_to_int92 bridge",
   "qualification": "all system links unapproved; observed-target holdouts exist only where a mix system has a SPEC target; CI95 omits model discrepancy; no mix clock scaling",
-  "inputs_sha256": "1fa01ab58edaf27225d6102ac2790ecd99ecdcbba43c3ef81008e1aa9cf473c0",
+  "inputs_sha256": "0639b6d64814e2cc9aada69deea958e1776cce40792473b3809cc969efe6a201",
   "code_sha256": {
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/benchmark_records.py": "cdee3e54a012cfb844f1464fc52c88b0651481e100276ba16abbf2747589028e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/calibration.py": "59cefc564a2a29587ac9aa4f56a6f0e9aa2c7d1c243535250f88fa8b9b36b470",
@@ -210,7 +210,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_review.py": "0c8578492eeee9982083ac4996dc18dd4bfef4932ddbc594a64e8ffbb76c9057",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_system.py": "94156a6b0aa461b1d9ed06be76cbdd5850de30b6aebea9097a437467be323e4d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/execution_policy.py": "c482cf4e5cd22c52cb0246af192407851b48c3daec77cf2ec279175f9d65800d",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_catalog.py": "86f2bd98f3b5c8c6009452a5b0576d5cdf762ab91bff98569cc2d0cdd77d7712",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_catalog.py": "e044181e4bab2df2e5b5e6396b7e725b928ba82c10eff56e78749858dc849e70",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_bridge.py": "70b54d9cc50662a053c789a0379ee5e17887ced2669255e225a15e15f4ce221e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_network.py": "b4d83524da3085e8e6e854cfb86a8d0d80e65b64d7d11841749978667b801b7d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/observation_store.py": "ecc52313bb5b1975788ce07a30b3633aecaf8ce4a01b760bc903b345c1938347",

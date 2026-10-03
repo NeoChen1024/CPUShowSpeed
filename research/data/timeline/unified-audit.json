@@ -1,41 +1,41 @@
 {
   "schema_version": "vaxen-timeline-v4",
   "database": "data/derived/schema/cpushowspeed.sqlite",
-  "inputs_sha256": "1fa01ab58edaf27225d6102ac2790ecd99ecdcbba43c3ef81008e1aa9cf473c0",
-  "web_manifest_sha256": "b5240682b0302de16acbd7c1d380a11c4e079d8b80098674cc03eff4ba254af2",
+  "inputs_sha256": "0639b6d64814e2cc9aada69deea958e1776cce40792473b3809cc969efe6a201",
+  "web_manifest_sha256": "d2f31b18d5fd8a7073cbc418abd48f6e5d3afeb6f6a0eca90c098bbf84591de5",
   "lineage_inputs_sha256": {
-    "research/model-registry.json": "637c6385f7c95eab87f887e8e1b42a2f43cf870b34961e9f5a78f662744d8fad",
-    "research/data/spec/fitting/integer-rate-edge-intervals.csv": "da9bc031a120ff9f55fe945f012676310bd3b59a639f648c524b983ca6e01d51",
-    "research/data/spec/fitting/integer-speed-factors.csv": "5f41aed1c521693202f45849b7eac2515764fbf8c0ba450e8179b2b8bbce67df",
+    "research/model-registry.json": "0051361366f35a0e0562fa5b68ee2830bc604b23d6798e23745673db567b786f",
+    "research/data/spec/fitting/integer-rate-edge-intervals.csv": "eb36be6fa72bc09a833428630a79ad8e7e2846cded9979aad70757f6889a492a",
+    "research/data/spec/fitting/integer-speed-factors.csv": "aac395ad8b0f9bf6631de1cc816eba7b82cf4253e5e5e2f217521759cd9e6643",
     "data/derived/spec/fitting/integer-speed-generation-pairs.csv": "aef952e4008c47c3c8667a6540ac014ee31fb10b83f472450a31627d079cd887",
     "research/data/classic/spec89-bridge-summary.csv": "b2c86e32ca518f8cd21cfb744c5b052733cc64577ecb35a75c6135d7e052a4f8",
     "research/data/classic/spec89-bridge-evidence.csv": "f3e19880479b4091041ae9be40729e202d15e5491993999bf5dec92de7a035de",
-    "research/data/classic/network-coefficients.csv": "11e2413a639bd7387c06643ec423526ead3c3d86b10f39fa188a2ee909a9662a",
-    "research/data/classic/mix-network-coefficients.csv": "ee2850155dcc787df551ec822839da61fdd3871d992ba800adfe400bf3ecf4df",
-    "data/derived/classic/network-fit/coefficients.csv": "11e2413a639bd7387c06643ec423526ead3c3d86b10f39fa188a2ee909a9662a",
-    "data/derived/classic/network-fit/coefficient-log-draws.npz": "cc009e7c8a60bee9ac87c7c8a66d685ba5f3eb18d22f654a99e52db87a2bd05e",
-    "data/derived/classic/network-fit/prediction-calibration.json": "460906205692d0f49626e9b636112ae188afef3b07056c241b12cda23885705f",
-    "data/derived/classic/mix-network-fit/coefficients.csv": "ee2850155dcc787df551ec822839da61fdd3871d992ba800adfe400bf3ecf4df",
-    "data/derived/classic/mix-network-fit/coefficient-log-draws.npz": "d3d0a8f4f40f4aa52da25448d8967ed1d8e1d18f36b06147341cadaafbc12d2f",
-    "data/derived/classic/mix-network-fit/audit.json": "9a0fb2a8bf5e22638567570c14d7faa4d8372fc5b118fb653d3c7a2fe8a7255a",
-    "research/data/classic/spec89-audit.json": "7c94e7208b86488a44e0563537ab32a3df10e23b9138145d47216c4713da62f9",
+    "research/data/classic/network-coefficients.csv": "1b83ccb0fa80dfe89ff1c3ec203660b37551d5cdc5aee296e819eb5ae5bc4053",
+    "research/data/classic/mix-network-coefficients.csv": "d4e484f0044146f25be8137900c6fd9915590681e1ba7309dcd90441ca7a9fbd",
+    "data/derived/classic/network-fit/coefficients.csv": "1b83ccb0fa80dfe89ff1c3ec203660b37551d5cdc5aee296e819eb5ae5bc4053",
+    "data/derived/classic/network-fit/coefficient-log-draws.npz": "d240c867ecb01fa71265fee0bad97aeeb3ec5d3f7ea68bd461d11e1aa3ff368c",
+    "data/derived/classic/network-fit/prediction-calibration.json": "d367f35f574cbba24dd410a9b3a1c3572dd3f5d8120eed7970d2139573b32f41",
+    "data/derived/classic/mix-network-fit/coefficients.csv": "d4e484f0044146f25be8137900c6fd9915590681e1ba7309dcd90441ca7a9fbd",
+    "data/derived/classic/mix-network-fit/coefficient-log-draws.npz": "c0d3222c4abaf280643e6bf14c2b177c0d60cd51f0b2a578649b21dffc3e7540",
+    "data/derived/classic/mix-network-fit/audit.json": "afbdba85e65bd29b622373d964eece7132d7b2c3baa7e72af95c788fccaf511e",
+    "research/data/classic/spec89-audit.json": "0a9495f67b082004cf5c6ce61fb8cbe7d928009bf8bda78b20fbefc844f0774e",
     "research/data/spec/fitting/integer-rate-chain-intervals.csv": "9223a0b85bb0e2f54bf87c2248ac96db03f214db8cc12ebfb868c6e2bdfb6723",
     "research/data/spec/fitting/integer-speed-chain-intervals.csv": "ec9ba132df00ad7840e8b0ba6e6e0c6eff7927ba2e01f664e5825ad4ec747259"
   },
-  "records": 101427,
+  "records": 101436,
   "spec_rate": 58813,
   "spec_speed": 40248,
-  "classical": 1641,
+  "classical": 1650,
   "spec89": 179,
   "estimates": {
-    "baseline": 100881,
+    "baseline": 100890,
     "mix": 360,
     "mix_combined": 186
   },
   "dates": {
-    "hardware": 26204,
+    "hardware": 26211,
     "cpu": 74475,
-    "unknown": 731,
+    "unknown": 733,
     "fallback": 17
   },
   "routes": {
@@ -45,7 +45,7 @@
     "CPU2006": 47553,
     "CPU2017": 40075,
     "CPU2026": 423,
-    "classical": 1641,
+    "classical": 1650,
     "SPEC89": 179,
     "ADP mix": 183,
     "Gibson mix": 177,
@@ -53,12 +53,12 @@
   },
   "quantities": {
     "rate": 58813,
-    "speed": 42614
+    "speed": 42623
   },
   "modes": {
     "base": 53795,
     "peak": 45266,
-    "peak_proxy": 2366
+    "peak_proxy": 2375
   },
   "chronology": "result_chronology: CPU release → hardware → reviewed fallback → publication",
   "cpu92_anchor_software_policy": "same_os",
@@ -79,8 +79,8 @@
   },
   "inputs_file_sha256": {
     "research/data/classic/spec89-estimates.csv": "492832cda0299f721237fbb426aee30472ed277f01caa954ee4da9182751172d",
-    "data/derived/classic/network-fit/prediction-calibration.json": "460906205692d0f49626e9b636112ae188afef3b07056c241b12cda23885705f",
-    "data/derived/classic/mix-network-fit/mix-estimates.csv": "35636ff719bb65d9a99197f592bb134e03f28aac4bf60111bbc88344f492bb0f",
+    "data/derived/classic/network-fit/prediction-calibration.json": "d367f35f574cbba24dd410a9b3a1c3572dd3f5d8120eed7970d2139573b32f41",
+    "data/derived/classic/mix-network-fit/mix-estimates.csv": "6d5e034dcb426d0d7a0c6b89d76da9c9639c6cfa1d613a633a6526768f4631cc",
     "research/data/spec/fitting/integer-speed-chain-intervals.csv": "ec9ba132df00ad7840e8b0ba6e6e0c6eff7927ba2e01f664e5825ad4ec747259",
     "research/data/spec/fitting/integer-rate-chain-intervals.csv": "9223a0b85bb0e2f54bf87c2248ac96db03f214db8cc12ebfb868c6e2bdfb6723",
     "research/data/spec/fitting/integer-rate-cpu92-vaxen-chain.csv": "bc84ae7bce141747a9f0438090c8ef98975fa2b12ce302d2e57ec56ff1fdc428"
@@ -106,7 +106,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_review.py": "0c8578492eeee9982083ac4996dc18dd4bfef4932ddbc594a64e8ffbb76c9057",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_system.py": "94156a6b0aa461b1d9ed06be76cbdd5850de30b6aebea9097a437467be323e4d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/execution_policy.py": "c482cf4e5cd22c52cb0246af192407851b48c3daec77cf2ec279175f9d65800d",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_catalog.py": "86f2bd98f3b5c8c6009452a5b0576d5cdf762ab91bff98569cc2d0cdd77d7712",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/input_catalog.py": "e044181e4bab2df2e5b5e6396b7e725b928ba82c10eff56e78749858dc849e70",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_bridge.py": "70b54d9cc50662a053c789a0379ee5e17887ced2669255e225a15e15f4ce221e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/mix_network.py": "b4d83524da3085e8e6e854cfb86a8d0d80e65b64d7d11841749978667b801b7d",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/observation_store.py": "ecc52313bb5b1975788ce07a30b3633aecaf8ce4a01b760bc903b345c1938347",

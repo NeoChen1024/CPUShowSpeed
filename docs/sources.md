@@ -58,10 +58,11 @@ rows as source observations without changing the versioned snapshot.
 Discovery review: 2026-09-26. Start with the existing local PDF mirror and
 published DocIR, then acquire sources missing locally. Collect definitions, historical results, source
 programs and machine configurations before selecting an assembly reconstruction
-pilot or fitting another conversion. The active performance series remains
-integer rate; the historical source collection also retains floating-point and
-mixed workloads as context and possible validation evidence. Collection does not
-make them eligible for the integer-rate fit.
+pilot or fitting another conversion. Historical routes are calibrated to
+speed-VAXen (SPECint92 speed = 1), parallel to rate-VAXen; the historical source
+collection also retains floating-point and mixed workloads as context and
+possible validation evidence. Collection does not make them eligible for either
+integer fit.
 
 Since 2026-10-02 the canonical source record is the curated
 [`source` table](../data/curated/source.jsonl) ([schema](data-schema.md#source));
@@ -106,7 +107,7 @@ Priority order:
 6. Build a machine/configuration-by-benchmark coverage table. Select calibration
    candidates and reconstruction targets from documented overlaps and gaps.
 
-Leads added 2026-10-02 (all unread; see the catalog's status and locator):
+Leads added 2026-10-02 (unread unless noted below; see the catalog's status and locator):
 VAX-relative ratings (DEC VUP via Datapro reports and a 1990 Digital RISC
 performance summary; AIM Suite III), dense vendor overlap tables (MIPS
 Performance Briefs), cross-vendor surveys in the local mirror (Auerbach 1966/1974,
@@ -115,6 +116,10 @@ multi-machine reports (Arbuckle, McMahon's Livermore report), and separate
 workload families (IBM LSPR, Khornerstone, MUSBUS). VUP, AIM and LSPR workloads
 are not SPEC92 rate; Nordhaus and Phister are external trend checks, not
 calibration targets.
+
+The 1990 Digital RISC summary was acquired and transcribed on 2026-10-03, and the
+MIPS Performance Briefs were found in the UTZOO Usenet archive (comp.arch,
+1986–1988). See [vendor performance reports](../research/vendor-performance-reports.md).
 
 For each acquired file, retain retrieval date, original URL, immutable local
 path and hash; distinguish archive copies of one report from independent
@@ -129,8 +134,8 @@ pages and linked programs alongside other origins; see the
 Before importing numbers, define result records with the original metric and
 unit, mix/version, source locator, machine/configuration, timing assumptions,
 reported-versus-reconstructed status and verification status. Preserve raw
-transcriptions separately from reviewed interpretations. No scores from this
-discovery pass have been added to the VAXen chain.
+transcriptions separately from reviewed interpretations. Apart from the 1990 DEC
+summary, no scores from this discovery pass have been added to the VAXen chain.
 
 ## Local PDF mirror and discovery inventory
 

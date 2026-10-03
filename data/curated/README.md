@@ -15,6 +15,7 @@ row schema; tables are JSONL, one row per line, sorted by primary key.
 | `date_event.jsonl` | `date_event`: dated events of processors and system models | 2026-10-02 |
 | `review.jsonl` | `review`: rejected result dates, accepted and rejected result pairs (CPU92/CPU95 speed and rate), identity links awaiting review | 2026-10-02 |
 | `metric.jsonl` | `metric`: observation metric strings and the registry metric each measures | 2026-10-02 |
+| `observation.jsonl` | `curated_observation`: hand-transcribed benchmark values with printed value, unit, conditions and calibration use | 2026-10-03 |
 
 Edit rows directly, then run:
 

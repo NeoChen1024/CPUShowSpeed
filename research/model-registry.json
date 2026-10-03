@@ -2083,6 +2083,13 @@
       "purpose": "First local early-benchmark evidence pass"
     },
     {
+      "path": "research/vendor-performance-reports.md",
+      "title": "Vendor performance reports",
+      "role": "evidence",
+      "status": "current",
+      "purpose": "Transcribed 1990 DEC RISC performance summary (curated observations) and located MIPS Performance Briefs"
+    },
+    {
       "path": "research/overview.md",
       "title": "Research overview",
       "role": "guide",
