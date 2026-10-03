@@ -4,3 +4,12 @@
 [submodule "third-party/fzstd"]
 	path = third-party/fzstd
 	url = https://github.com/101arrowz/fzstd.git
+[submodule "third-party/98.css"]
+	path = third-party/98.css
+	url = https://github.com/jdan/98.css
+[submodule "third-party/system.css"]
+	path = third-party/system.css
+	url = https://github.com/sakofchit/system.css
+[submodule "third-party/glasstty"]
+	path = third-party/glasstty
+	url = https://github.com/svofski/glasstty

@@ -5,6 +5,8 @@ is one set of values. `auto` follows the browser's light/dark preference; a chos
 remembered in localStorage and applied before the first paint.
 """
 
+from cpushowspeed import timeline_retro
+
 STORAGE_KEY = "cpushowspeed-theme"
 
 LIGHT = {
@@ -106,10 +108,13 @@ DARK = dict(
     },
 )
 
-# (value, label, variables, extra CSS scoped to the theme).
+# (value, label, variables, builder of extra CSS given the theme's root selector).
 THEMES = [
-    ("light", "Light", LIGHT, ""),
-    ("dark", "Dark", DARK, ""),
+    ("light", "Light", LIGHT, None),
+    ("dark", "Dark", DARK, None),
+    ("win98", "Windows 98", timeline_retro.WIN98_VARS, timeline_retro.win98_css),
+    ("system7", "System 7", timeline_retro.SYSTEM7_VARS, timeline_retro.system7_css),
+    ("vt220", "Amber VT220", timeline_retro.VT220_VARS, timeline_retro.vt220_css),
 ]
 
 
@@ -122,10 +127,12 @@ def stylesheet():
     css = [f":root{{{_variables(LIGHT)}}}"]
     css.append(f"@media(prefers-color-scheme:dark){{:root:not([data-theme]){{{_variables(DARK)}}}}}")
     for value, _, variables, extra in THEMES:
-        css.append(f':root[data-theme="{value}"]{{{_variables(variables)}}}')
+        scope = f':root[data-theme="{value}"]'
+        css.append(f"{scope}{{{_variables(variables)}}}")
         if extra:
-            css.append(extra)
+            css.append(extra(scope))
     css.append(".theme-bar{display:flex;justify-content:flex-end;gap:8px;align-items:center;margin:-8px 0 8px}")
+    css.append(".theme-credits{margin-top:32px;font-size:12px;color:var(--muted)}")
     return "\n".join(css)
 
 
@@ -134,6 +141,10 @@ def picker():
         f'<option value="{value}">{label}</option>' for value, label, _, _ in THEMES
     )
     return f'<div class="theme-bar"><label>Theme: <select id="theme">{options}</select></label></div>'
+
+
+def credits():
+    return f'<p class="theme-credits">{timeline_retro.CREDITS}</p>'
 
 
 # Runs in <head>: applies the stored theme before the first paint, then binds the picker. A

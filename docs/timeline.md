@@ -63,10 +63,10 @@ such as darkhttpd. This also keeps the relative research/method-note links usabl
 Open `data/derived/figures/timeline/vaxen-timeline.html` through that server. No application
 server, npm install, frontend build, or external CDN is required.
 
-Initialize the pinned decoder once after cloning:
+Initialize the pinned decoder and theme sources once after cloning:
 
 ```sh
-git submodule update --init third-party/hyparquet third-party/fzstd
+git submodule update --init third-party/hyparquet third-party/fzstd third-party/98.css third-party/system.css third-party/glasstty
 uv run cpushowspeed plot timeline
 darkhttpd . --addr 127.0.0.1 --port 8080 --hide-dotfiles
 # Open http://127.0.0.1:8080/data/derived/figures/timeline/vaxen-timeline.html
@@ -385,10 +385,26 @@ record qualifications remain in the tooltip and path details.
 Every colour the page draws reads a CSS custom property defined in
 `timeline_theme.py`; SVG markup uses inline `style` so the properties apply.
 **Theme** in the top-right picker offers Auto (the browser's light/dark
-preference), Light and Dark. A chosen theme is stored in `localStorage` under
+preference), Light, Dark and three 1990s themes. A chosen theme is stored in `localStorage` under
 `cpushowspeed-theme` and applied by a small head script before the first paint;
 Auto clears it. Changing the theme or the system preference fires a `themechange`
 event; the canvas rereads its colours and redraws.
+
+The 1990s themes are built by `timeline_retro.py` from pinned submodules under
+`third-party/`. Rules are taken by exact selector list, scoped to the theme, and
+their icons and fonts are inlined as data URIs, so the page needs no extra files;
+a selector that disappears after a submodule update fails the build. The page
+footer credits the sources, and each theme's stylesheet carries its licence text.
+
+| Theme | Source | Font |
+| --- | --- | --- |
+| Windows 98 | [98.css](https://github.com/jdan/98.css) (MIT): bevels, group boxes, fields, scrollbars; the page is a window and the title its title bar | MS Sans Serif FontStruction by “lou” (CC BY-SA 3.0) |
+| System 7 | [system.css](https://github.com/sakofchit/system.css) (MIT): pinstriped title bar, rounded buttons, fields, scrollbars; colour QuickDraw route colours | ChicagoFLF (public domain); body text Geneva or a sans-serif fallback |
+| Amber VT220 | Own rules: amber phosphor on black, glow and scanlines | [Glass TTY VT220](https://github.com/svofski/glasstty) (public domain) |
+
+In Amber VT220 the routes differ only in amber intensity and hue, so the route
+legend is harder to read than in the other themes; marker shapes still separate
+rate, speed and mix. The fonts add about 200 KB to the page.
 
 ## Offline VAXen calculator (2026-09-29)
 

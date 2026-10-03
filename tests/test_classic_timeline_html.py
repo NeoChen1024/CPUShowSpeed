@@ -50,6 +50,20 @@ class TimelineHTMLTests(unittest.TestCase):
             chart_width = min(width - 48, 1440, (height * 0.75 - 80) * 1400 / 760)
             self.assertLessEqual(chart_width * 760 / 1400 + 80, height * 0.75 + 0.01)
 
+    def test_retro_themes_are_scoped_and_self_contained(self):
+        import re
+
+        from cpushowspeed import timeline_retro, timeline_theme
+
+        css = timeline_theme.stylesheet()
+        for value in ("win98", "system7", "vt220"):
+            self.assertIn(f':root[data-theme="{value}"] body', css)
+            self.assertIn(f'value="{value}"', timeline_theme.picker())
+        self.assertNotIn("svg-load(", css)
+        self.assertIsNone(re.search(r'url\((?!"data:)', css))
+        with self.assertRaises(ValueError):
+            timeline_retro.take(timeline_retro.WIN98, ["no-such-selector"], ":root")
+
     def test_payload_cannot_close_script(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "timeline.html"

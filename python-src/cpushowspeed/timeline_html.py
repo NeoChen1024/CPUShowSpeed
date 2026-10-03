@@ -46,6 +46,7 @@ def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
         .replace("__THEME_STYLE__", timeline_theme.stylesheet())
         .replace("__THEME_INIT__", timeline_theme.INIT_SCRIPT)
         .replace("__THEME_PICKER__", timeline_theme.picker())
+        .replace("__THEME_CREDITS__", timeline_theme.credits())
         .replace("__LINEAGE_STYLE__", STYLE)
         .replace("__LINEAGE_MARKUP__", MARKUP)
         .replace("__LINEAGE_SCRIPT__", SCRIPT.replace("const lineage=__LINEAGE_DATA__;", ""))
@@ -104,12 +105,12 @@ __LINEAGE_STYLE__
 __CALCULATOR_STYLE__
 </style>
 __THEME_PICKER__
-<h1>__TITLE__</h1>
+<h1><span>__TITLE__</span></h1>
 <p id="load-status" role="status">Loading timeline…</p>
 <noscript>JavaScript is required to view the timeline.</noscript>
 <div id="timeline-app" hidden>
 __LINEAGE_MARKUP__
-<label>Search system, CPU, configuration or benchmark: <input id="q" placeholder="VAX, PDP, LINPACK…"></label>
+<label>Search system, CPU, configuration or benchmark: <input id="q" type="search" placeholder="VAX, PDP, LINPACK…"></label>
 <fieldset id="quantities"><legend>Quantity</legend>
 <label><input type="checkbox" style="width:auto" data-quantity="rate" checked> ● Throughput · rate-VAXen</label>
 <label><input type="checkbox" style="width:auto" data-quantity="speed" checked> ▲ Single job · speed-VAXen</label></fieldset>
@@ -143,6 +144,7 @@ __BROWSING_TOP__
 <table><thead><tr><th>Year / evidence</th><th>System / configuration</th><th>Route / inputs</th><th>VAXen / CI95</th><th>Sources</th></tr></thead><tbody id="body"></tbody></table>
 __BROWSING_BOTTOM__
 </div>
+__THEME_CREDITS__
 <script>
 for(const r of data)for(const key of ['source_record_ids','benchmark_sources','runtime_resources','hardware_context','input_configurations']){
  if(typeof r[key]==='string'&&r[key])r[key]=JSON.parse(r[key]);}
