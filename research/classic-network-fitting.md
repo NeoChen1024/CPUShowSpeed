@@ -175,10 +175,11 @@ network and bridge edges. A shared model gets the same draw weight everywhere.
 Each draw refits the bridge factor and the network coefficients; rank-deficient
 draws are rejected and valid counts exported. Each draw also redraws the 780
 anchor as `c_b + N(0, sd_b)`, with `sd_b` the standard error of the 780's median:
-the pooled within-(system, clock) log variance of distinct classical runs,
-divided by the number of 780 runs. Whetstone native replicates are especially
-inconsistent (pooled log variance 0.95), so its 780 anchor is loose
-(standard error 0.56 in log). CI95 is the linear percentile
+a robust run-to-run log standard deviation divided by the square root of the
+number of 780 runs. The run spread is 1.4826 times the median absolute deviation
+of distinct classical runs from their (system, clock) group's median, pooled over
+groups with two or more runs (`vax780-anchor.csv`). Whetstone native has the
+loosest anchor (robust run sd 0.32, anchor standard error 0.19 in log). CI95 is the linear percentile
 interval of coefficients or final VAXen estimates, not a prediction interval.
 It omits source bias, matching mistakes, within-model measurement uncertainty,
 unknown architecture transport error, era drift and uncertainty in the fixed clock exponent.
@@ -195,6 +196,28 @@ coverage (native Whetstone has eight models, unlike the 32–33-model DP/SP coho
 counts accompany every row. Missing held-out coefficients and evaluated subset
 counts are recorded in `fold-coverage.csv`, not silently scored as success.
 
+### Robust 780 anchor error (2026-10-03)
+
+The anchor standard error now uses a robust (median absolute deviation) run
+spread instead of the pooled within-group variance (user decision). Longbottom's
+Whetstone history lists language and compiler variants of one machine (Cyber 173
+from 0.009 to 0.73 MWIPS, Encore 32/7760 0.001 and 0.45), which inflated the
+native pooled log variance to 0.95 and its anchor standard error to 0.56; under
+the hard 780 tie that error shifts every estimate of the metric. Point estimates
+are unchanged; only intervals move.
+
+| Metric | Anchor log SE, pooled → robust | Exponent CI95, pooled → robust | Median hardware CI95 width (high/low) |
+| --- | --- | --- | --- |
+| Dhrystone 1.1 | 0.078 → 0.036 | 0.830–0.903 → 0.846–0.889 | 1.31 → 1.14 |
+| Dhrystone 2.1 | 0.151 → 0.068 | (shared) | 1.46 → 1.22 |
+| Whetstone native | 0.561 → 0.187 | 0.737–1.218 → 0.883–1.068 | 7.15 → 1.93 (max 333 → 8.3) |
+| Whetstone SP | 0.124 → 0.051 | 0.765–0.868 → 0.786–0.844 | 1.23 → 1.18 |
+| Whetstone DP | 0.304 → 0.042 | 0.760–1.013 → 0.852–0.900 | 1.90 → 1.17 (max 20.9 → 1.6) |
+| LINPACK n=100 | 0.144 → 0.028 | 0.741–0.856 → 0.768–0.826 | 1.35 → 1.26 |
+
+The robust spread treats the 780's own DP run of 0.41 MWIPS (against 0.715 and
+0.76) as atypical; the anchor is the median of the three runs either way.
+
 ## Results
 
 Both scenarios identify all six coefficients. The SPECint92-only network has
@@ -208,17 +231,17 @@ For `linear_clock / with_spec89`:
 
 | Input metric | Score unit | Exponent β (CI95) | speed-VAXen at score 1 (CI95) | At 10 units (proportional v3) |
 | --- | --- | --- | --- | ---: |
-| Dhrystone 1.1 | DMIPS | 0.868 (0.830–0.903) | 1.119 (0.982–1.271) | 8.26 (6.44) |
-| Dhrystone 2.1 | DMIPS | 0.868 (shared) | 1.170 (0.905–1.498) | 8.63 (6.84) |
-| Whetstone native | MWIPS | 0.972 (0.737–1.218) | 0.981 (0.255–2.283) | 9.20 (5.63) |
-| Whetstone SP | MWIPS | 0.816 (0.765–0.868) | 1.284 (1.057–1.533) | 8.40 (6.37) |
-| Whetstone DP | MWIPS | 0.877 (0.760–1.013) | 1.342 (0.761–2.059) | 10.10 (10.05) |
-| LINPACK n=100 | MFLOPS | 0.796 (0.741–0.856) | 4.778 (4.137–5.456) | 29.8 (31.8) |
+| Dhrystone 1.1 | DMIPS | 0.868 (0.846–0.889) | 1.119 (1.055–1.187) | 8.26 (6.44) |
+| Dhrystone 2.1 | DMIPS | 0.868 (shared) | 1.170 (1.044–1.312) | 8.63 (6.84) |
+| Whetstone native | MWIPS | 0.972 (0.883–1.068) | 0.981 (0.662–1.378) | 9.20 (5.63) |
+| Whetstone SP | MWIPS | 0.816 (0.786–0.844) | 1.284 (1.188–1.386) | 8.40 (6.37) |
+| Whetstone DP | MWIPS | 0.877 (0.852–0.900) | 1.342 (1.253–1.435) | 10.10 (10.05) |
+| LINPACK n=100 | MFLOPS | 0.796 (0.768–0.826) | 4.778 (4.519–5.082) | 29.8 (31.8) |
 
 For example, a Dhrystone
 **1.1** score of **10 DMIPS** maps to approximately 8.26 speed-VAXen (CI95
-7.27–9.28; v3: 6.44, 6.00–6.92), and the 780's own 0.878 DMIPS to 1.00
-(0.88–1.14). The wider intervals carry the 780 anchor's sampling error.
+7.73–8.78; v3: 6.44, 6.00–6.92), and the 780's own 0.878 DMIPS to 1.00
+(0.94–1.06). The wider intervals carry the 780 anchor's sampling error.
 Raw Dhrystones/second first need the declared /1757 DMIPS conversion; coefficients
 must not be applied to uninterpreted KIPS or printed unit labels with unresolved meaning.
 
@@ -279,8 +302,8 @@ nodes, then re-solves the free intercepts from all nodes (user decision).
   61.55% → 27.82%, and the Whetstone family 52.07% → 30.86%.
 - Observed all-available P95 rises 65.9% → 67.9%, and inferred-89 84.5% → 87.2%.
   Inferred-89 Whetstone alone improves 45.4% → 32.5%.
-- The native exponent CI widens to 0.737–1.218, since only anchored and
-  multi-family nodes inform it now.
+- The native exponent CI widens, since only anchored and multi-family nodes
+  inform it now (0.737–1.218 with the pooled-variance anchor error of that date).
 
 ### Separate Whetstone precision exponents (2026-10-03)
 

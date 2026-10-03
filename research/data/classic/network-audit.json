@@ -79,54 +79,54 @@
       "vax780_runs": 8,
       "vax780_median_score": 0.8783327456414349,
       "vax780_run_scores": "0.7439;0.8201;0.8367;0.8668;0.89;0.8941;0.93;0.9334",
-      "run_log_variance": 0.04887030696309193,
-      "run_variance_df": 253,
-      "anchor_log_sd": 0.07815873828553331
+      "run_log_sd_robust": 0.10111633392479691,
+      "run_groups": 137,
+      "anchor_log_sd": 0.03575002270347362
     },
     {
       "metric": "Dhrystone:v2.1_DMIPS",
       "vax780_runs": 2,
       "vax780_median_score": 0.834755221537501,
       "vax780_run_scores": "0.8071;0.8634",
-      "run_log_variance": 0.04561254955152806,
-      "run_variance_df": 281,
-      "anchor_log_sd": 0.1510174651348778
+      "run_log_sd_robust": 0.096860258412909,
+      "run_groups": 142,
+      "anchor_log_sd": 0.0684905455512493
     },
     {
       "metric": "LINPACK:n100_MFLOPS",
       "vax780_runs": 3,
       "vax780_median_score": 0.14,
       "vax780_run_scores": "0.11;0.14;0.14",
-      "run_log_variance": 0.062435791938811915,
-      "run_variance_df": 111,
-      "anchor_log_sd": 0.14426340716297614
+      "run_log_sd_robust": 0.048894641524059416,
+      "run_groups": 78,
+      "anchor_log_sd": 0.02822933444584596
     },
     {
       "metric": "Whetstone:MWIPS",
       "vax780_runs": 3,
       "vax780_median_score": 1.02,
       "vax780_run_scores": "0.494;1.02;1.18",
-      "run_log_variance": 0.9453931802413975,
-      "run_variance_df": 130,
-      "anchor_log_sd": 0.561365353473534
+      "run_log_sd_robust": 0.32431477541504716,
+      "run_groups": 82,
+      "anchor_log_sd": 0.1872432228880505
     },
     {
       "metric": "Whetstone:MWIPS_DP",
       "vax780_runs": 3,
       "vax780_median_score": 0.715,
       "vax780_run_scores": "0.41;0.715;0.76",
-      "run_log_variance": 0.2776090368263866,
-      "run_variance_df": 71,
-      "anchor_log_sd": 0.3041978724593509
+      "run_log_sd_robust": 0.07285093819861978,
+      "run_groups": 56,
+      "anchor_log_sd": 0.04206050877968992
     },
     {
       "metric": "Whetstone:MWIPS_SP",
       "vax780_runs": 2,
       "vax780_median_score": 0.7358668357794091,
       "vax780_run_scores": "0.5;1.083",
-      "run_log_variance": 0.030844056992182133,
-      "run_variance_df": 17,
-      "anchor_log_sd": 0.12418546008326042
+      "run_log_sd_robust": 0.07252387002653793,
+      "run_groups": 17,
+      "anchor_log_sd": 0.051282120293656766
     }
   ],
   "fit": "family/variant/node/model balanced log least squares; unanchored node values eliminated analytically; exponents from anchored and multi-family unanchored nodes, then free intercepts from all nodes with exponents fixed",
@@ -144,7 +144,7 @@
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_predict.py": "73fa47ac31b0281ed3ac1773970544a0869cdb39e98b129498e4930497e3168f",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classic_values.py": "348fedb309201fb703f530445059ba12eebef0cf5f2495706c1688979fd8206e",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_fit.py": "47a407fb9765ed0fbe760cfa44f73b3dd5488314d1230fe90e485628ff16485f",
-    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "19a65ef781cb711ae406f16141d79819d0621646ce4420aecbc77bd95f9f4902",
+    "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/classical_store.py": "6c1e04458710cd68130ab145e257a77f6986c5b0009a87d66b67661e6baacdf7",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated.py": "7c35f291c6a275114c1c1ed3c2ce7be017ab59692a1a94e4a5bdb214cddddfdb",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_dates.py": "481fc3b5d600caf5b76209672a6ccdeb1a3c64b37a51f915204de173cfa336f9",
     "/home/neo_chen/vcs/CPUShowSpeed/python-src/cpushowspeed/curated_identity.py": "eed4556830b8ef426e0279682b16d6fa2848ade3194c758bd07bd1fbe3386ee0",

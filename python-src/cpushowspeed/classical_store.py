@@ -214,9 +214,12 @@ def node_scores(paired: list[dict]) -> dict:
 def vax780_anchor(rows):
     """The 780's median log score per metric, and the standard error of that median's run sample.
 
-    Run-to-run spread is the pooled variance of distinct classical results of one system at one
-    reported clock (compiler, OS and option differences included); the anchor's standard error
-    is that spread over the 780's run count.
+    Run-to-run spread is a robust standard deviation of distinct classical results of one system
+    at one reported clock (compiler, OS and option differences included): 1.4826 times the
+    median absolute deviation of each run from its group's median, pooled over groups with two or
+    more runs. Groups mixing languages or interpreters (Longbottom's Whetstone history lists BASIC
+    beside Fortran) do not inflate it. The anchor's standard error is that spread over the square
+    root of the 780's run count.
     """
     runs, groups = defaultdict(list), defaultdict(lambda: defaultdict(list))
     for r in rows:
@@ -228,23 +231,19 @@ def vax780_anchor(rows):
                 runs[metric].append(math.log(score))
     anchor, sd, audit = {}, {}, []
     for metric, logs in sorted(runs.items()):
-        ss, df = 0.0, 0
-        for values in groups[metric].values():
-            if len(values) > 1:
-                mean = statistics.fmean(values)
-                ss += sum((v - mean) ** 2 for v in values)
-                df += len(values) - 1
-        variance = ss / df if df else 0.0
+        repeated = [values for values in groups[metric].values() if len(values) > 1]
+        deviations = [abs(v - statistics.median(values)) for values in repeated for v in values]
+        spread = 1.4826 * statistics.median(deviations) if deviations else 0.0
         anchor[metric] = statistics.median(logs)
-        sd[metric] = math.sqrt(variance / len(logs))
+        sd[metric] = spread / math.sqrt(len(logs))
         audit.append(
             dict(
                 metric=metric,
                 vax780_runs=len(logs),
                 vax780_median_score=math.exp(anchor[metric]),
                 vax780_run_scores=";".join(f"{math.exp(v):.4g}" for v in sorted(logs)),
-                run_log_variance=variance,
-                run_variance_df=df,
+                run_log_sd_robust=spread,
+                run_groups=len(repeated),
                 anchor_log_sd=sd[metric],
             )
         )

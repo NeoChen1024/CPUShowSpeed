@@ -63,7 +63,7 @@ exponent is the anchored least-squares slope with every system weighing 1 and
 each of its observations 1/n: `b = Σ w·dx·log y / Σ w·dx²`, where
 `dx = log C − log C₇₈₀`. The conditional exponent CI95 uses 10,000
 system-cluster bootstrap draws with seed 20260926; each draw also redraws the
-780's log anchors from a normal distribution with the network's run-spread
+780's log anchors from a normal distribution with the network's robust run-spread
 standard error. `free_loglog_slope_diagnostic` is the unanchored slope of system
 medians, reported only as a check on the anchored exponent.
 
@@ -88,21 +88,21 @@ are not counts of independent benchmark runs. Peak targets cover 98 results on
 
 | Composite | Systems / tuples | C₇₈₀ | Exponent b | Exponent CI95 | LOMO model-center P95 |
 | --- | ---: | ---: | ---: | --- | ---: |
-| Dhrystone 1.1 + LINPACK | 42 / 95 | 0.3507 | 0.8506 | 0.8222–0.8817 | 34.61% |
-| Dhrystone 2.1 + LINPACK | 43 / 96 | 0.3419 | 0.8484 | 0.8128–0.8871 | 31.63% |
-| Whetstone DP + LINPACK | 35 / 80 | 0.3164 | 0.8610 | 0.8056–0.9240 | 20.95% |
-| Dhrystone 1.1 + Whetstone DP + LINPACK | 34 / 79 | 0.4447 | 0.8646 | 0.8250–0.9074 | 21.10% |
-| Dhrystone 2.1 + Whetstone DP + LINPACK | 34 / 79 | 0.4372 | 0.8652 | 0.8240–0.9119 | 19.15% |
+| Dhrystone 1.1 + LINPACK | 42 / 95 | 0.3507 | 0.8506 | 0.8382–0.8632 | 34.61% |
+| Dhrystone 2.1 + LINPACK | 43 / 96 | 0.3419 | 0.8484 | 0.8319–0.8644 | 31.63% |
+| Whetstone DP + LINPACK | 35 / 80 | 0.3164 | 0.8610 | 0.8492–0.8723 | 20.95% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 34 / 79 | 0.4447 | 0.8646 | 0.8542–0.8744 | 21.10% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 34 / 79 | 0.4372 | 0.8652 | 0.8534–0.8769 | 19.15% |
 
 ### Base
 
 | Composite | Systems / tuples | Exponent b | Exponent CI95 | LOMO model-center P95 |
 | --- | ---: | ---: | --- | ---: |
-| Dhrystone 1.1 + LINPACK | 13 / 31 | 0.8607 | 0.8352–0.8883 | 16.94% |
-| Dhrystone 2.1 + LINPACK | 13 / 31 | 0.8576 | 0.8266–0.8916 | 13.80% |
-| Whetstone DP + LINPACK | 13 / 31 | 0.8593 | 0.8106–0.9145 | 15.30% |
-| Dhrystone 1.1 + Whetstone DP + LINPACK | 13 / 31 | 0.8649 | 0.8299–0.9029 | 15.70% |
-| Dhrystone 2.1 + Whetstone DP + LINPACK | 13 / 31 | 0.8627 | 0.8263–0.9037 | 15.63% |
+| Dhrystone 1.1 + LINPACK | 13 / 31 | 0.8607 | 0.8495–0.8715 | 16.94% |
+| Dhrystone 2.1 + LINPACK | 13 / 31 | 0.8576 | 0.8447–0.8706 | 13.80% |
+| Whetstone DP + LINPACK | 13 / 31 | 0.8593 | 0.8484–0.8703 | 15.30% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 13 / 31 | 0.8649 | 0.8540–0.8755 | 15.70% |
+| Dhrystone 2.1 + Whetstone DP + LINPACK | 13 / 31 | 0.8627 | 0.8513–0.8746 | 15.63% |
 
 The `same_result` cohort covers 62 peak targets on 38 systems; for example
 Dhrystone 1.1 + LINPACK gives b 0.8478 (P95 20.78%) and the Dhrystone 1.1 +

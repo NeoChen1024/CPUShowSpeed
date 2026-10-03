@@ -174,6 +174,16 @@ class NetworkTests(unittest.TestCase):
         self.assertGreater(sd["Dhrystone:v1.1_DMIPS"], 0)
         self.assertEqual(audit[0]["vax780_runs"], 3)
 
+    def test_vax780_anchor_spread_ignores_a_wildly_inconsistent_group(self):
+        metric = "Whetstone:MWIPS"
+        rows = [result(f"v{i}", "sys:vax11/780", {metric: s}, clock=5) for i, s in enumerate((0.9, 1.0, 1.1))]
+        rows += [result(f"o{i}", "sys:other", {metric: s}, clock=5) for i, s in enumerate((9, 10, 11))]
+        _, sd, _ = vax780_anchor(rows)
+        baseline = sd[metric]
+        rows += [result(f"b{i}", "sys:basic", {metric: s}, clock=5) for i, s in enumerate((0.001, 0.5, 0.45))]
+        _, sd, _ = vax780_anchor(rows)
+        self.assertLess(sd[metric], 1.5 * baseline)
+
 
 if __name__ == "__main__":
     unittest.main()

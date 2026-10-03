@@ -105,7 +105,7 @@ speed-VAXen; the unanchored slope of model medians is reported only as a
 diagnostic.
 
 Resample models with replacement 10,000 times (default seed 20260926), redraw
-the 780's log anchors from a normal distribution with their run-spread
+the 780's log anchors from a normal distribution with their robust run-spread
 standard error, and report the 2.5/97.5 percentiles of the exponent as
 conditional CI95. At least two
 model groups are required; small-cohort intervals are fragile. The CI excludes

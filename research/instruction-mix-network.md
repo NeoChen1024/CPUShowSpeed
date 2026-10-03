@@ -54,13 +54,17 @@ attached machines, since the intercept at 1 KIPS lies far outside the data:
 
 | Links | Shared exponent β (CI95) | Gibson at 1,000 KIPS | ADP at 1,000 KIPS |
 | --- | --- | ---: | ---: |
-| `resolved_system` | 0.984 (0.743–1.299) | 0.82 | 0.44 |
-| `plus_pending_links` | 0.991 (0.764–1.226) | 0.72 | 0.37 |
+| `resolved_system` | 0.984 (0.815–1.173) | 0.82 | 0.44 |
+| `plus_pending_links` | 0.991 (0.832–1.143) | 0.72 | 0.37 |
 
 The v3 proportional coefficients gave 0.47 / 0.24 (`resolved_system`) and
 0.40 / 0.20 (`plus_pending_links`) at 1,000 KIPS. The intercepts and their CI95
 are in the coefficient table. The exponent interval is wide: ten to fifteen
-clusters span a narrow range of ratings.
+clusters span a narrow range of ratings. With the robust 780 anchor error
+(2026-10-03; see the [network](classic-network-fitting.md#robust-780-anchor-error-2026-10-03)),
+the median rating CI95 spans a factor of 2.9 (Gibson) and 3.3 (ADP) between its
+ends, down from 9.4 and 10.4; ratings far below the attached machines still
+reach about 19–21, an extrapolation of three to four orders of magnitude.
 
 The whole-cluster holdout compares a mix-only prediction with the held-out
 node's classical-network prediction (a proxy, not a SPEC measurement). The

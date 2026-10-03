@@ -87,7 +87,7 @@ with the converted SPEC89 targets.
 
 Full results and baselines are in the
 [machine-readable summary](data/classic/spec89-summary.csv). For Dhrystone 1.1 +
-LINPACK the joint exponent is 0.8483 (CI95 0.8175–0.8815). Adding the SPEC89
+LINPACK the joint exponent is 0.8483 (CI95 0.8345–0.8617). Adding the SPEC89
 systems moves each exponent by at most 0.008 and the observed-target P95 by at
 most 1.5 points: the SPEC89 and SPEC92 targets lie on one power law through the
 780. The largest SPEC89 misses remain the IBM RS/6000 systems (Dhrystone 1.1 +
