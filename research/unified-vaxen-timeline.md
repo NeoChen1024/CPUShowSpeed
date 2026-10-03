@@ -174,6 +174,15 @@ changes in the [network report](classic-network-fitting.md#changes-from-the-1990
 SPEC rows and SPEC89 bridge estimates are unchanged. The full-population Node
 test passed (2026-10-03).
 
+## N3909 curated records and system merges — 2026-10-03
+
+The [N3909 curated records and spelling merges](classic-network-fitting.md#changes-from-the-n3909-curated-records-and-system-merges-2026-10-03)
+keep 102,034 records. Hardware-dated records rise 26,386 → 26,389 and unknown
+1,156 → 1,153, matching the three merged-spelling records now resolving to dated
+systems (not checked record by record). Classical and mix
+rows move by the network coefficient changes; SPEC rows are unchanged. The
+full-population Node test passed.
+
 ## Printed SPEC89 means — 2026-10-03
 
 The [printed SPECint89 values](usenet-result-lists.md#printed-spec89-means-19901991)

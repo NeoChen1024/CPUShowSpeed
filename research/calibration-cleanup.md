@@ -15,7 +15,6 @@ selected statistical definitions.
 | `classic_values.py` | Source numeric parsing, LINPACK column interpretation and clock compatibility |
 | `classic_vectors.py` | Exact-component pair/triple assembly |
 | `classic_pair_data.py` | Classical pair eligibility and values |
-| `classic_source_data.py` | Reviewed source vectors, OS identity and staged pairing |
 | `classic_bridge_data.py` | Archived SPEC89/92 paired integer evidence |
 | `research_plot.py` | Consistent figure export without changing scientific labels |
 

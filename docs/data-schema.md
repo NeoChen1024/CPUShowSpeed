@@ -239,6 +239,7 @@ hand from a report table or post, one row per printed cell.
 | `observation_id`, `result_id` | Row key (`cobs:…`); the values one source reports together for one system, configuration and run |
 | `source_id`, `locator`, `system` | Source row, printed page and table or figure, and the system name as printed |
 | `metric_id`, `value_printed`, `value`, `unit_printed` | Metric table key; the cell as printed and its number in the printed unit (never rescaled in the table) |
+| `reviewed_reading` | Optional `{value, unit, basis}`: the reviewed reading of a cell whose printed unit label or magnitude is wrong or incomplete, with the evidence |
 | `conditions` | Source-stated configuration and run conditions (clock, memory, OS, compiler, optimization, precision, BLAS form); absent keys are unknown |
 | `measured_by`, `cited_reference` | `source_author`, `cited_third_party` (with the citation) or `unattributed` |
 | `use`, `use_note` | `calibration_input` rows become observations; `context` rows stay here, with the reason |
@@ -246,11 +247,12 @@ hand from a report table or post, one row per printed cell.
 | `verification`, `reviewed_on`, `note` | How the transcription was checked, and when |
 
 `data extract` emits each `calibration_input` row as an observation in scope
-`reviewed-vector:<source>`, converting the printed unit to the metric's unit by a
+`reviewed-vector:<source>`, converting the `reviewed_reading` when present, else the printed unit, to the metric's unit by a
 named rule (Dhrystones/s ÷ 1757 = DMIPS; KWIPS ÷ 1000 = MWIPS; KFLOPS ÷ 1000 = MFLOPS) recorded in the
 observation. The first rows are the
 [Digital RISC Family Performance Summary](../research/vendor-performance-reports.md)
-(2026-10-03). The older `research/data/historical/observations.jsonl` rows
+(2026-10-03). The DEC N3909 report columns (661 rows, 140 with a reviewed reading)
+replaced a separate unit-interpretation policy the same day. The older `research/data/historical/observations.jsonl` rows
 (Honeywell 300, DEC benchmark memo) are not yet migrated.
 
 ### `date_event`

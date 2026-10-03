@@ -64,15 +64,13 @@ cell-by-cell certification. Every table page was rendered and inspected.
 
 ## Specific caveats
 
-- DEC Whetstone numeric values are interpreted as **MWIPS**, per the user's
-  corrected decision on 2026-09-26. The printed KWIPS label remains in raw fields:
-  a printed value of 189.4 is interpreted as 189.4 MWIPS. The earlier literal-KWIPS
-  rule is superseded and retained only in the policy revision history.
-- The eight bare-number Dhrystone cells on page 27 are interpreted as thousands
-  of Dhrystones/s, per the user's visual review and same-scale judgment. This
-  is a declared interpretation, not an OCR correction or independently recovered
-  missing character. Explicit K/M suffixes are not multiplied twice; blank cells
-  stay missing. Source strings and literal values remain unchanged.
+- DEC cells here stay literal. Their reviewed readings live in the curated
+  observations (`data/curated/observation.jsonl`, `cobs:dec-n3909-1994:…`):
+  printed KWIPS read as MWIPS (user decision 2026-09-26); the bare-number
+  Dhrystone cells on page 27 read as thousands of Dhrystones/s (a declared
+  interpretation, not a recovered character); and the page 29 VAX 4000/200 and
+  4000/300 Whetstone columns read at one tenth, matching Longbottom's 8.93/6.25
+  MWIPS for the 4000/300 (2026-10-03).
 - Page 31 prints 73.3 in a Whetstone cell where a related table has 33.3; this
   printed discrepancy is not silently fixed.
 - DEC rate rows do not establish copies or active CPUs for every benchmark.
@@ -86,14 +84,3 @@ cell-by-cell certification. Every table page was rendered and inspected.
   NPB is a geometric-mean ratio referenced to Sun Ultra60 360 MHz, per Section
   2.3. Hardware `core_count` is installed cores, not benchmark threads used.
   `year` is the paper's hardware year, with no invented month/day.
-
-## DEC interpretation output
-
-`interpretation-policy.json` records the two source-hash-bound decisions, their
-basis, authority and date. `dec-interpreted.csv` records interpreted Dhrystones/s
-or MWIPS alongside original strings/literal values, applied multipliers, rule
-IDs and a missing-suffix assumption flag. It additionally provides DMIPS using
-1757 Dhrystones/s per DMIPS, or MWIPS with no numeric rescaling under the corrected Whetstone interpretation. Row references
-join back to the source observations and table snapshot. No interpretation is
-applied to other documents. Configuration review and fitting eligibility remain
-separate; the affected source-pair fits were rerun after this correction.

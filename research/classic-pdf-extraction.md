@@ -29,10 +29,10 @@ The audit stores the arithmetic and sample count in machine-readable form.
 ## Findings affecting future fitting
 
 DEC now supplies within-document benchmark columns rather than loose model-only
-joins. The user-selected unit policy now interprets the printed Whetstone KWIPS values as MWIPS and
-interprets bare Dhrystone numbers as omitted-K values. Original cells remain
-unchanged; [interpreted values](data/classic/pdf-extraction/dec-interpreted.csv)
-carry the rule and assumption metadata.
+joins. Its report columns are now curated observations (2026-10-03): each cell
+keeps the printed value and label, and a `reviewed_reading` reads printed KWIPS
+as MWIPS, bare Dhrystone numbers as omitted-K values, and the VAX 4000/200 and
+4000/300 Whetstone columns (printed tenfold) at one tenth.
 SSCL adds non-DEC comparisons but mixes industry ratings with separate n=300
 experiments. Tomari provides a directly checked modern comparison subset.
 No new scores have been substituted into the existing fitting inputs in this

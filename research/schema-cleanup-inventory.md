@@ -47,7 +47,7 @@ not all the same kind of logic:
 | --- | --- | --- |
 | Entity identity (which processor/system/configuration) | `timeline_dates.cpu_key`, `spec_overlap._processor_key`/`_normalized`, `spec95_overlap_audit.candidate_system_key`/`candidate_processor_key`, `spec_rate_chain.config_key`, `classic_overlap.model_key`/`relaxed_key`, `classic_network_data.cpu_identity`, `classic_timeline.date_key`, `cpu_chronology.sku_key` | Become versioned `alias` rules read through `resolution`; delete private copies after parity |
 | Pairing policy (which observations a fitter compares) | `spec_joint_tracks.match` (strict / ram-aliases / cpu-clock), `rate_convert._matching` | Stay in fitters as declared policies, re-expressed over `hw:` IDs and resolution fields |
-| Run-condition or text normalization | `classic_source_data.os_key`, `spec_disclosure.canonical` | Stay; feed the observation `run` object |
+| Run-condition or text normalization | `spec_disclosure.canonical` (`classic_source_data.os_key` was removed with the N3909 curated records) | Stay; feed the observation `run` object |
 
 Step 5b (2026-10-02) took the SPEC rate fitters off `spec_overlap._processor_key`
 and `_normalized` system matching; `spec_rate_chain.config_key` now groups resolved

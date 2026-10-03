@@ -1071,6 +1071,36 @@
             "native_suite_points"
           ]
         },
+        "reviewed_reading": {
+          "description": "The reviewed reading of a cell whose printed unit label or magnitude is wrong or incomplete; extraction converts this instead of the printed value.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "basis"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "unit": {
+              "enum": [
+                "DMIPS",
+                "Dhrystones/s",
+                "MWIPS",
+                "KWIPS",
+                "MFLOPS",
+                "KFLOPS",
+                "native_suite_points"
+              ]
+            },
+            "basis": {
+              "$ref": "#/$defs/text"
+            }
+          }
+        },
         "conditions": {
           "description": "Source-stated configuration and run conditions (clock_mhz, memory_mb, os, compiler, optimization, precision, blas, fpu). Absent keys are unknown, not equal.",
           "type": "object"

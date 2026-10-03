@@ -293,7 +293,7 @@
       "status": "recorded",
       "variants": [],
       "precision": "native",
-      "normalization": "DEC printed KWIPS interpreted as MWIPS under reviewed policy; original labels preserved"
+      "normalization": "DEC N3909 printed KWIPS read as MWIPS in curated reviewed readings; printed labels preserved"
     },
     {
       "id": "whet-sp",
@@ -303,7 +303,7 @@
       "status": "recorded",
       "variants": [],
       "precision": "SP",
-      "normalization": "DEC printed KWIPS interpreted as MWIPS under reviewed policy; original labels preserved"
+      "normalization": "DEC N3909 printed KWIPS read as MWIPS in curated reviewed readings; printed labels preserved"
     },
     {
       "id": "whet-dp",
@@ -313,7 +313,7 @@
       "status": "recorded",
       "variants": [],
       "precision": "DP",
-      "normalization": "DEC printed KWIPS interpreted as MWIPS under reviewed policy; original labels preserved"
+      "normalization": "DEC N3909 printed KWIPS read as MWIPS in curated reviewed readings; printed labels preserved"
     },
     {
       "id": "linpack-100",
@@ -478,12 +478,12 @@
       "lineage": "DEC, SSCL, Tomari/Hiraki; DEC rows recur in source fits and bridge"
     },
     {
-      "id": "classic-unit-policy",
-      "path": "research/data/classic/pdf-extraction/interpretation-policy.json",
-      "kind": "policy",
-      "owner": "docs/classic-collection.md",
+      "id": "curated-observations",
+      "path": "data/curated/observation.jsonl",
+      "kind": "curated-table",
+      "owner": "docs/data-schema.md",
       "optional": false,
-      "lineage": ""
+      "lineage": "Hand-transcribed source cells with verification; DEC N3909 columns replaced the interpretation policy on 2026-10-03"
     },
     {
       "id": "classic-overlap",
@@ -1207,7 +1207,7 @@
       "owner": "research/classic-composite-fitting.md",
       "dataset_ids": [
         "schema-database",
-        "classic-unit-policy"
+        "curated-observations"
       ],
       "depends_on": [
         "classical-composite",

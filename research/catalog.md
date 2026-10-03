@@ -177,7 +177,7 @@ flowchart TD
 | spec89-supplement | [guide](../research/spec89-helman-worksheet.md) | `research/data/spec89/aggregate89-plus-helman.csv` | required in checkout |
 | classic-acquisition | [guide](../research/classic-benchmark-collection.md) | `research/data/classic/acquisition.csv` | required in checkout |
 | classic-pdf-tables | [guide](../research/classic-pdf-extraction.md) | `research/data/classic/pdf-extraction/tables.jsonl` | required in checkout |
-| classic-unit-policy | [guide](../docs/classic-collection.md) | `research/data/classic/pdf-extraction/interpretation-policy.json` | required in checkout |
+| curated-observations | [guide](../docs/data-schema.md) | `data/curated/observation.jsonl` | required in checkout |
 | classic-overlap | [guide](../research/classic-spec-overlap.md) | `data/derived/classic/overlap-spec` | optional derived input |
 | schema-database | [guide](../docs/data-schema.md) | `data/derived/schema/cpushowspeed.sqlite` | optional derived input |
 | historical-observations | [guide](../research/early-benchmark-evidence.md) | `research/data/historical` | required in checkout |

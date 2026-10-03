@@ -50,36 +50,3 @@ class ClassicPdfTests(unittest.TestCase):
         self.assertEqual(scalar("213"), 213)
         for s in ["—", "", "1.9 est.", "(4.9)", "7.*192.", "64/cpu"]:
             self.assertIsNone(scalar(s))
-
-
-class DecInterpretationTests(unittest.TestCase):
-    def test_scoped_policy_preserves_literals(self):
-        from cpushowspeed.classic_pdf import interpret_dec
-
-        policy = dict(
-            source_id="dec",
-            pdf_blake3="hash",
-            decision_date="2026-09-26",
-            authority="user",
-            whetstone=dict(rule_id="mwips", unit="MWIPS", mwips_per_interpreted_unit=1),
-            dhrystone=dict(rule_id="missing-k", missing_suffix_multiplier=1000, dmips_divisor=1757),
-        )
-        base = dict(
-            source_id="dec", pdf_blake3="hash", value_status="numeric_literal", pdf_page=27, table="table", row_line=1, column=1
-        )
-        rows = [
-            dict(base, id="a", metric="Dhrystone 1.1 instr/sec", value_raw="213", value=213),
-            dict(base, id="b", metric="Dhrystone 1.1 instr/sec", value_raw="248K", value=248000),
-            dict(base, id="c", metric="Whetstone KWIPS sp", value_raw="189.4", value=189.4),
-            dict(base, id="d", metric="Dhrystone 2.1 instr/sec", value_raw="", value=None, value_status="missing"),
-        ]
-        out = interpret_dec(rows, policy)
-        self.assertEqual(len(out), 3)
-        self.assertEqual(out[0]["interpreted_value"], 213000)
-        self.assertEqual(out[1]["interpreted_value"], 248000)
-        self.assertAlmostEqual(out[2]["normalized_value"], 189.4)
-        self.assertEqual(rows[0]["value"], 213)
-        self.assertTrue(out[0]["assumed_missing_suffix"])
-        rows[0]["pdf_blake3"] = "different"
-        with self.assertRaises(ValueError):
-            interpret_dec(rows, policy)

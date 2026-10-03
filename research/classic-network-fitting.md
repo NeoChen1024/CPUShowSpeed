@@ -148,22 +148,22 @@ Both scenarios identify all six coefficients. The SPECint92-only network has
 505 informative systems; the SPEC89-enabled network has 516. These include
 unanchored co-observations constraining relative scales and are **not** hundreds
 of measured SPEC anchor machines. The SPEC89-enabled run has 115 observed
-SPECint92 nodes, 126 inferred-89 nodes and 1,418 unanchored nodes; one-metric
+SPECint92 nodes, 127 inferred-89 nodes and 1,415 unanchored nodes; one-metric
 unanchored nodes do not influence training.
 
 For `linear_clock / with_spec89`:
 
 | Input metric | Score unit | speed-VAXen coefficient k | Conditional factor CI95 |
 | --- | --- | ---: | --- |
-| Dhrystone 1.1 | DMIPS | 0.64760 | 0.60326–0.69634 |
-| Dhrystone 2.1 | DMIPS | 0.68647 | 0.63505–0.74249 |
-| Whetstone native | MWIPS | 0.55658 | 0.47115–0.64650 |
-| Whetstone SP | MWIPS | 0.59968 | 0.52356–0.67620 |
-| Whetstone DP | MWIPS | 0.98906 | 0.85499–1.12873 |
-| LINPACK n=100 | MFLOPS | 3.18267 | 2.79283–3.66229 |
+| Dhrystone 1.1 | DMIPS | 0.64426 | 0.60045–0.69217 |
+| Dhrystone 2.1 | DMIPS | 0.68443 | 0.63351–0.73971 |
+| Whetstone native | MWIPS | 0.56331 | 0.48477–0.64900 |
+| Whetstone SP | MWIPS | 0.63785 | 0.57711–0.69970 |
+| Whetstone DP | MWIPS | 1.00566 | 0.88696–1.13490 |
+| LINPACK n=100 | MFLOPS | 3.18640 | 2.79991–3.65896 |
 
 For example, a Dhrystone **1.1** score of **10 DMIPS** maps to approximately
-6.48 speed-VAXen (SPECint92 ≈ 6.5) using this experimental coefficient. Raw
+6.44 speed-VAXen (SPECint92 ≈ 6.4) using this experimental coefficient. Raw
 Dhrystones/second first need the declared /1757 DMIPS conversion; coefficients
 must not be applied to uninterpreted KIPS or printed unit labels with unresolved meaning.
 
@@ -172,22 +172,22 @@ families (`linear_clock / with_spec89`):
 
 | Available inputs | Network P95 | Anchored-only control P95 |
 | --- | ---: | ---: |
-| Dhrystone 1.1 only | 29.11% | 26.23% |
-| Dhrystone 2.1 only | 35.06% | 33.14% |
-| Whetstone SP only (34 systems) | 39.34% | 38.82% |
-| Whetstone DP only | 59.40% | 51.11% |
-| LINPACK only | 44.00% | 45.85% |
-| Dhrystone + Whetstone families | 29.99% | 30.26% |
-| Dhrystone + LINPACK families | 29.49% | 30.15% |
-| Whetstone + LINPACK families | 24.29% | 26.98% |
-| All available measurements | 20.89% | 25.25% |
+| Dhrystone 1.1 only | 28.45% | 26.23% |
+| Dhrystone 2.1 only | 34.65% | 33.14% |
+| Whetstone SP only (34 systems) | 35.47% | 42.25% |
+| Whetstone DP only | 62.13% | 52.78% |
+| LINPACK only | 43.93% | 45.49% |
+| Dhrystone + Whetstone families | 32.34% | 32.64% |
+| Dhrystone + LINPACK families | 29.39% | 29.93% |
+| Whetstone + LINPACK families | 24.96% | 28.40% |
+| All available measurements | 21.65% | 26.29% |
 
 More available workloads do not guarantee a lower error, and the unanchored
 coupling does not uniformly beat the anchored-only control on this population.
 All combinations remain; the table is not a residual-based selection rule.
 
 Over all 115 observed-SPECint92 nodes (59 systems), the all-available network
-P95 is 87.9% (85.1% before the printed SPEC89 means, 84.4% before the smaller
+P95 is 88.1% (87.9% before the N3909 curated records, 85.1% before the printed SPEC89 means, 84.4% before the smaller
 Usenet posts, 83.5% before Richardson's lists). Before the 2026-10-03
 vendor-report rows (82.3%), on the 48 nodes that also carry a one-processor rate (the former
 anchor population) it is 31.5%; on 42 further DEC, multi-processor and
@@ -195,12 +195,29 @@ speed-only nodes 37.8%; on the 25 bridge-table nodes 122.7%, dominated by IBM
 RS/6000 systems overpredicted by 78–129% because their LINPACK n=100 is high
 relative to integer speed, and by the HP 9000/J200 (−69%, see below).
 
-The network emits full-availability estimates for **1,418 unanchored nodes on
-1,320 system keys** (an unresolved result counts as its own key). Of these,
+The network emits full-availability estimates for **1,415 unanchored nodes on
+1,317 system keys** (an unresolved result counts as its own key). Of these,
 1,374 nodes have one benchmark family, 28 have two and 16 have three. They are
-not 1,418 newly verified machines: configuration identity and source
+not 1,415 newly verified machines: configuration identity and source
 interpretation still need source-specific review. Their estimates are stored
 separately from observed SPEC targets.
+
+### Changes from the N3909 curated records and system merges (2026-10-03)
+
+The DEC N3909 report columns became curated observations with reviewed readings
+(see [PDF extraction](classic-pdf-extraction.md)). The values are unchanged except
+the page 29 VAX 4000/200 and 4000/300 Whetstone columns, now read at one tenth
+(4000/300: 6.25 DP / 8.93 SP MWIPS, as Longbottom reports; 4000/200: 4.27 / 6.67).
+Three spellings were merged by user decision: "CDC CYBER 4680" into the CDC 4680,
+and Richardson's "DEC 11/780" and "DEC VAX 780" into the VAX-11/780. The CDC 4680
+Netlib LINPACK result now pairs with its SPEC89 package result, so inferred-89
+nodes rise 126 → 127 and unanchored nodes fall 1,418 → 1,415 (1,317 keys).
+The VAX 4000/300 inferred-89 node, formerly overpredicted by about 700%, is now
+underpredicted by 29% (5.24 vs 7.39 speed-VAXen). `linear_clock / with_spec89`
+coefficients: Whetstone SP 0.59968 → 0.63785 (+6.37%), DP +1.68%, native +1.21%,
+LINPACK +0.12%, Dhrystone 1.1 −0.52%, 2.1 −0.30%. Whetstone inferred-89 P95 falls
+74.9% → 54.4% (DP 81.2% → 47.0%, SP 73.4% → 52.5%). All-available observed P95:
+87.9% → 88.1%; common-cohort all-available 20.89% → 21.65%.
 
 ### Changes from the printed SPEC89 means (2026-10-03)
 
@@ -284,9 +301,9 @@ LINPACK than the training population, which raises the coefficients and the
 observed-SPECint92 holdout errors (all available: 82.3% → 83.8%). Whetstone
 inferred-89 P95 falls (DP 277% → 88%, SP 295% → 119%) because the cohort grows
 from 23 to 48 (DP) nodes and dilutes one outlier: the DEC N3909 VAX 4000/300 column
-(p.29) has 62.5 DP / 89.3 SP read as MWIPS under the N3909 KWIPS rule, which
-overpredicts its SPECint89 by about 700%. That interpretation predates this change
-and is not revised here.
+(p.29) had 62.5 DP / 89.3 SP read as MWIPS under the then N3909 KWIPS rule, which
+overpredicted its SPECint89 by about 700%. That reading was later corrected (see
+the N3909 change above).
 
 ### Changes from the rate-anchored run (2026-10-03)
 

@@ -153,11 +153,13 @@ are checked. Embedded text is a parsing aid, checked against rendered PDFs.
 See [extraction findings](../research/classic-pdf-extraction.md) and the
 [table data contract](../research/data/classic/pdf-extraction/README.md).
 
-The PDF extractor also emits `dec-interpreted.csv` using the source-bound
-`interpretation-policy.json`: DEC Whetstone numeric values are interpreted as MWIPS despite printed KWIPS; omitted
-Dhrystone K suffixes use the explicit user-selected thousands interpretation.
-Original observations stay literal. `data extract` reads the interpreted DEC
-report columns as `reviewed-vector:dec-n3909-1994` results.
+The extracted tables stay literal and are not fitting inputs. The DEC N3909
+report columns are transcribed separately as
+[curated observations](data-schema.md#curated_observation) whose
+`reviewed_reading` records each cell's reviewed unit or magnitude (printed KWIPS
+read as MWIPS; bare Dhrystone counts read as thousands; the VAX 4000/200 and
+4000/300 Whetstone columns read at one tenth). `data extract` emits them as
+`reviewed-vector:dec-n3909-1994` results.
 
 ### Primary classical speed fitting
 

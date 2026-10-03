@@ -72,19 +72,31 @@ with the converted SPEC89 targets.
 | --- | ---: | ---: | ---: | ---: |
 | Dhrystone 1.1 + LINPACK | 43 → 61 | 41.75% | 50.41% | 78.21% |
 | Dhrystone 2.1 + LINPACK | 44 → 56 | 45.27% | 51.10% | 75.53% |
-| Whetstone native + LINPACK | 9 → 11 | 22.14% | 27.60% | 51.01% |
-| Whetstone DP + LINPACK | 36 → 51 | 35.03% | 44.02% | 59.30% |
-| Whetstone SP + LINPACK | 34 → 49 | 33.08% | 37.87% | 57.39% |
-| Dhrystone 1.1 + Whetstone DP | 36 → 51 | 30.92% | 35.13% | 39.83% |
-| Dhrystone 1.1 + Whetstone DP + LINPACK | 35 → 49 | 27.61% | 36.88% | 42.39% |
+| Whetstone native + LINPACK | 9 → 12 | 22.14% | 32.04% | 49.20% |
+| Whetstone DP + LINPACK | 36 → 52 | 35.03% | 48.13% | 49.48% |
+| Whetstone SP + LINPACK | 34 → 49 | 33.08% | 39.52% | 45.92% |
+| Dhrystone 1.1 + Whetstone DP | 36 → 51 | 30.92% | 38.28% | 30.63% |
+| Dhrystone 1.1 + Whetstone DP + LINPACK | 35 → 49 | 27.61% | 38.46% | 33.06% |
 | Dhrystone 2.1 + Whetstone DP + LINPACK | 35 → 43 | 29.50% | 37.91% | 37.01% |
-| Dhrystone 1.1 + Whetstone SP + LINPACK | 34 → 48 | 29.09% | 35.11% | 40.00% |
+| Dhrystone 1.1 + Whetstone SP + LINPACK | 34 → 48 | 29.09% | 36.19% | 30.05% |
 
 Full results and baselines are in the
 [machine-readable summary](data/classic/spec89-summary.csv). For Dhrystone 1.1 +
 LINPACK the joint factor is 1.537481 (CI95 1.439365–1.641245). The largest
 SPEC89 misses remain the IBM RS/6000 systems, whose LINPACK n=100 results are
 high relative to their integer speed; one shared composite factor cannot follow them.
+
+### Changes from the N3909 curated records and system merges (2026-10-03)
+
+The page 29 VAX 4000/200 and 4000/300 Whetstone columns of DEC N3909 are now read
+at one tenth of the printed value (see the
+[network report](classic-network-fitting.md#changes-from-the-n3909-curated-records-and-system-merges-2026-10-03)),
+and the Netlib "CDC CYBER 4680" LINPACK result is merged into the CDC 4680, adding
+it to the LINPACK-with-Whetstone joint cohorts (Whetstone DP + LINPACK 51 → 52).
+SPEC92-only results are unchanged. Whetstone SPEC89-target P95 falls 2–12 points
+(Dhrystone 1.1 + Whetstone DP 39.83% → 30.63%, Whetstone DP + LINPACK 59.30% →
+49.48%), while joint observed-target P95 rises 1–5 points as the joint Whetstone
+factors move toward the corrected VAX 4000 columns.
 
 ### Changes from the smaller Usenet result posts (2026-10-03)
 

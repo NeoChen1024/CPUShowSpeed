@@ -102,15 +102,6 @@ def spec89_bridges():
             )
 
 
-def dec_vectors():
-    """DEC N3909 report columns: classical scores and SPEC targets measured for one machine."""
-    from cpushowspeed.classic_source_data import source_vectors
-
-    root = Path("research/data/classic/pdf-extraction")
-    tables = [json.loads(line) for line in (root / "tables.jsonl").read_text().splitlines()]
-    return source_vectors(tables, read_csv(root / "dec-interpreted.csv"))[0]
-
-
 # Printed unit -> metric unit. Dhrystone 1 DMIPS = 1757 Dhrystones/s (VAX-11/780, VMS).
 CONVERSIONS = {
     ("Dhrystones/s", "DMIPS"): ("dhrystones-per-second-to-dmips", 1 / 1757),
@@ -120,7 +111,9 @@ CONVERSIONS = {
 
 
 def curated_observations():
-    """Hand-transcribed `calibration_input` rows of data/curated/observation.jsonl, one result per report column."""
+    """Hand-transcribed `calibration_input` rows of data/curated/observation.jsonl, one result per report column.
+
+    A row's `reviewed_reading`, when present, replaces its printed value and unit (a wrong or incomplete printed label)."""
     from cpushowspeed.curated import CURATED
 
     metrics = {m["metric_id"]: m for m in map(json.loads, (CURATED / "metric.jsonl").read_text().splitlines())}
@@ -129,14 +122,15 @@ def curated_observations():
         if row["use"] != "calibration_input":
             continue
         metric, source, conditions = metrics[row["metric_id"]], sources[row["source_id"]], row["conditions"]
-        if row["unit_printed"] == metric["unit"]:
+        reading = row.get("reviewed_reading") or dict(value=row["value"], unit=row["unit_printed"])
+        if reading["unit"] == metric["unit"]:
             rule, factor = "none", 1.0
         else:
-            rule, factor = CONVERSIONS[row["unit_printed"], metric["unit"]]
+            rule, factor = CONVERSIONS[reading["unit"], metric["unit"]]
         yield observation(
             "reviewed-vector:" + row["observation_id"].removeprefix("cobs:"),
             row["metric_id"],
-            row["value"] * factor,
+            reading["value"] * factor,
             result_id="reviewed-vector:" + row["result_id"].removeprefix("src:"),
             unit=metric["unit"],
             track=metric["track"],
@@ -216,9 +210,6 @@ def records(raw):
                 yield historical_observation(r, metric, numeric(r[metric]), "historical-spec")
     yield from curated_observations()
     yield from richardson_dhrystone()
-    for r in dec_vectors():
-        for metric, score in {**r["scores"], **r["targets"]}.items():
-            yield historical_observation(r, metric, score, "reviewed-vector")
     for row in read_csv(Path("data/derived/classic/mix-study/mix-records.csv")):
         if not row.get("kips"):
             continue

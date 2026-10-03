@@ -34,7 +34,7 @@ read from a bar length.
 That gives 87 rows, 43 of them `calibration_input`, across 11 report columns. Units
 are converted as printed: Dhrystones/s ÷ 1757 = DMIPS, and KWIPS ÷ 1000 = MWIPS.
 This report prints thousands of Whetstone instructions per second (DS5000/200 DP:
-14,271 KWIPS = 14.271 MWIPS), so the N3909 rule that reads a KWIPS label as MWIPS
+14,271 KWIPS = 14.271 MWIPS), so the N3909 reviewed reading of KWIPS labels as MWIPS
 does not apply to it.
 
 Rows that are context only, and why:

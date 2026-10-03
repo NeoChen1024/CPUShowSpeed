@@ -152,55 +152,6 @@ def observations(tables):
     return out
 
 
-def interpret_dec(records, policy):
-    """Apply a source-bound research decision without changing reported values."""
-    result = []
-    for r in records:
-        if r["source_id"] != policy["source_id"] or r["value_status"] != "numeric_literal":
-            continue
-        if r["pdf_blake3"] != policy["pdf_blake3"]:
-            raise ValueError("interpretation policy source hash mismatch")
-        metric = r["metric"]
-        if metric.startswith("Whetstone KWIPS"):
-            rule = policy["whetstone"]
-            value, unit = r["value"], rule["unit"]
-            normalized = value * rule["mwips_per_interpreted_unit"]
-            normalized_unit, multiplier, assumed = "MWIPS", 1, False
-        elif metric.startswith("Dhrystone") and "instr/sec" in metric:
-            rule = policy["dhrystone"]
-            assumed = not r["value_raw"].strip().endswith(("K", "M"))
-            multiplier = rule["missing_suffix_multiplier"] if assumed else 1
-            value, unit = r["value"] * multiplier, "Dhrystones/s"
-            normalized, normalized_unit = value / rule["dmips_divisor"], "DMIPS"
-        else:
-            continue
-        result.append(
-            dict(
-                observation_id=r["id"],
-                source_id=r["source_id"],
-                pdf_blake3=r["pdf_blake3"],
-                pdf_page=r["pdf_page"],
-                table=r["table"],
-                row_line=r["row_line"],
-                column=r["column"],
-                metric=metric,
-                value_raw=r["value_raw"],
-                literal_value=r["value"],
-                interpretation_rule=rule["rule_id"],
-                interpreted_value=value,
-                interpreted_unit=unit,
-                literal_value_multiplier=multiplier,
-                assumed_missing_suffix=assumed,
-                normalized_value=normalized,
-                normalized_unit=normalized_unit,
-                decision_date=policy["decision_date"],
-                authority=policy["authority"],
-                fit_eligible=False,
-            )
-        )
-    return result
-
-
 @click.command("extract-pdf-tables")
 @click.option(
     "--acquisition",
@@ -237,9 +188,6 @@ def extract_pdf_tables(acquisition, recipes, corrections, output):
             for row in table["rows"]:
                 row["label_checked"] = labels.get(row["label_raw"], row["label_raw"])
     obs = observations(tables)
-    policy_path = ROOT / "interpretation-policy.json"
-    interpreted = interpret_dec(obs, json.loads(policy_path.read_text()))
-    write_csv(output / "dec-interpreted.csv", interpreted)
     hardware = {}
     for table in tables:
         if table["source_id"] == "tomari-hiraki-2011" and table["table_id"].startswith("hardware"):
@@ -323,10 +271,7 @@ def extract_pdf_tables(acquisition, recipes, corrections, output):
             agrees_at_published_precision=round(correlation, 3) == 0.986,
         ),
         method="classic-source-pdf-tables-v1",
-        input_sha256={
-            str(p): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in [acquisition, recipes, corrections, labels_path, policy_path]
-        },
+        input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in [acquisition, recipes, corrections, labels_path]},
         code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         text_sha256={sid: hashlib.sha256(t.encode()).hexdigest() for sid, t in texts.items()},
         pdftotext_version=subprocess.run(["pdftotext", "-v"], capture_output=True, text=True).stderr.splitlines()[0],
