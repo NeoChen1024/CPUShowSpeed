@@ -329,16 +329,16 @@ def build_lineage(output):
 
 
 STYLE = r"""
-#lineage{max-width:1440px;margin:22px auto;border:1px solid #cedbe5;border-radius:16px;background:#f4f6f8;overflow:hidden}
+#lineage{max-width:1440px;margin:22px auto;border:1px solid var(--panel-border);border-radius:16px;background:var(--panel);overflow:hidden}
 #lineage summary{cursor:pointer;padding:18px 22px;font-size:19px;font-weight:650}
 .lineage-intro{padding:0 22px 8px;max-width:960px;font-size:14px;line-height:1.55}.lineage-intro p{margin:0 0 10px}
 .lineage-toolbar{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:0 22px 12px}.lineage-toolbar input{width:auto}
 .lineage-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;padding:0 16px 18px}
 .lineage-scroll{overflow:auto}#lineage-graph{min-width:850px;width:100%;background:transparent}
-#lineage-card{background:#fff;border:1px solid #d8e2e9;border-radius:12px;padding:16px;font-size:13px;overflow-wrap:anywhere;max-height:610px;overflow:auto}
+#lineage-card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:16px;font-size:13px;overflow-wrap:anywhere;max-height:610px;overflow:auto}
 #lineage-card h3{margin:0 0 12px}#lineage-card table{font-size:12px}#lineage-card td{padding:5px}
-#lineage-graph [role=button]{cursor:pointer}#lineage-graph [role=button]:focus{outline:none;filter:drop-shadow(0 0 4px #207ca3)}
-#lineage-selection{padding:0 22px 12px;font-size:13px} .lineage-badge{display:inline-block;border-radius:12px;background:#e8f1f8;padding:3px 9px;margin:3px}
+#lineage-graph [role=button]{cursor:pointer}#lineage-graph [role=button]:focus{outline:none;filter:drop-shadow(0 0 4px var(--accent))}
+#lineage-selection{padding:0 22px 12px;font-size:13px} .lineage-badge{display:inline-block;border-radius:12px;background:var(--badge);padding:3px 9px;margin:3px}
 @media(max-width:1050px){.lineage-layout{grid-template-columns:1fr}#lineage-card{max-height:330px}}
 """
 MARKUP = r"""
@@ -389,8 +389,8 @@ function pathway(r){
 }
 function drawLineage(){
  const svg=document.querySelector('#lineage-graph'), chosen=lineageActive;
- let s='<defs><marker id="lineage-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#648398"/></marker></defs>';
- for(const [y,label] of [[34,'SPEC rate chain → rate-VAXen'],[164,'SPEC speed chain → speed-VAXen'],[290,'Recovered speed results'],[448,'Sparse, jointly calibrated historical scores'],[608,'Instruction-mix ratings']])s+=`<text x="25" y="${y}" fill="#516a7a" font-size="16">${label}</text>`;
+ let s='<defs><marker id="lineage-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--lineage-arrow)"/></marker></defs>';
+ for(const [y,label] of [[34,'SPEC rate chain → rate-VAXen'],[164,'SPEC speed chain → speed-VAXen'],[290,'Recovered speed results'],[448,'Sparse, jointly calibrated historical scores'],[608,'Instruction-mix ratings']])s+=`<text x="25" y="${y}" style="fill:var(--lineage-lane)" font-size="16">${label}</text>`;
  for(const e of lineage.edges){const a=lineageNode(e.source),b=lineageNode(e.target);if(!a||!b)continue;
   const active=!chosen||(chosen.includes(e.source)&&chosen.includes(e.target));
   // Nodes stacked in one column connect top to bottom; others connect side to side.
@@ -400,12 +400,12 @@ function drawLineage(){
   else{const x=a.x+a.w,y=a.y+a.h/2,xx=b.x,yy=b.y+b.h/2;d=y===yy?`M${x} ${y}L${xx} ${yy}`:`M${x} ${y}C${x+65} ${y},${xx-65} ${yy},${xx} ${yy}`;labelX=(x+xx)/2;labelY=y===yy?y-12:(y+yy)/2-12;
    // A label longer than its gap would hide under the nodes; lift it above them.
    if(y===yy&&xx-x<6*e.label.length&&e.label.length>4)labelY=Math.min(a.y,b.y)-6;}
-  const c=e.kind==='definition'?'#148c80':e.kind==='candidate'?'#a66c3d':e.kind==='diagnostic'?'#8a949c':'#497e9d';
+  const c=`var(--edge-${['definition','candidate','diagnostic'].includes(e.kind)?e.kind:'fit'})`;
   const dash=e.kind==='candidate'?'stroke-dasharray="7 5"':e.kind==='diagnostic'?'stroke-dasharray="2 5"':'';
-  s+=`<g role="button" tabindex="0" data-key="${esc(e.id)}" data-type="edge" aria-label="${esc(e.label+' '+a.title+' to '+b.title)}" opacity="${active?1:.16}"><path d="${d}" fill="none" stroke="transparent" stroke-width="22"/><path d="${d}" fill="none" stroke="${c}" stroke-width="2.5" ${dash} marker-end="url(#lineage-arrow)"/><text x="${labelX}" y="${labelY}" text-anchor="${stacked?'start':'middle'}" font-size="11" fill="${c}">${esc(e.label)}</text><title>${esc(e.label)}</title></g>`;
+  s+=`<g role="button" tabindex="0" data-key="${esc(e.id)}" data-type="edge" aria-label="${esc(e.label+' '+a.title+' to '+b.title)}" opacity="${active?1:.16}"><path d="${d}" fill="none" stroke="transparent" stroke-width="22"/><path d="${d}" fill="none" style="stroke:${c}" stroke-width="2.5" ${dash} marker-end="url(#lineage-arrow)"/><text x="${labelX}" y="${labelY}" text-anchor="${stacked?'start':'middle'}" font-size="11" style="fill:${c}">${esc(e.label)}</text><title>${esc(e.label)}</title></g>`;
  }
- for(const n of lineage.nodes){const active=!chosen||chosen.includes(n.id),c=n.kind==='unit'?'#d9f3ed':n.kind==='model'?'#e8e6f7':'#fff';
- s+=`<g role="button" tabindex="0" data-key="${esc(n.id)}" data-type="node" aria-label="${esc(n.title)}" opacity="${active?1:.2}"><rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="14" fill="${c}" stroke="${active&&chosen?'#1c658e':'#bdccd7'}" stroke-width="${active&&chosen?3:1.5}"/><text x="${n.x+12}" y="${n.y+25}" font-size="16" fill="#213b50">${esc(n.title)}</text><text x="${n.x+12}" y="${n.y+45}" font-size="12" fill="#506676">${esc(n.subtitle)}</text>${n.kind==='model'?`<text x="${n.x+12}" y="${n.y+76}" font-size="11" fill="#60567d">Shared anchors · conditional calibration</text>`:''}</g>`;}
+ for(const n of lineage.nodes){const active=!chosen||chosen.includes(n.id),c=`var(--lineage-${n.kind==='unit'?'unit':n.kind==='model'?'model':'node'})`;
+ s+=`<g role="button" tabindex="0" data-key="${esc(n.id)}" data-type="node" aria-label="${esc(n.title)}" opacity="${active?1:.2}"><rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="14" style="fill:${c};stroke:var(--${active&&chosen?'lineage-active':'panel-border'})" stroke-width="${active&&chosen?3:1.5}"/><text x="${n.x+12}" y="${n.y+25}" font-size="16" style="fill:var(--lineage-title)">${esc(n.title)}</text><text x="${n.x+12}" y="${n.y+45}" font-size="12" style="fill:var(--lineage-subtitle)">${esc(n.subtitle)}</text>${n.kind==='model'?`<text x="${n.x+12}" y="${n.y+76}" font-size="11" style="fill:var(--lineage-model-text)">Shared anchors · conditional calibration</text>`:''}</g>`;}
  svg.innerHTML=s;
 }
 function lineageStats(edges){return edges.map(e=>{
@@ -467,10 +467,10 @@ function drawFit(){
  const lo=Math.log10(Math.min(...values.map(r=>r[0])))-.08,hi=Math.log10(Math.max(...values.map(r=>r[0])))+.08;
  const yl=Math.log10(Math.min(...values.map(r=>r[1])))-.08,yh=Math.log10(Math.max(...values.map(r=>r[1])))+.08;
  const xx=v=>75+(Math.log10(v)-lo)/(hi-lo)*580,yy=v=>275-(Math.log10(v)-yl)/(yh-yl)*245;
- let out='';for(let i=0;i<4;i++){const x=10**(lo+(hi-lo)*i/3),y=10**(yl+(yh-yl)*i/3);out+=`<path d="M${xx(x)} 30V275M75 ${yy(y)}H655" stroke="#ddd"/><text x="${xx(x)}" y="295" text-anchor="middle">${x.toPrecision(3)}</text><text x="68" y="${yy(y)}" text-anchor="end">${y.toPrecision(3)}</text>`;}
+ let out='';for(let i=0;i<4;i++){const x=10**(lo+(hi-lo)*i/3),y=10**(yl+(yh-yl)*i/3);out+=`<path d="M${xx(x)} 30V275M75 ${yy(y)}H655" style="stroke:var(--grid)"/><text x="${xx(x)}" y="295" text-anchor="middle">${x.toPrecision(3)}</text><text x="68" y="${yy(y)}" text-anchor="end">${y.toPrecision(3)}</text>`;}
  out+='<defs><clipPath id="fit-clip"><rect x="75" y="30" width="580" height="245"/></clipPath></defs><g clip-path="url(#fit-clip)">';
- if(fit){const a=10**lo,b=10**hi,k=fit.factor,l=fit.low,h=fit.high;out+=`<path d="M${xx(a)} ${yy(a*l)}L${xx(b)} ${yy(b*l)}L${xx(b)} ${yy(b*h)}L${xx(a)} ${yy(a*h)}Z" fill="#207ca3" opacity=".15"/><path d="M${xx(a)} ${yy(a*k)}L${xx(b)} ${yy(b*k)}" stroke="#207ca3"/>`;}
- out+=values.map((v,i)=>`<circle cx="${xx(v[0])}" cy="${yy(v[1])}" r="3" fill="#207ca3" opacity=".55"><title>${esc(rows[i].system)}</title></circle>`).join('');
+ if(fit){const a=10**lo,b=10**hi,k=fit.factor,l=fit.low,h=fit.high;out+=`<path d="M${xx(a)} ${yy(a*l)}L${xx(b)} ${yy(b*l)}L${xx(b)} ${yy(b*h)}L${xx(a)} ${yy(a*h)}Z" style="fill:var(--accent)" opacity=".15"/><path d="M${xx(a)} ${yy(a*k)}L${xx(b)} ${yy(b*k)}" style="stroke:var(--accent)"/>`;}
+ out+=values.map((v,i)=>`<circle cx="${xx(v[0])}" cy="${yy(v[1])}" r="3" style="fill:var(--accent)" opacity=".55"><title>${esc(rows[i].system)}</title></circle>`).join('');
  svg.innerHTML=out+`</g><text x="350" y="324" text-anchor="middle">${esc(xlabel)} (log scale)</text><text x="75" y="18">${esc(ylabel)} (log scale)</text>`;
 }
 for(const id of ['fit-edge','fit-mode'])document.querySelector('#'+id).addEventListener('change',drawFit);

@@ -110,19 +110,19 @@ def calculator_markup():
 
 
 STYLE = """
-#calculator{margin:24px 0;padding:20px;border:1px solid #bdccd7;border-radius:12px;background:#f4f6f8;container-type:inline-size}
+#calculator{margin:24px 0;padding:20px;border:1px solid var(--panel-border);border-radius:12px;background:var(--panel);container-type:inline-size}
 #calculator h2{margin-top:0}#calc-form{max-width:64rem}
 .calc-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px;align-items:start}
 #calculator label{display:grid;gap:6px;min-width:0}
 #calculator input,#calculator select{display:block;width:100%;min-width:0;max-width:100%;box-sizing:border-box}
-#calc-kind{display:flex;flex-wrap:wrap;gap:12px 24px;margin:16px 0;padding:12px;border:1px solid #bdccd7;border-radius:8px}
+#calc-kind{display:flex;flex-wrap:wrap;gap:12px 24px;margin:16px 0;padding:12px;border:1px solid var(--panel-border);border-radius:8px}
 #calc-kind label{display:flex;align-items:center;gap:8px;cursor:pointer}
-#calc-kind input[type="radio"]{width:auto;flex:none;margin:0;accent-color:#207ca3}
+#calc-kind input[type="radio"]{width:auto;flex:none;margin:0;accent-color:var(--accent)}
 #calculator small{display:block;margin-top:6px}
 .calc-actions{display:flex;flex-wrap:wrap;gap:10px}
 @container (max-width:36rem){.calc-fields{grid-template-columns:minmax(0,1fr)}}
 @supports not (container-type:inline-size){@media(max-width:660px){.calc-fields{grid-template-columns:minmax(0,1fr)}}}
-#calc-result{margin-top:16px;padding:12px;background:white;border:1px solid #bdccd7}
+#calc-result{margin-top:16px;padding:12px;background:var(--card);border:1px solid var(--panel-border)}
 #calc-result:empty{display:none}
 """
 
@@ -194,15 +194,15 @@ function predictionMarkup(){
  return '<g id="prediction-markers" clip-path="url(#plot-region)" pointer-events="none">'+userPredictions.map((r,i)=>{
   if(r.year<viewMin||r.year>viewMax)return '';
   const x=X(r.year),y=Y(r.values[0]),right=x>725,tx=x+(right?-25:25);
-  const ty=Math.max(62,Math.min(651,y-25+i*48)),anchor=right?'end':'start',c='#b34400';
+  const ty=Math.max(62,Math.min(651,y-25+i*48)),anchor=right?'end':'start',c='var(--prediction)';
   const label='You are here'+(userPredictions.length>1?' · '+r.label:'');
   return `<g role="img" aria-label="${esc(label+' · '+r.year+' · '+fmt(r.values[0],r.quantity))}">
-  <path d="M${x} ${Y(r.values[1])}V${Y(r.values[2])}" stroke="${c}" stroke-width="9" opacity=".2"/>
-  <circle cx="${x}" cy="${y}" r="17" fill="white" fill-opacity=".85" stroke="${c}" stroke-width="2"/>
-  <circle cx="${x}" cy="${y}" r="9" fill="${c}" stroke="white" stroke-width="2"/>
-  <path d="M${x+(right?-16:16)} ${y}L${tx} ${ty+5}" stroke="${c}" stroke-width="2"/>
-  <text x="${tx}" y="${ty}" text-anchor="${anchor}" fill="${c}" font-size="18" font-weight="700" stroke="white" stroke-width="5" paint-order="stroke">${esc(label)}</text>
-  <text x="${tx}" y="${ty+21}" text-anchor="${anchor}" fill="${c}" font-size="15" stroke="white" stroke-width="4" paint-order="stroke">${r.year} · ${fmt(r.values[0],r.quantity)}</text></g>`;
+  <path d="M${x} ${Y(r.values[1])}V${Y(r.values[2])}" style="stroke:${c}" stroke-width="9" opacity=".2"/>
+  <circle cx="${x}" cy="${y}" r="17" style="fill:var(--halo);stroke:${c}" fill-opacity=".85" stroke-width="2"/>
+  <circle cx="${x}" cy="${y}" r="9" style="fill:${c};stroke:var(--halo)" stroke-width="2"/>
+  <path d="M${x+(right?-16:16)} ${y}L${tx} ${ty+5}" style="stroke:${c}" stroke-width="2"/>
+  <text x="${tx}" y="${ty}" text-anchor="${anchor}" style="fill:${c};stroke:var(--halo)" font-size="18" font-weight="700" stroke-width="5" paint-order="stroke">${esc(label)}</text>
+  <text x="${tx}" y="${ty+21}" text-anchor="${anchor}" style="fill:${c};stroke:var(--halo)" font-size="15" stroke-width="4" paint-order="stroke">${r.year} · ${fmt(r.values[0],r.quantity)}</text></g>`;
  }).join('')+'</g>';
 }
 function calcQuantile(values,p){

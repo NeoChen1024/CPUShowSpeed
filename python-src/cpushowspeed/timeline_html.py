@@ -6,7 +6,7 @@ import re
 from html import escape
 from pathlib import Path
 
-from cpushowspeed import timeline_calculator
+from cpushowspeed import timeline_calculator, timeline_theme
 from cpushowspeed.timeline_lineage import MARKUP, SCRIPT, STYLE
 from cpushowspeed.timeline_storage import WebExport, browser_worker_source
 
@@ -43,6 +43,9 @@ def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
     data = export.table("timeline", display)
     page = (
         PAGE.replace("__TITLE__", escape(title))
+        .replace("__THEME_STYLE__", timeline_theme.stylesheet())
+        .replace("__THEME_INIT__", timeline_theme.INIT_SCRIPT)
+        .replace("__THEME_PICKER__", timeline_theme.picker())
         .replace("__LINEAGE_STYLE__", STYLE)
         .replace("__LINEAGE_MARKUP__", MARKUP)
         .replace("__LINEAGE_SCRIPT__", SCRIPT.replace("const lineage=__LINEAGE_DATA__;", ""))
@@ -52,7 +55,8 @@ def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
         .replace("__BROWSING_TOP__", list_browsing())
         .replace("__BROWSING_BOTTOM__", list_browsing("-bottom"))
     )
-    start, end = page.index("<script>"), page.index("</script>")
+    start = page.index("<script>")
+    end = page.index("</script>", start)
     script = page[start + len("<script>") : end]
     main = "function mountTimeline({data,lineage,calibration}) {\n" + script + "\n}\n"
     main += "// BOOTSTRAP\n" + (Path(__file__).parent / "web/bootstrap.js").read_text()
@@ -77,25 +81,28 @@ def render_html(rows, output, title=TITLE, lineage=None, calculator=None):
 PAGE = r"""<!doctype html>
 <html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>__TITLE__</title>
+__THEME_INIT__
 <style>
-body{font:15px system-ui;margin:24px;color:#223} input,select,button{font:inherit;padding:7px}
-input{width:min(36em,85vw)}button{cursor:pointer}svg{width:100%;background:#fafbfd;display:block}
+__THEME_STYLE__
+body{font:15px system-ui;margin:24px;color:var(--fg);background:var(--bg)}a{color:var(--link)}input,select,button{font:inherit;padding:7px}
+input{width:min(36em,85vw)}button{cursor:pointer}svg{width:100%;background:var(--plot-bg);display:block}svg text{fill:var(--fg)}
 .timeline-chart{width:100%;max-width:min(1440px,calc((75vh - 80px)*1.842105));margin:0 auto}
 @supports(height:1svh){.timeline-chart{max-width:min(1440px,calc((75svh - 80px)*1.842105))}}
 #plot{height:auto;aspect-ratio:1400/760}#overview{height:80px;touch-action:none;user-select:none;cursor:crosshair}
 #overview [data-brush="move"]{cursor:grab}#overview [data-brush="left"],#overview [data-brush="right"]{cursor:ew-resize}
-#overview [role="slider"]:focus{outline:none;stroke:#e78a19;stroke-width:3}
-.chart{overflow:hidden}td,th{padding:7px;text-align:left;border-bottom:1px solid #ddd;vertical-align:top}
-.score-input{display:block;margin:3px 0;overflow-wrap:anywhere}.score-input strong{font-weight:500;color:#223}
-table{border-collapse:collapse;width:100%}small,.hint{color:#556}.table-tools{margin:20px 0 10px}
+#overview [role="slider"]:focus{outline:none;stroke:var(--focus);stroke-width:3}
+.chart{overflow:hidden}td,th{padding:7px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+.score-input{display:block;margin:3px 0;overflow-wrap:anywhere}.score-input strong{font-weight:500;color:var(--fg)}
+table{border-collapse:collapse;width:100%}small,.hint{color:var(--muted)}.table-tools{margin:20px 0 10px}
 #tip{position:fixed;z-index:10;width:340px;max-width:calc(100vw - 36px);max-height:calc(100vh - 24px);
- overflow:auto;background:#fff;border:2px solid #207ca3;border-radius:8px;padding:12px;box-shadow:0 4px 24px #2233;
+ overflow:auto;background:var(--card);border:2px solid var(--accent);border-radius:8px;padding:12px;box-shadow:0 4px 24px var(--shadow);
  pointer-events:none;overflow-wrap:anywhere;font-size:14px;box-sizing:border-box}
 #tip.pinned{pointer-events:auto}#tip strong{display:block}#tip p{margin:7px 0}#tip-controls{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 #tip:not(.pinned) #tip-controls{display:none}[hidden]{display:none!important}#plot{touch-action:pan-y}
 __LINEAGE_STYLE__
 __CALCULATOR_STYLE__
 </style>
+__THEME_PICKER__
 <h1>__TITLE__</h1>
 <p id="load-status" role="status">Loading timeline…</p>
 <noscript>JavaScript is required to view the timeline.</noscript>
@@ -164,7 +171,7 @@ const dated=data.filter(r=>r.year);let ymin=Math.floor(Math.log10(data.reduce((m
 const originalBounds={xmin,xmax,ymin,ymax};let userPredictions=[];
 let viewMin=xmin,viewMax=xmax,page=0;const PAGE_SIZE=200;
 const X=x=>90+(x-viewMin)/(viewMax-viewMin)*1270,Y=y=>680-(Math.log10(y)-ymin)/(ymax-ymin)*640;
-const palette=['#207ca3','#bd5934','#397947','#7c57a2','#ad7130','#ca4779','#4064ac','#537b79'];
+const palette=[0,1,2,3,4,5,6,7].map(i=>`var(--route-${i})`);
 const routeNames=[...new Set(data.map(r=>r.route))],enabled=new Set(routeNames);
 const color=r=>palette[routeNames.indexOf(r.route)%palette.length];
 const modeOf=r=>r.mode||'peak_proxy';
@@ -249,10 +256,10 @@ function resourceDescription(r){
 function showSelection(){if(!candidates.length){clearSelection();return;}
  const p=candidates[active],r=p.r,c=color(r),m=plot.getScreenCTM(),scale=Math.hypot(m.a,m.b)||1;
  const related=relatives(r),others=[...sameSystem(r)].sort((a,b)=>(a.route===r.route)-(b.route===r.route)),visible=[r,...related].map(q=>visiblePoints.get(q.record_id)).filter(Boolean);
- const connections=visible.length>1?`<path d="${visible.map((q,i)=>(i?'L':'M')+q.x+' '+q.y).join(' ')}" stroke="${c}" fill="none" opacity=".7"/>`:'';
- document.querySelector('#highlight').innerHTML=connections+visible.map(q=>`<path d="${spans(q.r)}" stroke="${c}" opacity=".35"/><path d="${marker(q,5)}" fill="${c}"/>`).join('')+`<path d="${spans(r)}" stroke="${c}" opacity=".75" stroke-width="3" vector-effect="non-scaling-stroke"/>
- <circle cx="${p.x}" cy="${p.y}" r="${10/scale}" fill="white" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke"/>
- <circle cx="${p.x}" cy="${p.y}" r="${6/scale}" fill="${c}"/>`;
+ const connections=visible.length>1?`<path d="${visible.map((q,i)=>(i?'L':'M')+q.x+' '+q.y).join(' ')}" style="stroke:${c}" fill="none" opacity=".7"/>`:'';
+ document.querySelector('#highlight').innerHTML=connections+visible.map(q=>`<path d="${spans(q.r)}" style="stroke:${c}" opacity=".35"/><path d="${marker(q,5)}" style="fill:${c}"/>`).join('')+`<path d="${spans(r)}" style="stroke:${c}" opacity=".75" stroke-width="3" vector-effect="non-scaling-stroke"/>
+ <circle cx="${p.x}" cy="${p.y}" r="${10/scale}" style="fill:var(--halo);stroke:${c}" stroke-width="2" vector-effect="non-scaling-stroke"/>
+ <circle cx="${p.x}" cy="${p.y}" r="${6/scale}" style="fill:${c}"/>`;
  tip.hidden=false;tip.classList.toggle('pinned',pinned);tip.style.borderColor=c;
  document.querySelector('#tip-content').innerHTML=`<strong>${esc(r.system)}</strong>
  <p>${esc(r.cpu||'CPU unspecified')} · ${esc(r.route)}</p><p>${esc(configurationDetails(r))}</p>
@@ -310,23 +317,23 @@ function draw(){clearSelection();const query=document.querySelector('#q').value.
  filtered=cohort.filter(r=>!r.year||(r.year>=viewMin&&r.year<=viewMax));
  const sourceCount=new Set(filtered.flatMap(r=>(r.source_record_ids||[r.configuration_id]).map(id=>(r.generation||r.route)+':'+id))).size;
  document.querySelector('#count').textContent=`${sourceCount} source records · ${filtered.filter(r=>quantityOf(r)==='rate').length} rate · ${filtered.filter(r=>quantityOf(r)==='speed').length} speed · ${filtered.length} displayed points`;
- let s='<defs><clipPath id="plot-region"><rect x="90" y="40" width="1270" height="640"/></clipPath></defs>';for(let y=ymin;y<=ymax;y++){let p=Y(10**y);s+=`<path d="M90 ${p}H1360" stroke="#dde3e8"/><text x="8" y="${p+5}">10^${y} VAXen</text>`;}
- const step=viewMax-viewMin<12?1:5;for(let x=Math.ceil(viewMin/step)*step;x<=viewMax;x+=step)s+=`<path d="M${X(x)} 40V680" stroke="#eee"/><text x="${X(x)-17}" y="710">${x}</text>`;
+ let s='<defs><clipPath id="plot-region"><rect x="90" y="40" width="1270" height="640"/></clipPath></defs>';for(let y=ymin;y<=ymax;y++){let p=Y(10**y);s+=`<path d="M90 ${p}H1360" style="stroke:var(--grid)"/><text x="8" y="${p+5}">10^${y} VAXen</text>`;}
+ const step=viewMax-viewMin<12?1:5;for(let x=Math.ceil(viewMin/step)*step;x<=viewMax;x+=step)s+=`<path d="M${X(x)} 40V680" style="stroke:var(--grid-minor)"/><text x="${X(x)-17}" y="710">${x}</text>`;
  points=filtered.filter(r=>r.year).map(r=>({r,x:X(r.year),y:Y(r.vaxen)}));
  visiblePoints=new Map(points.map(p=>[p.r.record_id,p]));
  // Batch vector geometry per route: all observations retained, without thousands of DOM circles.
  for(const route of routeNames){const ps=points.filter(p=>p.r.route===route);if(!ps.length)continue;const c=color(ps[0].r);
  const intervals=ps.map(p=>spans(p.r)).join(' '),marks=ps.map(p=>marker(p,3)).join(' ');
- s+=`<g clip-path="url(#plot-region)"><path d="${intervals}" stroke="${c}" fill="none" opacity=".12" stroke-width="2"/><path d="${marks}" fill="${c}" opacity=".45"/></g>`;}
+ s+=`<g clip-path="url(#plot-region)"><path d="${intervals}" style="stroke:${c};opacity:var(--interval-alpha)" fill="none" stroke-width="2"/><path d="${marks}" style="fill:${c};opacity:var(--point-alpha)"/></g>`;}
  plot.innerHTML=s+'<g id="highlight" clip-path="url(#plot-region)" pointer-events="none"></g>'+predictionMarkup();indexPoints();renderTable();
  document.querySelector('#range-label').textContent=`${viewMin.toFixed(1)}–${viewMax.toFixed(1)}`;
  const bins=new Map();for(const r of cohort)if(r.year)bins.set(r.year,(bins.get(r.year)||0)+1);
  const maxCount=Math.max(0,...bins.values()),left=overviewX(viewMin),right=overviewX(viewMax);
  let overview=`<text x="90" y="13" font-size="12">Points/year · max ${maxCount} · √ height</text>`;
- for(const [yr,n] of bins)overview+=`<path d="M${overviewX(yr)} 65V${65-42*Math.sqrt(n/Math.max(1,maxCount))}" stroke="#829bad" stroke-width="5" pointer-events="none"/>`;
- overview+=`<rect x="90" y="18" width="${left-90}" height="49" fill="#ccd3da" opacity=".5" pointer-events="none"/>
- <rect x="${right}" y="18" width="${1360-right}" height="49" fill="#ccd3da" opacity=".5" pointer-events="none"/>
- <rect data-brush="move" x="${left}" y="18" width="${right-left}" height="49" fill="#207ca318" stroke="#207ca3"/>
+ for(const [yr,n] of bins)overview+=`<path d="M${overviewX(yr)} 65V${65-42*Math.sqrt(n/Math.max(1,maxCount))}" style="stroke:var(--overview-bar)" stroke-width="5" pointer-events="none"/>`;
+ overview+=`<rect x="90" y="18" width="${left-90}" height="49" style="fill:var(--overview-mask)" pointer-events="none"/>
+ <rect x="${right}" y="18" width="${1360-right}" height="49" style="fill:var(--overview-mask)" pointer-events="none"/>
+ <rect data-brush="move" x="${left}" y="18" width="${right-left}" height="49" style="fill:var(--accent-wash);stroke:var(--accent)"/>
  <text x="90" y="84" font-size="13">${xmin}</text><text x="1360" y="84" text-anchor="end" font-size="13">${xmax}</text>`;
  // Keep interactive handles stable across redraws so keyboard focus and pointer capture survive.
  document.querySelector('#overview-content').innerHTML=overview;
@@ -349,7 +356,7 @@ const overviewX=x=>90+(x-xmin)/(xmax-xmin)*1270;
 function overviewYear(e){const local=new DOMPoint(e.clientX,e.clientY).matrixTransform(overviewPlot.getScreenCTM().inverse());
  return Math.max(xmin,Math.min(xmax,xmin+(local.x-90)/1270*(xmax-xmin)));}
 let brush=null;
-overviewPlot.innerHTML='<g id="overview-content"></g><rect id="brush-left" data-brush="left" role="slider" aria-label="Start year" tabindex="0" y="17" width="14" height="51" rx="3" fill="#fff" fill-opacity=".9" stroke="#207ca3"/><rect id="brush-right" data-brush="right" role="slider" aria-label="End year" tabindex="0" y="17" width="14" height="51" rx="3" fill="#fff" fill-opacity=".9" stroke="#207ca3"/>';
+overviewPlot.innerHTML='<g id="overview-content"></g><rect id="brush-left" data-brush="left" role="slider" aria-label="Start year" tabindex="0" y="17" width="14" height="51" rx="3" style="fill:var(--card);stroke:var(--accent)" fill-opacity=".9"/><rect id="brush-right" data-brush="right" role="slider" aria-label="End year" tabindex="0" y="17" width="14" height="51" rx="3" style="fill:var(--card);stroke:var(--accent)" fill-opacity=".9"/>';
 overviewPlot.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();const at=overviewYear(e);
  brush={kind:e.target.dataset.brush||'new',at,lo:viewMin,hi:viewMax};overviewPlot.setPointerCapture(e.pointerId);});
 overviewPlot.addEventListener('pointermove',e=>{if(!brush)return;const at=overviewYear(e);

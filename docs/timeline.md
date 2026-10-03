@@ -365,8 +365,18 @@ of full browser visual interaction verification.
 
 ### Copy and color hierarchy
 
-Use solid backgrounds throughout: white page/cards, a light-gray pathway panel,
-and pale purple/teal model/unit nodes. Avoid gradients. The unit definition and
+Use solid backgrounds throughout: page and cards, a pathway panel distinct from
+the page, and tinted model/unit nodes. Avoid gradients.
+
+### Themes (2026-10-03)
+
+Every colour the page draws reads a CSS custom property defined in
+`timeline_theme.py`; SVG markup uses inline `style` so the properties apply.
+**Theme** in the top-right picker offers Auto (the browser's light/dark
+preference), Light and Dark. A chosen theme is stored in `localStorage` under
+`cpushowspeed-theme` and applied by a small head script before the first paint;
+Auto clears it. Changing the theme or the system preference fires a `themechange`
+event for drawing code that cannot read CSS directly. The unit definition and
 calibration-CI explanation live inside **How scores become VAXen**, above the
 graph. The VAXen node holds plural, SI-prefix and speed-versus-rate details.
 The main page keeps short scope, chronology and interaction hints; individual
