@@ -103,6 +103,9 @@ flowchart TD
     classical_sparse_network["classical-sparse-network"]
     int92_speed_vaxen --> classical_sparse_network
     int89_speed_vaxen --> classical_sparse_network
+    classical_power_law_sensitivity["classical-power-law-sensitivity"]
+    classical_sparse_network --> classical_power_law_sensitivity
+    int89_speed_vaxen --> classical_power_law_sensitivity
     instruction_mix_joint_network["instruction-mix-joint-network"]
     classical_sparse_network --> instruction_mix_joint_network
     int92_speed_vaxen --> instruction_mix_joint_network
@@ -153,6 +156,7 @@ flowchart TD
 | [classical-joint](../research/spec89-bridge.md) | composite → speed-vaxen | joint-fit; primary; implemented-conditional | classical-composite, int92-speed-vaxen, int89-speed-vaxen |
 | [timing-reconstruction](../docs/methods.md) | gibson, adp, process-control, trace-timing → vaxen | planned; planned; planned | none |
 | [classical-sparse-network](../research/classic-network-fitting.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → speed-vaxen | joint-fit; primary; implemented-conditional | int92-speed-vaxen, int89-speed-vaxen |
+| [classical-power-law-sensitivity](../research/classic-power-law-sensitivity.md) | dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → speed-vaxen | empirical-fit; diagnostic; implemented-conditional | classical-sparse-network, int89-speed-vaxen |
 | [instruction-mix-joint-network](../research/instruction-mix-network.md) | gibson, adp, dhry-11, dhry-21, whet-native, whet-sp, whet-dp, linpack-100 → speed-vaxen | joint-fit; primary; implemented-conditional | classical-sparse-network, int92-speed-vaxen, int89-speed-vaxen |
 | [int92-speed-vaxen](../research/spec-speed-chain.md) | int92 → speed-vaxen | definition; primary; defined | none |
 | [speed-95-to-92](../research/spec-speed-chain.md) | speed-95 → int92 | empirical-fit; primary; implemented-conditional | none |
@@ -261,6 +265,7 @@ analysis from evidence, diagnostics and retired work.
 | [Maintenance inventory snapshot](../research/data/maintenance/README.md) | diagnostic | current |
 | [Calibration cleanup and unified validation policy](../research/calibration-cleanup.md) | guide | current |
 | [Sparse joint calibration of individual classical benchmarks](../research/classic-network-fitting.md) | primary | current |
+| [Power-law sensitivity of classical calibrations](../research/classic-power-law-sensitivity.md) | diagnostic | current |
 | [Predict SPEC92 integer rate from classical scores](../docs/classical-prediction.md) | guide | current |
 | [Classical and SPEC89 historical VAXen timeline](../research/historical-vaxen-timeline.md) | archive | retired |
 | [Hardware-year evidence: bitsavers discovery and first review](../research/hardware-year-evidence.md) | evidence | current |

@@ -46,6 +46,8 @@ scaling and single/two-family/full-availability holdouts. The
 [mix network](instruction-mix-network.md) adds Gibson/ADP ratings to it. Both
 target speed-VAXen, which the [integer-speed chain](spec-speed-chain.md) extends
 from SPECint92 to CPU2026 in parallel with the rate chain.
+The [power-law sensitivity report](classic-power-law-sensitivity.md) tests the
+network's proportional form against free and VAX-11/780-anchored power laws.
 
 ## Historical analyses and storage
 

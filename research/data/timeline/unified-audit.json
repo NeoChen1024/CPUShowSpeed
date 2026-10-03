@@ -2,9 +2,9 @@
   "schema_version": "vaxen-timeline-v4",
   "database": "data/derived/schema/cpushowspeed.sqlite",
   "inputs_sha256": "27876859e421ef25c70bdc3f22005850b0172ff29ba16569f5b7d8ae4a5ae8a4",
-  "web_manifest_sha256": "9f18d148a979cfbcc2f7396a1b07700f8f19ab109700971c7fb27ea7029bd374",
+  "web_manifest_sha256": "f65495d12e6b7d09973ab443348d245c11106ca0b28d2442daaf1e91abc5ee83",
   "lineage_inputs_sha256": {
-    "research/model-registry.json": "1dcdd4cdf4464cbf2d492c071b8bc9c7225b2cb5844be6ad87af5bef16dbc110",
+    "research/model-registry.json": "d0ca64830fbfad27b9f009f79b1a81d7611fb3f35294c1bbac655bdf53e5f6f6",
     "research/data/spec/fitting/integer-rate-edge-intervals.csv": "b1aedb8a3a56c40a42bfaef159f0092f8b8490fc2e933d88ccf28df6b561bd81",
     "research/data/spec/fitting/integer-speed-factors.csv": "5b559e9f43142aa8e7ca2783f4991dd320a72cd1e44e693087dc758d384f213d",
     "data/derived/spec/fitting/integer-speed-generation-pairs.csv": "aef952e4008c47c3c8667a6540ac014ee31fb10b83f472450a31627d079cd887",

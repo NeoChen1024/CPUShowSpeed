@@ -1362,6 +1362,43 @@
       "prediction_guide": "docs/classical-prediction.md"
     },
     {
+      "id": "classical-power-law-sensitivity",
+      "title": "Single-metric power-law sensitivity (diagnostic)",
+      "track": "classical",
+      "input_metrics": [
+        "dhry-11",
+        "dhry-21",
+        "whet-native",
+        "whet-sp",
+        "whet-dp",
+        "linpack-100"
+      ],
+      "target_metric": "speed-vaxen",
+      "relationship": "empirical-fit",
+      "formula": "log y = a + b*log x (+ c*(year-1990)); proportional, free OLS/Deming, VAX-11/780-anchored",
+      "variants": [
+        "linear_clock; with_spec89 anchors"
+      ],
+      "role": "diagnostic",
+      "status": "implemented-conditional",
+      "owner": "research/classic-power-law-sensitivity.md",
+      "dataset_ids": [
+        "schema-database"
+      ],
+      "depends_on": [
+        "classical-sparse-network",
+        "int89-speed-vaxen"
+      ],
+      "shared_evidence": "Reuses the network's anchored nodes; never chained into an estimate",
+      "command": "cpushowspeed classic power-law-sensitivity",
+      "outputs": [
+        {
+          "path": "research/data/classic/power-law-sensitivity.csv",
+          "optional": false
+        }
+      ]
+    },
+    {
       "id": "instruction-mix-joint-network",
       "title": "Conditional Gibson/ADP joint classical-speed calibration",
       "track": "classical",
@@ -2251,6 +2288,13 @@
       "role": "primary",
       "status": "current",
       "purpose": "Per-benchmark coefficients, missing-data coupling and qualified clock scaling"
+    },
+    {
+      "path": "research/classic-power-law-sensitivity.md",
+      "title": "Power-law sensitivity of classical calibrations",
+      "role": "diagnostic",
+      "status": "current",
+      "purpose": "Whether speed-VAXen is proportional to classical scores; VAX-11/780 validation and era confounding"
     },
     {
       "path": "docs/classical-prediction.md",

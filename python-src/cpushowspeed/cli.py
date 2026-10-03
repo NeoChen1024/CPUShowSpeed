@@ -11,6 +11,7 @@ from cpushowspeed.classic_mix import mix_inventory
 from cpushowspeed.classic_network import network_fit
 from cpushowspeed.classic_overlap import overlap_spec
 from cpushowspeed.classic_pdf import extract_pdf_tables
+from cpushowspeed.classic_power_law import power_law_sensitivity
 from cpushowspeed.classic_predict import predict_speed
 from cpushowspeed.classical_fit import composite_fit, spec89_fit
 from cpushowspeed.curated import data
@@ -78,6 +79,7 @@ classic.add_command(extract_pdf_tables)
 classic.add_command(composite_fit)
 classic.add_command(spec89_fit)
 classic.add_command(network_fit)
+classic.add_command(power_law_sensitivity)
 classic.add_command(mix_network_fit)
 classic.add_command(predict_speed)
 classic.add_command(mix_evidence)

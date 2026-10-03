@@ -182,6 +182,10 @@ families (`linear_clock / with_spec89`):
 | Whetstone + LINPACK families | 24.96% | 28.40% |
 | All available measurements | 21.65% | 26.29% |
 
+The proportional form (exponent 1) is tested against power laws in the
+[power-law sensitivity report](classic-power-law-sensitivity.md): free exponents
+are 0.72–0.96, and the proportional coefficients underpredict the VAX-11/780.
+
 More available workloads do not guarantee a lower error, and the unanchored
 coupling does not uniformly beat the anchored-only control on this population.
 All combinations remain; the table is not a residual-based selection rule.
