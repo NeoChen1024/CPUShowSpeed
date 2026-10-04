@@ -7,13 +7,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import blake3
-from cpushowspeed.classic_overlap import (
-    full_name,
-    model_key,
-    parse_dhrystone,
-    parse_linpack_pdf,
-    parse_whetstone,
-)
+from cpushowspeed.classical.source_parsers import full_name, model_key, parse_dhrystone, parse_linpack_pdf, parse_whetstone
 
 
 def source(text, index):
@@ -55,7 +49,7 @@ class OverlapTests(unittest.TestCase):
                 "blob_path": str(p),
                 "blake3": blake3.blake3(p.read_bytes()).hexdigest(),
             }
-            with patch("cpushowspeed.classic_overlap.subprocess.run", return_value=SimpleNamespace(stdout=text.encode())):
+            with patch("cpushowspeed.classical.source_parsers.subprocess.run", return_value=SimpleNamespace(stdout=text.encode())):
                 rows, rejected = parse_linpack_pdf(meta)
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0]["locator"], "pdf:page:2:line:2")

@@ -4,7 +4,7 @@ import json
 import sqlite3
 import unittest
 
-from cpushowspeed.spec_rate_fit import GENERATIONS, _chain, _fit_edges, collect_rate
+from cpushowspeed.spec.rate_fit import GENERATIONS, _chain, _fit_edges, collect_rate
 
 
 def _database(processors: dict[str, tuple]) -> sqlite3.Connection:

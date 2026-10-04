@@ -6,13 +6,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from cpushowspeed.classic import (
-    extract_html,
-    fetch_source,
-    immutable_write,
-    load_sources,
-    normalize_url,
-)
+from cpushowspeed.classical.collect import extract_html, fetch_source, immutable_write, load_sources, normalize_url
 
 
 class ClassicTests(unittest.TestCase):
@@ -56,13 +50,13 @@ class ClassicTests(unittest.TestCase):
 
         source = {"source_id": "example", "url": "http://example.org/", "lineage": "one"}
         with tempfile.TemporaryDirectory() as tmp:
-            with patch("cpushowspeed.classic.urlopen", return_value=Response(b"abc")):
+            with patch("cpushowspeed.classical.collect.urlopen", return_value=Response(b"abc")):
                 r = fetch_source(source, Path(tmp), 2, 3)
             self.assertEqual(r["status"], "downloaded")
             self.assertEqual(Path(r["blob_path"]).read_bytes(), b"abc")
-            with patch("cpushowspeed.classic.urlopen", return_value=Response(b"abcd")):
+            with patch("cpushowspeed.classical.collect.urlopen", return_value=Response(b"abcd")):
                 self.assertEqual(fetch_source(source, Path(tmp), 2, 3)["status"], "failed")
-            with patch("cpushowspeed.classic.urlopen", side_effect=TimeoutError("offline")):
+            with patch("cpushowspeed.classical.collect.urlopen", side_effect=TimeoutError("offline")):
                 self.assertIn("offline", fetch_source(source, Path(tmp), 2, 3)["error"])
 
 

@@ -3,9 +3,9 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
-from cpushowspeed.benchmark_records import observation, write_jsonl
-from cpushowspeed.execution_policy import agreement
-from cpushowspeed.spec_overlap import Result, _pair
+from cpushowspeed.database.observation_records import observation, write_jsonl
+from cpushowspeed.spec.execution_policy import agreement
+from cpushowspeed.spec.result_pairing import Result, _pair
 
 
 def result(copies, peak=None, track="rate"):

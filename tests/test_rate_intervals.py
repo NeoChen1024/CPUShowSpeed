@@ -3,7 +3,7 @@
 import math
 import unittest
 
-from cpushowspeed.spec_overlap import ratio_statistics
+from cpushowspeed.spec.result_pairing import ratio_statistics
 
 
 class RateIntervalTests(unittest.TestCase):

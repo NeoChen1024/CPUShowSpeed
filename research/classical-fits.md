@@ -36,7 +36,7 @@ count is not independent measurements.
 | Later PC Whetstone / Dhrystone / LINPACK / Livermore | 574 / 121 / 158 / 356 | CPU-only labels |
 | Netlib LINPACK PDF | 1,373 | Table 1 machine-line candidates; wrapped names rejoined for display only |
 
-Pairing is done by the fitters on the built database (`classical_store`): a
+Pairing is done by the fitters on the built database (`classical.result_store`): a
 classical result pairs with a SPEC target only when both resolve to the same
 `system_id`. Names are never compared. Reported clocks are compared (within 1%),
 CPU counts and reference definitions are checked; OS, compiler, cache and FPU

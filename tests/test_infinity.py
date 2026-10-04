@@ -12,16 +12,9 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 
 import click
-from cpushowspeed import infinity
-from cpushowspeed.documents import open_inventory
-from cpushowspeed.ocr import (
-    PagePayload,
-    _convert_page,
-    _prepare_page,
-    _request,
-    _run_ocr,
-    _stage_path,
-)
+from cpushowspeed.documents import infinity
+from cpushowspeed.documents.inventory import open_inventory
+from cpushowspeed.documents.ocr import PagePayload, _convert_page, _prepare_page, _request, _run_ocr, _stage_path
 from PIL import Image
 
 
@@ -116,9 +109,9 @@ class InfinityTests(unittest.TestCase):
                 return ThreadPoolExecutor(max_workers=kwargs["max_workers"])
 
             with (
-                patch("cpushowspeed.ocr.ProcessPoolExecutor", side_effect=pool),
-                patch("cpushowspeed.ocr._render_page", return_value=(png.getvalue(), "", 100, 100)),
-                patch("cpushowspeed.ocr._request", request),
+                patch("cpushowspeed.documents.ocr.ProcessPoolExecutor", side_effect=pool),
+                patch("cpushowspeed.documents.ocr._render_page", return_value=(png.getvalue(), "", 100, 100)),
+                patch("cpushowspeed.documents.ocr._request", request),
             ):
                 asyncio.run(_run_ocr(*args, backend="infinity"))
                 self.assertEqual(request.await_count, 2)

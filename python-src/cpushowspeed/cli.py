@@ -1,31 +1,31 @@
 """Command-line entry point for CPUShowSpeed."""
 
 import click
-from cpushowspeed.bridge import chain
-from cpushowspeed.caption import caption_command
-from cpushowspeed.caption_backfill import backfill_captions_command
-from cpushowspeed.classic import classic
 from cpushowspeed.classic_bench import bench
-from cpushowspeed.classic_mix import mix_inventory
-from cpushowspeed.classic_network import network_fit
-from cpushowspeed.classic_overlap import parse_sources_command
-from cpushowspeed.classic_pdf import extract_pdf_tables
-from cpushowspeed.classic_power_law import power_law_sensitivity
-from cpushowspeed.classical_fit import composite_fit, spec89_fit
-from cpushowspeed.curated import data
-from cpushowspeed.curated_identity import extract_command
-from cpushowspeed.documents import documents
-from cpushowspeed.mix_bridge import mix_bridge
-from cpushowspeed.mix_evidence import mix_evidence
-from cpushowspeed.mix_network import mix_network_fit
-from cpushowspeed.ocr import ocr_command
+from cpushowspeed.classical.collect import classic
+from cpushowspeed.classical.composite_fit import composite_fit, spec89_fit
+from cpushowspeed.classical.network_fit import network_fit
+from cpushowspeed.classical.pdf_tables import extract_pdf_tables
+from cpushowspeed.classical.power_law import power_law_sensitivity
+from cpushowspeed.classical.source_parsers import parse_sources_command
+from cpushowspeed.database.curated_tables import data
+from cpushowspeed.database.processor_identity import extract_command
+from cpushowspeed.documents.caption import caption_command
+from cpushowspeed.documents.caption_backfill import backfill_captions_command
+from cpushowspeed.documents.inventory import documents
+from cpushowspeed.documents.ocr import ocr_command
+from cpushowspeed.documents.table_views import render_tables_command
+from cpushowspeed.mix.classical_fit import mix_bridge
+from cpushowspeed.mix.inventory import mix_inventory
+from cpushowspeed.mix.network_fit import mix_network_fit
+from cpushowspeed.mix.ocr_evidence import mix_evidence
 from cpushowspeed.research_registry import research
-from cpushowspeed.spec import spec
-from cpushowspeed.spec89 import spec89
-from cpushowspeed.spec92_rate import cpu92_rate_parse_command
-from cpushowspeed.spec_field_audit import audit_fields, fetch_resources
-from cpushowspeed.table_migrate import render_tables_command
-from cpushowspeed.unified_timeline import timeline_command
+from cpushowspeed.spec89.cli import spec89
+from cpushowspeed.spec.chain_cli import chain
+from cpushowspeed.spec.collect import spec
+from cpushowspeed.spec.cpu92_rate import cpu92_rate_parse_command
+from cpushowspeed.spec.field_audit import audit_fields, fetch_resources
+from cpushowspeed.timeline.build import timeline_command
 
 
 @click.group()

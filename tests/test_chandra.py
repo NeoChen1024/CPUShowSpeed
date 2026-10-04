@@ -2,8 +2,8 @@
 
 import unittest
 
-from cpushowspeed import chandra
-from cpushowspeed.ocr_backends import compatible_settings, sampling
+from cpushowspeed.documents import chandra
+from cpushowspeed.documents.ocr_backends import compatible_settings, sampling
 from PIL import Image
 
 

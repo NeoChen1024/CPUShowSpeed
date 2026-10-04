@@ -3,13 +3,8 @@
 import unittest
 from dataclasses import replace
 
-from cpushowspeed.spec95_overlap_audit import (
-    SCENARIOS,
-    blockers,
-    candidate_system_key,
-    disclosure_fields,
-)
-from cpushowspeed.spec_overlap import Result, automatic_pairs, normalized
+from cpushowspeed.spec.cpu95_cpu2000_audit import SCENARIOS, blockers, candidate_system_key, disclosure_fields
+from cpushowspeed.spec.result_pairing import Result, automatic_pairs, normalized
 
 
 def machine(system="AlphaServer GS160 6/731", **kwargs):

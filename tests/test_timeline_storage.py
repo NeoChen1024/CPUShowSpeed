@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 import pyarrow.parquet as pq
-from cpushowspeed.timeline_storage import WebExport, read_table, write_table
+from cpushowspeed.timeline.parquet_export import WebExport, read_table, write_table
 
 
 class ParquetTests(unittest.TestCase):

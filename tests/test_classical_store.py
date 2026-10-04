@@ -3,7 +3,7 @@
 import unittest
 
 from classical_fixture import result
-from cpushowspeed.classical_store import pair, pairings, target_value
+from cpushowspeed.classical.result_store import pair, pairings, target_value
 
 D, L = "Dhrystone:v1.1_DMIPS", "LINPACK:n100_MFLOPS"
 

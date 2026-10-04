@@ -1,6 +1,6 @@
 import unittest
 
-from cpushowspeed.spec_disclosure import parse_disclosure
+from cpushowspeed.spec.execution_resources import parse_disclosure
 
 
 class DisclosureTests(unittest.TestCase):

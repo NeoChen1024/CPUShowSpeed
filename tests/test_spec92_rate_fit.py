@@ -3,12 +3,8 @@
 import sqlite3
 import unittest
 
-from cpushowspeed.observation_store import result_pair_reviews
-from cpushowspeed.spec92_rate_fit import (
-    VAX_RATE92_REFERENCE,
-    _software_near,
-    selected_pairs,
-)
+from cpushowspeed.database.observation_store import result_pair_reviews
+from cpushowspeed.spec.cpu92_rate_fit import VAX_RATE92_REFERENCE, _software_near, selected_pairs
 
 
 class Cpu92RateFitTests(unittest.TestCase):

@@ -25,6 +25,7 @@ def code_hashes(entry):
     import ast
     import hashlib
 
+    package = Path(__file__).resolve().parent
     pending = [Path(entry)]
     result = {}
     while pending:
@@ -35,5 +36,7 @@ def code_hashes(entry):
         result[str(path)] = hashlib.sha256(content).hexdigest()
         for node in ast.walk(ast.parse(content)):
             if isinstance(node, ast.ImportFrom) and (node.module or "").startswith("cpushowspeed."):
-                pending.append(path.parent / (node.module.rsplit(".", 1)[-1] + ".py"))
+                base = package.joinpath(*node.module.split(".")[1:])
+                pending.append(base.with_suffix(".py"))
+                pending += [base / f"{alias.name}.py" for alias in node.names]
     return dict(sorted(result.items()))

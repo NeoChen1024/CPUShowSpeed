@@ -6,9 +6,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from cpushowspeed.spec92_disclosure import FIELDS, parse
-from cpushowspeed.spec92_rate import BENCHMARKS, _detail
-from cpushowspeed.spec_inputs import parse_speed92
+from cpushowspeed.spec.cpu92_disclosure import FIELDS, parse
+from cpushowspeed.spec.cpu92_rate import BENCHMARKS, _detail
+from cpushowspeed.spec.source_fields import parse_speed92
 
 VALUES = {
     "CPU": "50 MHz Example RISC",

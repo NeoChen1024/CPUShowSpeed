@@ -208,7 +208,7 @@ reconstruct canonical table geometry. Scripts consume the structured records.
 
 ### Implementation and migration record
 
-1. `docir_rich_table.py` implements the reader/writer and renderer. Validation
+1. `documents/rich_table.py` implements the reader/writer and renderer. Validation
    bounds nesting (32), nodes (100,000), HTML input (8 million characters) and
    aggregate grid slots (1 million), in addition to row (4,096) and column (512)
    limits. Invalid overlapping spans remain explicit errors, rather than being

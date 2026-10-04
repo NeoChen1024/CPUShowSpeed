@@ -59,8 +59,8 @@ and checked against the byte ranges and SHA-256 values in `source_manifest.csv`:
 ./.venv/bin/cpushowspeed spec89 recover-sources --archive-dir /path/to/mbox-zips
 ```
 
-The dataset builder is `python-src/cpushowspeed/spec89_build.py`; source recovery
-is `python-src/cpushowspeed/spec89_sources.py`. Both are called via the
+The dataset builder is `python-src/cpushowspeed/spec89/build.py`; source recovery
+is `python-src/cpushowspeed/spec89/usenet_sources.py`. Both are called via the
 `spec89` CLI group. The older standalone merger, archive scanners, and XLSX
 builder remain only in the local input package. This subset excludes the
 4.4 MB broad keyword index, redundant 3.1 MB JSON aggregate, XLSX workbook,

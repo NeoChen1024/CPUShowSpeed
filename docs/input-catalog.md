@@ -1,6 +1,6 @@
 # Shared benchmark input contract
 
-Source adapters (`input_catalog.records`) own parsing into one observation
+Source adapters (`database.extract_adapters.records`) own parsing into one observation
 envelope, `benchmark-observation-v2`; fitters own matching, exclusions and
 estimation. Raw source documents are immutable.
 
@@ -32,17 +32,17 @@ do not select a plotting year or relabel hardware availability as CPU release.
 
 ## Consumers
 
-SPEC92–2026 normalization has one owner: spec_inputs.py. Fitting and timeline
+SPEC92–2026 normalization has one owner: `spec/source_fields.py`. Fitting and timeline
 code use the same source record values and execution-disclosure adapter.
 
-Classical metric extraction has one owner in benchmark_records.py, reusing the
+Classical metric extraction has one owner in `database/observation_records.py`, reusing the
 existing LINPACK column parser. Dhrystone versions and Whetstone precision variants
 stay separate. Reviewed PDF vectors and Gibson/ADP records use source-specific
 adapters into the common envelope. Unit conversion and frequency assumptions are
 not part of the generic JSONL reader.
 
-The SPEC and classical fitters read the built database (`observation_store`,
-`classical_store`), not the adapters directly. Matching/review tables remain
+The SPEC and classical fitters read the built database (`database.observation_store`,
+`classical.result_store`), not the adapters directly. Matching/review tables remain
 separate policy inputs in `data/curated/`.
 
 ## Execution-count admission

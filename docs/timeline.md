@@ -98,7 +98,7 @@ Parquet; no full dataset is packed into one JSON cell. Draw tables have one metr
 per column, preserving the original shared bootstrap row order.
 
 Each file stores its reversible codec in `cpushowspeed.codec` Parquet metadata;
-the manifest also supplies it to the browser. `timeline_storage.read_table(path)`
+the manifest also supplies it to the browser. `timeline.parquet_export.read_table(path)`
 reconstructs the complete logical records in Python. Generic Parquet tools can
 inspect native columns directly; auxiliary presence/empty markers and JSON-cell
 metadata must be honored for an exact logical round trip.
@@ -399,14 +399,14 @@ record qualifications remain in the tooltip and path details.
 ### Themes (2026-10-03)
 
 Every colour the page draws reads a CSS custom property defined in
-`timeline_theme.py`; SVG markup uses inline `style` so the properties apply.
+`timeline/themes.py`; SVG markup uses inline `style` so the properties apply.
 **Theme** in the top-right picker offers Auto (the browser's light/dark
 preference), Light, Dark and three 1990s themes. A chosen theme is stored in `localStorage` under
 `cpushowspeed-theme` and applied by a small head script before the first paint;
 Auto clears it. Changing the theme or the system preference fires a `themechange`
 event; the canvas rereads its colours and redraws.
 
-The 1990s themes are built by `timeline_retro.py` from pinned submodules under
+The 1990s themes are built by `timeline/retro_themes.py` from pinned submodules under
 `third-party/`. Rules are taken by exact selector list, scoped to the theme, and
 their icons and fonts are inlined as data URIs, so the page needs no extra files;
 a selector that disappears after a submodule update fails the build. The page
@@ -492,8 +492,8 @@ Topology conflicts are flagged without changing numbers. See the
 
 ### Shared inputs
 
-SPEC and classical rows read the built database (`observation_store`,
-`classical_store`); the former input-catalog snapshot option was removed. Source
+SPEC and classical rows read the built database (`database.observation_store`,
+`classical.result_store`); the former input-catalog snapshot option was removed. Source
 values are not rescaled.
 
 Unparsed runtime declarations are displayed as their escaped source values

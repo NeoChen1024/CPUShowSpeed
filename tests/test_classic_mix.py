@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from cpushowspeed.classic_mix import SOURCE, weights
+from cpushowspeed.mix.inventory import SOURCE, weights
 
 
 class MixDefinitionTests(unittest.TestCase):

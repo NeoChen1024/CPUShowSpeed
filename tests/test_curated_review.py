@@ -7,8 +7,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from cpushowspeed import curated_review
-from cpushowspeed.curated import load_schema, row_validator
+from cpushowspeed.database import reviews
+from cpushowspeed.database.curated_tables import load_schema, row_validator
 
 
 def review(**fields):
@@ -72,10 +72,10 @@ class BuildReviewTests(unittest.TestCase):
                 "INSERT INTO hardware_record VALUES (?, ?, ?)",
                 [("mix:m", "CDC 6600", "sys:cdc6600"), ("classical:a", "Control Data 6600", "sys:cdc6600")],
             )
-            with mock.patch.object(curated_review, "RESULTS", results):
-                meta = curated_review.build_reviews(db, dict(review=[DATE, PAIR, LINK]))
+            with mock.patch.object(reviews, "RESULTS", results):
+                meta = reviews.build_reviews(db, dict(review=[DATE, PAIR, LINK]))
             self.assertEqual(
-                curated_review.rejected_dates(db),
+                reviews.rejected_dates(db),
                 {("classical:a:1:MWIPS", "table_year"): "rev:test/date", ("classical:a:1:MWIPS_DP", "table_year"): "rev:test/date"},
             )
             findings = db.execute("SELECT review_id, finding FROM review_finding ORDER BY 1").fetchall()

@@ -2,7 +2,7 @@
 
 import unittest
 
-from cpushowspeed.classic_pdf import correct, parse_table, scalar
+from cpushowspeed.classical.pdf_tables import correct, parse_table, scalar
 
 
 class ClassicPdfTests(unittest.TestCase):

@@ -11,8 +11,8 @@ from unittest.mock import patch
 import blake3
 import click
 from click.testing import CliRunner
-from cpushowspeed.chandra import has_repeat as _has_bad_repeat
-from cpushowspeed.ocr import (
+from cpushowspeed.documents.chandra import has_repeat as _has_bad_repeat
+from cpushowspeed.documents.ocr import (
     PageETAColumn,
     _convert_page,
     _finalize,
@@ -67,7 +67,7 @@ class OCRTests(unittest.TestCase):
                 "INSERT INTO files VALUES (?, 1, 100, 'hash', 0, 0, ?)",
                 [("a/one.pdf", "ok"), ("b/two.pdf", "ok"), ("c/unused.pdf", "ok")],
             )
-            with patch("cpushowspeed.ocr.CONSOLE") as console:
+            with patch("cpushowspeed.documents.ocr.CONSOLE") as console:
                 self.assertEqual(_read_file_list(file_list, root), ["b/two.pdf", "a/one.pdf"])
                 rows = select_inventory(connection, root, file_list, "", None)
                 self.assertEqual(console.print.call_count, 2)

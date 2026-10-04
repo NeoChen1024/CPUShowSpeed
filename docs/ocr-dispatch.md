@@ -21,10 +21,10 @@ and an external OpenAI-compatible SGLang/vLLM server. No `chandra-ocr` or
 BeautifulSoup and Markdownify provide image/HTML primitives. New raw document
 headers record backend and local adapter versions, not an installed client version.
 
-`ocr.py` owns rendering, asynchronous HTTP dispatch, retries, page conversion,
-ImagePool storage and publication. `ocr_backends.py` selects each model's prompt,
+`documents/ocr.py` owns rendering, asynchronous HTTP dispatch, retries, page conversion,
+ImagePool storage and publication. `documents/ocr_backends.py` selects each model's prompt,
 settings, resize and parsing functions and shares the sampling schedule.
-`chandra.py` and `infinity.py` normalize their model-specific output into blocks;
+`documents/chandra.py` and `documents/infinity.py` normalize their model-specific output into blocks;
 table conversion and crop storage then follow the same path. Layout parsing and
 conversion run in worker threads, and invalid layouts re-enter the original
 page's retry queue without occupying an inference slot.

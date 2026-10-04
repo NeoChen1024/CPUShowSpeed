@@ -3,13 +3,8 @@
 import unittest
 
 import numpy as np
-from cpushowspeed.spec92_rate_fit import VAX_RATE92_REFERENCE
-from cpushowspeed.spec_rate_chain import (
-    audit_overlap,
-    bootstrap_log_means,
-    configuration_logs,
-    propagate,
-)
+from cpushowspeed.spec.cpu92_rate_fit import VAX_RATE92_REFERENCE
+from cpushowspeed.spec.rate_chain import audit_overlap, bootstrap_log_means, configuration_logs, propagate
 
 
 class RateChainTests(unittest.TestCase):

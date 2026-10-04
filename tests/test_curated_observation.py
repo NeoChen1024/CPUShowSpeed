@@ -2,7 +2,7 @@
 
 import unittest
 
-from cpushowspeed.curated_observation import SourceIndex
+from cpushowspeed.database.observations import SourceIndex
 
 H = "a" * 64
 SOURCES = [

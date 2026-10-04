@@ -6,14 +6,8 @@ import unittest
 
 import numpy as np
 from classical_fixture import result
-from cpushowspeed.calibration_edges import bridge_log, coefficient, joint_bootstrap
-from cpushowspeed.classical_fit import (
-    SPEED_TARGETS,
-    composite_calculate,
-    composite_rows,
-    evaluate,
-    speed_edges,
-)
+from cpushowspeed.classical.calibration_edges import bridge_log, coefficient, joint_bootstrap
+from cpushowspeed.classical.composite_fit import SPEED_TARGETS, composite_calculate, composite_rows, evaluate, speed_edges
 
 D, W, L = "Dhrystone:v1.1_DMIPS", "Whetstone:MWIPS_DP", "LINPACK:n100_MFLOPS"
 # The 780 scores 1 in each metric, so speed-VAXen = composite ** exponent.

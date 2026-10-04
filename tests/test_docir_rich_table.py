@@ -9,7 +9,7 @@ from collections import Counter
 from pathlib import Path
 
 from bs4 import BeautifulSoup
-from cpushowspeed.docir_rich_table import (
+from cpushowspeed.documents.rich_table import (
     TableConversionError,
     convert_rich_table,
     render_table_block,
@@ -92,9 +92,9 @@ class RichTablesTests(unittest.TestCase):
     def test_nested_images_are_traversed_without_claiming_unresolved_completion(self):
         import sqlite3
 
-        from cpushowspeed.caption import _eligible_images
-        from cpushowspeed.caption_backfill import backfill_document
-        from cpushowspeed.document_report import _image_occurrences
+        from cpushowspeed.documents.caption import _eligible_images
+        from cpushowspeed.documents.caption_backfill import backfill_document
+        from cpushowspeed.documents.progress_report import _image_occurrences
 
         block = convert_rich_table('<table><tr><td><img alt="resolved later"/><img alt="no crop"/></td></tr></table>')
         block.update(kind="table", source_label="Table")

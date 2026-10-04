@@ -52,7 +52,7 @@ and [per-benchmark copy counts and timings](../data/derived/spec/cpu92-rate/cpu9
 Netlib's 305 CINT92 speed disclosures (`data/raw/spec/cpu92/netlib/details/`) are read
 by the input catalogue directly, with each composite checked against its six ratios
 and the issue summaries. Both tracks use one page parser
-(`cpushowspeed.spec92_disclosure`) that keeps all 21 labelled fields of the fixed PDS
+(`cpushowspeed.spec.cpu92_disclosure`) that keeps all 21 labelled fields of the fixed PDS
 layout verbatim, the issue (volume, number, month), the result table, the reported
 means and the tuning notes; hardware availability, software availability and test
 months are normalized to `YYYY-MM` and an unreadable value (two rate pages print

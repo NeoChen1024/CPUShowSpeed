@@ -3,7 +3,7 @@ import math
 import unittest
 
 import numpy as np
-from cpushowspeed.mix_network import attach, estimates
+from cpushowspeed.mix.network_fit import attach, estimates
 
 
 def node(node_id, model, scores, kind="unanchored", target=None):

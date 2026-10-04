@@ -170,7 +170,7 @@ path in [`data/curated/source.jsonl`](../data/curated/source.jsonl).
 Richardson (PC Research, Inc.) posted readers' Dhrystone results to net.arch and
 comp.arch about every three months; he did not re-run them. Each list includes
 the earlier rows, so only the last of each version is used, parsed by
-[`usenet_results.py`](../python-src/cpushowspeed/usenet_results.py):
+[`classical/usenet_results.py`](../python-src/cpushowspeed/classical/usenet_results.py):
 
 | Source | Format | Check |
 | --- | --- | --- |

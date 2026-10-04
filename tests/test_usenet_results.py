@@ -3,13 +3,7 @@
 import binascii
 import unittest
 
-from cpushowspeed.usenet_results import (
-    _dhrystone_record,
-    _report_boxes,
-    iso_date,
-    shar_files,
-    uudecode,
-)
+from cpushowspeed.classical.usenet_results import _dhrystone_record, _report_boxes, iso_date, shar_files, uudecode
 
 
 class UsenetResultsTests(unittest.TestCase):

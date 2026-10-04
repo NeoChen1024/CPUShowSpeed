@@ -4,7 +4,7 @@ import csv
 import math
 import unittest
 
-from cpushowspeed.spec_speed_chain import FACTORS, INTERVALS, convert_speed
+from cpushowspeed.spec.speed_chain import FACTORS, INTERVALS, convert_speed
 
 
 class SpeedChainTests(unittest.TestCase):

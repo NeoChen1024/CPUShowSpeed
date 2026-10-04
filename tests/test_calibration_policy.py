@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from cpushowspeed.calibration import absolute_error_percent, error_summary
+from cpushowspeed.calibration_stats import absolute_error_percent, error_summary
 from cpushowspeed.research_io import read_csv, write_csv
 
 

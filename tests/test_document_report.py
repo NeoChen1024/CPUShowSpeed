@@ -8,14 +8,9 @@ import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
 
-from cpushowspeed.document_report import (
-    _percent,
-    collect_caption_stats,
-    collect_ocr_stats,
-    print_document_report,
-)
-from cpushowspeed.documents import open_inventory
-from cpushowspeed.ocr import _init_state, select_inventory
+from cpushowspeed.documents.inventory import open_inventory
+from cpushowspeed.documents.ocr import _init_state, select_inventory
+from cpushowspeed.documents.progress_report import _percent, collect_caption_stats, collect_ocr_stats, print_document_report
 
 
 class DocumentReportTests(unittest.TestCase):

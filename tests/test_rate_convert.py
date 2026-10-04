@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from cpushowspeed.rate_convert import convert_rate
+from cpushowspeed.spec.rate_convert import convert_rate
 
 
 class RateConvertTests(unittest.TestCase):

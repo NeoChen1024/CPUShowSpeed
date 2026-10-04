@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from cpushowspeed.timeline_html import render_html
+from cpushowspeed.timeline.html import render_html
 
 
 class TimelineHTMLTests(unittest.TestCase):
@@ -42,7 +42,7 @@ class TimelineHTMLTests(unittest.TestCase):
             subprocess.run(["node", "tests/timeline_interaction.js", str(path)], check=True, capture_output=True, text=True)
 
     def test_chart_height_contract(self):
-        from cpushowspeed.timeline_html import PAGE
+        from cpushowspeed.timeline.html import PAGE
 
         self.assertIn("75svh - 80px", PAGE)
         self.assertNotIn('type="range"', PAGE)
@@ -53,12 +53,12 @@ class TimelineHTMLTests(unittest.TestCase):
     def test_retro_themes_are_scoped_and_self_contained(self):
         import re
 
-        from cpushowspeed import timeline_retro, timeline_theme
+        from cpushowspeed.timeline import retro_themes, themes
 
-        css = timeline_theme.stylesheet()
+        css = themes.stylesheet()
         for value in ("win98", "system7", "vt220"):
             self.assertIn(f':root[data-theme="{value}"] body', css)
-            self.assertIn(f'value="{value}"', timeline_theme.picker())
+            self.assertIn(f'value="{value}"', themes.picker())
         # A window rule applied to body must not clip it: body overflow would stop the page scrolling.
         for value in ("win98", "system7", "vt220"):
             overflow = re.findall(rf':root\[data-theme="{value}"\] body\{{[^}}]*?overflow:\s*(\w+)', css)
@@ -66,7 +66,7 @@ class TimelineHTMLTests(unittest.TestCase):
         self.assertNotIn("svg-load(", css)
         self.assertIsNone(re.search(r'url\((?!"data:)', css))
         with self.assertRaises(ValueError):
-            timeline_retro.take(timeline_retro.WIN98, ["no-such-selector"], ":root")
+            retro_themes.take(retro_themes.WIN98, ["no-such-selector"], ":root")
 
     def test_payload_cannot_close_script(self):
         with tempfile.TemporaryDirectory() as directory:

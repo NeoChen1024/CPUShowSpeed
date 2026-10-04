@@ -6,8 +6,8 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 
 import click
-from cpushowspeed.ocr import _resolve_model
-from cpushowspeed.ocr_backends import detect_backend
+from cpushowspeed.documents.ocr import _resolve_model
+from cpushowspeed.documents.ocr_backends import detect_backend
 
 
 class DetectionTests(unittest.TestCase):
@@ -39,7 +39,7 @@ class DetectionTests(unittest.TestCase):
                 detect_backend(name)
 
     def test_explicit_model_skips_discovery_and_override_allows_alias(self):
-        with patch("cpushowspeed.ocr.AsyncOpenAI") as client:
+        with patch("cpushowspeed.documents.ocr.AsyncOpenAI") as client:
             self.assertEqual(asyncio.run(_resolve_model("http://unused/v1", "chandra-FP8", "auto")), ("chandra-FP8", "chandra"))
             self.assertEqual(asyncio.run(_resolve_model("http://unused/v1", "custom", "infinity")), ("custom", "infinity"))
             with self.assertRaises(click.ClickException):
@@ -49,7 +49,7 @@ class DetectionTests(unittest.TestCase):
     def test_discovery_preserves_exact_id_and_rejects_multiple_models(self):
         client = AsyncMock()
         client.__aenter__.return_value = client
-        with patch("cpushowspeed.ocr.AsyncOpenAI", return_value=client):
+        with patch("cpushowspeed.documents.ocr.AsyncOpenAI", return_value=client):
             for names in [["infly/Infinity-Parser2-Flash-FP8"], [], ["chandra", "chandra-FP8"], ["custom"]]:
                 client.models.list.return_value = SimpleNamespace(data=[SimpleNamespace(id=name) for name in names])
                 if len(names) == 1 and names[0] != "custom":

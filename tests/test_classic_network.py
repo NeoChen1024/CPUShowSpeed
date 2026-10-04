@@ -3,14 +3,9 @@ import unittest
 
 import numpy as np
 from classical_fixture import result
-from cpushowspeed.classic_network import build
-from cpushowspeed.classic_network_model import (
-    bootstrap,
-    estimates,
-    metric_weights,
-    train,
-)
-from cpushowspeed.classical_store import vax780_anchor
+from cpushowspeed.classical.network_fit import build
+from cpushowspeed.classical.network_model import bootstrap, estimates, metric_weights, train
+from cpushowspeed.classical.result_store import vax780_anchor
 
 
 def node(key, scores, target=None, kind=None):

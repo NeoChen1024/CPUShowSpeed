@@ -5,11 +5,7 @@ import unittest
 from pathlib import Path
 
 import numpy as np
-from cpushowspeed.classic_predict import (
-    OPTIONS,
-    predict_scores,
-    write_prediction_manifest,
-)
+from cpushowspeed.classical.predict import OPTIONS, predict_scores, write_prediction_manifest
 from cpushowspeed.research_io import write_csv
 
 

@@ -2,7 +2,7 @@
 
 import unittest
 
-from cpushowspeed.unified_timeline import _month
+from cpushowspeed.timeline.build import _month
 
 
 class MonthTests(unittest.TestCase):

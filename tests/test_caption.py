@@ -11,7 +11,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import blake3
-from cpushowspeed import caption
+from cpushowspeed.documents import caption
 
 
 class FakeClient:

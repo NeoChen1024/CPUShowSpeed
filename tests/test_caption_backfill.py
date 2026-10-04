@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from cpushowspeed.caption_backfill import backfill_document
+from cpushowspeed.documents.caption_backfill import backfill_document
 
 
 class BackfillTests(unittest.TestCase):
@@ -67,7 +67,7 @@ class BackfillTests(unittest.TestCase):
 
     def test_interrupted_replace_preserves_original_and_removes_temporary(self):
         original = self.path.read_bytes()
-        with patch("cpushowspeed.caption_backfill.os.replace", side_effect=KeyboardInterrupt):
+        with patch("cpushowspeed.documents.caption_backfill.os.replace", side_effect=KeyboardInterrupt):
             with self.assertRaises(KeyboardInterrupt):
                 backfill_document(self.path, 1, self.db)
         self.assertEqual(self.path.read_bytes(), original)

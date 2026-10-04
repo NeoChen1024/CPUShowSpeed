@@ -2,7 +2,7 @@ import math
 import unittest
 
 import numpy as np
-from cpushowspeed.classic_power_law import deming_slope, fit, pooled_within
+from cpushowspeed.classical.power_law import deming_slope, fit, pooled_within
 
 
 class PowerLawTests(unittest.TestCase):

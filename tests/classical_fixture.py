@@ -1,6 +1,6 @@
 """In-memory classical and SPEC results for pairing and fitter tests."""
 
-from cpushowspeed.classical_store import Result
+from cpushowspeed.classical.result_store import Result
 
 
 def result(result_id, system_id, values, *, clock=None, cpus=None, entity="", scope="classical:test", reference=False):

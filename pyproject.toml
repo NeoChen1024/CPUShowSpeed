@@ -26,4 +26,4 @@ target-version = ["py311"]
 profile = "black"
 
 [tool.setuptools.package-data]
-cpushowspeed = ["web/*.js"]
+"cpushowspeed.timeline" = ["web/*.js"]
