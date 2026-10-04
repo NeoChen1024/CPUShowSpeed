@@ -15,8 +15,8 @@ from cpushowspeed.spec_overlap import (
     INTERVAL_FIELDS,
     PAIR_FIELDS,
     Result,
-    _automatic_pairs,
-    _statistics,
+    automatic_pairs,
+    ratio_statistics,
 )
 
 GENERATIONS = ("cpu95", "cpu2000", "cpu2006", "cpu2017", "cpu2026")
@@ -76,11 +76,11 @@ def _fit_edges(results: dict[str, list[Result]]) -> tuple[list[dict[str, object]
     pairs: list[dict[str, object]] = []
     edges: list[dict[str, object]] = []
     for old, new in zip(GENERATIONS, GENERATIONS[1:]):
-        cohort = _automatic_pairs(results, old, new)
+        cohort = automatic_pairs(results, old, new)
         pairs.extend(cohort)
         edge = {"old_generation": old, "new_generation": new}
         for mode in MODES:
-            edge["strict", mode] = _statistics(cohort, mode, {"hardware_near"})
+            edge["strict", mode] = ratio_statistics(cohort, mode, {"hardware_near"})
         edges.append(edge)
     pairs.sort(key=lambda row: (str(row["old_generation"]), str(row["old_result_id"]), str(row["new_result_id"])))
     return pairs, edges
@@ -104,15 +104,15 @@ def analyze_rate_generations(database: Path, output_dir: Path, research_dir: Pat
     nonadjacent = []
     for old_index, old in enumerate(GENERATIONS):
         for new in GENERATIONS[old_index + 2 :]:
-            candidates = _automatic_pairs(results, old, new)
+            candidates = automatic_pairs(results, old, new)
             nonadjacent.append(
                 {
                     "old_generation": old,
                     "new_generation": new,
                     "candidate_pairings": len(candidates),
                     "hardware_near_pairings": sum(row["match_tier"] == "hardware_near" for row in candidates),
-                    "base": _statistics(candidates, "base"),
-                    "peak": _statistics(candidates, "peak"),
+                    "base": ratio_statistics(candidates, "base"),
+                    "peak": ratio_statistics(candidates, "peak"),
                 }
             )
     output_dir.mkdir(parents=True, exist_ok=True)

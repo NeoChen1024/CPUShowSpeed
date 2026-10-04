@@ -9,12 +9,12 @@ from cpushowspeed.spec95_overlap_audit import (
     candidate_system_key,
     disclosure_fields,
 )
-from cpushowspeed.spec_overlap import Result, _automatic_pairs, _normalized
+from cpushowspeed.spec_overlap import Result, automatic_pairs, normalized
 
 
 def machine(system="AlphaServer GS160 6/731", **kwargs):
     r = Result(
-        "cpu95", "id", system, _normalized(system), "Alpha 21264A", "21264a", 1, 1, 1, 731, 4096, "OS", "CC", 10, 9, "url", "hash"
+        "cpu95", "id", system, normalized(system), "Alpha 21264A", "21264a", 1, 1, 1, 731, 4096, "OS", "CC", 10, 9, "url", "hash"
     )
     return replace(r, **kwargs)
 
@@ -51,7 +51,7 @@ class OverlapAuditTests(unittest.TestCase):
             machine(cores=2),
             machine(enabled_threads_per_core=2),
         ]:
-            pair = _automatic_pairs({"a": [a], "b": [b]}, "a", "b")[0]
+            pair = automatic_pairs({"a": [a], "b": [b]}, "a", "b")[0]
             self.assertEqual(not blockers(a, b), pair["match_tier"] == "hardware_near")
 
     def test_disclosure_fields_support_legacy_unclosed_cells(self):

@@ -23,7 +23,7 @@ These curated files remain separate from model inputs pending integration and
 variant/configuration review; no fitted coefficients were changed.
 
 `overlap-coverage.csv` and `overlap-audit.json` are compact outputs of
-`cpushowspeed classic overlap-spec` (copies of `source-coverage.csv` and
+`cpushowspeed classic parse-sources` (copies of `source-coverage.csv` and
 `audit.json`). Full records remain in the ignored derived output directory and
 are loaded by `data extract`. Pairing is by resolved system in the fitters; the
 former name-based `overlap-summary.csv`/`overlap-models.csv` were removed and
@@ -65,7 +65,7 @@ system links. See the [mix network](../../instruction-mix.md#mix-network).
 `mix-candidate-aliases.csv` is the frozen input of the step-4 review import,
 which turned it into open `system_link` reviews; it does not approve hardware
 identity and no fitter reads it. `mix-study/weights.csv` and `audit.json`
-snapshot `classic mix-inventory`. Full source listings including missing scores
+snapshot `mix inventory`. Full source listings including missing scores
 remain in the generated `mix-records.csv`. See
 [the preparation report](../../instruction-mix.md).
 

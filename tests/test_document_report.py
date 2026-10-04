@@ -14,8 +14,8 @@ from cpushowspeed.document_report import (
     collect_ocr_stats,
     print_document_report,
 )
-from cpushowspeed.documents import _connect
-from cpushowspeed.ocr import _init_state, _select_inventory
+from cpushowspeed.documents import open_inventory
+from cpushowspeed.ocr import _init_state, select_inventory
 
 
 class DocumentReportTests(unittest.TestCase):
@@ -31,7 +31,7 @@ class DocumentReportTests(unittest.TestCase):
             source = base / "pdf"
             source.mkdir()
             output = base / "ocr"
-            with _connect(base / "inventory.sqlite", source) as inventory:
+            with open_inventory(base / "inventory.sqlite", source) as inventory:
                 _init_state(inventory)
                 inventory.execute("INSERT INTO ocr_runs VALUES ('run', ?, '{}', 'now')", (str(output),))
                 for relative, pages in [("a.pdf", 2), ("b.pdf", 3), ("c.pdf", 4)]:
@@ -49,7 +49,7 @@ class DocumentReportTests(unittest.TestCase):
                     )
                 selected_list = base / "selected.txt"
                 selected_list.write_text("b.pdf\na.pdf\n", encoding="utf-8")
-                selected = _select_inventory(inventory, source, selected_list, "", None)
+                selected = select_inventory(inventory, source, selected_list, "", None)
                 self.assertEqual([row["relative_path"] for row in selected], ["b.pdf", "a.pdf"])
 
                 for relative, pages in [("a.pdf", 2), ("c.pdf", 4)]:
@@ -107,7 +107,7 @@ class DocumentReportTests(unittest.TestCase):
                     (2, 1, 1, 1),
                 )
                 self.assertEqual(caption_stats.processed, 3)
-                all_selected = _select_inventory(inventory, source, None, "", None)
+                all_selected = select_inventory(inventory, source, None, "", None)
                 all_stats = collect_ocr_stats(inventory, "run", output, all_selected)
                 self.assertEqual((all_stats.target_documents, all_stats.target_pages), (3, 9))
                 self.assertEqual((all_stats.published_documents, all_stats.published_pages), (2, 6))
@@ -116,7 +116,7 @@ class DocumentReportTests(unittest.TestCase):
                 self.assertEqual(all_captions.captioned, 3)
 
                 inventory.execute("UPDATE files SET blake3 = 'changed' WHERE relative_path = 'b.pdf'")
-                selected = _select_inventory(inventory, source, selected_list, "", None)
+                selected = select_inventory(inventory, source, selected_list, "", None)
                 stale = collect_ocr_stats(inventory, "run", output, selected)
                 self.assertEqual(stale.stale_sources, 1)
                 self.assertEqual(stale.completed_pages, 2)

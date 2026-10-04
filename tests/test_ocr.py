@@ -19,11 +19,11 @@ from cpushowspeed.ocr import (
     _read_file_list,
     _read_stage,
     _record_page,
-    _select_inventory,
     _stage_path,
     _verify_final,
     _write_atomic,
     ocr_command,
+    select_inventory,
 )
 from PIL import Image
 from rich.console import Console
@@ -69,20 +69,20 @@ class OCRTests(unittest.TestCase):
             )
             with patch("cpushowspeed.ocr.CONSOLE") as console:
                 self.assertEqual(_read_file_list(file_list, root), ["b/two.pdf", "a/one.pdf"])
-                rows = _select_inventory(connection, root, file_list, "", None)
+                rows = select_inventory(connection, root, file_list, "", None)
                 self.assertEqual(console.print.call_count, 2)
             self.assertEqual([row["relative_path"] for row in rows], ["b/two.pdf", "a/one.pdf"])
             file_list.write_text("c/unused.pdf\nb/two.pdf\n", encoding="utf-8")
             self.assertEqual(
-                [row["relative_path"] for row in _select_inventory(connection, root, file_list, "", None)],
+                [row["relative_path"] for row in select_inventory(connection, root, file_list, "", None)],
                 ["c/unused.pdf", "b/two.pdf"],
             )
             connection.execute("UPDATE files SET status = 'pdf_error' WHERE relative_path = 'c/unused.pdf'")
             with self.assertRaises(click.ClickException):
-                _select_inventory(connection, root, file_list, "", None)
+                select_inventory(connection, root, file_list, "", None)
             file_list.write_text("missing.pdf\n", encoding="utf-8")
             with self.assertRaises(click.ClickException):
-                _select_inventory(connection, root, file_list, "", None)
+                select_inventory(connection, root, file_list, "", None)
             file_list.write_text("../outside.pdf\n", encoding="utf-8")
             with self.assertRaises(click.ClickException):
                 _read_file_list(file_list, root)

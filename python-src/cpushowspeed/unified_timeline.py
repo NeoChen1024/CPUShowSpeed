@@ -29,7 +29,7 @@ from cpushowspeed.spec_speed_chain import DERIVED as SPEED_DERIVED
 from cpushowspeed.spec_speed_chain import INTERVALS as SPEED_INTERVALS
 from cpushowspeed.spec_speed_chain import convert_speed
 from cpushowspeed.timeline_calculator import calculator_payload
-from cpushowspeed.timeline_estimates import MIX_OUTPUT, _fresh, mix_rows
+from cpushowspeed.timeline_estimates import MIX_OUTPUT, fresh_audit, mix_rows
 from cpushowspeed.timeline_html import render_html
 from cpushowspeed.timeline_lineage import build_lineage
 
@@ -132,7 +132,7 @@ def runtime(result, mode, raw, track):
 
 def spec_rows(db, dates, digest):
     """Every SPEC92–2026 integer result: rate through the rate chain, speed through the speed chain."""
-    _fresh(
+    fresh_audit(
         SPEED_DERIVED / "integer-speed-chain.json", digest, "database_inputs_sha256", {str(SPEED_INTERVALS): sha(SPEED_INTERVALS)}
     )
 

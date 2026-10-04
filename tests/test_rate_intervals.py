@@ -3,7 +3,7 @@
 import math
 import unittest
 
-from cpushowspeed.spec_overlap import _statistics
+from cpushowspeed.spec_overlap import ratio_statistics
 
 
 class RateIntervalTests(unittest.TestCase):
@@ -21,14 +21,14 @@ class RateIntervalTests(unittest.TestCase):
             }
             for i, ratio in enumerate((1, 2, 4))
         ]
-        result = _statistics(rows, "base")
+        result = ratio_statistics(rows, "base")
         self.assertAlmostEqual(result["factor_old_per_new"], 2)
         # In the exact 3^3 bootstrap, either extreme has mass 1/27 > 2.5%.
         self.assertAlmostEqual(result["cluster_bootstrap_95_low"], 1)
         self.assertAlmostEqual(result["cluster_bootstrap_95_high"], 4)
         self.assertAlmostEqual(result["heldout_p95_absolute_pct_error"], 0.1 * (1 - math.sqrt(2) / 4) + 0.9 * (math.sqrt(8) - 1))
         self.assertEqual(result["bootstrap_replicates"], 10000)
-        repeated = _statistics(list(reversed(rows)) + [rows[0]], "base")
+        repeated = ratio_statistics(list(reversed(rows)) + [rows[0]], "base")
         for field in ("factor_old_per_new", "cluster_bootstrap_95_low", "cluster_bootstrap_95_high"):
             self.assertEqual(result[field], repeated[field])
 

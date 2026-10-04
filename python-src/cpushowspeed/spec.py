@@ -208,7 +208,7 @@ def collect_indexes(generations: tuple[str, ...], raw_dir: Path, manifest: Path,
     click.echo(f"Wrote {len(records)} result links to {manifest}", err=True)
 
 
-def collect_legacy92_rate(raw_dir: Path, manifest: Path, delay: float, refresh: bool) -> dict[str, int]:
+def collect_cpu92_rate_index(raw_dir: Path, manifest: Path, delay: float, refresh: bool) -> dict[str, int]:
     """Collect the separately published Netlib CINT92 rate indexes."""
     root = "https://www.netlib.org/performance/html/"
     index = get_cached(root + "spec.html", raw_dir / "cpu92" / "netlib" / "spec.html", refresh=refresh, delay=delay)
@@ -270,7 +270,7 @@ def collect_legacy92_rate(raw_dir: Path, manifest: Path, delay: float, refresh: 
     }
 
 
-def fetch_legacy92_rate_details(manifest: Path, raw_dir: Path, limit: int | None, delay: float) -> dict[str, int]:
+def fetch_cpu92_rate_details(manifest: Path, raw_dir: Path, limit: int | None, delay: float) -> dict[str, int]:
     if not manifest.exists():
         raise ValueError(f"CPU92 rate manifest missing: {manifest}")
     urls = sorted({json.loads(line)["detail_url"] for line in manifest.read_text().splitlines()})
@@ -429,7 +429,7 @@ def verify_command(generations: tuple[str, ...], raw_dir: Path, manifest: Path) 
     verify_bulk(manifest, raw_dir, generations or GENERATIONS)
 
 
-@spec.command("legacy92-rate")
+@spec.command("cpu92-rate-index")
 @click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
 @click.option(
     "--manifest",
@@ -439,16 +439,16 @@ def verify_command(generations: tuple[str, ...], raw_dir: Path, manifest: Path) 
 )
 @click.option("--delay", type=click.FloatRange(min=0), default=0.5, show_default=True)
 @click.option("--refresh", is_flag=True)
-def legacy92_rate_command(raw_dir: Path, manifest: Path, delay: float, refresh: bool) -> None:
+def cpu92_rate_index_command(raw_dir: Path, manifest: Path, delay: float, refresh: bool) -> None:
     """Cache Netlib's surviving CINT92 rate issue and combined indexes."""
     try:
-        result = collect_legacy92_rate(raw_dir, manifest, delay, refresh)
+        result = collect_cpu92_rate_index(raw_dir, manifest, delay, refresh)
     except (OSError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(json.dumps(result, sort_keys=True))
 
 
-@spec.command("legacy92-rate-fetch")
+@spec.command("cpu92-rate-fetch")
 @click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
 @click.option(
     "--manifest",
@@ -458,10 +458,10 @@ def legacy92_rate_command(raw_dir: Path, manifest: Path, delay: float, refresh: 
 )
 @click.option("--limit", type=click.IntRange(min=1), help="Maximum new disclosures in this run.")
 @click.option("--delay", type=click.FloatRange(min=0), default=0.5, show_default=True)
-def legacy92_rate_fetch_command(raw_dir: Path, manifest: Path, limit: int | None, delay: float) -> None:
+def cpu92_rate_fetch_command(raw_dir: Path, manifest: Path, limit: int | None, delay: float) -> None:
     """Cache CINT92 rate detail reports while preserving their source URLs."""
     try:
-        result = fetch_legacy92_rate_details(manifest, raw_dir, limit, delay)
+        result = fetch_cpu92_rate_details(manifest, raw_dir, limit, delay)
     except (OSError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(json.dumps(result, sort_keys=True))

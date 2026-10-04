@@ -28,7 +28,7 @@ def text_fields(value):
             yield from text_fields(child)
 
 
-@click.command("mix-evidence")
+@click.command("evidence")
 @click.option(
     "--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/documents/mix-evidence"), show_default=True
 )

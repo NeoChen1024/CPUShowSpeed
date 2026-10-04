@@ -16,7 +16,7 @@ from cpushowspeed.spec_disclosure import (
     parse_disclosure,
 )
 from cpushowspeed.spec_inputs import collect_speed92
-from cpushowspeed.spec_overlap import _checked_bulk, _positive, _source_url
+from cpushowspeed.spec_overlap import disclosure_url, positive, read_checked_bulk
 
 
 def field_use(field):
@@ -57,7 +57,7 @@ def field_use(field):
 
 
 def valid_score(row):
-    return bool(_positive(row.get("Result") or row.get("Peak Result")) or _positive(row.get("Baseline") or row.get("Base Result")))
+    return bool(positive(row.get("Result") or row.get("Peak Result")) or positive(row.get("Baseline") or row.get("Base Result")))
 
 
 def bulk_resources(row):
@@ -92,7 +92,7 @@ def audit_fields(raw_dir, output, research_output, fetch_samples):
     hashes = {}
     for gen in GENERATIONS:
         path = raw_dir / gen / "bulk.csv"
-        rows, digest = _checked_bulk(path)
+        rows, digest = read_checked_bulk(path)
         hashes[str(path)] = digest
         ints = [r for r in rows if r["Benchmark"] in ("CINT" + gen[3:], "CINT" + gen[3:] + "rate")]
         for field in rows[0]:
@@ -114,7 +114,7 @@ def audit_fields(raw_dir, output, research_output, fetch_samples):
         stats = Counter()
         for row in ints:
             track = "rate" if row["Benchmark"].endswith("rate") else "speed"
-            source = _source_url(row["Disclosure"])
+            source = disclosure_url(row["Disclosure"])
             resources = bulk_resources(row)
             usable = valid_score(row)
             stats[track + "_rows"] += 1

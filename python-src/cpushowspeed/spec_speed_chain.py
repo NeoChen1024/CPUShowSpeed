@@ -27,7 +27,7 @@ import numpy as np
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import MODES, connect, inputs_digest, spec_results
 from cpushowspeed.research_io import code_hashes
-from cpushowspeed.spec_overlap import INTERVAL_FIELDS, PAIR_FIELDS, _automatic_pairs, _statistics
+from cpushowspeed.spec_overlap import INTERVAL_FIELDS, PAIR_FIELDS, automatic_pairs, ratio_statistics
 from cpushowspeed.spec_rate_chain import config_key, configuration_logs
 
 METHOD_VERSION = "integer-speed-chain-v1"
@@ -68,7 +68,7 @@ def analyze(database: Path, research_dir: Path = RESEARCH, fit_dir: Path = DERIV
         digest = inputs_digest(db)
     pairs, cohorts = [], []
     for old, new in EDGES:
-        rows = _automatic_pairs(results, old, new)
+        rows = automatic_pairs(results, old, new)
         pairs.extend(rows)
         cohorts.append([r for r in rows if r["match_tier"] == "hardware_near"])
     overlap = []
@@ -86,7 +86,7 @@ def analyze(database: Path, research_dir: Path = RESEARCH, fit_dir: Path = DERIV
     for m, mode in enumerate(MODES):
         point, draws = [0.0], [np.zeros(REPLICATES)]
         for (old, new), cohort in zip(EDGES, cohorts):
-            stats = _statistics(cohort, mode, {"hardware_near"})
+            stats = ratio_statistics(cohort, mode, {"hardware_near"})
             logs = configuration_logs(cohort, mode)
             if stats is None:
                 raise ValueError(f"too few configurations for the {old}-{new} {mode} speed edge")
@@ -205,11 +205,11 @@ def convert_speed(generation: str, mode: str, score: float) -> dict:
     return dict(vaxen=values[0], ci95=dict(low=values[1], high=values[2]), scope=row["scope"])
 
 
-@click.command("fit-speed-chain")
+@click.command("fit-speed")
 @click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=RESEARCH, show_default=True)
 @click.option("--fit-dir", type=click.Path(path_type=Path), default=DERIVED, show_default=True)
-def fit_speed_chain_command(database: Path, research_dir: Path, fit_dir: Path) -> None:
+def fit_speed_command(database: Path, research_dir: Path, fit_dir: Path) -> None:
     """Fit the CPU92–CPU2026 integer-speed chain (speed-VAXen, SPECint92 = 1) with a whole-chain bootstrap."""
     try:
         result = analyze(database, research_dir, fit_dir)

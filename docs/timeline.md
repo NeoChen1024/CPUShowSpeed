@@ -16,15 +16,15 @@ population and numerical comparisons.
 ```sh
 uv run cpushowspeed data extract
 uv run cpushowspeed data build
-uv run cpushowspeed bridge fit-rate92-anchor
-uv run cpushowspeed bridge fit-rate-generations
-uv run cpushowspeed bridge bootstrap-rate-chain
-uv run cpushowspeed bridge fit-speed-chain
+uv run cpushowspeed chain fit-cpu92-rate-anchor
+uv run cpushowspeed chain fit-rate-generations
+uv run cpushowspeed chain bootstrap-rate
+uv run cpushowspeed chain fit-speed
 uv run cpushowspeed classic composite-fit
 uv run cpushowspeed classic spec89-fit
 uv run cpushowspeed classic network-fit
-uv run cpushowspeed classic mix-network-fit
-uv run cpushowspeed classic mix-bridge
+uv run cpushowspeed mix network-fit
+uv run cpushowspeed mix fit-classical
 uv run cpushowspeed plot timeline
 ```
 

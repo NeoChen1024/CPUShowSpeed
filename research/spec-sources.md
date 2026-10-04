@@ -96,7 +96,7 @@ is in the [1993-12 issue summary](https://www.netlib.org/performance/html/spec.c
 but not the combined list, a source-index discrepancy rather than a reason to
 discard it.
 
-`spec legacy92-rate`, `legacy92-rate-fetch` and `legacy92-rate-parse` cached all
+`spec cpu92-rate-index`, `cpu92-rate-fetch` and `cpu92-rate-parse` cached all
 22 issue summaries and 274 details with URL, retrieval date and SHA-256, and
 export 274 result records plus 1,644 per-benchmark rows with copy counts and
 timings to `data/derived/spec/cpu92-rate/`. All parsed without exclusions; 199
@@ -286,6 +286,6 @@ families and five configurations. Findings:
 Forty original disclosures were checked: 39 agree with the bulk on model, CPU,
 clock, chip count and memory; the other is the SGI NC record
 ([checks](data/spec/95-2000-audit/disclosure-checks.csv)). Reproduce with
-`bridge audit-95-2000 [--fetch-review]` and `spec verify --generation cpu95
+`chain audit-cpu95-cpu2000 [--fetch-review]` and `spec verify --generation cpu95
 --generation cpu2000`. The rate chain now pairs over resolved identity (which
 absorbs the naming differences above) and still requires equal RAM.

@@ -133,5 +133,3 @@ def write_jsonl(path, records):
             count += 1
     temporary.replace(path)
     return count
-
-

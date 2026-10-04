@@ -13,7 +13,7 @@ cached by the project; the [author's ResearchGate copy](https://www.researchgate
 is the same work, not independent measurements.
 
 ```sh
-uv run cpushowspeed classic mix-inventory
+uv run cpushowspeed mix inventory
 ```
 
 The command validates the cached blob's BLAKE3, independently reparses its 190
@@ -76,7 +76,7 @@ pairs. The LINPACK pairs come only from CDC 6600/7600. Review priorities:
 4. PDP-8/E, PDP-11, HP 2100: resolve EAE/EAU/FPU/software floating point options.
 5. IBM 360/65 G versus H/I/J: memory size and interleaving.
 
-`classic mix-bridge` also audits direct edges to SPEC. No mix result shares a
+`mix fit-classical` also audits direct edges to SPEC. No mix result shares a
 resolved system with any SPEC89 result (SPECint89 182 values on 91 systems,
 SPECmark89 264 on 132, SPECfp89 207 on 106: zero pairs) or SPEC92 result
 (SPECint92, SPECbase_int92, SPECfp92, SPECrate_int92 and SPECrate_base_int92:
@@ -93,7 +93,7 @@ unapproved matches.
 
 ## Mix network
 
-`classic mix-network-fit` extends the [classical network](classical-fits.md#sparse-network)
+`mix network-fit` extends the [classical network](classical-fits.md#sparse-network)
 with the Gibson and ADP ratings (KIPS), calibrated in speed-VAXen.
 
 - **Attachment.** A rating attaches to every network node of its resolved system;
@@ -162,7 +162,7 @@ A bounded web search (2026-09-27) recorded twelve source dispositions in the
 [source hunt](data/classic/mix-study/source-hunt.csv), with
 [acquisition records](data/classic/mix-study/source-hunt-acquisition.csv) for
 five PDFs. Eight documents (1,571 pages, including the AFIPS SJCC 1971
-proceedings) were OCRed and screened by `classic mix-evidence`; the
+proceedings) were OCRed and screened by `mix evidence`; the
 [review ledger](data/classic/mix-study/ocr-review-ledger.csv) separates OCR
 screening from original-page checks. Keyword hits are navigation aids, not proof
 of absence. None of the cells below is a database observation yet

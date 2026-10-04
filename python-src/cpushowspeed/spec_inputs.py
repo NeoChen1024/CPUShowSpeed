@@ -11,17 +11,17 @@ from urllib.parse import urlparse
 
 from cpushowspeed import spec92_disclosure
 from cpushowspeed.parallel import pmap
-from cpushowspeed.spec92_rate import BENCHMARKS, _checked
+from cpushowspeed.spec92_rate import BENCHMARKS, read_checked_source
 from cpushowspeed.spec_disclosure import load_disclosure
 from cpushowspeed.spec_overlap import (
     Result,
-    _checked_bulk,
-    _frequency,
-    _memory_mib,
-    _normalized,
-    _positive,
-    _processor_key,
-    _source_url,
+    clock_mhz,
+    disclosure_url,
+    memory_mib,
+    normalized,
+    positive,
+    processor_text_key,
+    read_checked_bulk,
 )
 
 GENERATIONS = ("cpu95", "cpu2000", "cpu2006", "cpu2017", "cpu2026")
@@ -57,21 +57,21 @@ def collect_integer(raw_dir: Path, track: str) -> dict[str, list[Result]]:
         raise ValueError(f"unknown SPEC track: {track}")
     results: dict[str, list[Result]] = {}
     for generation in GENERATIONS:
-        rows, digest = _checked_bulk(raw_dir / generation / "bulk.csv")
+        rows, digest = read_checked_bulk(raw_dir / generation / "bulk.csv")
         selected: list[Result] = []
         seen: set[str] = set()
         for raw in rows:
             if raw["Benchmark"] != "CINT" + generation[3:] + ("rate" if track == "rate" else ""):
                 continue
-            peak = _positive(raw.get("Result") or raw.get("Peak Result"))
-            base = _positive(raw.get("Baseline") or raw.get("Base Result"))
+            peak = positive(raw.get("Result") or raw.get("Peak Result"))
+            base = positive(raw.get("Baseline") or raw.get("Base Result"))
             if peak is None and base is None:
                 continue
             processor = raw.get("Processor") or raw.get("CPU") or ""
             chips = raw.get("# chips") or raw.get("# Chips") or ""
             if not processor or not chips.isdigit():
                 continue
-            url = _source_url(raw["Disclosure"])
+            url = disclosure_url(raw["Disclosure"])
             result_id = url.split("/results/", 1)[1].removesuffix(".html")
             if result_id in seen:
                 raise ValueError(f"duplicate {generation} integer-{track} result: {result_id}")
@@ -83,14 +83,14 @@ def collect_integer(raw_dir: Path, track: str) -> dict[str, list[Result]]:
                     generation,
                     result_id,
                     raw["System"],
-                    _normalized(raw["System"]),
+                    normalized(raw["System"]),
                     processor,
-                    _processor_key(processor),
+                    processor_text_key(processor),
                     int(chips),
                     int(cores) if cores.isdigit() else None,
                     int(threads) if threads.isdigit() else None,
-                    _frequency(raw, processor),
-                    _memory_mib(raw.get("Memory", "")),
+                    clock_mhz(raw, processor),
+                    memory_mib(raw.get("Memory", "")),
                     raw.get("Operating System") or raw.get("Op. Sys.") or "",
                     raw.get("Compiler", ""),
                     peak,
@@ -127,13 +127,13 @@ def collect_cpu92_rate(path: Path, raw_dir: Path | None = None) -> list[Result]:
                     "cpu92",
                     row["source_url"].rsplit("/", 1)[-1],
                     row["system"],
-                    _normalized(row["system"]),
+                    normalized(row["system"]),
                     processor,
-                    _processor_key(processor),
+                    processor_text_key(processor),
                     int(row["cpu_count"]),
                     None,
                     None,
-                    _frequency({"System": row["system"]}, processor),
+                    clock_mhz({"System": row["system"]}, processor),
                     float(row["memory_mib"]) if row["memory_mib"] else None,
                     row["os"],
                     row["compiler"],
@@ -206,14 +206,14 @@ def parse_speed92(document, url, digest):
         "cpu92",
         url.rsplit("/", 1)[-1],
         system,
-        _normalized(system),
+        normalized(system),
         processor,
-        _processor_key(processor),
+        processor_text_key(processor),
         int(chips[0]),
         None,
         None,
-        _frequency({"System": system}, processor),
-        _memory_mib(fields["Memory"]),
+        clock_mhz({"System": system}, processor),
+        memory_mib(fields["Memory"]),
         fields["O/S & Version"],
         fields["Compilers & Version"],
         peak,
@@ -231,14 +231,14 @@ def collect_speed92(raw):
     summaries = {}
     for path in sorted((raw / "cpu92/netlib").glob("spec*.cint92.*.col0.html")):
         meta = json.loads(path.with_name(path.name + ".meta.json").read_text())
-        body, digest = _checked(path, meta["source_url"])
+        body, digest = read_checked_source(path, meta["source_url"])
         mode = "base" if path.name.startswith("specbase.") else "peak"
         for name, score in re.findall(r'(spec\.[^/"#]+\.notes\.html)[^>]*>.*?</A>\s*([0-9.]+)', body, re.I):
             summaries.setdefault((name, mode), []).append((float(score), meta["source_url"], digest))
     for path in sorted((raw / "cpu92/netlib/details").glob("*.cint92.*.html")):
         meta = json.loads(path.with_name(path.name + ".meta.json").read_text())
         # Hash/identity failures are fatal; unsupported document layouts are audited.
-        body, digest = _checked(path, meta["source_url"])
+        body, digest = read_checked_source(path, meta["source_url"])
         try:
             result = parse_speed92(body, meta["source_url"], digest)
         except ValueError as exc:
@@ -263,5 +263,3 @@ def collect_speed92(raw):
                 )
             )
     return records, audit
-
-

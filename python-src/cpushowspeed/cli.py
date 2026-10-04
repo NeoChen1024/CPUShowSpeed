@@ -1,14 +1,14 @@
 """Command-line entry point for CPUShowSpeed."""
 
 import click
-from cpushowspeed.bridge import bridge
+from cpushowspeed.bridge import chain
 from cpushowspeed.caption import caption_command
 from cpushowspeed.caption_backfill import backfill_captions_command
 from cpushowspeed.classic import classic
 from cpushowspeed.classic_bench import bench
 from cpushowspeed.classic_mix import mix_inventory
 from cpushowspeed.classic_network import network_fit
-from cpushowspeed.classic_overlap import overlap_spec
+from cpushowspeed.classic_overlap import parse_sources_command
 from cpushowspeed.classic_pdf import extract_pdf_tables
 from cpushowspeed.classic_power_law import power_law_sensitivity
 from cpushowspeed.classical_fit import composite_fit, spec89_fit
@@ -22,7 +22,7 @@ from cpushowspeed.ocr import ocr_command
 from cpushowspeed.research_registry import research
 from cpushowspeed.spec import spec
 from cpushowspeed.spec89 import spec89
-from cpushowspeed.spec92_rate import legacy92_rate_parse_command
+from cpushowspeed.spec92_rate import cpu92_rate_parse_command
 from cpushowspeed.spec_field_audit import audit_fields, fetch_resources
 from cpushowspeed.table_migrate import render_tables_command
 from cpushowspeed.unified_timeline import timeline_command
@@ -39,7 +39,12 @@ def plot() -> None:
     """Render the combined VAXen timeline."""
 
 
-spec.add_command(legacy92_rate_parse_command)
+@click.group()
+def mix() -> None:
+    """Instruction-mix ratings: source inventory, OCR evidence and fits against classical results."""
+
+
+spec.add_command(cpu92_rate_parse_command)
 cli.add_command(research)
 data.add_command(extract_command)
 cli.add_command(data)
@@ -48,7 +53,7 @@ spec.add_command(audit_fields)
 spec.add_command(fetch_resources)
 cli.add_command(spec)
 cli.add_command(spec89)
-cli.add_command(bridge)
+cli.add_command(chain)
 plot.add_command(timeline_command)
 cli.add_command(plot)
 documents.add_command(ocr_command)
@@ -56,15 +61,16 @@ documents.add_command(caption_command)
 documents.add_command(backfill_captions_command)
 documents.add_command(render_tables_command)
 cli.add_command(documents)
-classic.add_command(overlap_spec)
-classic.add_command(mix_inventory)
+classic.add_command(parse_sources_command)
 classic.add_command(extract_pdf_tables)
 classic.add_command(composite_fit)
 classic.add_command(spec89_fit)
 classic.add_command(network_fit)
 classic.add_command(power_law_sensitivity)
-classic.add_command(mix_network_fit)
-classic.add_command(mix_evidence)
-classic.add_command(mix_bridge)
 cli.add_command(classic)
+mix.add_command(mix_inventory)
+mix.add_command(mix_evidence)
+mix.add_command(mix_bridge)
+mix.add_command(mix_network_fit)
+cli.add_command(mix)
 cli.add_command(bench)

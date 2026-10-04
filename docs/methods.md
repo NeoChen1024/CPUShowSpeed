@@ -78,7 +78,7 @@ integer-rate submissions. The [source guide](sources.md) records collection
 caveats and the [data contract](data-contract.md) records value, date and
 provenance requirements.
 
-The implemented `bridge bootstrap-rate-chain` command audits cross-edge
+The implemented `chain bootstrap-rate` command audits cross-edge
 configuration/source overlap, then propagates 10,000 complete multiplier
 vectors under a disjoint-cohort independence assumption. The
 [rate audit](../research/spec-chains.md#conditional-whole-chain-confidence-intervals)

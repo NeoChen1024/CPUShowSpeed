@@ -19,13 +19,13 @@ Source collection and the field/resource audits behind these inputs are in
 From the repository root, using the uv-managed `.venv`:
 
 ```sh
-./.venv/bin/cpushowspeed spec legacy92-rate-parse
+./.venv/bin/cpushowspeed spec cpu92-rate-parse
 ./.venv/bin/cpushowspeed data extract
 ./.venv/bin/cpushowspeed data build
-./.venv/bin/cpushowspeed bridge fit-rate-generations
-./.venv/bin/cpushowspeed bridge fit-rate92-anchor
-./.venv/bin/cpushowspeed bridge bootstrap-rate-chain
-./.venv/bin/cpushowspeed bridge fit-speed-chain
+./.venv/bin/cpushowspeed chain fit-rate-generations
+./.venv/bin/cpushowspeed chain fit-cpu92-rate-anchor
+./.venv/bin/cpushowspeed chain bootstrap-rate
+./.venv/bin/cpushowspeed chain fit-speed
 ```
 
 Every fit command takes `--database` (default the built database). A factor
@@ -195,7 +195,7 @@ fitted from the same database inputs.
 
 ### Conditional whole-chain confidence intervals
 
-`bridge bootstrap-rate-chain` writes the [chain interval CSV](data/spec/fitting/integer-rate-chain-intervals.csv)
+`chain bootstrap-rate` writes the [chain interval CSV](data/spec/fitting/integer-rate-chain-intervals.csv)
 for both anchor scenarios and modes, a bootstrap NPZ of complete multiplier
 vectors and a JSON audit (input hashes, stream definition, NumPy version, edge
 overlap and within-chain log-scale covariance).
@@ -253,7 +253,7 @@ universal error margin or validated public historical index is not claimed.
 
 ## Speed chain
 
-`bridge fit-speed-chain` (`integer-speed-chain-v1`) fits each adjacent speed edge
+`chain fit-speed` (`integer-speed-chain-v1`) fits each adjacent speed edge
 exactly as the later rate edges: automatic hardware-near speed pairs over
 resolved identity, the same system/configuration estimator, a
 configuration-cluster bootstrap per edge (10,000 draws, seed 20261003) and

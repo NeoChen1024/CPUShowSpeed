@@ -6,8 +6,8 @@ import unittest
 from cpushowspeed.observation_store import result_pair_reviews
 from cpushowspeed.spec92_rate_fit import (
     VAX_RATE92_REFERENCE,
-    _selected,
     _software_near,
+    selected_pairs,
 )
 
 
@@ -32,10 +32,10 @@ class Cpu92RateFitTests(unittest.TestCase):
             pair("unreviewed", "hardware_near"),
             pair("accept", "name_only"),
         ]
-        self.assertEqual(_selected(pairs, "hardware_near"), [pairs[0], pairs[1], pairs[4]])
-        self.assertEqual(_selected(pairs, "same_os"), [pairs[0], pairs[1], pairs[4]])
+        self.assertEqual(selected_pairs(pairs, "hardware_near"), [pairs[0], pairs[1], pairs[4]])
+        self.assertEqual(selected_pairs(pairs, "same_os"), [pairs[0], pairs[1], pairs[4]])
         pairs[1]["new_os"] = "HP-UX B.10.20"
-        self.assertEqual(_selected(pairs, "same_os"), [pairs[0], pairs[4]])
+        self.assertEqual(selected_pairs(pairs, "same_os"), [pairs[0], pairs[4]])
 
     def test_result_pair_reviews_strip_prefixes_and_ignore_other_suites(self):
         db = sqlite3.connect(":memory:")

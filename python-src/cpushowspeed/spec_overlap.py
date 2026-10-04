@@ -93,11 +93,11 @@ class Result:
     raw_fields: dict = field(default_factory=dict, compare=False, hash=False)
 
 
-def _normalized(value: str) -> str:
+def normalized(value: str) -> str:
     return re.sub(r"[^a-z0-9]", "", value.lower())
 
 
-def _processor_key(value: str) -> str:
+def processor_text_key(value: str) -> str:
     """Remove disclosure prose while retaining model, generation, and SKU tokens."""
     name = value.lower()
     name = re.sub(r"\([^)]*\)", "", name)
@@ -105,10 +105,10 @@ def _processor_key(value: str) -> str:
     name = re.sub(r"\d+(?:\.\d+)?\s*[gm]hz", "", name)
     for word in ("processor", "cpu", "chip", "intel", "amd", "ibm", "powerpc", "alpha", "microprocessor", "tm", "core"):
         name = re.sub(r"\b" + word + r"\b", " ", name)
-    return _normalized(name)
+    return normalized(name)
 
 
-def _frequency(raw: dict[str, str], processor: str) -> float | None:
+def clock_mhz(raw: dict[str, str], processor: str) -> float | None:
     value = raw.get("Processor MHz", "").strip()
     if re.fullmatch(r"\d+(?:\.\d+)?", value):
         return float(value)
@@ -119,7 +119,7 @@ def _frequency(raw: dict[str, str], processor: str) -> float | None:
     return None
 
 
-def _memory_mib(value: str) -> float | None:
+def memory_mib(value: str) -> float | None:
     text = value.strip()
     match = re.match(r"(?:(\d+)\s*[x×*]\s*)?(\d+(?:\.\d+)?)\s*(TB|GB|MB)\b", text, re.I)
     if match:
@@ -128,7 +128,7 @@ def _memory_mib(value: str) -> float | None:
     return None
 
 
-def _positive(value: str | None) -> float | None:
+def positive(value: str | None) -> float | None:
     try:
         score = float(value or "")
     except ValueError:
@@ -136,7 +136,7 @@ def _positive(value: str | None) -> float | None:
     return score if math.isfinite(score) and score > 0 else None
 
 
-def _source_url(disclosure: str) -> str:
+def disclosure_url(disclosure: str) -> str:
     match = re.search(r'<A\s+HREF="([^"]+\.html)"', disclosure, re.I)
     if not match:
         raise ValueError(f"result has no HTML disclosure: {disclosure[:100]}")
@@ -146,7 +146,7 @@ def _source_url(disclosure: str) -> str:
     return url
 
 
-def _checked_bulk(path: Path) -> tuple[list[dict[str, str]], str]:
+def read_checked_bulk(path: Path) -> tuple[list[dict[str, str]], str]:
     body = path.read_bytes()
     meta = json.loads(path.with_name(path.name + ".meta.json").read_text())
     digest = hashlib.sha256(body).hexdigest()
@@ -210,7 +210,7 @@ def _same_text(left: str, right: str) -> bool:
     return " ".join(left.lower().split()) == " ".join(right.lower().split())
 
 
-def _automatic_pairs(results: dict[str, list[Result]], older: str, newer: str) -> list[dict[str, object]]:
+def automatic_pairs(results: dict[str, list[Result]], older: str, newer: str) -> list[dict[str, object]]:
     old_by_key: dict[tuple[str, str, int], list[Result]] = defaultdict(list)
     new_by_key: dict[tuple[str, str, int], list[Result]] = defaultdict(list)
     for item in results[older]:
@@ -261,7 +261,7 @@ def _processor_family(key: str) -> str:
     return "Other"
 
 
-def _statistics(rows: list[dict[str, object]], mode: str, eligible_tiers: set[str] | None = None) -> dict[str, object] | None:
+def ratio_statistics(rows: list[dict[str, object]], mode: str, eligible_tiers: set[str] | None = None) -> dict[str, object] | None:
     tiers = eligible_tiers if eligible_tiers is not None else {"reviewed_detail", "hardware_near"}
     selected = [row for row in rows if row["match_tier"] in tiers and row[f"{mode}_ratio"] != ""]
     systems: dict[tuple[str, str, int, float], list[dict[str, object]]] = defaultdict(list)

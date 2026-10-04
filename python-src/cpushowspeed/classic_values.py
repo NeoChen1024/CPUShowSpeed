@@ -32,5 +32,3 @@ def linpack_n100(record, pages):
 
 
 TARGETS = ("SPECmark89", "SPECint89", "SPECfp89", "SPECrate_base_int92", "SPECrate_int92")
-
-

@@ -27,7 +27,7 @@ import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
 from cpushowspeed import ocr_settings
 from cpushowspeed.docir_rich_table import TableConversionError, convert_rich_table
-from cpushowspeed.documents import DEFAULT_DATABASE, _connect
+from cpushowspeed.documents import DEFAULT_DATABASE, open_inventory
 from cpushowspeed.ocr_backends import (
     BACKENDS,
     LayoutError,
@@ -412,7 +412,7 @@ def _read_file_list(file_list: Path, input_root: Path) -> list[str]:
     return paths
 
 
-def _select_inventory(
+def select_inventory(
     connection: sqlite3.Connection, input_root: Path, file_list: Path | None, prefix: str, limit_documents: int | None
 ) -> list[sqlite3.Row]:
     columns = "relative_path, pages, size_bytes, blake3, mtime_ns, ctime_ns, status"
@@ -456,11 +456,11 @@ async def _run_ocr(
     backend: str = "chandra",
 ) -> bool:
     adapter = get_backend(backend)
-    connection = _connect(database, input_root)
+    connection = open_inventory(database, input_root)
     image_catalog = _init_image_catalog(output_root / "ImagePool")
     try:
         _init_state(connection)
-        inventory = _select_inventory(connection, input_root, file_list, prefix, limit_documents)
+        inventory = select_inventory(connection, input_root, file_list, prefix, limit_documents)
         if not inventory:
             raise click.ClickException("no inventoried PDFs match the selection")
         destinations = {}

@@ -15,12 +15,12 @@ from cpushowspeed.research_io import code_hashes, write_csv
 from cpushowspeed.spec import get_cached
 from cpushowspeed.spec_inputs import collect_integer
 from cpushowspeed.spec_overlap import (
-    _checked_bulk,
-    _frequency,
-    _memory_mib,
-    _normalized,
-    _positive,
-    _source_url,
+    clock_mhz,
+    disclosure_url,
+    memory_mib,
+    normalized,
+    positive,
+    read_checked_bulk,
 )
 
 MEMORY = {"memory_unknown", "memory_mismatch"}
@@ -46,7 +46,7 @@ def candidate_system_key(item):
     match = re.search(r"\b6/(\d+)\s*$", value)
     if match and item.clock_mhz and abs(float(match[1]) / item.clock_mhz - 1) <= 0.01:
         value = value[: match.start()]
-    return _normalized(value)
+    return normalized(value)
 
 
 @cache
@@ -178,12 +178,12 @@ def review_disclosures(urls, records, raw, fetch_missing):
                 m = re.search(r"(\d+)\s+chips?", fields["CPU(s) enabled:"])
                 raw_chips = m[1] if m else ""
             row["parsed_chips"] = int(raw_chips) if raw_chips.isdigit() else None
-            row["parsed_memory_mib"] = _memory_mib(fields["Memory:"])
-            row["parsed_clock_mhz"] = _frequency(
+            row["parsed_memory_mib"] = memory_mib(fields["Memory:"])
+            row["parsed_clock_mhz"] = clock_mhz(
                 {"System": fields["Model Name:"], "Processor MHz": fields["CPU MHz:"]}, fields["CPU:"]
             )
-            row["model_matches_bulk"] = _normalized(fields["Model Name:"]) == record.system_key
-            row["cpu_text_matches_bulk"] = _normalized(fields["CPU:"]) == _normalized(record.processor)
+            row["model_matches_bulk"] = normalized(fields["Model Name:"]) == record.system_key
+            row["cpu_text_matches_bulk"] = normalized(fields["CPU:"]) == normalized(record.processor)
             row["chips_match_bulk"] = row["parsed_chips"] == record.chips
             row["memory_matches_bulk"] = row["parsed_memory_mib"] == record.memory_mib
             row["clock_matches_bulk"] = row["parsed_clock_mhz"] == record.clock_mhz
@@ -208,7 +208,7 @@ def review_disclosures(urls, records, raw, fetch_missing):
 def analyze(raw, output, research, fetch_review=False):
     output.mkdir(parents=True, exist_ok=True)
     research.mkdir(parents=True, exist_ok=True)
-    bulk_rows = {g: _checked_bulk(raw / g / "bulk.csv")[0] for g in ("cpu95", "cpu2000")}
+    bulk_rows = {g: read_checked_bulk(raw / g / "bulk.csv")[0] for g in ("cpu95", "cpu2000")}
     exclusions = []
     for generation, rows in bulk_rows.items():
         for row in rows:
@@ -216,8 +216,8 @@ def analyze(raw, output, research, fetch_review=False):
                 continue
             reasons = []
             if (
-                _positive(row.get("Result") or row.get("Peak Result")) is None
-                and _positive(row.get("Baseline") or row.get("Base Result")) is None
+                positive(row.get("Result") or row.get("Peak Result")) is None
+                and positive(row.get("Baseline") or row.get("Base Result")) is None
             ):
                 reasons.append("no_positive_score")
             if not (row.get("Processor") or row.get("CPU")):
@@ -233,7 +233,7 @@ def analyze(raw, output, research, fetch_review=False):
                         raw_result=row.get("Result") or row.get("Peak Result"),
                         raw_base=row.get("Baseline") or row.get("Base Result"),
                         reason=";".join(reasons),
-                        source_url=_source_url(row["Disclosure"]),
+                        source_url=disclosure_url(row["Disclosure"]),
                     )
                 )
     write_csv(research / "collection-exclusions.csv", exclusions)
@@ -410,14 +410,14 @@ def analyze(raw, output, research, fetch_review=False):
     return dict(summary=str(research / "ablation.csv"), systems=len(inventory), candidate_pairs=len(exports))
 
 
-@click.command("audit-95-2000")
+@click.command("audit-cpu95-cpu2000")
 @click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/95-2000-audit"), show_default=True)
 @click.option(
     "--research-dir", type=click.Path(path_type=Path), default=Path("research/data/spec/95-2000-audit"), show_default=True
 )
 @click.option("--fetch-review", is_flag=True, help="Fetch missing source disclosures selected by this audit.")
-def audit_95_2000(raw_dir, output_dir, research_dir, fetch_review):
+def audit_cpu95_cpu2000_command(raw_dir, output_dir, research_dir, fetch_review):
     """Explain CPU95/2000 joint-overlap losses without changing production matches."""
     try:
         result = analyze(raw_dir, output_dir, research_dir, fetch_review)

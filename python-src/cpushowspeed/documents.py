@@ -102,7 +102,7 @@ def _inventory_one(root: str, relative_path: str, expected: tuple[int, int, int,
     return result
 
 
-def _connect(database: Path, root: Path | None = None) -> sqlite3.Connection:
+def open_inventory(database: Path, root: Path | None = None) -> sqlite3.Connection:
     database.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(database)
     connection.row_factory = sqlite3.Row
@@ -193,7 +193,7 @@ def _store_result(connection: sqlite3.Connection, result: dict, run_id: str) -> 
     )
 
 
-def _summary(connection: sqlite3.Connection, database: Path) -> None:
+def print_summary(connection: sqlite3.Connection, database: Path) -> None:
     console = Console()
     root = connection.execute("SELECT value FROM metadata WHERE key = 'root'").fetchone()
     rows = connection.execute("SELECT relative_path, size_bytes, pages, status FROM files").fetchall()
@@ -243,7 +243,7 @@ def inventory_command(root: Path, database: Path, workers: int, rescan: bool) ->
     """Hash every new or changed PDF with BLAKE3 and record its page count."""
     root = root.resolve(strict=True)
     database = database.resolve()
-    with closing(_connect(database, root)) as connection:
+    with closing(open_inventory(database, root)) as connection:
         try:
             discovered = _discover(root)
         except OSError as exc:
@@ -341,7 +341,7 @@ def inventory_command(root: Path, database: Path, workers: int, rescan: bool) ->
             (run_id,),
         )
         connection.commit()
-        _summary(connection, database)
+        print_summary(connection, database)
         click.echo(f"Scanned {completed:,}; reused {len(skipped):,}; stat errors {len(stat_errors):,}.", err=True)
 
 
@@ -369,7 +369,7 @@ def report_command(
     """Show PDF inventory, OCR progress, and optional caption progress."""
     from cpushowspeed.document_report import print_document_report
 
-    with closing(_connect(database)) as connection:
+    with closing(open_inventory(database)) as connection:
         print_document_report(connection, database, output_root, file_list, all_documents, caption_database)
 
 
@@ -380,7 +380,7 @@ def report_command(
 @click.option("--output", type=click.Path(path_type=Path, dir_okay=False), required=True, help="JSONL path, or '-' for stdout.")
 def export_command(database: Path, output: Path) -> None:
     """Export per-file records as JSONL."""
-    with closing(_connect(database)) as connection:
+    with closing(open_inventory(database)) as connection:
         root = connection.execute("SELECT value FROM metadata WHERE key = 'root'").fetchone()
         source_root = root["value"] if root else None
         destination = sys.stdout if str(output) == "-" else None

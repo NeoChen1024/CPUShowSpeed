@@ -188,11 +188,11 @@ def records(raw):
     for result in collect_speed92(raw)[0]:
         yield from spec_observations(result)
     pages = Path("data/derived/classic/netlib-linpack-report.txt").read_text().split("\f")
-    for line in Path("data/derived/classic/overlap-spec/classical-records.jsonl").read_text().splitlines():
+    for line in Path("data/derived/classic/parsed-sources/classical-records.jsonl").read_text().splitlines():
         r = json.loads(line)
         for metric, score in classical_values(r, pages).items():
             yield historical_observation(r, metric, score, "classical")
-    for line in Path("data/derived/classic/overlap-spec/spec-records.jsonl").read_text().splitlines():
+    for line in Path("data/derived/classic/parsed-sources/spec-records.jsonl").read_text().splitlines():
         r = json.loads(line)
         if r["cohort"] == "SPEC92 rate Netlib":
             continue  # the same Netlib pages are the spec:cpu92 rate results
@@ -226,5 +226,3 @@ def records(raw):
             raw=row,
             qualification=row["fit_eligible"],
         )
-
-

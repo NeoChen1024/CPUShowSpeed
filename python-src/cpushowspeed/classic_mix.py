@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from cpushowspeed.classic_values import numeric
 from cpushowspeed.research_io import code_hashes, write_csv
 
-RECORDS = Path("data/derived/classic/overlap-spec/classical-records.jsonl")
+RECORDS = Path("data/derived/classic/parsed-sources/classical-records.jsonl")
 SOURCE = Path("data/derived/classic/longbottom-cpumix-84dcf58a736b.json")
 SNAPSHOT = Path("data/raw/classic/blobs/84/84dcf58a736be9fe1622801cbae47b984ae15915507f6b2108a5c29250180173")
 
@@ -51,7 +51,7 @@ def weights(source):
     ]
 
 
-@click.command("mix-inventory")
+@click.command("inventory")
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/classic/mix-study"), show_default=True)
 def mix_inventory(output_dir):
     """Inventory Gibson/ADP scores and mix definitions from the archived Longbottom page."""

@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 
 import click
 from cpushowspeed import spec92_disclosure
-from cpushowspeed.spec_overlap import _memory_mib
+from cpushowspeed.spec_overlap import memory_mib
 
 METHOD_VERSION = "netlib-cpu92-rate-v3"
 BENCHMARKS = ("008.espresso", "022.li", "023.eqntott", "026.compress", "072.sc", "085.gcc")
@@ -62,7 +62,7 @@ BENCHMARK_FIELDS = (
 )
 
 
-def _checked(path: Path, expected_url: str) -> tuple[str, str]:
+def read_checked_source(path: Path, expected_url: str) -> tuple[str, str]:
     body = path.read_bytes()
     meta = json.loads(path.with_name(path.name + ".meta.json").read_text())
     digest = hashlib.sha256(body).hexdigest()
@@ -72,7 +72,7 @@ def _checked(path: Path, expected_url: str) -> tuple[str, str]:
 
 
 def _summary_score(path: Path, url: str, detail_name: str) -> tuple[float, str]:
-    body, digest = _checked(path, url)
+    body, digest = read_checked_source(path, url)
     match = re.search(re.escape(detail_name) + r"[^>]*>.*?</A>\s*([0-9]+(?:\.[0-9]+)?)", body, re.I | re.S)
     if match is None:
         raise ValueError(f"detail absent from rate summary: {detail_name} {url}")
@@ -136,7 +136,7 @@ def _detail(document: str, url: str, digest: str, summary: dict[str, tuple[str, 
     cpu_count = re.match(r"\d+", fields["Number of CPUs"])
     if cpu_count is None or not fields["CPU"] or not fields["O/S & Version"] or page["test_month"] is None:
         raise ValueError(f"missing CPU, CPU count, OS or test date: {url}")
-    parsed_memory = _memory_mib(fields["Memory"])
+    parsed_memory = memory_mib(fields["Memory"])
     return (
         {
             "method_version": METHOD_VERSION,
@@ -193,7 +193,7 @@ def analyze_cpu92_rate(raw_dir: Path, manifest: Path, output_dir: Path) -> dict[
             exclusions.append({"source_url": url, "reason": "detail_not_cached"})
             continue
         try:
-            document, digest = _checked(path, url)
+            document, digest = read_checked_source(path, url)
             record, rows = _detail(document, url, digest, summaries)
         except (ValueError, IndexError) as exc:
             exclusions.append({"source_url": url, "reason": str(exc)})
@@ -227,7 +227,7 @@ def analyze_cpu92_rate(raw_dir: Path, manifest: Path, output_dir: Path) -> dict[
     return summary
 
 
-@click.command("legacy92-rate-parse")
+@click.command("cpu92-rate-parse")
 @click.option("--raw-dir", type=click.Path(path_type=Path), default=Path("data/raw/spec"), show_default=True)
 @click.option(
     "--manifest",
@@ -236,7 +236,7 @@ def analyze_cpu92_rate(raw_dir: Path, manifest: Path, output_dir: Path) -> dict[
     show_default=True,
 )
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/cpu92-rate"), show_default=True)
-def legacy92_rate_parse_command(raw_dir: Path, manifest: Path, output_dir: Path) -> None:
+def cpu92_rate_parse_command(raw_dir: Path, manifest: Path, output_dir: Path) -> None:
     """Verify cached CINT92 rate details against their issue summaries."""
     try:
         result = analyze_cpu92_rate(raw_dir, manifest, output_dir)

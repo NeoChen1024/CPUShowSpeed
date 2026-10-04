@@ -174,7 +174,7 @@ flowchart TD
 | classic-acquisition | [guide](../research/historical-sources.md) | `research/data/classic/acquisition.csv` | required in checkout |
 | classic-pdf-tables | [guide](../research/historical-sources.md) | `research/data/classic/pdf-extraction/tables.jsonl` | required in checkout |
 | curated-observations | [guide](../docs/data-schema.md) | `data/curated/observation.jsonl` | required in checkout |
-| classic-overlap | [guide](../research/classical-fits.md) | `data/derived/classic/overlap-spec` | optional derived input |
+| classic-overlap | [guide](../research/classical-fits.md) | `data/derived/classic/parsed-sources` | optional derived input |
 | schema-database | [guide](../docs/data-schema.md) | `data/derived/schema/cpushowspeed.sqlite` | optional derived input |
 | historical-observations | [guide](../research/historical-sources.md) | `research/data/historical` | required in checkout |
 | curated-sources | [guide](../docs/data-schema.md) | `data/curated/source.jsonl` | required in checkout |

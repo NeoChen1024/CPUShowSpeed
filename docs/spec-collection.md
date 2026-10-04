@@ -42,9 +42,9 @@ rate reports, then checks composite scores against the issue summaries and
 per-benchmark rate rows:
 
 ```sh
-./.venv/bin/cpushowspeed spec legacy92-rate
-./.venv/bin/cpushowspeed spec legacy92-rate-fetch
-./.venv/bin/cpushowspeed spec legacy92-rate-parse
+./.venv/bin/cpushowspeed spec cpu92-rate-index
+./.venv/bin/cpushowspeed spec cpu92-rate-fetch
+./.venv/bin/cpushowspeed spec cpu92-rate-parse
 ```
 
 The parser writes [result records](../data/derived/spec/cpu92-rate/cpu92-rate-records.csv)
@@ -69,8 +69,8 @@ source evidence, not part of this official-submission fit.
 ```sh
 ./.venv/bin/cpushowspeed data extract
 ./.venv/bin/cpushowspeed data build
-./.venv/bin/cpushowspeed bridge fit-rate-generations
-./.venv/bin/cpushowspeed bridge fit-rate92-anchor
+./.venv/bin/cpushowspeed chain fit-rate-generations
+./.venv/bin/cpushowspeed chain fit-cpu92-rate-anchor
 ```
 
 Both fit commands read the built database (`--database`, default
@@ -92,7 +92,7 @@ material. They do not enter these rate commands.
 ## Whole-chain rate confidence intervals
 
 ```sh
-./.venv/bin/cpushowspeed bridge bootstrap-rate-chain
+./.venv/bin/cpushowspeed chain bootstrap-rate
 ```
 
 Run after both rate-fitting commands. The source-hash and edge-overlap checks
@@ -104,7 +104,7 @@ and uncertainty scope before propagating the draws.
 
 ## SPEC95/CPU2000 overlap-loss audit
 
-`uv run --no-sync cpushowspeed bridge audit-95-2000 --fetch-review` reproduces
+`uv run --no-sync cpushowspeed chain audit-cpu95-cpu2000 --fetch-review` reproduces
 the [SPEC95/CPU2000 overlap-loss audit](../research/spec-sources.md#cpu95cpu2000-overlap-audit).
 It exports candidate aliases, RAM/resource ablations and source-field checks
 without changing production matches or coefficients. Omit `--fetch-review`

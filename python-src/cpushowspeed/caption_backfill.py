@@ -15,7 +15,7 @@ import click
 from cpushowspeed.docir_rich_table import walk_content
 from cpushowspeed.document_report import collect_ocr_stats
 from cpushowspeed.documents import DEFAULT_DATABASE
-from cpushowspeed.ocr import CONSOLE, _select_inventory
+from cpushowspeed.ocr import CONSOLE, select_inventory
 from rich.progress import (
     BarColumn,
     MofNCompleteColumn,
@@ -133,7 +133,7 @@ def backfill_captions_command(
             run = inventory.execute("SELECT run_id FROM ocr_runs WHERE output_root=?", (str(output),)).fetchone()
             if root is None or run is None:
                 raise click.ClickException("inventory has no OCR run for this output root")
-            selected = _select_inventory(inventory, Path(root["value"]), file_list, "", None)
+            selected = select_inventory(inventory, Path(root["value"]), file_list, "", None)
             stats = collect_ocr_stats(inventory, run["run_id"], output, selected)
             CONSOLE.print(
                 f"Selected {len(selected):,} PDFs; {stats.published_documents:,} published documents / {stats.published_pages:,} pages."

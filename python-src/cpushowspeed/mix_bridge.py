@@ -18,7 +18,7 @@ SCENARIOS = ("resolved_system", "plus_pending_links")
 RESEARCH = Path("research/data/classic/mix-study")
 
 
-def _rows(db, scope):
+def observation_rows(db, scope):
     """(result_id, system, system_id, metric, value, source_url) for every observation in one scope."""
     query = (
         "SELECT result_id, json_extract(record, '$.system'), system_id, metric_id, value, json_extract(record, '$.source.url') "
@@ -84,7 +84,7 @@ def overlap(mixes, db, scope, metrics, kind):
     """Mix ratings and SPEC values of one resolved system; an audit, not fitting pairs."""
     pairs, coverage = [], []
     values = defaultdict(list)
-    for result_id, system, system_id, metric, value, url in _rows(db, scope) if isinstance(scope, str) else scope:
+    for result_id, system, system_id, metric, value, url in observation_rows(db, scope) if isinstance(scope, str) else scope:
         metric = {"cpu92:integer:speed:peak": "SPECint92", "cpu92:integer:speed:base": "SPECbase_int92"}.get(metric, metric)
         metric = {"cpu92:integer:rate:peak": "SPECrate_int92", "cpu92:integer:rate:base": "SPECrate_base_int92"}.get(metric, metric)
         if metric in metrics and system_id:
@@ -115,7 +115,7 @@ def overlap(mixes, db, scope, metrics, kind):
     return pairs, coverage, target_coverage
 
 
-@click.command("mix-bridge")
+@click.command("fit-classical")
 @click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/classic/mix-bridge"), show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=RESEARCH, show_default=True)
@@ -133,7 +133,7 @@ def mix_bridge(database, output_dir, research_dir, bootstrap, seed):
                 kips=value,
                 source_url=url,
             )
-            for rid, system, system_id, metric, value, url in _rows(db, MIX_SCOPE)
+            for rid, system, system_id, metric, value, url in observation_rows(db, MIX_SCOPE)
         ]
         classical = [r for r in results(db, SCOPES) if r.classical and set(r.classical) <= set(CLASSICAL)]
         links = pending_links(db)
@@ -141,7 +141,7 @@ def mix_bridge(database, output_dir, research_dir, bootstrap, seed):
         spec92_rows = [
             row
             for scope in ("spec:cpu92", "historical-spec:spec92-dec", "reviewed-vector:dec-n3909-1994")
-            for row in _rows(db, scope)
+            for row in observation_rows(db, scope)
         ]
         spec92_pairs, spec92_coverage, spec92_targets = overlap(mixes, db, spec92_rows, SPEC92, "spec92")
         digest = inputs_digest(db)

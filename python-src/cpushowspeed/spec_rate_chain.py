@@ -15,7 +15,7 @@ import click
 import numpy as np
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import connect, inputs_digest
-from cpushowspeed.spec92_rate_fit import VAX_RATE92_REFERENCE, _selected
+from cpushowspeed.spec92_rate_fit import VAX_RATE92_REFERENCE, selected_pairs
 from cpushowspeed.spec_rate_fit import GENERATIONS as LATER_GENERATIONS
 from cpushowspeed.spec_rate_inputs import MODES, SCENARIOS, read_rate_factors
 
@@ -118,7 +118,7 @@ def analyze_chain(database: Path, research_dir: Path, fit_dir: Path) -> dict:
             logs = configuration_logs(cohorts[index], mode)
             downstream.append(bootstrap_log_means(logs, f"{mode}:{'-'.join(EDGES[index])}:strict"))
         for scenario_index, scenario in enumerate(SCENARIOS):
-            active = [_selected(cohorts[0], scenario), *cohorts[1:]]
+            active = [selected_pairs(cohorts[0], scenario), *cohorts[1:]]
             config_logs = [configuration_logs(rows, mode) for rows in active]
             point_edges = np.asarray([statistics.mean(list(logs.values())) for logs in config_logs])
             point_chain = propagate(point_edges[None, :])[0]
@@ -225,11 +225,11 @@ def analyze_chain(database: Path, research_dir: Path, fit_dir: Path) -> dict:
     return {"summary_file": str(summary_path), "interval_csv": str(interval_path), "bootstrap_draws": str(draws_path)}
 
 
-@click.command("bootstrap-rate-chain")
+@click.command("bootstrap-rate")
 @click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=Path("research/data/spec/fitting"), show_default=True)
 @click.option("--fit-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/fitting"), show_default=True)
-def bootstrap_rate_chain_command(database: Path, research_dir: Path, fit_dir: Path) -> None:
+def bootstrap_rate_command(database: Path, research_dir: Path, fit_dir: Path) -> None:
     """Bootstrap complete rate chains after checking cross-edge cluster overlap."""
     try:
         result = analyze_chain(database, research_dir, fit_dir)

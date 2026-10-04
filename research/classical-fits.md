@@ -22,7 +22,7 @@ models; they do not replace measured SPEC observations.
 
 ## Hardware overlap
 
-`classic overlap-spec` parses records (parser `classic-hardware-overlap-v2-records-only`;
+`classic parse-sources` parses records (parser `classic-hardware-overlap-v2-records-only`;
 semantics in the [collection guide](../docs/classic-collection.md#hardware-overlap-discovery)).
 It extracted 3,794 records from eight acquired sources, including CPU-only rows,
 instruction-mix listings and unreviewed PDF machine-line candidates, so the

@@ -11,7 +11,7 @@ from pathlib import Path
 
 import click
 from cpushowspeed.docir_rich_table import walk_content
-from cpushowspeed.ocr import _select_inventory
+from cpushowspeed.ocr import select_inventory
 from rich.console import Console
 from rich.table import Table
 
@@ -219,7 +219,7 @@ def print_document_report(
     all_documents: bool,
     caption_database: Path | None,
 ) -> None:
-    from cpushowspeed.documents import _summary
+    from cpushowspeed.documents import print_summary
 
     if file_list is not None and all_documents:
         raise click.ClickException("--file-list and --all cannot be combined")
@@ -228,11 +228,11 @@ def print_document_report(
     root = connection.execute("SELECT value FROM metadata WHERE key = 'root'").fetchone()
     if not root:
         raise click.ClickException("inventory database has no source root")
-    selected = _select_inventory(connection, Path(root["value"]), file_list, "", None)
+    selected = select_inventory(connection, Path(root["value"]), file_list, "", None)
     if not _has_table(connection, "ocr_runs"):
         if output_root is not None or caption_database is not None:
             raise click.ClickException("inventory database has no OCR runs")
-        _summary(connection, database)
+        print_summary(connection, database)
         Console().print("OCR: not started")
         return
     runs = connection.execute("SELECT run_id, output_root FROM ocr_runs ORDER BY created_at").fetchall()
@@ -247,13 +247,13 @@ def print_document_report(
     elif not runs:
         if caption_database is not None:
             raise click.ClickException("inventory database has no OCR runs")
-        _summary(connection, database)
+        print_summary(connection, database)
         Console().print("OCR: not started")
         return
     else:
         if file_list is not None or caption_database is not None:
             raise click.ClickException("multiple OCR runs; select one with --output-root")
-        _summary(connection, database)
+        print_summary(connection, database)
         table = Table(title="OCR runs")
         table.add_column("Output root")
         for row in runs:
@@ -264,7 +264,7 @@ def print_document_report(
         raise click.ClickException("OCR run exists but ocr_documents table is missing")
     stats = collect_ocr_stats(connection, run["run_id"], chosen_root, selected)
     caption_stats = collect_caption_stats(caption_database, stats.published) if caption_database is not None else None
-    _summary(connection, database)
+    print_summary(connection, database)
     console = Console()
     console.print(_ocr_table(stats, chosen_root, str(file_list) if file_list else "all eligible PDFs"))
     if caption_stats is not None:

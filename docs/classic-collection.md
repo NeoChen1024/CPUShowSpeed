@@ -7,9 +7,10 @@ interchangeable or importing normalized scores.
 ## Pipeline
 
 Collectors and parsers (`classic collect`, `extract`, `extract-pdf-tables`,
-`overlap-spec`, `mix-inventory`) write derived records; `data extract` and
+`parse-sources`, and `mix inventory`) write derived records; `data extract` and
 `data build` load them into the built database. The fitters
-(`classic composite-fit`, `spec89-fit`, `network-fit`, `mix-network-fit`, `mix-bridge`)
+(`classic composite-fit`, `spec89-fit`, `network-fit`, and `mix network-fit`,
+`fit-classical`)
 read only that database and pair classical with SPEC results by resolved
 `system_id` (schema step 5c, 2026-10-02). The former `prepare-pairs` /
 `prepare-sources` name-matching stage and the earlier diagnostic fitting commands
@@ -23,7 +24,7 @@ For the research interpretation, start with the [classical fits](../research/cla
 | --- | --- |
 | Acquire source snapshots | `classic collect`, `classic extract` below |
 | Extract reviewed PDF tables | [Selected tables](#selected-historical-pdf-tables) |
-| Parse records and build the database | `classic overlap-spec`, `classic mix-inventory`, then `data extract`, `data build` |
+| Parse records and build the database | `classic parse-sources`, `mix inventory`, then `data extract`, `data build` |
 | Fit current direct speed models | [Primary speed fitting](#primary-classical-speed-fitting) |
 | Add the SPEC89 estimated-target route | `classic spec89-fit` in the primary fitting section |
 
@@ -99,7 +100,7 @@ not replace a future reviewed per-result dataset.
 
 ## Hardware overlap discovery
 
-Run `.venv/bin/cpushowspeed classic overlap-spec` from the repository root.
+Run `.venv/bin/cpushowspeed classic parse-sources` from the repository root.
 It parses acquired sources and existing SPEC archives into records, requires
 Poppler's `pdftotext`, and does not download sources, pair records or calculate
 conversion factors. Pairing happens over resolved systems in the database.
@@ -130,7 +131,7 @@ The `model_key`/`relaxed_key` name helpers remain only for the legacy
 timeline's date lookup (removed in schema step 5d); they no longer pair records. Clocks are taken from the source's MHz field and
 never inferred from model suffixes.
 
-Outputs in `data/derived/classic/overlap-spec/`:
+Outputs in `data/derived/classic/parsed-sources/`:
 
 | File | Meaning |
 | --- | --- |
@@ -193,7 +194,7 @@ any nonempty score subset. See [input units and CI95 semantics](classical-predic
 
 ## Instruction-mix preparation
 
-`uv run cpushowspeed classic mix-inventory` inventories the cached CCTA/TSU
+`uv run cpushowspeed mix inventory` inventories the cached CCTA/TSU
 Gibson and ADP tables. It independently checks the cached HTML rows, records missing scores, validates operation weights, and preserves
 source/configuration/metric identities. Default outputs live in
 `data/derived/classic/mix-study/`; `--output-dir` selects another directory.
@@ -202,7 +203,7 @@ pairs mixes with classical rows. The
 [research report](../research/instruction-mix.md) owns the checked counts,
 configuration risks and next experiment design.
 
-`uv run cpushowspeed classic mix-evidence` screens the eight instruction-mix
+`uv run cpushowspeed mix evidence` screens the eight instruction-mix
 OCR selections for benchmark terms, including canonical table-cell text. It
 writes unverified page excerpts and a manifest with input hashes, page counts
 and missing-document flags under `data/derived/documents/mix-evidence/`.
@@ -210,7 +211,7 @@ It only reads published DocIR; it does not publish incomplete staged documents
 or turn keyword hits into calibrated scores. Original-page review and curated
 SC-3/DINKIAC CSVs are described in the same research report.
 
-`uv run cpushowspeed classic mix-bridge` pairs mix results with classical results
+`uv run cpushowspeed mix fit-classical` pairs mix results with classical results
 of the same resolved system (`resolved_system`), and separately adds the system
 links a review leaves open (`plus_pending_links`); it fits them with the shared
 geometric-ratio policy and audits direct SPEC89/SPEC92 overlap on the database. It preserves metric

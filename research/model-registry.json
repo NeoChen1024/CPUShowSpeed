@@ -487,7 +487,7 @@
     },
     {
       "id": "classic-overlap",
-      "path": "data/derived/classic/overlap-spec",
+      "path": "data/derived/classic/parsed-sources",
       "kind": "derived",
       "owner": "research/classical-fits.md",
       "optional": true,
@@ -644,7 +644,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
-      "command": "cpushowspeed bridge fit-rate92-anchor",
+      "command": "cpushowspeed chain fit-cpu92-rate-anchor",
       "outputs": [
         {
           "path": "research/data/spec/fitting/cpu92-cpu95-rate-direct-factors.csv",
@@ -683,7 +683,7 @@
         "rate92-unit"
       ],
       "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
-      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "command": "cpushowspeed chain bootstrap-rate",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
@@ -720,7 +720,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
-      "command": "cpushowspeed bridge fit-rate-generations",
+      "command": "cpushowspeed chain fit-rate-generations",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-rate-factors.csv",
@@ -761,7 +761,7 @@
         "rate-95-vaxen"
       ],
       "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
-      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "command": "cpushowspeed chain bootstrap-rate",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
@@ -798,7 +798,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
-      "command": "cpushowspeed bridge fit-rate-generations",
+      "command": "cpushowspeed chain fit-rate-generations",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-rate-factors.csv",
@@ -839,7 +839,7 @@
         "rate-2000-vaxen"
       ],
       "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
-      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "command": "cpushowspeed chain bootstrap-rate",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
@@ -876,7 +876,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
-      "command": "cpushowspeed bridge fit-rate-generations",
+      "command": "cpushowspeed chain fit-rate-generations",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-rate-factors.csv",
@@ -917,7 +917,7 @@
         "rate-2006-vaxen"
       ],
       "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
-      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "command": "cpushowspeed chain bootstrap-rate",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
@@ -954,7 +954,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Base/peak and adjacent edges may share hardware/source evidence; chain audit checks overlap",
-      "command": "cpushowspeed bridge fit-rate-generations",
+      "command": "cpushowspeed chain fit-rate-generations",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-rate-factors.csv",
@@ -995,7 +995,7 @@
         "rate-2017-vaxen"
       ],
       "shared_evidence": "Common edge bootstrap vectors propagate jointly to descendants",
-      "command": "cpushowspeed bridge bootstrap-rate-chain",
+      "command": "cpushowspeed chain bootstrap-rate",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-rate-chain-intervals.csv",
@@ -1383,7 +1383,7 @@
         "int89-speed-vaxen"
       ],
       "shared_evidence": "Ratings attach by resolved system; nodes sharing a rating form one bootstrap/holdout cluster; proxy holdouts are not SPEC errors",
-      "command": "cpushowspeed classic mix-network-fit",
+      "command": "cpushowspeed mix network-fit",
       "outputs": [
         {
           "path": "research/data/classic/mix-network-coefficients.csv",
@@ -1445,7 +1445,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Edges share no configuration or submission (checked)",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-factors.csv",
@@ -1486,7 +1486,7 @@
         "int92-speed-vaxen"
       ],
       "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
@@ -1524,7 +1524,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Edges share no configuration or submission (checked)",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-factors.csv",
@@ -1565,7 +1565,7 @@
         "speed-95-vaxen"
       ],
       "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
@@ -1603,7 +1603,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Edges share no configuration or submission (checked)",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-factors.csv",
@@ -1644,7 +1644,7 @@
         "speed-2000-vaxen"
       ],
       "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
@@ -1682,7 +1682,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Edges share no configuration or submission (checked)",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-factors.csv",
@@ -1723,7 +1723,7 @@
         "speed-2006-vaxen"
       ],
       "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",
@@ -1761,7 +1761,7 @@
       ],
       "depends_on": [],
       "shared_evidence": "Edges share no configuration or submission (checked)",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-factors.csv",
@@ -1802,7 +1802,7 @@
         "speed-2017-vaxen"
       ],
       "shared_evidence": "Independent edge bootstrap draws propagate jointly to descendants",
-      "command": "cpushowspeed bridge fit-speed-chain",
+      "command": "cpushowspeed chain fit-speed",
       "outputs": [
         {
           "path": "research/data/spec/fitting/integer-speed-chain-intervals.csv",

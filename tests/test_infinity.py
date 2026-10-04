@@ -13,7 +13,7 @@ from unittest.mock import AsyncMock, patch
 
 import click
 from cpushowspeed import infinity
-from cpushowspeed.documents import _connect
+from cpushowspeed.documents import open_inventory
 from cpushowspeed.ocr import (
     PagePayload,
     _convert_page,
@@ -100,7 +100,7 @@ class InfinityTests(unittest.TestCase):
             source.write_bytes(b"renderer is mocked")
             stat = source.stat()
             database = Path(temp) / "inventory.sqlite"
-            with _connect(database, root) as db:
+            with open_inventory(database, root) as db:
                 db.execute(
                     "INSERT INTO files (relative_path,size_bytes,mtime_ns,ctime_ns,blake3,pages,status,seen_run) "
                     "VALUES (?,?,?,?,?,1,'ok','test')",

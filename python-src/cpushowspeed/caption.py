@@ -20,8 +20,8 @@ import click
 import humanize
 from cpushowspeed.docir_rich_table import walk_content
 from cpushowspeed.document_report import collect_ocr_stats
-from cpushowspeed.documents import DEFAULT_DATABASE, _connect
-from cpushowspeed.ocr import _select_inventory
+from cpushowspeed.documents import DEFAULT_DATABASE, open_inventory
+from cpushowspeed.ocr import select_inventory
 from openai import AsyncOpenAI
 from rich.console import Console
 from rich.progress import (
@@ -141,7 +141,7 @@ async def _run(
     shutdown_grace: float,
     force: bool,
 ) -> bool:
-    inventory = _connect(database)
+    inventory = open_inventory(database)
     pool = output_root / "ImagePool"
     catalog = sqlite3.connect(pool / "catalog.sqlite")
     catalog.row_factory = sqlite3.Row
@@ -150,7 +150,7 @@ async def _run(
         run = inventory.execute("SELECT run_id FROM ocr_runs WHERE output_root=?", (str(output_root),)).fetchone()
         if source_root is None or run is None:
             raise click.ClickException("inventory has no OCR run for this output root")
-        selected = _select_inventory(inventory, Path(source_root["value"]), file_list, "", None)
+        selected = select_inventory(inventory, Path(source_root["value"]), file_list, "", None)
         stats = collect_ocr_stats(inventory, run["run_id"], output_root, selected)
         _init_catalog(catalog)
         published = {path: pages for path, pages in stats.published}

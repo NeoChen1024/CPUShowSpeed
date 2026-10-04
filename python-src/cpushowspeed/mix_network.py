@@ -36,7 +36,7 @@ from cpushowspeed.classical_store import (
     vax780_anchor,
 )
 from cpushowspeed.curated import DATABASE
-from cpushowspeed.mix_bridge import MIX_SCOPE, _rows, pending_links
+from cpushowspeed.mix_bridge import MIX_SCOPE, observation_rows, pending_links
 from cpushowspeed.observation_store import connect, inputs_digest
 from cpushowspeed.parallel import jobs_option, pmap
 from cpushowspeed.research_io import code_hashes, write_csv
@@ -51,7 +51,7 @@ OUTPUT = DERIVED / "mix-network-fit"
 def mix_results(db):
     """Every positive mix rating with its resolved system and the source table row it shares with its sibling rating."""
     out = []
-    for rid, system, system_id, metric, value, url in _rows(db, MIX_SCOPE):
+    for rid, system, system_id, metric, value, url in observation_rows(db, MIX_SCOPE):
         if metric in MIX_METRICS and value > 0:
             out.append(
                 dict(
@@ -274,7 +274,7 @@ def fit_run(task):
     )
 
 
-@click.command("mix-network-fit")
+@click.command("network-fit")
 @click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--output", type=click.Path(path_type=Path), default=OUTPUT, show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=RESEARCH, show_default=True)

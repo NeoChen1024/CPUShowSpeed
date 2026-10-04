@@ -26,7 +26,7 @@ def _read(path: Path) -> list[dict]:
         return list(csv.DictReader(stream))
 
 
-def _fresh(audit_path: Path, digest: str, digest_key: str, files: dict) -> dict:
+def fresh_audit(audit_path: Path, digest: str, digest_key: str, files: dict) -> dict:
     """The audit of a saved bundle, after checking its database inputs, code and output files are current."""
     audit = json.loads(audit_path.read_text())
     if audit[digest_key] != digest:
@@ -46,7 +46,7 @@ def _values(score, vaxen, low, high):
 
 def mix_rows(dates, digest):
     """Every Gibson/ADP rating and every source row's combined available mixes, from the timeline run of the mix network."""
-    audit = _fresh(MIX_OUTPUT / "audit.json", digest, "inputs_sha256", {})
+    audit = fresh_audit(MIX_OUTPUT / "audit.json", digest, "inputs_sha256", {})
     run = " / ".join(TIMELINE_RUN[k] for k in ("links", "scenario", "cohort"))
     rows = []
     for r in _read(MIX_OUTPUT / "mix-estimates.csv"):

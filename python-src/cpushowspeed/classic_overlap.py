@@ -415,7 +415,7 @@ def write_csv(path, rows):
     return shared_write_csv(path, rows, fields=list(rows[0]) if rows else [], lineterminator="\n", empty_text="")
 
 
-@click.command("overlap-spec")
+@click.command("parse-sources")
 @click.option(
     "--acquisition",
     type=click.Path(path_type=Path, exists=True, dir_okay=False),
@@ -423,9 +423,9 @@ def write_csv(path, rows):
     show_default=True,
 )
 @click.option(
-    "--output-root", type=click.Path(path_type=Path), default=Path("data/derived/classic/overlap-spec"), show_default=True
+    "--output-root", type=click.Path(path_type=Path), default=Path("data/derived/classic/parsed-sources"), show_default=True
 )
-def overlap_spec(acquisition, output_root):
+def parse_sources_command(acquisition, output_root):
     """Parse supported classical rows and collect SPEC89/92 records for the observation extract."""
     try:
         records, rejected, coverage = parse_classics(acquisition)

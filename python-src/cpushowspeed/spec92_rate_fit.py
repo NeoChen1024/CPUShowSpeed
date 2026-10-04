@@ -13,9 +13,9 @@ from cpushowspeed.observation_store import connect, inputs_digest, result_pair_r
 from cpushowspeed.spec_overlap import (
     INTERVAL_FIELDS,
     PAIR_FIELDS,
-    _automatic_pairs,
-    _normalized,
-    _statistics,
+    automatic_pairs,
+    normalized,
+    ratio_statistics,
 )
 from cpushowspeed.spec_rate_fit import GENERATIONS, collect_rate
 
@@ -48,11 +48,11 @@ CPU92_PAIR_FIELDS = (*PAIR_FIELDS, "review_id", "review_decision")
 
 
 def _software_near(pair: dict[str, object]) -> bool:
-    old, new = _normalized(str(pair["old_os"])), _normalized(str(pair["new_os"]))
+    old, new = normalized(str(pair["old_os"])), normalized(str(pair["new_os"]))
     return old == new or (old == "unixware20" and new == "unixware20sdk")
 
 
-def _selected(pairs: list[dict[str, object]], scenario: str) -> list[dict[str, object]]:
+def selected_pairs(pairs: list[dict[str, object]], scenario: str) -> list[dict[str, object]]:
     """Reviewed-accepted pairs (hardware_near), optionally restricted to a matching OS (same_os)."""
     accepted = [row for row in pairs if row["review_decision"] == "accept"]
     return accepted if scenario == "hardware_near" else [row for row in accepted if _software_near(row)]
@@ -105,7 +105,7 @@ def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path)
         results["cpu92"] = spec_results(db, "cpu92", "rate")
         digest = inputs_digest(db)
         reviews = result_pair_reviews(db, "spec:cpu92:rate:", "spec:cpu95:rate:")
-    pairs = _automatic_pairs(results, "cpu92", "cpu95")
+    pairs = automatic_pairs(results, "cpu92", "cpu95")
     for pair in pairs:
         pair["source_check"] = "netlib_detail_and_summary_hash_checked__cpu95_bulk_hash_checked"
         review_id, decision = reviews.get((pair["old_result_id"], pair["new_result_id"]), ("", "unreviewed"))
@@ -127,10 +127,10 @@ def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path)
         writer = csv.DictWriter(stream, fieldnames=FACTOR_FIELDS, lineterminator="\n")
         writer.writeheader()
         for scenario in ("hardware_near", "same_os"):
-            selected = _selected(pairs, scenario)
+            selected = selected_pairs(pairs, scenario)
             for mode in ("base", "peak"):
                 fit_rows = [{**row, "match_tier": "hardware_near"} for row in selected]
-                fit = _statistics(fit_rows, mode, {"hardware_near"})
+                fit = ratio_statistics(fit_rows, mode, {"hardware_near"})
                 fits[scenario, mode] = fit
                 writer.writerow(
                     {
@@ -234,11 +234,11 @@ def analyze_cpu92_rate_fit(database: Path, output_dir: Path, research_dir: Path)
     return summary
 
 
-@click.command("fit-rate92-anchor")
+@click.command("fit-cpu92-rate-anchor")
 @click.option("--database", type=click.Path(path_type=Path, dir_okay=False), default=DATABASE, show_default=True)
 @click.option("--output-dir", type=click.Path(path_type=Path), default=Path("data/derived/spec/fitting"), show_default=True)
 @click.option("--research-dir", type=click.Path(path_type=Path), default=Path("research/data/spec/fitting"), show_default=True)
-def fit_rate92_anchor_command(database: Path, output_dir: Path, research_dir: Path) -> None:
+def fit_cpu92_rate_anchor_command(database: Path, output_dir: Path, research_dir: Path) -> None:
     """Fit CPU92 and CPU95 integer rate from the built database, then extend the exploratory rate chain."""
     try:
         summary = analyze_cpu92_rate_fit(database, output_dir, research_dir)
