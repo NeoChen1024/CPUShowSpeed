@@ -5,13 +5,9 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
-import math
-import statistics
-from collections import defaultdict
 from pathlib import Path
 
 import click
-from cpushowspeed.calibration import absolute_error_percent, quantile
 from cpushowspeed.curated import DATABASE
 from cpushowspeed.observation_store import connect, inputs_digest, result_pair_reviews, spec_results
 from cpushowspeed.spec_overlap import (
@@ -60,24 +56,6 @@ def _selected(pairs: list[dict[str, object]], scenario: str) -> list[dict[str, o
     """Reviewed-accepted pairs (hardware_near), optionally restricted to a matching OS (same_os)."""
     accepted = [row for row in pairs if row["review_decision"] == "accept"]
     return accepted if scenario == "hardware_near" else [row for row in accepted if _software_near(row)]
-
-
-def _heldout_p95(pairs: list[dict[str, object]], mode: str) -> float | None:
-    """Leave-one-processor-configuration-out error, after system/config medians."""
-    systems: dict[tuple[str, str, int, float], list[float]] = defaultdict(list)
-    for row in pairs:
-        ratio = row[f"{mode}_ratio"]
-        if ratio != "":
-            key = (str(row["system_key"]), str(row["processor_key"]), int(row["chips"]), round(float(row["old_clock_mhz"]), 1))
-            systems[key].append(math.log(float(ratio)))
-    configs: dict[tuple[str, int, float], list[float]] = defaultdict(list)
-    for key, values in systems.items():
-        configs[key[1:]].append(statistics.median(values))
-    logs = [statistics.median(values) for values in configs.values()]
-    if len(logs) < 3:
-        return None
-    errors = sorted(absolute_error_percent((sum(logs) - value) / (len(logs) - 1) - value) / 100 for value in logs)
-    return quantile(errors, 0.95)
 
 
 def _write_edge_intervals(research_dir: Path) -> Path:

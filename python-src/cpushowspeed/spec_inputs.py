@@ -51,12 +51,6 @@ def prefetch(keys, jobs=None):
     _DISCLOSURES.update(zip(missing, pmap(_load, missing, JOBS if jobs is None else jobs, chunksize=64)))
 
 
-def enrich(result, raw_dir, track, raw_fields=None, execution=None):
-    if execution is None:
-        execution = disclosure(raw_dir, result.source_url, result.generation, track)
-    return replace(result, track=track, execution=execution, raw_fields=raw_fields or {})
-
-
 def collect_integer(raw_dir: Path, track: str) -> dict[str, list[Result]]:
     """Read either metric family without changing reported scores or rate defaults."""
     if track not in {"speed", "rate"}:
@@ -271,11 +265,3 @@ def collect_speed92(raw):
     return records, audit
 
 
-def runtime_fingerprint(raw):
-    """Freeze discovery of missing as well as present detail files in a saved model."""
-    entries = []
-    for generation in (*GENERATIONS, "cpu92"):
-        for path in sorted((Path(raw) / generation).rglob("*")):
-            if path.suffix in (".html", ".csv") and path.name not in ("bulk.csv", "index.html"):
-                entries.append((str(path.relative_to(raw)), hashlib.sha256(path.read_bytes()).hexdigest()))
-    return hashlib.sha256(json.dumps(entries, sort_keys=True).encode()).hexdigest()

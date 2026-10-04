@@ -1,6 +1,5 @@
 import json
 import unittest
-from pathlib import Path
 
 from cpushowspeed.classic_mix import SOURCE, weights
 

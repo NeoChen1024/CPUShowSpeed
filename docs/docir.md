@@ -25,7 +25,7 @@ document header containing source PDF identity, schema version, model, and
 rendering settings, followed by page records. Do not repeat these document-wide
 values in every DocIR page line. No third manifest file is required.
 
-## Version-1 page and block shape
+## Page and block shape
 
 A page record is ordered and keeps the rendered page size so pixel bounding
 boxes are interpretable:
@@ -46,17 +46,8 @@ boxes are interpretable:
       "kind": "table",
       "source_label": "Table",
       "bbox_px": [110, 340, 1920, 900],
-      "table": {
-        "row_count": 2,
-        "column_count": 2,
-        "caption": null,
-        "cells": [
-          {"row": 0, "column": 0, "rowspan": 1, "colspan": 1, "text": "Operation", "header": true},
-          {"row": 0, "column": 1, "rowspan": 1, "colspan": 1, "text": "Time (µs)", "header": true},
-          {"row": 1, "column": 0, "rowspan": 1, "colspan": 1, "text": "ADD", "header": false},
-          {"row": 1, "column": 1, "rowspan": 1, "colspan": 1, "text": "1.5", "header": false}
-        ]
-      }
+      "table_schema_version": 2,
+      "content": ["… see Tables below …"]
     }
   ]
 }
@@ -86,7 +77,7 @@ OCR failure has `status: "error"`, an empty `blocks` array, and an error
 message; it is not counted as complete or included in a published document.
 Blocks follow the OCR reading order.
 
-## Version-1 HTML table conversion
+## HTML table conversion
 
 Build table blocks from Chandra's original block HTML, before using its
 document-level Markdown. Its current Markdown converter leaves `<table>`
@@ -103,8 +94,7 @@ table blocks do not store Markdown.
 - Expand spans into empty Markdown positions while retaining their original
   extents in `cells`. Preserve text such as decimal points, signs, units,
   pipes, line breaks, superscripts, and captions in the reading projection.
-- Reject nested, malformed, overlapping, or unsupported image-bearing tables
-  explicitly. A failed conversion keeps its original HTML in the raw OCR
+- Reject malformed or overlapping tables explicitly. A failed conversion keeps its original HTML in the raw OCR
   artifact and records a table conversion failure; it must not silently emit
   plausible Markdown or discard the table. Review the original PDF page before
   curating any numeric value.
@@ -118,11 +108,12 @@ triggered Chandra's trimmed-suffix repeat check; the OCR adapter now exempts
 short, complete binary table cells while still retrying degenerate output.
 This does not validate the extracted text against original PDF pages.
 
-## Version 2: compound tables and rich cells
+## Tables: compound tables and rich cells
 
-Implemented and checked on 2026-09-26. New OCR uses the version-2 table schema;
-the reading API also supports existing version-1 blocks above. Both
-renderers place merged-cell text only at its top-left anchor,
+Implemented and checked on 2026-09-26 as table schema version 2. Every stored
+table uses it: the last version-1 blocks were migrated on 2026-10-04 and
+version-1 support was removed. The renderer places merged-cell text only at its
+top-left anchor,
 leaving the other covered grid positions empty. Do not remove spans from the
 canonical representation to simplify Markdown.
 
@@ -215,47 +206,39 @@ A whole-table crop may aid review but must not be presented as a cell crop.
 The reading projection is deliberately lossy in layout and must not be used to
 reconstruct canonical table geometry. Scripts consume the structured records.
 
-### Implementation and migration
+### Implementation and migration record
 
-1. `docir_rich_table.py` implements the version-2 reader/writer and renderer
-   alongside the version-1 reader. Validation bounds nesting (32), nodes
-   (100,000), HTML input (8 million characters) and aggregate grid slots
-   (1 million), in addition to the existing row/column limits. Invalid overlapping spans
-   remain explicit errors, rather than being silently repaired.
-2. `documents migrate-tables` reconverts saved raw chunk HTML without inference,
-   using the existing output lock and atomic replacement per document. It checks
-   source hash identity, page counts/order, status and block/chunk alignment.
-   It preserves unrelated fields/captions and raw JSONL. Existing v2 blocks are
-   validated and retained, including any subsequently resolved image metadata.
-   A failed conversion leaves that document unchanged; previously completed
-   documents can remain migrated. Repeat the command to resume safely.
-3. The nine real failure blocks are regression fixtures, alongside merged
+1. `docir_rich_table.py` implements the reader/writer and renderer. Validation
+   bounds nesting (32), nodes (100,000), HTML input (8 million characters) and
+   aggregate grid slots (1 million), in addition to row (4,096) and column (512)
+   limits. Invalid overlapping spans remain explicit errors, rather than being
+   silently repaired.
+2. The nine real failure blocks are regression fixtures, alongside merged
    headers, nesting, surrounding text, sibling tables and unresolved images.
    Their original text/numeric token multiplicities survive conversion.
    Structural checks and reading projections do not certify OCR accuracy.
-4. `walk_content` traverses rich cells and nested nodes for retrieval and image
+3. `walk_content` traverses rich cells and nested nodes for retrieval and image
    consumers. Caption selection/backfill and image reporting use it. The report
    lists unresolved inline images separately from resolved Image Pool assets;
    they are not counted as completed captions. No automatic image resolver is
    implemented, and image URIs are never fetched during conversion.
 
 ```sh
-.venv/bin/cpushowspeed documents migrate-tables \
-  --output-root data/derived/documents/chandra-ocr \
-  --file-list inventories/early-benchmark-ocr.txt --dry-run
-.venv/bin/cpushowspeed documents migrate-tables \
-  --output-root data/derived/documents/chandra-ocr \
-  --file-list inventories/early-benchmark-ocr.txt
 .venv/bin/cpushowspeed documents render-tables \
   data/derived/documents/chandra-ocr/honeywell/h300/Honeywell_300_Programmers_Reference_Manual_Aug64.docir.jsonl \
   --page 51
 ```
 
-The two-document batch now contains 58 v2 table blocks; all nine previous
-conversion failures are represented. Its 12 unresolved inline images retain OCR
-alt text and enclosing page/block provenance. Raw hashes, page/block positions,
-non-table blocks and table metadata were checked unchanged; a repeated migration
-changed zero blocks. The 16-document watchlist remains readable as v1.
+Version-1 blocks were reconverted from the immutable raw chunk HTML by a
+one-time `documents migrate-tables` command, which checked source hash, page
+order, status and block/chunk alignment and replaced each document atomically.
+The two-document early-benchmark batch (58 blocks, including the nine former
+failures) was migrated on 2026-09-26. The remaining 24 watchlist documents
+(1,284 blocks) followed on 2026-10-04, after the command was changed to record a
+conversion failure in place, as OCR does, instead of stopping. The corpus then
+held 11,115 version-2 table blocks and 143 conversion failures. The command,
+the version-1 converter and the version-1 reader were then removed; they remain
+in Git history.
 
 ## Structured diagrams
 

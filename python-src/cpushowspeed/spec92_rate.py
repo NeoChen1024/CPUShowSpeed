@@ -14,7 +14,6 @@ from urllib.parse import urlparse
 
 import click
 from cpushowspeed import spec92_disclosure
-from cpushowspeed.spec import links
 from cpushowspeed.spec_overlap import _memory_mib
 
 METHOD_VERSION = "netlib-cpu92-rate-v3"

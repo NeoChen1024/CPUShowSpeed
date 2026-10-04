@@ -19,8 +19,7 @@ from urllib.request import Request, urlopen
 import blake3
 import click
 from bs4 import BeautifulSoup, UnicodeDammit
-from cpushowspeed.docir_rich_table import convert_rich_table
-from cpushowspeed.docir_table import TableConversionError
+from cpushowspeed.docir_rich_table import TableConversionError, convert_rich_table
 
 DEFAULT_SOURCES = Path("docs/data/classic-benchmark-sources.csv")
 

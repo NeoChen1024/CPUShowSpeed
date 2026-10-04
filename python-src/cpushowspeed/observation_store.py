@@ -111,25 +111,6 @@ def spec_results(db: sqlite3.Connection, generation: str, track: str) -> list[Re
     return results
 
 
-def result_dates(db: sqlite3.Connection, scope: str) -> dict[str, dict]:
-    """Reported dates of each result after reviewed rejections, the rejected fields and the selected year."""
-    query = (
-        "SELECT result_id, hardware_availability, test, publication, date_kind, year, candidates "
-        "FROM result_chronology WHERE scope = ?"
-    )
-    return {
-        r[0]: dict(
-            hardware_availability=r[1] or "",
-            test=r[2] or "",
-            publication=r[3] or "",
-            date_kind=r[4],
-            year=r[5],
-            rejected=[c["kind"].removeprefix("rejected_") for c in json.loads(r[6]) if c["kind"].startswith("rejected_")],
-        )
-        for r in db.execute(query, (scope,))
-    }
-
-
 def result_pair_reviews(db: sqlite3.Connection, left_prefix: str, right_prefix: str) -> dict[tuple[str, str], tuple[str, str]]:
     """(left id, right id) without prefixes -> (review id, decision) for reviewed result pairs."""
     sides = defaultdict(dict)

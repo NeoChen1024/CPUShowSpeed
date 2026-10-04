@@ -77,20 +77,6 @@ def model_key(name):
     return re.sub(r"[^a-z0-9]", "", s)
 
 
-@lru_cache(maxsize=10000)
-def relaxed_key(name, clock):
-    """One explicit relaxation: HP /clock suffix when corroborated by MHz."""
-    s = name
-    parenthesized = re.search(r"\s+\((\d+(?:\.\d+)?)\)\s*$", s)
-    if parenthesized and clock is not None and abs(float(parenthesized[1]) - clock) < 0.01:
-        s = s[: parenthesized.start()]
-    if re.search(r"\bhp\b", s, re.I):
-        m = re.search(r"(\d{3})/(\d+(?:\.\d+)?)\s*$", s)
-        if m and clock is not None and abs(float(m[2]) - clock) < 0.01:
-            s = s[: m.start()] + m[1]
-    return model_key(s)
-
-
 def source_pre(source):
     return {b["pre_index"]: b["text"] for b in source["blocks"] if b["kind"] == "preformatted"}
 

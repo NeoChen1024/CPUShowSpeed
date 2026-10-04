@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 
 import click
-from cpushowspeed.research_io import code_hashes, read_csv, write_csv
+from cpushowspeed.research_io import code_hashes, write_csv
 from cpushowspeed.spec import GENERATIONS, collect_disclosures, get_cached
 from cpushowspeed.spec_disclosure import (
     canonical,

@@ -32,10 +32,8 @@ do not select a plotting year or relabel hardware availability as CPU release.
 
 ## Consumers
 
-SPEC92–2026 normalization has one owner: spec_inputs.py. Existing imports from
-spec_rate_fit, spec92_rate_fit and spec_dual_track are compatibility entry points,
-not separate implementations. Fitting and timeline code use the same source
-record values and execution-disclosure adapter.
+SPEC92–2026 normalization has one owner: spec_inputs.py. Fitting and timeline
+code use the same source record values and execution-disclosure adapter.
 
 Classical metric extraction has one owner in benchmark_records.py, reusing the
 existing LINPACK column parser. Dhrystone versions and Whetstone precision variants
@@ -71,11 +69,3 @@ outside CI95.
 Historical record (2026-09): the initial migration checked exact numeric/identity parity for 53,961 SPEC source
 records and 3,794 classical records before enabling the execution guard. The catalog
 contains 103,456 positive observations; source views preserve the other context.
-
-Before/after coefficient comparison:
-
-    uv run cpushowspeed inputs compare-factors
-
-It writes `factor-changes.csv` and `model-review.csv` under
-`data/derived/input-unification/`, outside Git. The one-time migration review that compared factors before and after
-unification is in Git history.

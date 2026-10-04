@@ -6,20 +6,26 @@ from dataclasses import dataclass, field
 from html import escape
 from html.parser import HTMLParser
 
-from cpushowspeed.docir_table import (
-    MAX_GRID_SLOTS,
-    MAX_TABLE_COLUMNS,
-    MAX_TABLE_ROWS,
-    TableCell,
-    TableConversionError,
-    TableProjection,
-    _clean,
-    _render_row,
-    render_markdown_table,
-)
-
+MAX_TABLE_ROWS = 4096
+MAX_TABLE_COLUMNS = 512
+MAX_GRID_SLOTS = 1_000_000
 MAX_DEPTH = 32
 MAX_NODES = 100_000
+
+
+class TableConversionError(ValueError):
+    """A table cannot be converted without losing or inventing cells."""
+
+
+def _clean(parts: list[str]) -> str:
+    lines = [" ".join(line.split()) for line in "".join(parts).splitlines()]
+    return "<br>".join(line for line in lines if line)
+
+
+def _render_row(row: list[str]) -> str:
+    return "| " + " | ".join(cell.replace("|", r"\|") for cell in row) + " |"
+
+
 VOID = {"img", "br", "hr", "meta", "link", "input", "col", "wbr"}
 
 
@@ -305,7 +311,7 @@ def validate_rich_table(block):
 
 
 def walk_content(block):
-    """Yield all rich nodes in reading order; v1 returns the original block."""
+    """Yield all rich nodes in reading order; a failed conversion yields only its block."""
     yield block
     if block.get("table_schema_version") == 2:
         validate_rich_table(block)
@@ -321,14 +327,7 @@ def walk_content(block):
 
 
 def render_table_block(block):
-    """Read either v1 or v2. Nested tables are emitted with cell-path labels."""
-    if "table_schema_version" not in block:
-        table = block["table"]
-        return render_markdown_table(
-            TableProjection(
-                tuple(TableCell(**x) for x in table["cells"]), table["row_count"], table["column_count"], table.get("caption")
-            )
-        )
+    """Render a version-2 table block as Markdown; nested tables are emitted with cell-path labels."""
     validate_rich_table(block)
 
     def image_text(n):

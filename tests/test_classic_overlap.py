@@ -13,7 +13,6 @@ from cpushowspeed.classic_overlap import (
     parse_dhrystone,
     parse_linpack_pdf,
     parse_whetstone,
-    relaxed_key,
 )
 
 
@@ -69,9 +68,6 @@ class OverlapTests(unittest.TestCase):
         self.assertNotEqual(model_key("DEC 3000/400"), model_key("DEC 3000/400S"))
         self.assertNotEqual(model_key("HP 9000/735/755"), model_key("HP 9000/735"))
         self.assertEqual(model_key(full_name("Digital Equipment Corporation", "DEC 3000 Model 900")), model_key("DEC 3000/900 AXP"))
-        self.assertEqual(relaxed_key("SPARCstation 2 (40)", 40), model_key("Sun SPARCstation 2"))
-        self.assertNotEqual(relaxed_key("SPARCstation 2 (40)", 80), model_key("Sun SPARCstation 2"))
-        self.assertEqual(relaxed_key("HP 9000 Series 700 Model 735/99", 99), model_key("HP 9000/735"))
 
 
 if __name__ == "__main__":

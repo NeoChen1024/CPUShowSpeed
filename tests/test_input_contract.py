@@ -1,10 +1,9 @@
-import json
 import tempfile
 import unittest
 from dataclasses import replace
 from pathlib import Path
 
-from cpushowspeed.benchmark_records import observation, read_jsonl, write_jsonl
+from cpushowspeed.benchmark_records import observation, write_jsonl
 from cpushowspeed.execution_policy import agreement
 from cpushowspeed.spec_overlap import Result, _pair
 
@@ -70,7 +69,6 @@ class InputContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "records.jsonl"
             write_jsonl(p, [r])
-            self.assertEqual(list(read_jsonl(p)), [r])
             with self.assertRaises(ValueError):
                 write_jsonl(p, [r, r])
         with self.assertRaises(ValueError):

@@ -4,7 +4,6 @@ import hashlib
 import json
 from pathlib import Path
 
-import click
 from cpushowspeed.benchmark_records import (
     classical_values,
     observation,
@@ -229,6 +228,3 @@ def records(raw):
         )
 
 
-@click.group("inputs")
-def inputs():
-    """Shared source-normalization and input contracts."""

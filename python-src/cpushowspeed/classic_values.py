@@ -34,9 +34,3 @@ def linpack_n100(record, pages):
 TARGETS = ("SPECmark89", "SPECint89", "SPECfp89", "SPECrate_base_int92", "SPECrate_int92")
 
 
-def clock_status(records):
-    clocks = [numeric(r.get("clock_mhz")) for r in records]
-    known = [x for x in clocks if x is not None]
-    if known and max(known) - min(known) > 0.01 * max(known):
-        return "conflict"
-    return "known" if len(known) == len(clocks) else "unknown"

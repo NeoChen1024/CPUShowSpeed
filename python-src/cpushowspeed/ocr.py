@@ -26,8 +26,7 @@ import humanize
 import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
 from cpushowspeed import ocr_settings
-from cpushowspeed.docir_rich_table import convert_rich_table
-from cpushowspeed.docir_table import TableConversionError
+from cpushowspeed.docir_rich_table import TableConversionError, convert_rich_table
 from cpushowspeed.documents import DEFAULT_DATABASE, _connect
 from cpushowspeed.ocr_backends import (
     BACKENDS,

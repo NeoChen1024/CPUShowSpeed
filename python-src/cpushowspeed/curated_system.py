@@ -18,18 +18,15 @@ clock, chips, cores, threads/core, memory) tuple from the input catalogue. Build
 import hashlib
 import json
 import re
-import sys
-from collections import Counter, defaultdict
-from datetime import date
+from collections import Counter
 from pathlib import Path
 
-import click
-from cpushowspeed.curated import CURATED, read_table, sha256, validate, write_jsonl
+from cpushowspeed.curated import sha256
 from cpushowspeed.curated_identity import Resolver
 
 RECORDS = Path("data/derived/schema/hardware-records.jsonl")
 SUFFIX = r"\b(?:inc|incorporated|corp|corporation|corportation|co|ltd|limited|llc|gmbh|ag|s ?a|sas|plc|company|computers?|kk)\b"
-# Brand words that SPEC system names repeat before the model; curated per vendor after seeding.
+# Brand words that SPEC system names repeat before the model; curated per vendor.
 PREFIXES = {
     "org:dell": ["dell"],
     "org:hewlett-packard": ["hewlett-packard", "hewlett packard", "hp"],
@@ -77,43 +74,6 @@ def vendor_norm(name):
     k = re.sub(r"[^a-z0-9& -]", " ", k).replace("-", " ")
     k = " ".join(re.sub(SUFFIX, " ", k).split())
     return MERGES.get(k, k)
-
-
-def seed_vendors(records):
-    spellings = Counter()
-    for r in records:
-        if r["vendor"]:
-            spellings[r["vendor"]] += r["observations"]
-    groups = defaultdict(Counter)
-    for name, n in spellings.items():
-        groups[vendor_norm(name)][name] += n
-    today = date.today().isoformat()
-    vendors, aliases = [], []
-    for key, names in sorted(groups.items()):
-        vid = "org:" + re.sub(r"[^a-z0-9.+]+", "-", key).strip("-")
-        row = dict(vendor_id=vid, name=names.most_common(1)[0][0])
-        if vid in PREFIXES:
-            row["model_prefixes"] = PREFIXES[vid]
-        if key in MERGES.values():
-            row["note"] = "Merges spellings that normalisation keeps apart (GIGA-BYTE / Gigabyte)."
-        vendors.append(row)
-        for name in sorted(names):
-            # Spellings differing only in case or punctuation share a slug; the text hash keeps IDs unique and stable.
-            slug = re.sub(r"[^a-z0-9.+]+", "-", name.lower()).strip("-.")
-            aid = f"alias:vendor/{slug}.{hashlib.sha256(name.encode()).hexdigest()[:6]}"
-            aliases.append(
-                dict(
-                    alias_id=aid,
-                    entity_kind="vendor",
-                    entity_id=vid,
-                    match_kind="exact_text",
-                    text=name,
-                    scope="vendor",
-                    status="accepted",
-                    reviewed_on=today,
-                )
-            )
-    return vendors, aliases
 
 
 # Hardware options are configuration facts, not part of the model name.
@@ -246,31 +206,6 @@ def extract_records(inputs):
         counts[key] += 1
     fields = ["scope", "vendor", "system", "processor", "clock_mhz", "chips", "cores", "threads_per_core", "memory_mib"]
     return [dict(zip(fields, k), observations=n) for k, n in sorted(counts.items(), key=lambda kv: json.dumps(kv[0]))]
-
-
-@click.command("import-vendors")
-@click.option("--root", type=click.Path(path_type=Path, file_okay=False), default=CURATED, show_default=True)
-@click.option("--force", is_flag=True, help="Overwrite vendor/system tables and vendor aliases, discarding curated edits.")
-def import_vendors_command(root, force):
-    """One-time seed: vendors and their exact-text aliases from extracted SPEC hardware records."""
-    if any((root / n).exists() for n in ("vendor.jsonl", "system_model.jsonl")) and not force:
-        raise click.ClickException("vendor tables exist and are curated data; pass --force to reseed them")
-    if not RECORDS.exists():
-        raise click.ClickException("run `cpushowspeed data extract` first")
-    records = [json.loads(line) for line in RECORDS.read_text().splitlines()]
-    vendors, vendor_aliases = seed_vendors(records)
-    aliases = [a for a in read_table(root, dict(file="alias.jsonl")) if a["entity_kind"] != "vendor"]
-    write_jsonl(root / "vendor.jsonl", vendors)
-    if not (root / "system_model.jsonl").exists():
-        write_jsonl(root / "system_model.jsonl", [])
-    write_jsonl(root / "alias.jsonl", sorted(aliases + vendor_aliases, key=lambda a: a["alias_id"]))
-    _, tables, errors, _ = validate(root)
-    for e in errors:
-        click.echo(e, err=True)
-    json.dump(dict(tables={k: len(v) for k, v in tables.items()}, errors=len(errors)), sys.stdout)
-    click.echo()
-    if errors:
-        sys.exit(1)
 
 
 def brand_prefixes(tables):

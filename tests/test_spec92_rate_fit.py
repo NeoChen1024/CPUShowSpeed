@@ -1,13 +1,11 @@
 """Checks for the direct CPU92/CPU95 integer-rate bridge."""
 
-import math
 import sqlite3
 import unittest
 
 from cpushowspeed.observation_store import result_pair_reviews
 from cpushowspeed.spec92_rate_fit import (
     VAX_RATE92_REFERENCE,
-    _heldout_p95,
     _selected,
     _software_near,
 )
@@ -22,15 +20,6 @@ class Cpu92RateFitTests(unittest.TestCase):
         self.assertTrue(_software_near({"old_os": "UnixWare 2.0", "new_os": "UnixWare 2.0, SDK"}))
         self.assertTrue(_software_near({"old_os": "HP-UX B.10.01", "new_os": "HP-UX B.10.01"}))
         self.assertFalse(_software_near({"old_os": "HP-UX B.10.01", "new_os": "HP-UX B.10.20"}))
-
-    def test_repeated_submission_does_not_add_independent_config(self):
-        def pair(system, cpu, ratio):
-            return {"system_key": system, "processor_key": cpu, "chips": 1, "old_clock_mhz": 100, "peak_ratio": ratio}
-
-        pairs = [pair("a", "cpu-a", 100), pair("a", "cpu-a", 100), pair("b", "cpu-b", 110), pair("c", "cpu-c", 120)]
-        expected = sorted([abs(math.sqrt(math.prod(x for x in (100, 110, 120) if x != v)) / v - 1) for v in (100, 110, 120)])
-        percentile = expected[1] + 0.9 * (expected[2] - expected[1])
-        self.assertAlmostEqual(_heldout_p95(pairs, "peak"), percentile)
 
     def test_only_reviewed_accepted_pairs_are_fitted(self):
         def pair(decision, tier, os="UnixWare 2.0"):

@@ -135,10 +135,3 @@ def write_jsonl(path, records):
     return count
 
 
-def read_jsonl(path):
-    with path.open() as stream:
-        for line in stream:
-            row = json.loads(line)
-            if row.get("schema_version") != SCHEMA or not math.isfinite(row["value"]) or row["value"] <= 0:
-                raise ValueError("invalid canonical observation")
-            yield row
